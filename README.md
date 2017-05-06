@@ -19,7 +19,7 @@ To use angular-maps with the default Bing Map implementation, follow these three
 2 Configure Services
 3 Add a map, markers, infoboxes and actions to a component
 
-## 1 Import Module
+## 1. Import Module
 
 Import MapModule, MapAPILoader, BingMapAPILoaderConfig, BingMapAPILoader, WindowRef, DocumentRef, MapServiceFactory and BingMapServiceFactory (yeah, I know...) in your main app module (or a particular feature module, if you don't want it globally). 
 
@@ -45,7 +45,7 @@ Import the MapModule. Note that the module is designed for lazy loading, so call
         ]
     })
 ```
-## 2 Configure Services
+## 2. Configure Services
 
 Theoretically, this is options. However, generally you will need to supply some configuration to your map service, such as the service key or some such. You do that by injection specifc 
 service configurations in the root module. The two service you will need to configure 
@@ -82,7 +82,7 @@ is the loader (which is actually responsible to load the resources from the map 
     })
 ```
 
-## 3 Add a map, markers, infoboxes and actions to a component
+## 3. Add a map, markers, infoboxes and actions to a component
 
 To use maps, create a simple component (or implement the below in an existin component) as follows:
 
@@ -157,10 +157,10 @@ As with all these, I am looking for help in evolving this module. The top things
 The angular-maps module allows for the implementation of various different providers. Even though currently only Bing is implemented, implementing your own provider against Google, Esri or others is straight forward 
 as long as the underlying capabilities are there. In order to do that you need to:
 
-1 Create concrete implementations of the Marker and InfoBox abstracts (see BingMarker and BingInfoWindow for guidance)
-2 Create concrete implementations of the MapAPILoader, MapService, MarkerService and InfoBoxService abstracts (again, see the Bing implementation in this project for guidance)
-3 Create a concrete implementation of the MapServiceFactory to bootstrap the various services. 
-4 Inject your service implementations in the provider (see configure services above).
+1. Create concrete implementations of the Marker and InfoBox abstracts (see BingMarker and BingInfoWindow for guidance)
+2. Create concrete implementations of the MapAPILoader, MapService, MarkerService and InfoBoxService abstracts (again, see the Bing implementation in this project for guidance)
+3. Create a concrete implementation of the MapServiceFactory to bootstrap the various services. 
+4. Inject your service implementations in the provider (see configure services above).
 
 Happy coding! 
 
