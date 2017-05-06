@@ -47,7 +47,7 @@ Import the MapModule. Note that the module is designed for lazy loading, so call
 ```
 ## 2. Configure Services
 
-Theoretically, this is options. However, generally you will need to supply some configuration to your map service, such as the service key or some such. You do that by injection specifc 
+Theoretically, this is optional. However, generally you will need to supply some configuration to your map service, such as the service key or some such. You do that by injection specifc 
 service configurations in the root module. The two service you will need to configure 
 is the loader (which is actually responsible to load the resources from the map provider such as scripts etc) and the Service Factory, which provides bootstrapping for the concrete implementation
 (Bing, Google, etc) you want to be using. Currently only a bing provider exists. 
@@ -70,11 +70,6 @@ is the loader (which is actually responsible to load the resources from the map 
                     let bc: BingMapAPILoaderConfig = new BingMapAPILoaderConfig();
                     bc.apiKey ="..."; // your bing map key
                     return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
-                }
-            },
-            {
-                provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: (apiLoader: MapAPILoader, zone: NgZone) => {
-                    return new BingMapServiceFactory(apiLoader, zone);
                 }
             }
             ...
