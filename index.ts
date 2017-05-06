@@ -1,4 +1,4 @@
-﻿import { NgModule } from "@angular/core";
+﻿import { NgModule, NgZone } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 ///
@@ -69,7 +69,9 @@ export class MapModule {
         return {
             ngModule: MapModule,
             providers: [
-                mapServiceFactory ? { provide: MapServiceFactory, useValue: mapServiceFactory } : BingMapServiceFactory,
+                mapServiceFactory ? { provide: MapServiceFactory, useValue: mapServiceFactory } : { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: (apiLoader: MapAPILoader, zone: NgZone) => {
+                    return new BingMapServiceFactory(apiLoader, zone);
+                }},,
                 loader ? { provide: MapAPILoader, useValue: loader } : { provide: MapAPILoader, useFactory: () => {
                     return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
                 }},

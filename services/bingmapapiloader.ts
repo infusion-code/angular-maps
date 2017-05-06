@@ -7,6 +7,7 @@ export enum ScriptProtocol {
     AUTO
 }
 
+@Injectable()
 export class BingMapAPILoaderConfig  {
 
     ///
