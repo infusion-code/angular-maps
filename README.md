@@ -170,5 +170,6 @@ I want to give credit to [@youjustgo](https://www.npmjs.com/~youjustgo) who star
 leverage it for this module. Thanks also to [@adessoag](https://github.com/adessoag) and the [Angular Google Maps Team](https://github.com/SebastianM/angular-google-maps). I structurally modelled much of the interfaces and abstracts for this project 
 after their work to make it easy to inject their services for a provider independent map implementation. 
 
-#Advanced
+# Advanced
+
 Check out the [Wiki](../../wiki) for detailed documentation on components, models and providers. 
