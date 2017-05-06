@@ -1,0 +1,50 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "target": "es5",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "dist",
+        "skipDefaultLibCheck": true,
+        "lib": ["es6", "dom"],
+        "types": ["node"]
+    },
+    "files": [
+        "index.ts",
+        "components/infobox.ts",
+        "components/infoboxaction.ts",
+        "components/map.ts",
+        "components/mapmarker.ts",
+        "interfaces/ibox.ts",
+        "interfaces/iinfowindowaction.ts",
+        "interfaces/iinfowindowoptions.ts",
+        "interfaces/ilatlong.ts",
+        "interfaces/imapoptions.ts",
+        "interfaces/imarkerevent.ts",
+        "interfaces/imarkericoninfo.ts",
+        "interfaces/imarkeroptions.ts",
+        "interfaces/ipoint.ts",
+        "interfaces/isize.ts",
+        "models/binginfowindow.ts",
+        "models/bingmarker.ts",
+        "models/infowindow.ts",
+        "models/maptypeid.ts",
+        "models/marker.ts",
+        "models/markertypeid.ts",
+        "services/bingconversions.ts",
+        "services/binginfoboxservice.ts",
+        "services/bingmapapiloader.ts",
+        "services/bingmapservice.ts",
+        "services/bingmapservicefactory.ts",
+        "services/infoboxservice.ts",
+        "services/mapservice.ts",
+        "services/mapservicefactory.ts",
+        "services/markerservice.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
