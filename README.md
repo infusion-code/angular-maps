@@ -1,7 +1,7 @@
 # Overview
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.
 
-[![npm version](https://badge.fury.io/js/%40agm%2Fcore.svg)](https://www.npmjs.com/package/angular-maps)
+[![npm version](https://badge.fury.io/js/angular-maps.svg)](https://www.npmjs.com/package/angular-maps)
 
 ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg)  
 
@@ -140,13 +140,35 @@ Some notes:
 - You can use full rich text in the body of the info-box directive, this lets you fully control the appearance of the info-box. However, when you do that, info-box-actions won't work and you have to implement your own action mechanism.
 - In my experience, when you have a large number of markers and you need a customized experience, it is easiest to implement a shard infobox. I'll have an example in the Wiki soonish. 
 
+Happy Mapping!
+
 # If you want to help
 
-Happy Mapping!
+As with all these, I am looking for help in evolving this module. The top things on the agenda:
+
+- Adding Polygon capabilities (abstract and concrete for Bing) is the highest priority.
+- Clustering support needs to be improved.
+- Currently the markers are directly placed on the map. Moving them into (optionaly multiple) layers would be good for larger app scenarios.
+- Looking for someone to implement a Goolge Maps wrapper implementing thing proxy services against [Angular Google Maps](https://github.com/SebastianM/angular-google-maps)
+- Looking for someone to create a set of ESRI concrete implementations. 
 
 # Implementing your own Provider
 
+The angular-maps module allows for the implementation of various different providers. Even though currently only Bing is implemented, implementing your own provider against Google, Esri or others is straight forward 
+as long as the underlying capabilities are there. In order to do that you need to:
+
+1 Create concrete implementations of the Marker and InfoBox abstracts (see BingMarker and BingInfoWindow for guidance)
+2 Create concrete implementations of the MapAPILoader, MapService, MarkerService and InfoBoxService abstracts (again, see the Bing implementation in this project for guidance)
+3 Create a concrete implementation of the MapServiceFactory to bootstrap the various services. 
+4 Inject your service implementations in the provider (see configure services above).
+
+Happy coding! 
+
 # Some Credits
+
+I want to give credit to [@youjustgo](https://www.npmjs.com/~youjustgo) who started [ng2-bingmaps](https://www.npmjs.com/package/ng2-bingmaps). Even though this effort is no abandoned, I was able to pick up some great stuff and 
+leverage it for this module. Thanks also to [@adessoag](https://github.com/adessoag) and the [Angular Google Maps Team](https://github.com/SebastianM/angular-google-maps). I structurally modelled much of the interfaces and abstracts for this project 
+after their work to make it easy to inject their services for a provider independent map implementation. 
 
 #Advanced
 Check out the [Wiki](../../wiki) for detailed documentation on components, models and providers. 
