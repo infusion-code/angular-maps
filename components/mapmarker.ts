@@ -1,4 +1,4 @@
-﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit } from '@angular/core';
+﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, AfterViewInit } from '@angular/core';
 import { IPoint } from "../interfaces/ipoint";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IMarkerEvent } from "../interfaces/imarkerevent";
@@ -36,7 +36,7 @@ let markerId:number = 0;
     inputs: ['latitude', 'longitude', 'title', 'label', 'draggable: markerDraggable', 'iconUrl', 'width', 'height', 'anchor', 'iconInfo'],
     outputs: ['MarkerClick', 'DragEnd','DynamicMarkerCreated']
 })
-export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
+export class MapMarker implements OnDestroy, OnChanges, AfterContentInit, AfterViewInit {
 
     ///
     /// Icon anchor relative to marker root 
@@ -107,11 +107,18 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     /// Any InfoBox that is a direct children of the marker 
     /// 
     @ContentChild(InfoBox) private _infoBox: InfoBox;
-
+    private _inCustomLayer: boolean = false;
     private _markerAddedToManger: boolean = false;
     private _id: string;
+    private _layerId: number;
 
     public get Id(): string { return this._id; }
+
+    public get InCustomLayer(): boolean { return this._inCustomLayer; }
+    public set InCustomLayer(val: boolean) { this._inCustomLayer = val; }
+
+    public get LayerId(): number { return this._layerId; }
+    public set LayerId(val: number) { this._layerId = val; }
 
     constructor(private _markerService: MarkerService) {
         this._id = (markerId++).toString();
@@ -129,16 +136,19 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
         }
     }
 
-    public ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (typeof this.latitude !== 'number' || typeof this.longitude !== 'number') {
-            return;
-        }
+    public ngAfterViewInit() {
         if (!this._markerAddedToManger) {
             this._markerService.AddMarker(this);
             this._markerAddedToManger = true;
             this.AddEventListeners();
+        }
+    }
+
+    public ngOnChanges(changes: { [key: string]: SimpleChange }) {
+        if (typeof this.latitude !== 'number' || typeof this.longitude !== 'number') {
             return;
         }
+        if (!this._markerAddedToManger) return;
         if (changes['latitude'] || changes['longitude']) {
             this._markerService.UpdateMarkerPosition(this);
         }

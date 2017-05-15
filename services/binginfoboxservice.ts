@@ -7,6 +7,7 @@ import { InfoBoxAction } from "../components/infoboxaction";
 import { InfoBoxService } from "./infoboxservice";
 import { MapService } from "../services/mapservice";
 import { InfoBox  } from "../components/infobox";
+//import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
 
 @Injectable()
 export class BingInfoBoxService implements InfoBoxService {

@@ -8,6 +8,7 @@ import { MarkerTypeId } from "../models/markertypeid";
 export abstract class Marker {
 
     public abstract get Location(): ILatLong;
+    public abstract get NativePrimitve(): any;
 
     public abstract AddListener(eventType: string, fn: Function): void;
     public abstract DeleteMarker(): void;

@@ -7,15 +7,17 @@ import { IPoint } from "../interfaces/ipoint";
 import { MapMarker } from "../components/mapmarker";
 import { MarkerService } from "../services/markerservice";
 import { MapService } from "../services/mapservice";
+import { LayerService } from "../services/layerservice";
 import { Marker } from "../models/marker";
 import { BingConversions } from "../services/bingconversions";
+import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
 
 @Injectable()
 export class BingMarkerService implements MarkerService {
 
     private _markers: Map<MapMarker, Promise<Marker>> = new Map<MapMarker, Promise<Marker>>();
 
-    constructor(private _mapService: MapService, private _zone: NgZone) { }
+    constructor(private _mapService: MapService, private _layerService: LayerService, private _zone: NgZone) { }
 
     public AddMarker(marker: MapMarker) {
         let o: IMarkerOptions = {
@@ -29,7 +31,7 @@ export class BingMarkerService implements MarkerService {
         if (marker.width) o.width = marker.width;
         if (marker.height) o.height = marker.height;
         if (marker.anchor) o.anchor = marker.anchor;
-        const markerPromise = this._mapService.CreateMarker(o);
+        const markerPromise = marker.InCustomLayer? this._layerService.CreateMarker(marker.LayerId, o) : this._mapService.CreateMarker(o);
         this._markers.set(marker, markerPromise);
         if (marker.iconInfo) markerPromise.then((m: Marker) => {
             // update iconInfo to provide hook to do post icon creation activities and
@@ -109,7 +111,7 @@ export class BingMarkerService implements MarkerService {
                     position: { latitude: marker.latitude, longitude: marker.longitude },
                     iconInfo: marker.iconInfo
                 }
-                let o: Microsoft.Maps.PushpinOptions = BingConversions.TranslateMarkerOptions(x);
+                let o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(x);
                 m.SetIcon(o.icon);
                 marker.DynamicMarkerCreated.emit(x.iconInfo);
             }

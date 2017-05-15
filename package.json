@@ -32,7 +32,6 @@
     "@angular/common": "^2.4.9",
     "@angular/compiler": "^2.4.9",
     "@angular/core": "^2.4.9",
-    "@types/bingmaps": "^7.0.21",
     "font-awesome": "^4.6.3",
     "json-loader": "^0.5.4",
     "rxjs": "^5.2.0",
@@ -40,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^7.0.5",
+    "bingmaps": "^1.0.13",
     "typescript": "^2.3.2"
   }
 }

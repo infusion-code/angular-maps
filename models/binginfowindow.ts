@@ -2,40 +2,43 @@
 import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
 import { InfoWindow } from "./infowindow";
 import { BingConversions } from "../services/bingconversions";
-import { } from "@types/bingmaps";
 
 export class BingInfoWindow implements InfoWindow {
 
-    constructor(private infoBox: Microsoft.Maps.Infobox) { }
+    public get NativePrimitve(): any {
+        return this._infoBox;
+    }
+    
+    constructor(private _infoBox: Microsoft.Maps.Infobox) { }
 
     public Close(): void {
-        let o: Microsoft.Maps.InfoboxOptions = {};
+        let o: Microsoft.Maps.IInfoboxOptions = {};
         o.visible = false;
-        this.infoBox.setOptions(o);
+        this._infoBox.setOptions(o);
     };
 
     public GetPosition(): ILatLong {
         let p: ILatLong = {
-            latitude: this.infoBox.getLocation().latitude,
-            longitude: this.infoBox.getLocation().longitude
+            latitude: this._infoBox.getLocation().latitude,
+            longitude: this._infoBox.getLocation().longitude
         };
         return p;
     };
 
     public Open(): void {
-        let o: Microsoft.Maps.InfoboxOptions = {};
+        let o: Microsoft.Maps.IInfoboxOptions = {};
         o.visible = true;
-        this.infoBox.setOptions(o);
+        this._infoBox.setOptions(o);
     };
 
     public SetOptions(options: IInfoWindowOptions): void {
-        let o: Microsoft.Maps.InfoboxOptions = BingConversions.TranslateInfoBoxOptions(options);
-        this.infoBox.setOptions(o);
+        let o: Microsoft.Maps.IInfoboxOptions = BingConversions.TranslateInfoBoxOptions(options);
+        this._infoBox.setOptions(o);
     };
 
     public SetPosition(position: ILatLong): void {
         let l: Microsoft.Maps.Location = BingConversions.TranslateLocation(position)
-        this.infoBox.setLocation(l);
+        this._infoBox.setLocation(l);
     };
 
 

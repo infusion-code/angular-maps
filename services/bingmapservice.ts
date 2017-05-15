@@ -9,15 +9,16 @@ import { Marker } from "../models/marker";
 import { MarkerTypeId } from "../models/markertypeid";
 import { InfoWindow } from "../models/infowindow"
 import { BingMarker } from "../models/bingmarker";
+import { Layer } from "../models/layer";
+import { BingLayer } from "../models/binglayer";
 import { BingInfoWindow } from "../models/binginfowindow";
+import { ILayerOptions} from "../interfaces/ilayeroptions"; 
 import { IMapOptions } from "../interfaces/imapoptions";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IPoint } from "../interfaces/ipoint";
 import { IMarkerOptions } from "../interfaces/imarkeroptions";
 import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
 import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
-import { } from "@types/bingmaps";
-
 
 ///
 /// Wrapper class that handles the communication with the Bing Maps Javascript
@@ -38,7 +39,7 @@ export class BingMapService implements MapService {
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
             if (this._mapInstance != null) this.DisposeMap();
-            let o: Microsoft.Maps.MapOptions = BingConversions.TranslateOptions(mapOptions);
+            let o: Microsoft.Maps.IMapLoadOptions = BingConversions.TranslateLoadOptions(mapOptions);
             if (!o.credentials) o.credentials = this._config.apiKey;
             let map = new Microsoft.Maps.Map(el, o);
             this._mapInstance = map;
@@ -59,7 +60,7 @@ export class BingMapService implements MapService {
     public LocationToPoint(loc: ILatLong): Promise<IPoint> {
         return this._map.then((m: Microsoft.Maps.Map) => {
             let l: Microsoft.Maps.Location = BingConversions.TranslateLocation(loc);
-            let p: Microsoft.Maps.Point = m.tryLocationToPixel(l, Microsoft.Maps.PixelReference.control);
+            let p: Microsoft.Maps.Point = <Microsoft.Maps.Point>m.tryLocationToPixel(l, Microsoft.Maps.PixelReference.control);
             if (p != null) return { x: p.x, y: p.y };
             return null;
         })
@@ -67,15 +68,26 @@ export class BingMapService implements MapService {
 
     public SetViewOptions(options: IMapOptions) {
         this._map.then((m: Microsoft.Maps.Map) => {
-            let o: Microsoft.Maps.ViewOptions = BingConversions.TranslateViewOptions(options);
+            let o: Microsoft.Maps.IViewOptions = BingConversions.TranslateViewOptions(options);
             m.setView(o);
         });
     }
 
     public SetMapOptions(options: IMapOptions) {
         this._map.then((m: Microsoft.Maps.Map) => {
-            let o: Microsoft.Maps.MapOptions = BingConversions.TranslateOptions(options);
+            let o: Microsoft.Maps.IMapOptions = BingConversions.TranslateOptions(options);
             m.setOptions(o);
+        });
+    }
+
+    ///
+    /// Creates a Bing map layer with the map context
+    ///
+    public CreateLayer(options: ILayerOptions): Promise<Layer> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            let layer: Microsoft.Maps.Layer = new Microsoft.Maps.Layer(options.id.toString());
+            map.layers.insert(layer);
+            return new BingLayer(layer, this);
         });
     }
 
@@ -85,7 +97,7 @@ export class BingMapService implements MapService {
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             let loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
-            let o: Microsoft.Maps.PushpinOptions = BingConversions.TranslateMarkerOptions(options);
+            let o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
             if (o.icon == null) {
                 let s: number = 48;
                 let iconInfo: IMarkerIconInfo = {
@@ -125,6 +137,12 @@ export class BingMapService implements MapService {
             infoBox.setMap(map);
             return new BingInfoWindow(infoBox);
         });
+    }
+
+    public DeleteLayer(layer: Layer): Promise<void> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            map.layers.remove(layer.NativePrimitve);
+        });        
     }
 
     public SubscribeToMapEvent<E>(eventName: string): Observable<E> {

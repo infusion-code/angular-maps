@@ -3,6 +3,8 @@ import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
 
 export abstract class InfoWindow {
     
+    public abstract get NativePrimitve(): any;
+
     public abstract Close(): void ;
     public abstract GetPosition(): ILatLong;
     public abstract Open(): void ;

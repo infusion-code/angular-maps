@@ -4,6 +4,7 @@ import { MapService } from "../services/mapservice";
 import { MarkerService } from "../services/markerservice";
 import { BingMarkerService } from "../services/bingmarkerservice";
 import { InfoBoxService } from "../services/infoboxservice";
+import { LayerService } from "../services/layerservice";
 import { BingInfoBoxService } from "../services/binginfoboxservice";
 import { BingMapService } from "../services/bingmapservice";
 import { ILatLong } from "../interfaces/ilatlong";
@@ -35,21 +36,10 @@ import { MapTypeId } from "../models/maptypeid";
 @Component({
     selector: 'x-map',
     providers: [
-        {
-            provide: MapService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => {
-                return f.Create();
-            }
-        },
-        {
-            provide: MarkerService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => {
-                return f.CreateMarkerService();
-            }
-        }, 
-        {
-            provide: InfoBoxService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => {
-                return f.CreateInfoBoxService();
-            }
-        } 
+        { provide: MapService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.Create() },
+        { provide: MarkerService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateMarkerService() }, 
+        { provide: InfoBoxService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateInfoBoxService() },
+        { provide: LayerService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateLayerService() }  
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -71,6 +61,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     private _clickTimeout: number | NodeJS.Timer;
     private _options: IMapOptions = {};
     private _box: IBox = null;
+    private _mapPromise: Promise<void>;
 
     @ViewChild('container') _container: ElementRef;
 
@@ -155,15 +146,17 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
-        if (changes['Box']) {
-            if (this._box != null) {
-                this._mapService.SetViewOptions(<IMapOptions>{
-                    bounds: this._box
-                });
+        if(this._mapPromise){
+            if (changes['Box']) {
+                if (this._box != null) {
+                    this._mapService.SetViewOptions(<IMapOptions>{
+                        bounds: this._box
+                    });
+                }
             }
-        }
-        if (changes['Options']) {
-            this._mapService.SetMapOptions(this._options);
+            if (changes['Options']) {
+                this._mapService.SetMapOptions(this._options);
+            }
         }
     }
 
@@ -190,7 +183,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
         if (this._options.center == null) this._options.center = { latitude: this._latitude, longitude: this._longitude }
         if (this._options.zoom == null) this._options.zoom = this._zoom;
         if (this._options.mapTypeId == null) this._options.mapTypeId = MapTypeId.aerial;
-        this._mapService.CreateMap(el, this._options);
+        this._mapPromise = this._mapService.CreateMap(el, this._options);
         this.HandleMapCenterChange();
         this.HandleMapZoomChange();
         this.HandleMapClickEvents();
