@@ -2,6 +2,7 @@
 import { IPoint } from "../interfaces/ipoint";
 import { IMarkerOptions } from "../interfaces/Imarkeroptions";
 import { Marker } from "./Marker";
+import { BingMapService } from "../services/bingmapservice";
 import { BingConversions } from "../services/bingconversions";
 
 export class BingMarker implements Marker  {

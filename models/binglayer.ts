@@ -1,6 +1,7 @@
 import { Layer } from "./layer";
 import { Marker } from "./marker";
 import { InfoWindow } from "./infowindow";
+import { BingMapService } from "../services/bingmapservice";
 import { MapService} from "../services/mapservice";
 
 export class BingLayer implements Layer {

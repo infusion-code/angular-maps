@@ -1,13 +1,13 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { InfoWindow } from '../models/infowindow';
-import { BingInfoWindow } from "../models/binginfowindow";
 import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
 import { ILatLong } from "../interfaces/ilatlong";
 import { InfoBoxAction } from "../components/infoboxaction";
 import { InfoBoxService } from "./infoboxservice";
 import { MapService } from "../services/mapservice";
 import { InfoBox  } from "../components/infobox";
-//import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
+import { BingMapService } from "./bingmapservice";
+import { BingInfoWindow } from "../models/binginfowindow";
 
 @Injectable()
 export class BingInfoBoxService implements InfoBoxService {

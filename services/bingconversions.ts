@@ -7,7 +7,7 @@ import { IInfoWindowAction } from "../interfaces/iinfowindowaction";
 import { IPoint } from "../interfaces/ipoint";
 import { MapTypeId } from "../models/maptypeid";
 import { Marker } from "../models/marker";
-//import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
+import { BingMapService } from "./bingmapservice";
 
 export class BingConversions {
 

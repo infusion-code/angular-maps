@@ -9,8 +9,8 @@ import { MarkerService } from "../services/markerservice";
 import { MapService } from "../services/mapservice";
 import { LayerService } from "../services/layerservice";
 import { Marker } from "../models/marker";
-import { BingConversions } from "../services/bingconversions";
-import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
+import { BingMapService } from "./bingmapservice";
+import { BingConversions } from "./bingconversions";
 
 @Injectable()
 export class BingMarkerService implements MarkerService {

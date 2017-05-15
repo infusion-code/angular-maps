@@ -7,6 +7,7 @@ import { Layer } from '../models/layer';
 import { MarkerTypeId } from "../models/markertypeid";
 import { MapService } from "./mapservice";
 import { MapLayer } from "../components/mapLayer";
+import { BingMapService } from "./bingmapservice";
 import { BingConversions } from "./bingconversions";
 
 @Injectable()
