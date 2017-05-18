@@ -2,11 +2,9 @@
 import { MapServiceFactory } from "../services/mapservicefactory";
 import { MapService } from "../services/mapservice";
 import { MarkerService } from "../services/markerservice";
-import { BingMarkerService } from "../services/bingmarkerservice";
 import { InfoBoxService } from "../services/infoboxservice";
 import { LayerService } from "../services/layerservice";
-import { BingInfoBoxService } from "../services/binginfoboxservice";
-import { BingMapService } from "../services/bingmapservice";
+import { ClusterService } from "../services/clusterservice";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IBox } from "../interfaces/ibox";
 import { IMapOptions } from "../interfaces/imapoptions";
@@ -37,9 +35,10 @@ import { MapTypeId } from "../models/maptypeid";
     selector: 'x-map',
     providers: [
         { provide: MapService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.Create() },
-        { provide: MarkerService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateMarkerService() }, 
-        { provide: InfoBoxService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateInfoBoxService() },
-        { provide: LayerService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.CreateLayerService() }  
+        { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: (f: MapServiceFactory, m:MapService, l:LayerService, c:ClusterService) => f.CreateMarkerService(m, l, c) }, 
+        { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateInfoBoxService(m) },
+        { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateLayerService(m) },
+        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateClusterService(m) }   
     ],
     template: `
         <div #container class='map-container-inner'></div>

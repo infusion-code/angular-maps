@@ -5,7 +5,7 @@ import { MapMarker } from "./mapmarker";
 let layerId:number = 0;
 
 ///
-/// MapMarker renders a map marker inside a {@link Map}.
+/// MapLayer creates a layer on a {@link Map}.
 ///
 /// ### Example
 /// ```typescript
@@ -33,9 +33,9 @@ let layerId:number = 0;
     selector: 'map-layer',
 })
 export class MapLayer implements OnInit, OnDestroy, OnChanges {
-    private _visible: boolean = true;
-    private _addedToManager: boolean = false;
-    private _id: number;
+    protected _visible: boolean = true;
+    protected _addedToManager: boolean = false;
+    protected _id: number;
 
     @ContentChildren(MapMarker) _markers: Array<MapMarker>;
 
@@ -45,7 +45,7 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges {
 
     public get Id(): number { return this._id; }
 
-    constructor(private _layerService: LayerService) {
+    constructor(protected _layerService: LayerService) {
         this._id = layerId++
     }
 
@@ -65,7 +65,7 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges {
 
     public ngAfterContentInit():void {
         this._markers.forEach((m:MapMarker) => {
-            m.InCustomLayer = true
+            m.InCustomLayer = true;
             m.LayerId = this._id;
         });
     }

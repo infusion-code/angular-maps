@@ -8,6 +8,7 @@ import { MapMarker } from "../components/mapmarker";
 import { MarkerService } from "../services/markerservice";
 import { MapService } from "../services/mapservice";
 import { LayerService } from "../services/layerservice";
+import { ClusterService } from "../services/clusterservice";
 import { Marker } from "../models/marker";
 import { BingMapService } from "./bingmapservice";
 import { BingConversions } from "./bingconversions";
@@ -17,7 +18,7 @@ export class BingMarkerService implements MarkerService {
 
     private _markers: Map<MapMarker, Promise<Marker>> = new Map<MapMarker, Promise<Marker>>();
 
-    constructor(private _mapService: MapService, private _layerService: LayerService, private _zone: NgZone) { }
+    constructor(private _mapService: MapService, private _layerService: LayerService, private _clusterService: ClusterService, private _zone: NgZone) { }
 
     public AddMarker(marker: MapMarker) {
         let o: IMarkerOptions = {
@@ -31,7 +32,13 @@ export class BingMarkerService implements MarkerService {
         if (marker.width) o.width = marker.width;
         if (marker.height) o.height = marker.height;
         if (marker.anchor) o.anchor = marker.anchor;
-        const markerPromise = marker.InCustomLayer? this._layerService.CreateMarker(marker.LayerId, o) : this._mapService.CreateMarker(o);
+
+        // create marker via promise.
+        let markerPromise: Promise<Marker> = null;
+        if(marker.InClusterLayer) markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
+        else if(marker.InCustomLayer) markerPromise = this._layerService.CreateMarker(marker.LayerId, o);
+        else markerPromise = this._mapService.CreateMarker(o);
+
         this._markers.set(marker, markerPromise);
         if (marker.iconInfo) markerPromise.then((m: Marker) => {
             // update iconInfo to provide hook to do post icon creation activities and

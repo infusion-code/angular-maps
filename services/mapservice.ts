@@ -27,6 +27,8 @@ export abstract class MapService {
 
     abstract CreateLayer(options: ILayerOptions): Promise<Layer>;
 
+    abstract CreateClusterLayer(options: ILayerOptions): Promise<Layer>;
+
     abstract CreateMarker(options: IMarkerOptions): Promise<Marker>;
 
     abstract CreateInfoWindow(options?: IInfoWindowOptions): Promise<InfoWindow>;

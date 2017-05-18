@@ -108,11 +108,15 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit, AfterV
     /// 
     @ContentChild(InfoBox) private _infoBox: InfoBox;
     private _inCustomLayer: boolean = false;
+    private _inClusterLayer: boolean = false;
     private _markerAddedToManger: boolean = false;
     private _id: string;
     private _layerId: number;
 
     public get Id(): string { return this._id; }
+
+    public get InClusterLayer(): boolean { return this._inClusterLayer; }
+    public set InClusterLayer(val: boolean) { this._inClusterLayer = val; }
 
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
     public set InCustomLayer(val: boolean) { this._inCustomLayer = val; }

@@ -15,6 +15,7 @@ import { IBox } from "./interfaces/ibox";
 import { IMarkerEvent } from "./interfaces/imarkerevent";
 import { IMarkerIconInfo } from "./interfaces/imarkericoninfo";
 import { ILayerOptions } from "./interfaces/ilayeroptions";
+import { IClusterOptions } from "./interfaces/iclusteroptions";
 
 ///
 /// import module models
@@ -27,6 +28,7 @@ import { BingMarker } from "./models/bingmarker";
 import { MapTypeId } from "./models/maptypeid";
 import { Layer } from "./models/layer";
 import { BingLayer } from "./models/binglayer"; 
+import { BingClusterLayer } from "./models/bingclusterlayer";
 
 ///
 /// import module components
@@ -36,6 +38,7 @@ import { MapMarker } from "./components/mapmarker";
 import { InfoBox } from "./components/infobox";
 import { InfoBoxAction } from "./components/infoboxaction"
 import { MapLayer } from "./components/maplayer";
+import { ClusterLayer } from "./components/clusterlayer";
 
 ///
 /// import module services
@@ -44,21 +47,23 @@ import { MapServiceFactory } from "./services/mapservicefactory";
 import { MapService } from "./services/mapservice";
 import { MapAPILoader, WindowRef, DocumentRef } from "./services/mapapiloader";
 import { InfoBoxService } from "./services/infoboxservice";
+import { LayerService } from  "./services/layerservice";
+import { ClusterService } from "./services/clusterservice";
 import { BingMapServiceFactory } from "./services/bingmapservicefactory";
 import { BingMapService } from "./services/bingmapservice";
 import { BingMapAPILoader, BingMapAPILoaderConfig } from "./services/bingmapapiloader";
 import { BingInfoBoxService } from "./services/binginfoboxservice";
-import { LayerService } from  "./services/layerservice";
 import { BingLayerService  } from "./services/binglayerservice";
+import { BingClusterService  } from "./services/bingclusterservice";
 
 ///
 /// export publics components, models, interfaces etc for external reuse.
 ///
 export {
-    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IMarkerIconInfo, ILayerOptions,
-    Map, InfoBox, MapMarker, InfoBoxAction, MapLayer,
-    MapService, MapServiceFactory,  InfoBoxService, MapAPILoader, BingMapAPILoaderConfig, WindowRef, DocumentRef, LayerService, 
-    BingMapServiceFactory, BingMapService, BingInfoBoxService, BingMapAPILoader, BingLayerService,
+    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IMarkerIconInfo, ILayerOptions, IClusterOptions,
+    Map, InfoBox, MapMarker, InfoBoxAction, MapLayer, ClusterLayer,
+    MapService, MapServiceFactory,  InfoBoxService, MapAPILoader, BingMapAPILoaderConfig, WindowRef, DocumentRef, LayerService, ClusterService,
+    BingMapServiceFactory, BingMapService, BingInfoBoxService, BingMapAPILoader, BingLayerService, BingClusterService, 
     MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, 
     BingLayer, BingMarker, BingInfoWindow
 }
@@ -67,9 +72,9 @@ export {
 /// define module
 ///
 @NgModule({
-    declarations: [Map, MapMarker, InfoBox, InfoBoxAction, MapLayer ],
+    declarations: [Map, MapMarker, InfoBox, InfoBoxAction, MapLayer, ClusterLayer ],
     imports: [ CommonModule ],
-    exports: [ CommonModule, Map, MapMarker, InfoBox, InfoBoxAction, MapLayer ]
+    exports: [ CommonModule, Map, MapMarker, InfoBox, InfoBoxAction, MapLayer, ClusterLayer ]
 })
 export class MapModule {
 

@@ -1,7 +1,7 @@
 ﻿import { Injectable, NgZone } from "@angular/core";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
-import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps";
+import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All";
 
 import { MapService } from "./mapservice";
 import { MapAPILoader } from "./mapapiloader";
@@ -13,8 +13,10 @@ import { InfoWindow } from "../models/infowindow"
 import { BingMarker } from "../models/bingmarker";
 import { Layer } from "../models/layer";
 import { BingLayer } from "../models/binglayer";
+import { BingClusterLayer } from "../models/bingclusterlayer";
 import { BingInfoWindow } from "../models/binginfowindow";
 import { ILayerOptions} from "../interfaces/ilayeroptions"; 
+import { IClusterOptions } from "../interfaces/iclusteroptions";
 import { IMapOptions } from "../interfaces/imapoptions";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IPoint } from "../interfaces/ipoint";
@@ -90,6 +92,25 @@ export class BingMapService implements MapService {
             let layer: Microsoft.Maps.Layer = new Microsoft.Maps.Layer(options.id.toString());
             map.layers.insert(layer);
             return new BingLayer(layer, this);
+        });
+    }
+
+    ///
+    /// Creates a Bing map cluster layer with the map context
+    ///
+    public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            let p: Promise<Layer> = new Promise<Layer>( resolve => {
+                Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", () => {
+                    let o:Microsoft.Maps.IClusterLayerOptions = BingConversions.TranslateClusterOptions(options);
+                    let layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer( new Array<Microsoft.Maps.Pushpin>(), o);
+                    let bl:BingClusterLayer;
+                    map.layers.insert(layer);
+                    bl = new BingClusterLayer(layer, this);
+                    resolve(bl);
+                });
+            });
+            return p;
         });
     }
 

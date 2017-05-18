@@ -2,6 +2,7 @@
 import { IBox } from "../interfaces/ibox";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IMarkerOptions } from "../interfaces/imarkeroptions";
+import { IClusterOptions } from "../interfaces/iclusteroptions";
 import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
 import { IInfoWindowAction } from "../interfaces/iinfowindowaction";
 import { IPoint } from "../interfaces/ipoint";
@@ -58,7 +59,6 @@ export class BingConversions {
         "zoom"
     ];
 
-
     private static _infoWindowOptionsAttributes: string[] = [
         "actions",
         "description",
@@ -94,6 +94,15 @@ export class BingConversions {
         "zIndex"
     ];
 
+    private static _clusterOptionsAttributes: string[] = [
+        "callback",
+        "clusteredPinCallback",
+        "clusteringEnabled",
+        "gridSize",
+        "layerOffset",
+        "visible",
+        "zIndex"
+    ];
 
     public static TranslateAction(action: IInfoWindowAction): Microsoft.Maps.IInfoboxActions {
         let a: Microsoft.Maps.IInfoboxActions = {
@@ -112,6 +121,17 @@ export class BingConversions {
     public static TranslateBounds(box: IBox): Microsoft.Maps.LocationRect {
         let r: Microsoft.Maps.LocationRect = Microsoft.Maps.LocationRect.fromEdges(box.maxLatitude, box.minLongitude, box.minLatitude, box.maxLongitude);
         return r;
+    }
+
+    public static TranslateClusterOptions(options: IClusterOptions): Microsoft.Maps.IClusterLayerOptions {
+        let o: Microsoft.Maps.IClusterLayerOptions | any = {};
+        Object.keys(options)
+            .filter(k => BingConversions._clusterOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k == "layerOffset") o.layerOffset = BingConversions.TranslatePoint(options.layerOffset);
+                else o[k] = (<any>options)[k];
+            });
+        return o;
     }
 
     public static TranslateInfoBoxOptions(options: IInfoWindowOptions): Microsoft.Maps.IInfoboxOptions {

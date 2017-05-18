@@ -5,38 +5,35 @@ import { MapAPILoader } from "./mapapiloader";
 import { MarkerService } from "./markerservice";
 import { InfoBoxService } from "./infoboxservice";
 import { LayerService } from "./layerservice";
+import { ClusterService } from "./clusterservice";
 import { BingInfoBoxService } from "./binginfoboxservice";
 import { BingMarkerService } from "./bingmarkerservice";
 import { BingMapService } from "./bingmapservice";
 import { BingLayerService } from "./binglayerservice";
+import { BingClusterService } from "./bingclusterservice";
 
 @Injectable()
 export class BingMapServiceFactory implements MapServiceFactory {
 
-    private _mapService: BingMapService = null;
-    private _layerService: BingLayerService = null;
-
     constructor(private _loader: MapAPILoader, private _zone: NgZone) { }
 
     public Create(): MapService {
-        if (this._mapService == null) this._mapService = new BingMapService(this._loader, this._zone);
-        return this._mapService; 
+        return new BingMapService(this._loader, this._zone);
     }
 
-    public CreateMarkerService(): MarkerService {
-        if (this._mapService == null) this.Create();
-        if (this._layerService == null) this.CreateLayerService();
-        return new BingMarkerService(this._mapService, this._layerService, this._zone);
+    public CreateMarkerService(_mapService: BingMapService, _layerService: BingLayerService, _clusterService: BingClusterService): MarkerService {
+        return new BingMarkerService(_mapService, _layerService, _clusterService, this._zone);
     }
 
-    public CreateInfoBoxService(): InfoBoxService {
-        if (this._mapService == null) this.Create();
-        return new BingInfoBoxService(this._mapService, this._zone);
+    public CreateInfoBoxService(_mapService: BingMapService): InfoBoxService {
+        return new BingInfoBoxService(_mapService, this._zone);
     }
 
-    public CreateLayerService(): LayerService {
-        if (this._mapService == null) this.Create();
-        this._layerService = new BingLayerService(this._mapService, this._zone);
-        return this._layerService;
+    public CreateLayerService(_mapService: BingMapService): LayerService {
+        return new BingLayerService(_mapService, this._zone);
+    }
+
+    public CreateClusterService(_mapService: BingMapService): ClusterService {
+        return new BingClusterService(_mapService, this._zone);
     }
 }

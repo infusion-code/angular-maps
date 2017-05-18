@@ -1,3 +1,4 @@
+import { ILayerOptions } from "../interfaces/ilayeroptions";
 import { Layer } from "./layer";
 import { Marker } from "./marker";
 import { InfoWindow } from "./infowindow";
@@ -27,6 +28,13 @@ export class BingLayer implements Layer {
         this._layer.dispose();
     }
     
+    public GetOptions(): ILayerOptions{
+        let o: ILayerOptions = {
+            id: Number(this._layer.getId())
+        };
+        return o;
+    }
+
     public GetVisible(): boolean  {
         return this._layer.getVisible();
     }
@@ -41,6 +49,10 @@ export class BingLayer implements Layer {
         this._layer.setPrimitives(p);
     }
     
+    public SetOptions(options: ILayerOptions){
+        this._layer.id = options.id.toString();
+    }
+
     public SetVisible(visible: boolean): void {
         this._layer.setVisible(visible);
     }
