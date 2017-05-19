@@ -1,4 +1,4 @@
-﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, AfterViewInit } from '@angular/core';
+﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, Inject, forwardRef } from '@angular/core';
 import { IPoint } from "../interfaces/ipoint";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IMarkerEvent } from "../interfaces/imarkerevent";
@@ -36,7 +36,7 @@ let markerId:number = 0;
     inputs: ['latitude', 'longitude', 'title', 'label', 'draggable: markerDraggable', 'iconUrl', 'width', 'height', 'anchor', 'iconInfo'],
     outputs: ['MarkerClick', 'DragEnd','DynamicMarkerCreated']
 })
-export class MapMarker implements OnDestroy, OnChanges, AfterContentInit, AfterViewInit {
+export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
 
     ///
     /// Icon anchor relative to marker root 
@@ -132,21 +132,13 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit, AfterV
         return this._markerService.LocationToPoint(this);
     } 
 
-    public ngOnDestroy() { this._markerService.DeleteMarker(this); }
-
     public ngAfterContentInit() {
         if (this._infoBox != null) {
             this._infoBox.hostMarker = this;
         }
     }
 
-    public ngAfterViewInit() {
-        if (!this._markerAddedToManger) {
-            this._markerService.AddMarker(this);
-            this._markerAddedToManger = true;
-            this.AddEventListeners();
-        }
-    }
+    public ngOnDestroy() { this._markerService.DeleteMarker(this); }
 
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (typeof this.latitude !== 'number' || typeof this.longitude !== 'number') {
@@ -170,6 +162,14 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit, AfterV
         }
         if (changes['anchor']) {
             this._markerService.UpdateAnchor(this);
+        }
+    }
+
+    public RegisterWithService(): void{
+        if (!this._markerAddedToManger) {
+            this._markerService.AddMarker(this);
+            this._markerAddedToManger = true;
+            this.AddEventListeners();
         }
     }
 

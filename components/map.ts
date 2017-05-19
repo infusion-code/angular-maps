@@ -1,4 +1,4 @@
-﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy, SimpleChange, ViewChild, Input, ElementRef } from "@angular/core";
+﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy, AfterContentInit, SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from "@angular/core";
 import { MapServiceFactory } from "../services/mapservicefactory";
 import { MapService } from "../services/mapservice";
 import { MarkerService } from "../services/markerservice";
@@ -9,6 +9,7 @@ import { ILatLong } from "../interfaces/ilatlong";
 import { IBox } from "../interfaces/ibox";
 import { IMapOptions } from "../interfaces/imapoptions";
 import { MapTypeId } from "../models/maptypeid";
+import { MapMarker } from "./mapmarker";
 
 ///
 /// Map renders a Bing Map.
@@ -46,14 +47,13 @@ import { MapTypeId } from "../models/maptypeid";
             <ng-content></ng-content>
         </div>
     `,
-    outputs: ['MapClick', 'MapRightClick', 'MapDblClick', 'ViewChange', 'ZoomChange', 'CenterChange'],
     host: { '[class.map-container]': 'true' },
     styles: [`
         .map-container-inner { width: inherit; height: inherit; }
         .map-content { display:none; }
     `]
 })
-export class Map implements OnChanges, OnInit, OnDestroy {
+export class Map implements OnChanges, OnInit, OnDestroy, AfterContentInit {
     private _longitude: number = 0;
     private _latitude: number = 0;
     private _zoom: number = 0;
@@ -62,14 +62,8 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     private _box: IBox = null;
     private _mapPromise: Promise<void>;
 
-    @ViewChild('container') _container: ElementRef;
-
-    ///
-    /// Map Options
-    ///
-    @Input()
-    public set Options(val: IMapOptions) { this._options = val; }
-    public get Options(): IMapOptions { return this._options };
+    @ViewChild('container') private _container: ElementRef;
+    @ContentChildren(MapMarker) private _markers: Array<MapMarker>;
 
     ///
     /// Maximum and minimum bounding box for map. 
@@ -79,32 +73,32 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     public get Box(): IBox { return this._box; }
 
     ///
-    /// This event emitter gets emitted when the user clicks on the map (but not when they click on a
-    /// marker or infoWindow).
+    /// Sets the latitude that sets the center of the map.
     ///
-    MapClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Input()
+    public set Latitude(value: number | string) {
+        this._latitude = this.ConvertToDecimal(value);
+        this.UpdateCenter();
+    }
+    public get Latitude(): number | string { return this._longitude; }
 
     ///
-    /// This event emitter gets emitted when the user right-clicks on the map (but not when they click
-    /// on a marker or infoWindow).
+    /// Sets the longitude that sets the center of the map.
     ///
-    MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Input()
+    public set Longitude(value: number | string) {
+        this._longitude = this.ConvertToDecimal(value);
+        this.UpdateCenter();
+    }
+    public get Longitude(): number| string { return this._longitude; }
 
     ///
-    /// This event emitter gets emitted when the user double-clicks on the map (but not when they click
-    /// on a marker or infoWindow).
+    /// Map Options
     ///
-    MapDblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Input()
+    public set Options(val: IMapOptions) { this._options = val; }
+    public get Options(): IMapOptions { return this._options };
 
-    ///
-    /// This event emitter is fired when the map center changes.
-    ///
-    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
-
-    ///
-    /// This event emiiter is fired when the map zoom changes
-    ///
-    ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
 
     ///
     /// Sets the zoom level of the map. The default value is `8`.
@@ -119,26 +113,45 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     public get Zoom(): number | string { return this._zoom; }
 
     ///
-    /// Sets the longitude that sets the center of the map.
+    /// This event emitter gets emitted when the user clicks on the map (but not when they click on a
+    /// marker or infoWindow).
     ///
-    @Input()
-    public set Longitude(value: number | string) {
-        this._longitude = this.ConvertToDecimal(value);
-        this.UpdateCenter();
-    }
-    public get Longitude(): number| string { return this._longitude; }
+    @Output()
+    MapClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     ///
-    /// Sets the latitude that sets the center of the map.
+    /// This event emitter gets emitted when the user right-clicks on the map (but not when they click
+    /// on a marker or infoWindow).
     ///
-    @Input()
-    public set Latitude(value: number | string) {
-        this._latitude = this.ConvertToDecimal(value);
-        this.UpdateCenter();
-    }
-    public get Latitude(): number | string { return this._longitude; }
+    @Output()
+    MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
-    constructor(private _mapService: MapService) {}
+    ///
+    /// This event emitter gets emitted when the user double-clicks on the map (but not when they click
+    /// on a marker or infoWindow).
+    ///
+    @Output()
+    MapDblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    ///
+    /// This event emitter is fired when the map center changes.
+    ///
+    @Output()
+    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
+
+    ///
+    /// This event emiiter is fired when the map zoom changes
+    ///
+    @Output()
+    ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
+
+    constructor(private _mapService: MapService) { }
+
+    public ngAfterContentInit():void {
+       this._markers.forEach((m:MapMarker) => {
+            m.RegisterWithService();
+        });
+    }
 
     public ngOnInit() {
         this.InitMapInstance(this._container.nativeElement);
@@ -250,3 +263,4 @@ export class Map implements OnChanges, OnInit, OnDestroy {
         });
     }
 }
+

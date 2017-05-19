@@ -1,4 +1,4 @@
-﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
+﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
 import { LayerService } from "../services/layerservice";
 import { MapMarker } from "./mapmarker";
 
@@ -32,12 +32,12 @@ let layerId:number = 0;
 @Directive({
     selector: 'map-layer',
 })
-export class MapLayer implements OnInit, OnDestroy, OnChanges {
+export class MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit {
     protected _visible: boolean = true;
     protected _addedToManager: boolean = false;
     protected _id: number;
 
-    @ContentChildren(MapMarker) _markers: Array<MapMarker>;
+    @ContentChildren(MapMarker) protected _markers: Array<MapMarker>;
 
     @Input()
     public get Visible(): boolean { return this._visible; }
@@ -64,9 +64,10 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges {
     }
 
     public ngAfterContentInit():void {
-        this._markers.forEach((m:MapMarker) => {
+       this._markers.forEach((m:MapMarker) => {
             m.InCustomLayer = true;
             m.LayerId = this._id;
+            m.RegisterWithService();
         });
     }
 

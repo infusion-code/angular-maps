@@ -1,4 +1,4 @@
-﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
+﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
 import { Marker } from "../models/marker";
 import { Layer } from "../models/layer";
 import { IPoint } from "../interfaces/ipoint";
@@ -38,7 +38,7 @@ let layerId:number = 0;
 @Directive({
     selector: 'cluster-layer',
 })
-export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges {
+export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit {
     private _clusteringEnabled: boolean = true;
     private _zIndex: number;
     private _gridSize: number;
@@ -82,6 +82,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
             m.InCustomLayer = false;
             m.InClusterLayer = true;
             m.LayerId = this._id;
+            m.RegisterWithService();
         });
     }
 
