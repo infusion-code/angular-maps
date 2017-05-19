@@ -1,10 +1,13 @@
-﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, Inject, forwardRef } from '@angular/core';
+﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, ViewContainerRef } from '@angular/core';
 import { IPoint } from "../interfaces/ipoint";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IMarkerEvent } from "../interfaces/imarkerevent";
 import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
 import { MarkerService } from '../services/markerservice';
 import { InfoBox } from './infobox';
+import { Map } from './map';
+import { MapLayer } from "./maplayer";
+import { ClusterLayer } from "./clusterlayer";
 
 let markerId:number = 0;
 
@@ -113,18 +116,13 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     private _id: string;
     private _layerId: number;
 
+    public get AddedToManager():boolean { return this._markerAddedToManger; }
     public get Id(): string { return this._id; }
-
     public get InClusterLayer(): boolean { return this._inClusterLayer; }
-    public set InClusterLayer(val: boolean) { this._inClusterLayer = val; }
-
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
-    public set InCustomLayer(val: boolean) { this._inCustomLayer = val; }
-
     public get LayerId(): number { return this._layerId; }
-    public set LayerId(val: number) { this._layerId = val; }
 
-    constructor(private _markerService: MarkerService) {
+    constructor(private _markerService: MarkerService, private _containerRef: ViewContainerRef) {
         this._id = (markerId++).toString();
     }
 
@@ -133,8 +131,17 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     } 
 
     public ngAfterContentInit() {
-        if (this._infoBox != null) {
-            this._infoBox.hostMarker = this;
+        if (this._infoBox != null)  this._infoBox.hostMarker = this;
+        if (this._containerRef.element.nativeElement.parentElement){
+            let parentName:string =this._containerRef.element.nativeElement.parentElement.tagName;
+            if (parentName.toLowerCase() == "cluster-layer") { this._inClusterLayer = true; }
+            else if (parentName.toLowerCase() == "map-layer") { this._inCustomLayer = true; }
+            this._layerId = Number(this._containerRef.element.nativeElement.parentElement.attributes["layerId"]);
+        }
+        if (!this._markerAddedToManger) {
+            this._markerService.AddMarker(this);
+            this._markerAddedToManger = true;
+            this.AddEventListeners();
         }
     }
 
@@ -162,14 +169,6 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
         }
         if (changes['anchor']) {
             this._markerService.UpdateAnchor(this);
-        }
-    }
-
-    public RegisterWithService(): void{
-        if (!this._markerAddedToManger) {
-            this._markerService.AddMarker(this);
-            this._markerAddedToManger = true;
-            this.AddEventListeners();
         }
     }
 

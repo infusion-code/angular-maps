@@ -1,4 +1,4 @@
-﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
+﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange, ContentChildren, Input, ElementRef, ViewContainerRef } from "@angular/core";
 import { Marker } from "../models/marker";
 import { Layer } from "../models/layer";
 import { IPoint } from "../interfaces/ipoint";
@@ -7,8 +7,6 @@ import { IMarkerIconInfo} from "../interfaces/imarkericoninfo";
 import { ClusterService } from "../services/clusterservice";
 import { MapMarker } from "./mapmarker";
 import { MapLayer } from "./maplayer";
-
-let layerId:number = 0;
 
 ///
 /// Creates a cluster layer on a {@link Map}.
@@ -38,7 +36,7 @@ let layerId:number = 0;
 @Directive({
     selector: 'cluster-layer',
 })
-export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit {
+export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges {
     private _clusteringEnabled: boolean = true;
     private _zIndex: number;
     private _gridSize: number;
@@ -72,18 +70,8 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
 
 
 
-    constructor(_layerService: ClusterService) {
-        super(_layerService);
-        this._id = layerId++
-    }
-
-    public ngAfterContentInit():void {
-        this._markers.forEach((m:MapMarker) => {
-            m.InCustomLayer = false;
-            m.InClusterLayer = true;
-            m.LayerId = this._id;
-            m.RegisterWithService();
-        });
+    constructor(_layerService: ClusterService, _containerRef: ViewContainerRef) {
+        super(_layerService, _containerRef);
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {

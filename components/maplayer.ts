@@ -1,4 +1,4 @@
-﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange, ContentChildren, Input, ElementRef } from "@angular/core";
+﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange, ContentChildren, Input, ElementRef, ViewContainerRef } from "@angular/core";
 import { LayerService } from "../services/layerservice";
 import { MapMarker } from "./mapmarker";
 
@@ -32,10 +32,10 @@ let layerId:number = 0;
 @Directive({
     selector: 'map-layer',
 })
-export class MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit {
+export class MapLayer implements OnInit, OnDestroy, OnChanges {
     protected _visible: boolean = true;
     protected _addedToManager: boolean = false;
-    protected _id: number;
+    protected _id: number = layerId++;
 
     @ContentChildren(MapMarker) protected _markers: Array<MapMarker>;
 
@@ -45,11 +45,12 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit 
 
     public get Id(): number { return this._id; }
 
-    constructor(protected _layerService: LayerService) {
+    constructor(protected _layerService: LayerService, protected _containerRef: ViewContainerRef) {
         this._id = layerId++
     }
 
     public ngOnInit():void {
+        this._containerRef.element.nativeElement.attributes["layerId"] = this._id.toString();
         this._layerService.AddLayer(this);
         this._addedToManager = true;
     }
@@ -61,14 +62,6 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges, AfterContentInit 
                 l.SetVisible(!l.GetVisible());
             });
         }
-    }
-
-    public ngAfterContentInit():void {
-       this._markers.forEach((m:MapMarker) => {
-            m.InCustomLayer = true;
-            m.LayerId = this._id;
-            m.RegisterWithService();
-        });
     }
 
     public ngOnDestroy(): void {

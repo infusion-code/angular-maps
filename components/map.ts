@@ -1,4 +1,4 @@
-﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy, AfterContentInit, SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from "@angular/core";
+﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy, SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from "@angular/core";
 import { MapServiceFactory } from "../services/mapservicefactory";
 import { MapService } from "../services/mapservice";
 import { MarkerService } from "../services/markerservice";
@@ -53,7 +53,7 @@ import { MapMarker } from "./mapmarker";
         .map-content { display:none; }
     `]
 })
-export class Map implements OnChanges, OnInit, OnDestroy, AfterContentInit {
+export class Map implements OnChanges, OnInit, OnDestroy {
     private _longitude: number = 0;
     private _latitude: number = 0;
     private _zoom: number = 0;
@@ -147,12 +147,6 @@ export class Map implements OnChanges, OnInit, OnDestroy, AfterContentInit {
 
     constructor(private _mapService: MapService) { }
 
-    public ngAfterContentInit():void {
-       this._markers.forEach((m:MapMarker) => {
-            m.RegisterWithService();
-        });
-    }
-
     public ngOnInit() {
         this.InitMapInstance(this._container.nativeElement);
     }
@@ -195,6 +189,7 @@ export class Map implements OnChanges, OnInit, OnDestroy, AfterContentInit {
         if (this._options.center == null) this._options.center = { latitude: this._latitude, longitude: this._longitude }
         if (this._options.zoom == null) this._options.zoom = this._zoom;
         if (this._options.mapTypeId == null) this._options.mapTypeId = MapTypeId.aerial;
+        if (this._box != null) this._options.bounds = this._box;
         this._mapPromise = this._mapService.CreateMap(el, this._options);
         this.HandleMapCenterChange();
         this.HandleMapZoomChange();
