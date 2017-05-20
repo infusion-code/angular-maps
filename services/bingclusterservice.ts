@@ -28,7 +28,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         let options: IClusterOptions = {
             id: layer.Id,
             visible: layer.Visible,
-            clusteringEnabled: layer.ClusteringEnbabled,
+            clusteringEnabled: layer.ClusteringEnabled,
             placementMode: layer.ClusterPlacementMode
         };
         if(layer.GridSize) options.gridSize = layer.GridSize;
@@ -38,6 +38,18 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         if(layer.CustomMarkerCallback) options.clusteredPinCallback = (pin:Microsoft.Maps.ClusterPushpin) => { this.CreateCustomClusterPushPin(pin, layer); };
 
         const layerPromise = this._mapService.CreateClusterLayer(options);
+        (<BingMapService>this._mapService).MapPromise.then(m => {
+            Microsoft.Maps.Events.addHandler(m, "viewchangeend", (e) => {
+                if(layer.ClusteringEnabled && m.getZoom() == 19) layerPromise.then((l:BingClusterLayer) => {
+                    l.SetOptions({ id: layer.Id, clusteringEnabled: false })
+                });
+                if(layer.ClusteringEnabled && m.getZoom() < 19) layerPromise.then((l:BingClusterLayer) => {
+                    if(!l.GetOptions().clusteringEnabled) {
+                        l.SetOptions({ id: layer.Id, clusteringEnabled: true });
+                    }
+                });
+            })
+        });
         this._layers.set(layer, layerPromise);       
     }
 

@@ -60,8 +60,8 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         public set ClusterClickAction(val: ClusterClickAction) { this._clusterClickAction = val; }
 
     @Input()
-        public get ClusteringEnbabled():boolean  { return this._clusteringEnabled; }
-        public set ClusteringEnbabled(val: boolean) { this._clusteringEnabled = val; }
+        public get ClusteringEnabled():boolean  { return this._clusteringEnabled; }
+        public set ClusteringEnabled(val: boolean) { this._clusteringEnabled = val; }
 
     @Input()
         public get ClusterPlacementMode():ClusterPlacementMode  { return this._clusterPlacementMode; }
@@ -101,8 +101,8 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
             if(val) {
                 this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
                     return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
-                }  
-            }  
+                }   
+            } 
         }
 
     @Input()
