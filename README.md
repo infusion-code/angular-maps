@@ -23,6 +23,7 @@ To use angular-maps with the default Bing Map implementation, follow these three
 
 Import MapModule, MapAPILoader, BingMapAPILoaderConfig, BingMapAPILoader, WindowRef, DocumentRef, MapServiceFactory and BingMapServiceFactory (yeah, I know...) in your main app module (or a particular feature module, if you don't want it globally). 
 
+
 ```
     import { MapModule, MapAPILoader, BingMapAPILoaderConfig, BingMapAPILoader, WindowRef, DocumentRef, MapServiceFactory, BingMapServiceFactory } from "angular-maps";
 ```
@@ -69,6 +70,10 @@ is the loader (which is actually responsible to load the resources from the map 
                 provide: MapAPILoader, deps: [], useFactory: () => {
                     let bc: BingMapAPILoaderConfig = new BingMapAPILoaderConfig();
                     bc.apiKey ="..."; // your bing map key
+                    //bc.branch = "experimental"; 
+                        // to use the experimental bing brach. There are some bug fixes for
+                        // clustering in that branch you will need if you want to use 
+                        // clustering.
                     return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
                 }
             }
@@ -91,11 +96,11 @@ To use maps, create a simple component (or implement the below in an existin com
             <div style="height: 500px">
                 <x-map #xmap [Options]="_options">
                     <map-marker
-                        [latitude]="30" 
-                        [longitude]="90" 
-                        [title]="'My Marker'" 
-                        [iconUrl]="'https://cdn0.iconfinder.com/data/icons/industrial-icons/164/2-128.png'" 
-                        [iconInfo]="{
+                        [Latitude]="30" 
+                        [Longitude]="90" 
+                        [Title]="'My Marker'" 
+                        [IconUrl]="'https://cdn0.iconfinder.com/data/icons/industrial-icons/164/2-128.png'" 
+                        [IconInfo]="{
                             markerType: _markerTypeId.FontMarker,
                             fontName: 'FontAwesome',
                             fontSize: 48,
