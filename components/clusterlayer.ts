@@ -42,7 +42,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
-    private _useDynamicSizeMarker: boolean = true;
+    private _useDynamicSizeMarker: boolean = false;
     private _dynamicMarkerBaseSize: number = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number,string>([
         [10, 'rgba(255, 40, 40, 0.5)'],
