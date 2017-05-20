@@ -86,8 +86,10 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         public get UseDynamicSizeMarkers():boolean { return this._useDynamicSizeMarker; }
         public set UseDynamicSizeMarkers(val: boolean) { 
             this._useDynamicSizeMarker = val; 
-            this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
-                return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
+            if(val) {
+                this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
+                    return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
+                }
             }    
         }
 
