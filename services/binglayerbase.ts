@@ -50,6 +50,7 @@ export abstract class BingLayerBase {
             }
             let pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
             let marker:BingMarker =  new BingMarker(pushpin);
+            if(options.metadata) options.metadata.forEach((v,k) => marker.Metadata.set(k,v));
             l.AddEntity(marker);
             return marker;
         });

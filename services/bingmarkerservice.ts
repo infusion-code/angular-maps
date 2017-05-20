@@ -22,16 +22,17 @@ export class BingMarkerService implements MarkerService {
 
     public AddMarker(marker: MapMarker) {
         let o: IMarkerOptions = {
-            position: { latitude: marker.latitude, longitude: marker.longitude },
-            title: marker.title,
-            label: marker.label,
-            draggable: marker.draggable,
-            icon: marker.iconUrl,
-            iconInfo: marker.iconInfo
+            position: { latitude: marker.Latitude, longitude: marker.Longitude },
+            title: marker.Title,
+            label: marker.Label,
+            draggable: marker.Draggable,
+            icon: marker.IconUrl,
+            iconInfo: marker.IconInfo
         };
-        if (marker.width) o.width = marker.width;
-        if (marker.height) o.height = marker.height;
-        if (marker.anchor) o.anchor = marker.anchor;
+        if (marker.Width) o.width = marker.Width;
+        if (marker.Height) o.height = marker.Height;
+        if (marker.Anchor) o.anchor = marker.Anchor;
+        if (marker.Metadata) o.metadata = marker.Metadata;
 
         // create marker via promise.
         let markerPromise: Promise<Marker> = null;
@@ -40,7 +41,7 @@ export class BingMarkerService implements MarkerService {
         else markerPromise = this._mapService.CreateMarker(o);
 
         this._markers.set(marker, markerPromise);
-        if (marker.iconInfo) markerPromise.then((m: Marker) => {
+        if (marker.IconInfo) markerPromise.then((m: Marker) => {
             // update iconInfo to provide hook to do post icon creation activities and
             // also re-anchor the marker 
             marker.DynamicMarkerCreated.emit(o.iconInfo);
@@ -87,43 +88,43 @@ export class BingMarkerService implements MarkerService {
 
     public UpdateAnchor(marker: MapMarker): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => {
-            m.SetAnchor(marker.anchor);
+            m.SetAnchor(marker.Anchor);
         });
     }
 
     public UpdateMarkerPosition(marker: MapMarker): Promise<void> {
         return this._markers.get(marker).then(
             (m: Marker) => m.SetPosition({
-                latitude: marker.latitude,
-                longitude: marker.longitude
+                latitude: marker.Latitude,
+                longitude: marker.Longitude
             }));
     }
 
     public UpdateTitle(marker: MapMarker): Promise<void> {
-        return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.title));
+        return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.Title));
     }
 
     public UpdateLabel(marker: MapMarker): Promise<void> {
-        return this._markers.get(marker).then((m: Marker) => { m.SetLabel(marker.label); });
+        return this._markers.get(marker).then((m: Marker) => { m.SetLabel(marker.Label); });
     }
 
     public UpdateDraggable(marker: MapMarker): Promise<void> {
-        return this._markers.get(marker).then((m: Marker) => m.SetDraggable(marker.draggable));
+        return this._markers.get(marker).then((m: Marker) => m.SetDraggable(marker.Draggable));
     }
 
     public UpdateIcon(marker: MapMarker): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => {
-            if (marker.iconInfo) {
+            if (marker.IconInfo) {
                 let x: IMarkerOptions = {
-                    position: { latitude: marker.latitude, longitude: marker.longitude },
-                    iconInfo: marker.iconInfo
+                    position: { latitude: marker.Latitude, longitude: marker.Longitude },
+                    iconInfo: marker.IconInfo
                 }
                 let o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(x);
                 m.SetIcon(o.icon);
                 marker.DynamicMarkerCreated.emit(x.iconInfo);
             }
             else {
-                m.SetIcon(marker.iconUrl)
+                m.SetIcon(marker.IconUrl)
             }
 
         });

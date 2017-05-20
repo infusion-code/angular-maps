@@ -13,4 +13,5 @@ export interface IMarkerOptions {
     width?: number;
     height?: number;
     iconInfo?: IMarkerIconInfo;
+    metadata?: Map<string, any>;
 }

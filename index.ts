@@ -48,11 +48,13 @@ import { MapService } from "./services/mapservice";
 import { MapAPILoader, WindowRef, DocumentRef } from "./services/mapapiloader";
 import { InfoBoxService } from "./services/infoboxservice";
 import { LayerService } from  "./services/layerservice";
+import { MarkerService } from "./services/markerservice";
 import { ClusterService } from "./services/clusterservice";
 import { BingMapServiceFactory } from "./services/bingmapservicefactory";
 import { BingMapService } from "./services/bingmapservice";
 import { BingMapAPILoader, BingMapAPILoaderConfig } from "./services/bingmapapiloader";
 import { BingInfoBoxService } from "./services/binginfoboxservice";
+import { BingMarkerService } from "./services/bingmarkerservice";
 import { BingLayerService  } from "./services/binglayerservice";
 import { BingClusterService  } from "./services/bingclusterservice";
 
@@ -62,8 +64,8 @@ import { BingClusterService  } from "./services/bingclusterservice";
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IMarkerIconInfo, ILayerOptions, IClusterOptions,
     Map, InfoBox, MapMarker, InfoBoxAction, MapLayer, ClusterLayer,
-    MapService, MapServiceFactory,  InfoBoxService, MapAPILoader, BingMapAPILoaderConfig, WindowRef, DocumentRef, LayerService, ClusterService,
-    BingMapServiceFactory, BingMapService, BingInfoBoxService, BingMapAPILoader, BingLayerService, BingClusterService, 
+    MapService, MapServiceFactory, MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, ClusterService,
+    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingMapAPILoader, BingLayerService, BingClusterService, 
     MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, 
     BingLayer, BingMarker, BingInfoWindow
 }

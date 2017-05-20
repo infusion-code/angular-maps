@@ -76,7 +76,7 @@ export class BingInfoBoxService implements InfoBoxService {
                 });
             }
             if (info.latitude && info.longitude) w.SetPosition({ latitude: info.latitude, longitude: info.longitude });
-            else if (info.hostMarker) w.SetPosition({ latitude: info.hostMarker.latitude, longitude: info.hostMarker.longitude });
+            else if (info.hostMarker) w.SetPosition({ latitude: info.hostMarker.Latitude, longitude: info.hostMarker.Longitude });
             else { };
             w.Open();
         });

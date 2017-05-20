@@ -1,13 +1,10 @@
-﻿import { Directive, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, ViewContainerRef } from '@angular/core';
+﻿import { Directive, SimpleChange, Input, Output, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, ViewContainerRef } from '@angular/core';
 import { IPoint } from "../interfaces/ipoint";
 import { ILatLong } from "../interfaces/ilatlong";
 import { IMarkerEvent } from "../interfaces/imarkerevent";
 import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
 import { MarkerService } from '../services/markerservice';
 import { InfoBox } from './infobox';
-import { Map } from './map';
-import { MapLayer } from "./maplayer";
-import { ClusterLayer } from "./clusterlayer";
 
 let markerId:number = 0;
 
@@ -40,76 +37,6 @@ let markerId:number = 0;
     outputs: ['MarkerClick', 'DragEnd','DynamicMarkerCreated']
 })
 export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
-
-    ///
-    /// Icon anchor relative to marker root 
-    ///
-    anchor: IPoint;
-
-    ///
-    /// The latitude position of the marker.
-    ///
-    latitude: number;
-
-    ///
-    /// The longitude position of the marker.
-    ///
-    longitude: number;
-
-    ///
-    /// The title of the marker.
-    ///
-    title: string;
-
-    ///
-    /// The label (a single uppercase character) for the marker.
-    ///
-    label: string;
-
-    ///
-    /// If true, the marker can be dragged. Default value is false.
-    ///
-    draggable: boolean = false;
-
-    ///
-    /// Icon (the URL of the image) for the foreground.
-    ///
-    iconUrl: string;
-
-    ///
-    /// Information for dynamic, custom created icons.
-    ///
-    iconInfo: IMarkerIconInfo;
-
-    /// 
-    /// Icon height
-    ///
-    height: number;
-
-    ///
-    /// Icon Widht
-    ///
-    width: number;
-
-    ///
-    /// This event emitter gets emitted when the user clicks on the marker.
-    ///
-    DynamicMarkerCreated: EventEmitter<IMarkerIconInfo> = new EventEmitter<IMarkerIconInfo>();
-
-    ///
-    /// This event emitter gets emitted when the user clicks on the marker.
-    ///
-    MarkerClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
-
-    ///
-    /// This event is fired when the user stops dragging the marker.
-    ///
-    DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
-
-    ///
-    /// Any InfoBox that is a direct children of the marker 
-    /// 
-    @ContentChild(InfoBox) private _infoBox: InfoBox;
     private _inCustomLayer: boolean = false;
     private _inClusterLayer: boolean = false;
     private _markerAddedToManger: boolean = false;
@@ -121,6 +48,81 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     public get InClusterLayer(): boolean { return this._inClusterLayer; }
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
     public get LayerId(): number { return this._layerId; }
+
+    ///
+    /// Any InfoBox that is a direct children of the marker 
+    /// 
+    @ContentChild(InfoBox) protected _infoBox: InfoBox;
+
+    ///
+    /// Icon anchor relative to marker root 
+    ///
+    @Input() public Anchor: IPoint;
+
+    ///
+    /// If true, the marker can be dragged. Default value is false.
+    ///
+    @Input() public Draggable: boolean = false;
+    
+    /// 
+    /// Icon height
+    ///
+    @Input() public Height: number;
+
+    ///
+    /// Information for dynamic, custom created icons.
+    ///
+    @Input() public IconInfo: IMarkerIconInfo;
+
+    ///
+    /// Icon (the URL of the image) for the foreground.
+    ///
+    @Input() public IconUrl: string;
+
+    ///
+    /// The label (a single uppercase character) for the marker.
+    ///
+    @Input() public Label: string;
+
+    ///
+    /// The latitude position of the marker.
+    ///
+    @Input() public Latitude: number;
+
+    ///
+    /// The longitude position of the marker.
+    ///
+    @Input() public Longitude: number;
+
+    ///
+    /// Arbitary metadata to assign to the Marker. This is useful for events
+    ///
+    @Input() public Metadata: Map<string, any> = new Map<string, any>();
+
+    ///
+    /// The title of the marker.
+    ///
+    @Input() public Title: string;
+
+    ///
+    /// Icon Widht
+    ///
+    @Input() public Width: number;
+
+    ///
+    /// This event emitter gets emitted when the user clicks on the marker.
+    ///
+    @Output() public DynamicMarkerCreated: EventEmitter<IMarkerIconInfo> = new EventEmitter<IMarkerIconInfo>();
+
+    ///
+    /// This event emitter gets emitted when the user clicks on the marker.
+    ///
+    @Output() public MarkerClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    ///
+    /// This event is fired when the user stops dragging the marker.
+    ///
+    @Output() public  DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     constructor(private _markerService: MarkerService, private _containerRef: ViewContainerRef) {
         this._id = (markerId++).toString();
@@ -148,26 +150,26 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     public ngOnDestroy() { this._markerService.DeleteMarker(this); }
 
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (typeof this.latitude !== 'number' || typeof this.longitude !== 'number') {
+        if (typeof this.Latitude !== 'number' || typeof this.Longitude !== 'number') {
             return;
         }
         if (!this._markerAddedToManger) return;
-        if (changes['latitude'] || changes['longitude']) {
+        if (changes['Latitude'] || changes['Longitude']) {
             this._markerService.UpdateMarkerPosition(this);
         }
-        if (changes['title']) {
+        if (changes['Title']) {
             this._markerService.UpdateTitle(this);
         }
-        if (changes['label']) {
+        if (changes['Label']) {
             this._markerService.UpdateLabel(this);
         }
-        if (changes['draggable']) {
+        if (changes['Draggable']) {
             this._markerService.UpdateDraggable(this);
         }
-        if (changes['iconUrl'] || changes['iconInfo']) {
+        if (changes['IconUrl'] || changes['IconInfo']) {
             this._markerService.UpdateIcon(this);
         }
-        if (changes['anchor']) {
+        if (changes['Anchor']) {
             this._markerService.UpdateAnchor(this);
         }
     }

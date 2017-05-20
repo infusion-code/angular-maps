@@ -42,6 +42,13 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
+    private _useDynamicSizeMarker: boolean = true;
+    private _dynamicMarkerBaseSize: number = 18;
+    private _dynamicMarkerRanges: Map<number, string> = new Map<number,string>([
+        [10, 'rgba(255, 40, 40, 0.5)'],
+        [100, 'rgba(20, 180, 20, 0.5)'],
+        [Number.MAX_SAFE_INTEGER ,'rgba(255, 210, 40, 0.5)']
+    ]);
     private _iconCreationCallback: (m:Array<Marker>, i:IMarkerIconInfo) => string;
 
     @Input()
@@ -50,7 +57,18 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
 
     @Input()
         public get CustomMarkerCallback(): (m:Array<Marker>, i:IMarkerIconInfo) => string  { return this._iconCreationCallback; }
-        public set CustomMarkerCallback(val: (m:Array<Marker>, i:IMarkerIconInfo) => string) { this._iconCreationCallback = val; }
+        public set CustomMarkerCallback(val: (m:Array<Marker>, i:IMarkerIconInfo) => string) { 
+            if(this._useDynamicSizeMarker) throw ("You cannot set a custom marker callback when UseDynamicSizeMarkers is set to true. Set UseDynamicSizeMakers to false.");
+            this._iconCreationCallback = val; 
+        }
+
+    @Input()
+        public get DynamicMarkerBaseSize():number  { return this._dynamicMarkerBaseSize; }
+        public set DynamicMarkerBaseSize(val: number) { this._dynamicMarkerBaseSize = val; }
+
+    @Input()
+        public get DynamicMarkerRanges():Map<number, string>  { return this._dynamicMarkerRanges; }
+        public set DynamicMarkerRanges(val: Map<number, string>) { this._dynamicMarkerRanges = val; }
 
     @Input()
         public get GridSize():number  { return this._gridSize; }
@@ -63,6 +81,15 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     @Input()
         public get LayerOffset():IPoint  { return this._layerOffset; }
         public set LayerOffset(val: IPoint) { this._layerOffset = val; }
+
+    @Input()
+        public get UseDynamicSizeMarkers():boolean { return this._useDynamicSizeMarker; }
+        public set UseDynamicSizeMarkers(val: boolean) { 
+            this._useDynamicSizeMarker = val; 
+            this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
+                return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
+            }    
+        }
 
     @Input()
         public get ZIndex():number { return this._zIndex; }
@@ -87,7 +114,29 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         this._layerService.GetNativeLayer(this).then((l:Layer) => {
             l.SetOptions(options);
         });
+    }
 
+    protected static CreateDynamicSizeMarker(m: Array<Marker>, info: IMarkerIconInfo, baseMarkerSize: number, ranges: Map<number, string>):string{
+        let mr: number = baseMarkerSize;
+        let outline: number = mr*0.35;
+        let total: number = m.length;
+        let r:number = Math.log(total) / Math.log(10) * 5 + mr;
+        let d:number = r*2;
+        let fillColor:string;
+        ranges.forEach((v,k) => { 
+            if(total <= k && !fillColor) fillColor = v; 
+        });
+        if(!fillColor) fillColor = 'rgba(20, 180, 20, 0.5)';
+
+        //Create an SVG string of two circles, one on top of the other, with the specified radius and color.
+        let svg: Array<any> = [`<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}">`,
+            `<circle cx="${r}" cy="${r}" r="${r}" fill="${fillColor}"/>`,
+            `<circle cx="${r}" cy="${r}" r="${r - outline}" fill="${fillColor}"/>`,
+            `</svg>`];
+        info.size = { width: d, height: d };
+        info.markerOffsetRatio = { x: 0.5, y: 0.5 };
+        info.textOffset = { x: 0, y: r - 8 };
+        return svg.join('');       
     }
 
 }

@@ -6,12 +6,11 @@ import { BingMapService } from "../services/bingmapservice";
 import { BingConversions } from "../services/bingconversions";
 
 export class BingMarker implements Marker  {
+    private _metadata: Map<string, any> = new Map<string,any>();
 
-    constructor(private _pushpin: Microsoft.Maps.Pushpin) { }
+    public get Metadata(): Map<string, any> { return this._metadata; }
 
-    public get NativePrimitve(): any {
-        return this._pushpin;
-    }
+    public get NativePrimitve(): any { return this._pushpin;}
 
     public get Location(): ILatLong {
         let l: Microsoft.Maps.Location = this._pushpin.getLocation();
@@ -20,6 +19,9 @@ export class BingMarker implements Marker  {
             longitude: l.longitude
         }
     }
+
+
+    constructor(private _pushpin: Microsoft.Maps.Pushpin) { }
 
     public AddListener(eventType: string, fn: Function): void {
         Microsoft.Maps.Events.addHandler(this._pushpin, eventType, (e) => {
