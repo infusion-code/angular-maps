@@ -35,6 +35,9 @@ export class BingMapService implements MapService {
     private _mapResolver: (value?: Microsoft.Maps.Map) => void;
     private _config: BingMapAPILoaderConfig;
 
+    public get MapInstance():Microsoft.Maps.Map {return this._mapInstance; }
+    public get MapPromise():Promise<Microsoft.Maps.Map> { return this._map; }
+
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
         this._map = new Promise<Microsoft.Maps.Map>((resolve: () => void) => { this._mapResolver = resolve; });
         this._config = (<BingMapAPILoader>this._loader).Config;

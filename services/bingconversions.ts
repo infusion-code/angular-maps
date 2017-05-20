@@ -8,6 +8,7 @@ import { IInfoWindowAction } from "../interfaces/iinfowindowaction";
 import { IPoint } from "../interfaces/ipoint";
 import { MapTypeId } from "../models/maptypeid";
 import { Marker } from "../models/marker";
+import { ClusterPlacementMode } from "../models/clusterplacementmode";
 import { BingMapService } from "./bingmapservice";
 
 export class BingConversions {
@@ -100,6 +101,7 @@ export class BingConversions {
         "clusteringEnabled",
         "gridSize",
         "layerOffset",
+        "placementMode",
         "visible",
         "zIndex"
     ];
@@ -129,6 +131,10 @@ export class BingConversions {
             .filter(k => BingConversions._clusterOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
                 if (k == "layerOffset") o.layerOffset = BingConversions.TranslatePoint(options.layerOffset);
+                if (k == "placementMode") {
+                    if (options.placementMode == ClusterPlacementMode.FirstPin) o.placementMode = Microsoft.Maps.ClusterPlacementType.FirstLocation;
+                    else o.placementMode = Microsoft.Maps.ClusterPlacementType.MeanAverage
+                }
                 else o[k] = (<any>options)[k];
             });
         return o;

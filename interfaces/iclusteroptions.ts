@@ -2,6 +2,7 @@ import { IPoint } from "./ipoint";
 import { ILayerOptions } from "./ilayeroptions";
 import { IMarkerIconInfo } from "./imarkericoninfo";
 import { Marker } from "../models/marker";
+import { ClusterPlacementMode } from "../models/clusterplacementmode";
 
 export interface IClusterOptions extends ILayerOptions {
 
@@ -31,6 +32,11 @@ export interface IClusterOptions extends ILayerOptions {
         * otherwise the clusters from the different layers would overlap completely.
         */
         layerOffset?: IPoint;
+
+        /**
+         * Determines the cluster placement mode
+         */
+        placementMode?: ClusterPlacementMode; 
 
         /**
         * A boolean indicating if the layer is visible or not.

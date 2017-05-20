@@ -1,6 +1,8 @@
 ﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange, ContentChildren, Input, ElementRef, ViewContainerRef } from "@angular/core";
 import { Marker } from "../models/marker";
 import { Layer } from "../models/layer";
+import { ClusterPlacementMode } from "../models/clusterplacementmode";
+import { ClusterClickAction } from "../models/clusterclickaction"; 
 import { IPoint } from "../interfaces/ipoint";
 import { IClusterOptions } from "../interfaces/iclusteroptions";
 import { IMarkerIconInfo} from "../interfaces/imarkericoninfo";
@@ -38,11 +40,13 @@ import { MapLayer } from "./maplayer";
 })
 export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges {
     private _clusteringEnabled: boolean = true;
+    private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
+    private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
     private _zIndex: number;
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
-    private _useDynamicSizeMarker: boolean = false;
+    private _useDynamicSizeMarker: boolean = true;
     private _dynamicMarkerBaseSize: number = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number,string>([
         [10, 'rgba(255, 40, 40, 0.5)'],
@@ -52,8 +56,16 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     private _iconCreationCallback: (m:Array<Marker>, i:IMarkerIconInfo) => string;
 
     @Input()
+        public get ClusterClickAction():ClusterClickAction  { return this._clusterClickAction; }
+        public set ClusterClickAction(val: ClusterClickAction) { this._clusterClickAction = val; }
+
+    @Input()
         public get ClusteringEnbabled():boolean  { return this._clusteringEnabled; }
         public set ClusteringEnbabled(val: boolean) { this._clusteringEnabled = val; }
+
+    @Input()
+        public get ClusterPlacementMode():ClusterPlacementMode  { return this._clusterPlacementMode; }
+        public set ClusterPlacementMode(val: ClusterPlacementMode) { this._clusterPlacementMode = val; }
 
     @Input()
         public get CustomMarkerCallback(): (m:Array<Marker>, i:IMarkerIconInfo) => string  { return this._iconCreationCallback; }
@@ -86,18 +98,14 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         public get UseDynamicSizeMarkers():boolean { return this._useDynamicSizeMarker; }
         public set UseDynamicSizeMarkers(val: boolean) { 
             this._useDynamicSizeMarker = val; 
-            if(val) {
-                this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
-                    return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
-                }
+            this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
+                return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
             }    
         }
 
     @Input()
         public get ZIndex():number { return this._zIndex; }
         public set ZIndex(val: number) { this._zIndex = val; }
-
-
 
     constructor(_layerService: ClusterService, _containerRef: ViewContainerRef) {
         super(_layerService, _containerRef);

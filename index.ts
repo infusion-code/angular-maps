@@ -27,6 +27,8 @@ import { MarkerTypeId } from "./models/markertypeid";
 import { BingMarker } from "./models/bingmarker";
 import { MapTypeId } from "./models/maptypeid";
 import { Layer } from "./models/layer";
+import { ClusterPlacementMode } from "./models/clusterplacementmode";
+import { ClusterClickAction } from "./models/clusterclickaction";
 import { BingLayer } from "./models/binglayer"; 
 import { BingClusterLayer } from "./models/bingclusterlayer";
 
@@ -66,7 +68,7 @@ export {
     Map, InfoBox, MapMarker, InfoBoxAction, MapLayer, ClusterLayer,
     MapService, MapServiceFactory, MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, ClusterService,
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingMapAPILoader, BingLayerService, BingClusterService, 
-    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, 
+    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode, ClusterClickAction,
     BingLayer, BingMarker, BingInfoWindow
 }
 

@@ -7,6 +7,7 @@ import { BingMarker } from '../models/bingmarker';
 import { BingClusterLayer } from "../models/bingclusterlayer";
 import { Layer } from '../models/layer';
 import { MarkerTypeId } from "../models/markertypeid";
+import { ClusterClickAction } from "../models/clusterclickaction";
 import { MapService } from "./mapservice";
 import { ClusterLayer } from "../components/clusterLayer";
 import { ClusterService } from "./clusterservice";
@@ -27,7 +28,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         let options: IClusterOptions = {
             id: layer.Id,
             visible: layer.Visible,
-            clusteringEnabled: layer.ClusteringEnbabled
+            clusteringEnabled: layer.ClusteringEnbabled,
+            placementMode: layer.ClusterPlacementMode
         };
         if(layer.GridSize) options.gridSize = layer.GridSize;
         if(layer.LayerOffset) options.layerOffset = layer.LayerOffset;
@@ -56,7 +58,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         });
     }
 
-    private CreateClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer){
+    private CreateClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer): void{
         this._layers.get(layer).then((l:BingClusterLayer) =>{
             if(layer.IconInfo){
                 let o: Microsoft.Maps.IPushpinOptions = {};
@@ -69,10 +71,13 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                     cluster.setOptions(o);
                 }
             }
+            if(layer.ClusterClickAction == ClusterClickAction.ZoomIntoCluster){
+                Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs) => { this.ZoomIntoCluster(e) });
+            }
         });
     }
 
-    private CreateCustomClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer){
+    private CreateCustomClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer): void{
         this._layers.get(layer).then((l:BingClusterLayer) => {
             // assemble markers for callback
             let m:Array<Marker> = new Array<Marker>();
@@ -91,7 +96,25 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                 if(iconInfo.textOffset) o.textOffset = new Microsoft.Maps.Point(iconInfo.textOffset.x, iconInfo.textOffset.y);
                 cluster.setOptions(o);
             }
+            if(layer.ClusterClickAction == ClusterClickAction.ZoomIntoCluster){
+                Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs) => { this.ZoomIntoCluster(e) });
+            }
         });
     }
 
+    private ZoomIntoCluster(e:Microsoft.Maps.IMouseEventArgs): void {
+        let pin: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.target;
+        if (pin && pin.containedPushpins) {
+            let bounds: Microsoft.Maps.LocationRect;
+            let locs:Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
+            pin.containedPushpins.forEach( p => locs.push(p.getLocation()));
+            bounds = Microsoft.Maps.LocationRect.fromLocations(locs);
+
+            //Zoom into the bounding box of the cluster. 
+            //Add a padding to compensate for the pixel area of the pushpins.
+            (<BingMapService>this._mapService).MapPromise.then((m:Microsoft.Maps.Map) => {
+                m.setView({ bounds: bounds, padding: 100 });
+            });
+        }
+    }
 }
