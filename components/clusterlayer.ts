@@ -46,7 +46,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
-    private _useDynamicSizeMarker: boolean = true;
+    private _useDynamicSizeMarker: boolean = false;
     private _dynamicMarkerBaseSize: number = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number,string>([
         [10, 'rgba(255, 40, 40, 0.5)'],
@@ -98,9 +98,11 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         public get UseDynamicSizeMarkers():boolean { return this._useDynamicSizeMarker; }
         public set UseDynamicSizeMarkers(val: boolean) { 
             this._useDynamicSizeMarker = val; 
-            this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
-                return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
-            }    
+            if(val) {
+                this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
+                    return ClusterLayer.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
+                }  
+            }  
         }
 
     @Input()
