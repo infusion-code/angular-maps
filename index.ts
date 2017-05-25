@@ -1,5 +1,6 @@
 ﻿import { NgModule, NgZone } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All";
 
 ///
 /// import module interfaces

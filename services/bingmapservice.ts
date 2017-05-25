@@ -1,7 +1,6 @@
 ﻿import { Injectable, NgZone } from "@angular/core";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
-import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All";
 
 import { MapService } from "./mapservice";
 import { MapAPILoader } from "./mapapiloader";
