@@ -13,3 +13,5 @@ Thumbs.db
 # Ignored files
 *.ts
 !*.d.ts
+tsconfig.json
+tsconfig-aot.json
