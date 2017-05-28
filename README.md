@@ -90,12 +90,12 @@ is the loader (which is actually responsible to load the resources from the map 
             // to use the experimental bing brach. There are some bug fixes for
             // clustering in that branch you will need if you want to use 
             // clustering.
-    return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
-}
+        return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
+    }
 
 ```
 
-> Note: The provider factory is moved into an exported method to accomodate Angular 4 requirements to no have lambda functions in the provider loading. 
+> Note: The provider factory was moved into an exported method to accomodate Angular 4 requirements to no have lambda functions in the provider loading. 
 
 ## 3. Add a map, markers, infoboxes and actions to a component
 
