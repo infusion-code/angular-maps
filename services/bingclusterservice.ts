@@ -9,7 +9,7 @@ import { Layer } from '../models/layer';
 import { MarkerTypeId } from "../models/markertypeid";
 import { ClusterClickAction } from "../models/clusterclickaction";
 import { MapService } from "./mapservice";
-import { ClusterLayer } from "../components/clusterLayer";
+import { ClusterLayer } from "../components/clusterlayer";
 import { ClusterService } from "./clusterservice";
 import { BingLayerBase } from "./binglayerbase";
 import { BingMapService } from "./bingmapservice";

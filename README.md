@@ -5,6 +5,10 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 
 ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg)  
 
+# Latest Updates
+- Support for layers and clustring
+- Support for AOT and Angular 4 
+
 # Install
 Install via npm:
 
@@ -15,11 +19,17 @@ Install via npm:
 # Use
 To use angular-maps with the default Bing Map implementation, follow these three steps:
 
-1 Import Module
-2 Configure Services
-3 Add a map, markers, infoboxes and actions to a component
+1. Import Module
+2. Configure Services
+3. Add a map, markers, infoboxes and actions to a component
 
 ## 1. Import Module
+
+Add the Bing Type Declarations to your main app module (or a particular feature module, if you don't want it globally). This is currently necessary even if you do not want to use the Bing Maps providers as the types are in the signatures but not part of the distribution (the bingmaps Typescript types npm package is part of the dependencies and should have been installed when you installed angular maps). We are looking for ways around that... In the meanwhile, insert the following on the top of your app module file (depending on your project structure, you might have to manipulate the path):
+
+```
+    /// <reference path="node_modules/bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
+```
 
 Import MapModule, MapAPILoader, BingMapAPILoaderConfig, BingMapAPILoader, WindowRef, DocumentRef, MapServiceFactory and BingMapServiceFactory (yeah, I know...) in your main app module (or a particular feature module, if you don't want it globally). 
 
@@ -67,20 +77,25 @@ is the loader (which is actually responsible to load the resources from the map 
         providers: [
             ...
             {
-                provide: MapAPILoader, deps: [], useFactory: () => {
-                    let bc: BingMapAPILoaderConfig = new BingMapAPILoaderConfig();
-                    bc.apiKey ="..."; // your bing map key
-                    //bc.branch = "experimental"; 
-                        // to use the experimental bing brach. There are some bug fixes for
-                        // clustering in that branch you will need if you want to use 
-                        // clustering.
-                    return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
-                }
+                provide: MapAPILoader, deps: [], useFactory: MapServiceProviderFactory
             }
             ...
         ]
     })
+
+    export function MapServiceProviderFactory(){
+        let bc: BingMapAPILoaderConfig = new BingMapAPILoaderConfig();
+        bc.apiKey ="..."; // your bing map key
+        bc.branch = "experimental"; 
+            // to use the experimental bing brach. There are some bug fixes for
+            // clustering in that branch you will need if you want to use 
+            // clustering.
+    return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
+}
+
 ```
+
+> Note: The provider factory is moved into an exported method to accomodate Angular 4 requirements to no have lambda functions in the provider loading. 
 
 ## 3. Add a map, markers, infoboxes and actions to a component
 

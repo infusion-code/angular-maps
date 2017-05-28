@@ -5,7 +5,7 @@ import { BingMarker } from '../models/bingmarker';
 import { Layer } from '../models/layer';
 import { MarkerTypeId } from "../models/markertypeid";
 import { MapService } from "./mapservice";
-import { MapLayer } from "../components/mapLayer";
+import { MapLayer } from "../components/maplayer";
 import { LayerService } from "./layerservice";
 import { BingMapService } from "./bingmapservice";
 import { BingConversions } from "./bingconversions";

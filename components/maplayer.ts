@@ -30,7 +30,7 @@ let layerId:number = 0;
 /// ```
 ///
 @Directive({
-    selector: 'map-layer',
+    selector: 'map-layer'
 })
 export class MapLayer implements OnInit, OnDestroy, OnChanges {
     protected _visible: boolean = true;

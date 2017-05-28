@@ -2,7 +2,7 @@
 import { IMarkerOptions } from "../interfaces/imarkeroptions";
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
-import { MapLayer } from '../components/mapLayer'
+import { MapLayer } from '../components/maplayer'
 
 @Injectable()
 export abstract class LayerService {

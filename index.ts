@@ -1,6 +1,5 @@
-﻿import { NgModule, NgZone } from "@angular/core";
+﻿import { NgModule, ModuleWithProviders, NgZone } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { } from "bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All";
 
 ///
 /// import module interfaces
@@ -77,25 +76,28 @@ export {
 /// define module
 ///
 @NgModule({
-    declarations: [Map, MapMarker, InfoBox, InfoBoxAction, MapLayer, ClusterLayer ],
+    declarations: [MapLayer, Map, MapMarker, InfoBox, InfoBoxAction, ClusterLayer ],
     imports: [ CommonModule ],
     exports: [ CommonModule, Map, MapMarker, InfoBox, InfoBoxAction, MapLayer, ClusterLayer ]
 })
 export class MapModule {
 
-    static forRoot(mapServiceFactory?: MapServiceFactory, loader?: MapAPILoader ) {
+    static forRoot(mapServiceFactory?: MapServiceFactory, loader?: MapAPILoader ): ModuleWithProviders {
         return {
             ngModule: MapModule,
             providers: [
-                mapServiceFactory ? { provide: MapServiceFactory, useValue: mapServiceFactory } : { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: (apiLoader: MapAPILoader, zone: NgZone) => {
-                    return new BingMapServiceFactory(apiLoader, zone);
-                }},,
-                loader ? { provide: MapAPILoader, useValue: loader } : { provide: MapAPILoader, useFactory: () => {
-                    return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
-                }},
+                mapServiceFactory ? { provide: MapServiceFactory, useValue: mapServiceFactory } : { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: BingMapServiceFactoryFactory},
+                loader ? { provide: MapAPILoader, useValue: loader } : { provide: MapAPILoader, useFactory: BingMapLoaderFactory },
                 DocumentRef,
                 WindowRef
             ]
         }
     }
+}
+
+export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory{
+    return new BingMapServiceFactory(apiLoader, zone);
+}
+export function BingMapLoaderFactory(): MapAPILoader {
+    return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
 }

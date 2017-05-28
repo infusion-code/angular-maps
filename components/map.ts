@@ -35,11 +35,11 @@ import { MapMarker } from "./mapmarker";
 @Component({
     selector: 'x-map',
     providers: [
-        { provide: MapService, deps: [MapServiceFactory], useFactory: (f: MapServiceFactory) => f.Create() },
-        { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: (f: MapServiceFactory, m:MapService, l:LayerService, c:ClusterService) => f.CreateMarkerService(m, l, c) }, 
-        { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateInfoBoxService(m) },
-        { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateLayerService(m) },
-        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: (f: MapServiceFactory, m:MapService) => f.CreateClusterService(m) }   
+        { provide: MapService, deps: [MapServiceFactory], useFactory: MapServiceCreator },
+        { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: MarkerServiceFactory }, 
+        { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: InfoBoxServiceFactory },
+        { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
+        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory }   
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -259,3 +259,8 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 }
 
+export function MapServiceCreator(f: MapServiceFactory): MapService { return f.Create(); } 
+export function MarkerServiceFactory(f: MapServiceFactory, m:MapService, l:LayerService, c:ClusterService): MarkerService { return f.CreateMarkerService(m, l, c); } 
+export function InfoBoxServiceFactory(f: MapServiceFactory, m:MapService): InfoBoxService { return f.CreateInfoBoxService(m); } 
+export function LayerServiceFactory(f: MapServiceFactory, m:MapService): LayerService { return f.CreateLayerService(m); } 
+export function ClusterServiceFactory(f: MapServiceFactory, m:MapService): ClusterService { return f.CreateClusterService(m); }

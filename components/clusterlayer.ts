@@ -36,7 +36,7 @@ import { MapLayer } from "./maplayer";
 /// ```
 ///
 @Directive({
-    selector: 'cluster-layer',
+    selector: 'cluster-layer'
 })
 export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges {
     private _clusteringEnabled: boolean = true;

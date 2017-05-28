@@ -63,5 +63,9 @@
     ],
     "exclude": [
         "node_modules"
-    ]
+    ],
+    "angularCompilerOptions": {
+        "genDir": "aot",
+        "strictMetadataEmit": true
+    }
 }

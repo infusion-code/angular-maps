@@ -2,7 +2,7 @@
 import { IMarkerOptions } from "../interfaces/imarkeroptions";
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
-import { ClusterLayer } from '../components/clusterLayer'
+import { ClusterLayer } from '../components/clusterlayer'
 
 @Injectable()
 export abstract class ClusterService {
