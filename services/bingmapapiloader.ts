@@ -1,12 +1,24 @@
 ﻿import { Injectable, Optional } from "@angular/core";
 import { MapAPILoader, WindowRef, DocumentRef } from "./mapapiloader";
 
+/**
+ * Protocol enumeration
+ * 
+ * @export
+ * @enum {number}
+ */
 export enum ScriptProtocol {
     HTTP,
     HTTPS,
     AUTO
 }
 
+/**
+ * Bing Maps V8 specific loader configuration to be used with the {@link BingMapAPILoader} 
+ * 
+ * @export
+ * @class BingMapAPILoaderConfig
+ */
 @Injectable()
 export class BingMapAPILoaderConfig  {
 
@@ -31,15 +43,47 @@ export class BingMapAPILoaderConfig  {
     branch: string = "";
 }
 
+/**
+ * Default loader configuration.
+ */
 const DEFAULT_CONFIGURATION = new BingMapAPILoaderConfig();
 
+/**
+ * Bing Maps V8 implementation for the {@link MapAPILoader} service. 
+ * 
+ * @export
+ * @class BingMapAPILoader
+ * @extends {MapAPILoader}
+ */
 @Injectable()
 export class BingMapAPILoader extends MapAPILoader {
 
+    ///
+    /// Field defintitions. 
+    ///
     private _scriptLoadingPromise: Promise<void>;
 
+    ///
+    /// Property declarations. 
+    ///
+
+    /**
+     * Gets the loader configuration. 
+     * 
+     * @readonly
+     * @type {BingMapAPILoaderConfig}
+     * @memberof BingMapAPILoader
+     */
     public get Config(): BingMapAPILoaderConfig { return this._config; }
 
+    /**
+     * Creates an instance of BingMapAPILoader.
+     * @param {BingMapAPILoaderConfig} _config  - The loader configuration. 
+     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object. 
+     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}. Necessary because Bing Map V8 interacts with the document object. 
+     * 
+     * @memberof BingMapAPILoader
+     */
     constructor( @Optional() private _config: BingMapAPILoaderConfig, private _windowRef: WindowRef, private _documentRef: DocumentRef) {
         super();
         if (this._config === null || this._config === undefined) {
@@ -47,6 +91,17 @@ export class BingMapAPILoader extends MapAPILoader {
         }
     }
 
+    ///
+    /// Public methods and MapAPILoader implementation. 
+    ///
+
+    /**
+     * Loads the necessary resources for Bing Maps V8.
+     * 
+     * @returns {Promise<void>} 
+     * 
+     * @memberof BingMapAPILoader
+     */
     public Load(): Promise<void> {
         if (this._scriptLoadingPromise) {
             return this._scriptLoadingPromise;
@@ -69,6 +124,19 @@ export class BingMapAPILoader extends MapAPILoader {
         return this._scriptLoadingPromise;
     }
 
+    ///
+    /// Private methods
+    ///
+
+    /**
+     * Gets the Bing Map V8 scripts url for injections into the header. 
+     * 
+     * @private
+     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded. 
+     * @returns {string} - The url to be used to load the Bing Map scripts. 
+     * 
+     * @memberof BingMapAPILoader
+     */
     private GetScriptSrc(callbackName: string): string {
         let protocolType: ScriptProtocol = (this._config && this._config.protocol) || DEFAULT_CONFIGURATION.protocol;
         let protocol: string;

@@ -15,6 +15,14 @@ import { BingLayerBase } from "./binglayerbase";
 import { BingMapService } from "./bingmapservice";
 import { BingConversions } from "./bingconversions";
 
+/**
+ * 
+ * 
+ * @export
+ * @class BingClusterService
+ * @extends {BingLayerBase}
+ * @implements {ClusterService}
+ */
 @Injectable()
 export class BingClusterService extends BingLayerBase implements ClusterService {
 
@@ -36,6 +44,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         if(layer.ZIndex) options.zIndex = layer.ZIndex;
         if(layer.IconInfo) options.clusteredPinCallback = (pin:Microsoft.Maps.ClusterPushpin) => { this.CreateClusterPushPin(pin, layer); };
         if(layer.CustomMarkerCallback) options.clusteredPinCallback = (pin:Microsoft.Maps.ClusterPushpin) => { this.CreateCustomClusterPushPin(pin, layer); };
+        if(layer.SpiderClusterOptions) options.spiderClusterOptions = layer.SpiderClusterOptions;
 
         const layerPromise:Promise<Layer> = this._mapService.CreateClusterLayer(options);
         (<BingMapService>this._mapService).MapPromise.then(m => {

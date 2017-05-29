@@ -7,41 +7,55 @@ import { IPoint } from "../interfaces/ipoint";
 import { IClusterOptions } from "../interfaces/iclusteroptions";
 import { IMarkerIconInfo} from "../interfaces/imarkericoninfo";
 import { ClusterService } from "../services/clusterservice";
+import { ISpiderClusterOptions } from "../interfaces/ispiderclusteroptions";
 import { MapMarker } from "./mapmarker";
 import { MapLayer } from "./maplayer";
 
-///
-/// Creates a cluster layer on a {@link Map}.
-///
-/// ### Example
-/// ```typescript
-/// import {Component} from '@angular/core';
-/// import {Map, MapMarker} from '...';
-///
-/// @Component({
-///  selector: 'my-map-cmp',
-///  styles: [`
-///   .map-container {
-///     height: 300px;
-///   }
-/// `],
-/// template: `
-///   <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-///     <cluster-layer [Visible]="visible">
-///         <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'"></map-marker>
-///     </cluster-layer>
-///   </x-map>
-/// `
-/// })
-/// ```
-///
+/**
+ *
+ * Creates a cluster layer on a {@link Map}.
+ *
+ * ### Example
+ * ```typescript
+ * import {Component} from '@angular/core';
+ * import {Map, MapMarker} from '...';
+ *  
+ * @Component({
+ *  selector: 'my-map-cmp',
+ *  styles: [`
+ *   .map-container {
+ *     height: 300px;
+ *   }
+ * `],
+ * template: `
+ *   <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+ *     <cluster-layer [Visible]="visible">
+ *         <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'"></map-marker>
+ *     </cluster-layer>
+ *   </x-map>
+ * `
+ * })
+ * ```
+ * 
+ * @export
+ * @class ClusterLayer
+ * @extends {MapLayer}
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ * @implements {OnChanges}
+ */
 @Directive({
     selector: 'cluster-layer'
 })
 export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChanges {
+
+    ///
+    /// Field declarations
+    ///
     private _clusteringEnabled: boolean = true;
     private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
     private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
+    private _spiderClusterOptions: ISpiderClusterOptions;
     private _zIndex: number;
     private _gridSize: number;
     private _layerOffset: IPoint;
@@ -55,18 +69,48 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     ]);
     private _iconCreationCallback: (m:Array<Marker>, i:IMarkerIconInfo) => string;
 
+    ///
+    /// Property defintions
+    ///
+
+    /**
+     * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
+     * 
+     * @type {ClusterClickAction}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get ClusterClickAction():ClusterClickAction  { return this._clusterClickAction; }
         public set ClusterClickAction(val: ClusterClickAction) { this._clusterClickAction = val; }
 
+    /**
+     * Gets or sets whether the clustering layer enables clustering. When set to false, the layer 
+     * behaves like a generic layer. This is handy if you want to prevent clustering at certain zoom levels.
+     * 
+     * @type {boolean}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get ClusteringEnabled():boolean  { return this._clusteringEnabled; }
         public set ClusteringEnabled(val: boolean) { this._clusteringEnabled = val; }
 
+    /**
+     * Gets or sets the cluster placement mode. {@link ClusterPlacementMode}
+     * 
+     * @type {ClusterPlacementMode}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get ClusterPlacementMode():ClusterPlacementMode  { return this._clusterPlacementMode; }
         public set ClusterPlacementMode(val: ClusterPlacementMode) { this._clusterPlacementMode = val; }
 
+    /**
+     * Gets or sets the callback invoked to create a custom cluster marker. Note that when {@link UseDynamicSizeMarkers} is enabled, 
+     * you cannot set a custom marker callback. 
+     * 
+     * @type (Array<Marker>, IMarkerIconInfo) => string
+     * @memberof ClusterLayer
+     */
     @Input()
         public get CustomMarkerCallback(): (m:Array<Marker>, i:IMarkerIconInfo) => string  { return this._iconCreationCallback; }
         public set CustomMarkerCallback(val: (m:Array<Marker>, i:IMarkerIconInfo) => string) { 
@@ -74,26 +118,74 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
             this._iconCreationCallback = val; 
         }
 
+    /**
+     * Gets or sets the base size of dynamic markers in pixels. The actualy size of the dynamic marker is based on this. See {@link UseDynamicSizeMarkers}.
+     * 
+     * @type {number}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get DynamicMarkerBaseSize():number  { return this._dynamicMarkerBaseSize; }
         public set DynamicMarkerBaseSize(val: number) { this._dynamicMarkerBaseSize = val; }
 
+    /**
+     * Gets or sets the ranges to use to calculate breakpoints and colors for dynamic markers. The map contains key/value pairs, with the keys being 
+     * the breakpoint sizes and the values the colors to be used for the dynamic marker in that range. See {@link UseDynamicSizeMarkers}.  
+     * 
+     * @type {Map<number, string>}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get DynamicMarkerRanges():Map<number, string>  { return this._dynamicMarkerRanges; }
         public set DynamicMarkerRanges(val: Map<number, string>) { this._dynamicMarkerRanges = val; }
 
+    /**
+     * Gets or sets the grid size to be used for clustering.
+     * 
+     * @type {number}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get GridSize():number  { return this._gridSize; }
         public set GridSize(val: number) { this._gridSize = val; }
 
+    /**
+     * Gets or sets the IconInfo to be used to create a custom cluster marker. Supports font-based, SVG, graphics and more. See {@link IMarkerIconInfo}.
+     * 
+     * @type {IMarkerIconInfo}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get IconInfo():IMarkerIconInfo  { return this._iconInfo; }
         public set IconInfo(val: IMarkerIconInfo) { this._iconInfo = val; }
 
+    /**
+     * Gets or sets An offset applied to the positioning of the layer.
+     * 
+     * @type {IPoint}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get LayerOffset():IPoint  { return this._layerOffset; }
         public set LayerOffset(val: IPoint) { this._layerOffset = val; }
 
+    /**
+     * Gets or sets the options for spider clustering behavior. See {@link ISpiderClusterOptions}
+     * 
+     * @type {ISpiderClusterOptions}
+     * @memberof ClusterLayer
+     */
+    @Input()
+        public get SpiderClusterOptions(): ISpiderClusterOptions { return this._spiderClusterOptions; }
+        public set SpiderClusterOptions(val: ISpiderClusterOptions) { this._spiderClusterOptions = val; }
+
+    /**
+     * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
+     * pins in the cluster. If set to true, this will take precendence over any custom marker creation. 
+     * 
+     * @type {boolean}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get UseDynamicSizeMarkers():boolean { return this._useDynamicSizeMarker; }
         public set UseDynamicSizeMarkers(val: boolean) { 
@@ -105,15 +197,41 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
             } 
         }
 
+    /**
+     * Gets or sets the z-index of the layer. If not used, layers get stacked in the order created. 
+     * 
+     * @type {number}
+     * @memberof ClusterLayer
+     */
     @Input()
         public get ZIndex():number { return this._zIndex; }
         public set ZIndex(val: number) { this._zIndex = val; }
 
+
+    ///
+    /// Constructor
+    ///
+
+    /**
+     * Creates an instance of ClusterLayer.
+     * 
+     * @param {ClusterService} _layerService - Concreted implementation of a cluser layer service for the underlying maps implementations. Generally provided via injections. 
+     * @param {ViewContainerRef} _containerRef - A reference to the view container of the layer. Generally provided via injection. 
+     * 
+     * @memberof ClusterLayer
+     */
     constructor(_layerService: ClusterService, _containerRef: ViewContainerRef) {
         super(_layerService, _containerRef);
     }
 
-    public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
+    /**
+     * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model. 
+     * 
+     * @param {{ [propName: string]: SimpleChange }} changes - collection of changes. 
+     * 
+     * @memberof ClusterLayer
+     */
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if(!this._addedToManager) return;
         if(changes['ClusterClickAction']){
             throw ("You cannot change the ClusterClickAction after the layer has been added to the layerservice.")
@@ -123,6 +241,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         if (changes['ClusteringEnbabled']) options.clusteringEnabled = this._clusteringEnabled;
         if (changes['GridSize']) options.gridSize = this._gridSize;
         if (changes['LayerOffset']) options.layerOffset = this._layerOffset;
+        if(changes['SpiderClusterOptions']) options.spiderClusterOptions = this._spiderClusterOptions;
         if (changes['ZIndex']) options.zIndex = this._zIndex;
         if (changes['Visible']) options.visible = this._visible;
 
@@ -131,6 +250,21 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
         });
     }
 
+    /**
+     * Creates the dynamic size marker to be used for cluster markers if UseDynamicSizeMarkers is set to true.
+     * 
+     * @protected
+     * @static
+     * @param {Array<Marker>} m - The array of markers for the cluster.
+     * @param {IMarkerIconInfo} info  - The icon info to be used. This will be hydrated with the actualy dimensions of the created markers and is used by the underlying model/services
+     * to correctly offset the marker for correct positioning.  
+     * @param {number} baseMarkerSize - The base size for dynmic markers. 
+     * @param {Map<number, string>} ranges - The ranges to use to calculate breakpoints and colors for dynamic markers. The map contains key/value pairs, with the keys being 
+     * the breakpoint sizes and the values the colors to be used for the dynamic marker in that range.
+     * @returns {string} - An string containing the SVG for the marker. 
+     * 
+     * @memberof ClusterLayer
+     */
     protected static CreateDynamicSizeMarker(m: Array<Marker>, info: IMarkerIconInfo, baseMarkerSize: number, ranges: Map<number, string>):string{
         let mr: number = baseMarkerSize;
         let outline: number = mr*0.35;
