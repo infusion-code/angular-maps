@@ -215,7 +215,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
     /**
      * Creates an instance of ClusterLayer.
      * 
-     * @param {ClusterService} _layerService - Concreted implementation of a cluser layer service for the underlying maps implementations. Generally provided via injections. 
+     * @param {ClusterService} _layerService - Concreted implementation of a cluster layer service for the underlying maps implementations. Generally provided via injections. 
      * @param {ViewContainerRef} _containerRef - A reference to the view container of the layer. Generally provided via injection. 
      * 
      * @memberof ClusterLayer
