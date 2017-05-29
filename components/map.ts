@@ -128,7 +128,6 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets or sets the zoom level of the map. The default value is `8`.
      * 
-     * @readonly
      * @type {(number | string)}
      * @memberof Map
      */
@@ -196,6 +195,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Creates an instance of Map.
+     * 
      * @param {MapService} _mapService - Concreted implementation of a map service for the underlying maps implementations. Generally provided via injections. 
      * 
      * @memberof Map
@@ -209,6 +209,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * Called on Component initialization. Part of ng Component life cycle.
      * 
+     * @returns {void}
      * 
      * @memberof Map
      */
@@ -220,6 +221,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle. 
      * 
      * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured. 
+     * @return {void}
      * 
      * @memberof Map
      */
@@ -241,10 +243,11 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle. 
      * 
+     * @returns {void}
      * 
      * @memberof Map
      */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this._mapService.DisposeMap();
     }
 
