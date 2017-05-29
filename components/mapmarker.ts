@@ -126,8 +126,8 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
         this._id = (markerId++).toString();
     }
 
-    public LocationToPixel(): Promise<IPoint> {
-        return this._markerService.LocationToPoint(this);
+    public LocationToPixel(loc?: ILatLong): Promise<IPoint> {
+        return this._markerService.LocationToPoint(loc ? loc: this);
     } 
 
     public ngAfterContentInit() {
