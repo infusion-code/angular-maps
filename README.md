@@ -6,6 +6,10 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg)  
 
 # Latest Updates
+0.3.11
+- Support for spider clusters. Super cool...
+
+0.3.10
 - Support for layers and clustring
 - Support for AOT and Angular 4 
 
