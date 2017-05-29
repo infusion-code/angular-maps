@@ -350,6 +350,7 @@ export class BingClusterLayer implements Layer {
                 let ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
                 if (this._spiderOptions.markerSelected) this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster));
                 if (Microsoft.Maps.Events.hasHandler(ppin, "click")) Microsoft.Maps.Events.invoke(ppin, "click", e);
+                this._mapclicks = 0;
             } 
             else {
                 if (this._spiderOptions.markerSelected) this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null);
@@ -369,9 +370,9 @@ export class BingClusterLayer implements Layer {
     private SetSpiderOptions(options: ISpiderClusterOptions): void {
        if (options) {
             if (typeof options.circleSpiralSwitchover === 'number') this._spiderOptions.circleSpiralSwitchover = options.circleSpiralSwitchover;
-            if (options.collapseClusterOnMapChange) this._spiderOptions.collapseClusterOnMapChange = options.collapseClusterOnMapChange;
+            if (typeof options.collapseClusterOnMapChange === 'boolean') this._spiderOptions.collapseClusterOnMapChange = options.collapseClusterOnMapChange;
             if (typeof options.collapseClusterOnNthClick === 'number') this._spiderOptions.collapseClusterOnNthClick = options.collapseClusterOnNthClick;
-            if (options.invokeClickOnHover) this._spiderOptions.invokeClickOnHover = options.invokeClickOnHover;
+            if (typeof options.invokeClickOnHover === 'boolean') this._spiderOptions.invokeClickOnHover = options.invokeClickOnHover;
             if (typeof options.minSpiralAngleSeperation === 'number')  this._spiderOptions.minSpiralAngleSeperation = options.minSpiralAngleSeperation;
             if (typeof options.spiralDistanceFactor === 'number') this._spiderOptions.spiralDistanceFactor = options.spiralDistanceFactor;        
             if (typeof options.minCircleLength === 'number') this._spiderOptions.minCircleLength = options.minCircleLength;
