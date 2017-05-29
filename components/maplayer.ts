@@ -52,11 +52,11 @@ export class MapLayer implements OnInit, OnDestroy, OnChanges {
     public ngOnInit():void {
         this._containerRef.element.nativeElement.attributes["layerId"] = this._id.toString();
         this._layerService.AddLayer(this);
-        this._addedToManager = true;
+        this._addedToManager = true;        
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
-        if(!this._addedToManager) return;
+        if (!this._addedToManager) return;
         if (changes['Visible']) {
             this._layerService.GetNativeLayer(this).then(l => {
                 l.SetVisible(!l.GetVisible());

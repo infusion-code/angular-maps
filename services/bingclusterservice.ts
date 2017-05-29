@@ -37,7 +37,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         if(layer.IconInfo) options.clusteredPinCallback = (pin:Microsoft.Maps.ClusterPushpin) => { this.CreateClusterPushPin(pin, layer); };
         if(layer.CustomMarkerCallback) options.clusteredPinCallback = (pin:Microsoft.Maps.ClusterPushpin) => { this.CreateCustomClusterPushPin(pin, layer); };
 
-        const layerPromise = this._mapService.CreateClusterLayer(options);
+        const layerPromise:Promise<Layer> = this._mapService.CreateClusterLayer(options);
         (<BingMapService>this._mapService).MapPromise.then(m => {
             Microsoft.Maps.Events.addHandler(m, "viewchangeend", (e) => {
                 if(layer.ClusteringEnabled && m.getZoom() == 19) layerPromise.then((l:BingClusterLayer) => {
@@ -86,6 +86,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             if(layer.ClusterClickAction == ClusterClickAction.ZoomIntoCluster){
                 Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs) => { this.ZoomIntoCluster(e) });
             }
+            if(layer.ClusterClickAction == ClusterClickAction.Spider){
+                l.InitializeSpiderClusterSupport();
+            }
         });
     }
 
@@ -110,6 +113,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             }
             if(layer.ClusterClickAction == ClusterClickAction.ZoomIntoCluster){
                 Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs) => { this.ZoomIntoCluster(e) });
+            }
+            if(layer.ClusterClickAction == ClusterClickAction.Spider){
+                l.InitializeSpiderClusterSupport();
             }
         });
     }

@@ -32,9 +32,7 @@ let markerId:number = 0;
 /// ```
 ///
 @Directive({
-    selector: 'map-marker',
-    inputs: ['latitude', 'longitude', 'title', 'label', 'draggable: markerDraggable', 'iconUrl', 'width', 'height', 'anchor', 'iconInfo'],
-    outputs: ['MarkerClick', 'DragEnd','DynamicMarkerCreated']
+    selector: 'map-marker'
 })
 export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     private _inCustomLayer: boolean = false;
@@ -180,9 +178,14 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
         this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
             let t: MapMarker = this;
             if (this._infoBox != null) {
-                this._infoBox.Open();
+                this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
             }
-            this.MarkerClick.emit({ Marker: this, Click: e});
+            this.MarkerClick.emit({ 
+                Marker: this, 
+                Click: e, 
+                Location: this._markerService.GetCoordinatesFromClick(e),
+                Pixels: this._markerService.GetPixelsFromClick(e),
+            });
         });
         this._markerService.CreateEventObservable<MouseEvent>('dragend', this)
             .subscribe((e: MouseEvent) => {

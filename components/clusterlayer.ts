@@ -115,8 +115,11 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
         if(!this._addedToManager) return;
-        let options:IClusterOptions = { id: this._id };
+        if(changes['ClusterClickAction']){
+            throw ("You cannot change the ClusterClickAction after the layer has been added to the layerservice.")
+        }
 
+        let options:IClusterOptions = { id: this._id };
         if (changes['ClusteringEnbabled']) options.clusteringEnabled = this._clusteringEnabled;
         if (changes['GridSize']) options.gridSize = this._gridSize;
         if (changes['LayerOffset']) options.layerOffset = this._layerOffset;

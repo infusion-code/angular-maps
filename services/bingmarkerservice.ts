@@ -74,8 +74,26 @@ export class BingMarkerService implements MarkerService {
         });
     }
 
+    public GetCoordinatesFromClick(e: MouseEvent| any): ILatLong {
+        if (!e) return null;
+        if (!e.primitive) return null;
+        if (!(e.primitive instanceof Microsoft.Maps.Pushpin)) return null;
+        let p: Microsoft.Maps.Pushpin = e.primitive;
+        let loc: Microsoft.Maps.Location = p.getLocation();
+        return { latitude: loc.latitude, longitude: loc.longitude };
+    }
+
     public GetNativeMarker(marker: MapMarker): Promise<Marker> {
         return this._markers.get(marker);
+    }
+
+    public GetPixelsFromClick(e: MouseEvent| any): IPoint {
+        let loc: ILatLong = this.GetCoordinatesFromClick(e);
+        if (loc == null) return null;
+        let l: Microsoft.Maps.Location = BingConversions.TranslateLocation(loc);
+        let p: Microsoft.Maps.Point = <Microsoft.Maps.Point>(<BingMapService>this._mapService).MapInstance.tryLocationToPixel(l, Microsoft.Maps.PixelReference.control);
+        if (p == null) return null;
+        return { x: p.x, y: p.y };
     }
 
     public LocationToPoint(marker: MapMarker): Promise<IPoint> {

@@ -16,21 +16,25 @@ import { IMarkerEvent } from "./interfaces/imarkerevent";
 import { IMarkerIconInfo } from "./interfaces/imarkericoninfo";
 import { ILayerOptions } from "./interfaces/ilayeroptions";
 import { IClusterOptions } from "./interfaces/iclusteroptions";
+import { ISpiderClusterOptions } from "./interfaces/ispiderclusteroptions";
+import { ILineOptions } from "./interfaces/ilineoptions";
 
 ///
 /// import module models
 ///
 import { InfoWindow } from "./models/infowindow";
-import { BingInfoWindow } from "./models/binginfowindow";
 import { Marker } from "./models/marker";
 import { MarkerTypeId } from "./models/markertypeid";
-import { BingMarker } from "./models/bingmarker";
 import { MapTypeId } from "./models/maptypeid";
 import { Layer } from "./models/layer";
+import { SpiderClusterMarker } from "./models/spiderclustermarker";
 import { ClusterPlacementMode } from "./models/clusterplacementmode";
 import { ClusterClickAction } from "./models/clusterclickaction";
 import { BingLayer } from "./models/binglayer"; 
 import { BingClusterLayer } from "./models/bingclusterlayer";
+import { BingSpiderClusterMarker } from "./models/bingspiderclustermarker";
+import { BingInfoWindow } from "./models/binginfowindow";
+import { BingMarker } from "./models/bingmarker";
 
 ///
 /// import module components
@@ -64,12 +68,13 @@ import { BingClusterService  } from "./services/bingclusterservice";
 /// export publics components, models, interfaces etc for external reuse.
 ///
 export {
-    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IMarkerIconInfo, ILayerOptions, IClusterOptions,
+    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, 
+    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions,
     Map, InfoBox, MapMarker, InfoBoxAction, MapLayer, ClusterLayer,
     MapService, MapServiceFactory, MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, ClusterService,
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingMapAPILoader, BingLayerService, BingClusterService, 
-    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode, ClusterClickAction,
-    BingLayer, BingMarker, BingInfoWindow
+    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker,
+    BingLayer, BingMarker, BingInfoWindow, BingSpiderClusterMarker
 }
 
 ///

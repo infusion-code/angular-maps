@@ -65,7 +65,7 @@ export class BingInfoBoxService implements InfoBoxService {
         });
     }
 
-    public Open(info: InfoBox): Promise<void> {
+    public Open(info: InfoBox, loc?: ILatLong): Promise<void> {
         return this._boxes.get(info).then((w) => {
             if (info.modal) {
                 this._boxes.forEach((v: Promise<InfoWindow>, i: InfoBox) => {
@@ -76,6 +76,12 @@ export class BingInfoBoxService implements InfoBoxService {
                 });
             }
             if (info.latitude && info.longitude) w.SetPosition({ latitude: info.latitude, longitude: info.longitude });
+            else if (loc){
+                ///
+                /// this situation is specifically used for cluster layers that use spidering.
+                ///
+                w.SetPosition(loc);
+            } 
             else if (info.hostMarker) w.SetPosition({ latitude: info.hostMarker.Latitude, longitude: info.hostMarker.Longitude });
             else { };
             w.Open();

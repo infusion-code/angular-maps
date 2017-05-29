@@ -14,4 +14,5 @@ export interface IMarkerOptions {
     height?: number;
     iconInfo?: IMarkerIconInfo;
     metadata?: Map<string, any>;
+    visible?: boolean;
 }

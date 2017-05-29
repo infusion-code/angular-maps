@@ -1,5 +1,6 @@
 ﻿import { Component, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChildren, QueryList, ViewChild, ElementRef, ViewEncapsulation } from "@angular/core";
 import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
+import { ILatLong } from "../interfaces/ilatlong";
 import { InfoBoxService } from "../services/infoboxservice";
 import { MapMarker } from "./mapmarker";
 import { InfoBoxAction } from "./infoboxaction";
@@ -157,8 +158,8 @@ export class InfoBox implements OnDestroy, OnChanges {
         this.SetInfoWindowOptions(changes);
     }
 
-    public Open(): Promise<void> {
-        return this._infoBoxService.Open(this);
+    public Open(loc?: ILatLong): Promise<void> {
+        return this._infoBoxService.Open(this, loc);
     }
     
     public ToString(): string { return 'InfoBox-' + this._id.toString(); }
