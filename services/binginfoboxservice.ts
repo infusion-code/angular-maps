@@ -27,8 +27,8 @@ export class BingInfoBoxService implements InfoBoxService {
             options.actions = [];
             info.infoWindowActions.forEach((action:InfoBoxAction) => {
                 options.actions.push({
-                    label: action.label,
-                    eventHandler: () => { action.actionClicked.emit(null); }
+                    label: action.Label,
+                    eventHandler: () => { action.ActionClicked.emit(null); }
                 });
             });
         }
