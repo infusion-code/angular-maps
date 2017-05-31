@@ -26,6 +26,7 @@ export class BingClusterLayer implements Layer {
     private _mapclicks: number = 0;
     private _spiderLayer: Microsoft.Maps.Layer;
     private _events: Array<Microsoft.Maps.IHandlerId> = new Array<Microsoft.Maps.IHandlerId>();
+    private _currentZoom: number = 0;
     private _spiderOptions: ISpiderClusterOptions = {
         circleSpiralSwitchover: 9,
         collapseClusterOnMapChange: false,
@@ -122,6 +123,7 @@ export class BingClusterLayer implements Layer {
         let m: Microsoft.Maps.Map = (<BingMapService>this._maps).MapInstance;
         this._useSpiderCluster = true;
         this._spiderLayer = new Microsoft.Maps.Layer();
+        this._currentZoom = m.getZoom();
         m.layers.insert(this._spiderLayer);
         this.SetSpiderOptions(options);
 
@@ -133,7 +135,8 @@ export class BingClusterLayer implements Layer {
             } 
         }));
         this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', (e) => { 
-            if(this._spiderOptions.collapseClusterOnMapChange) this.HideSpiderCluster(); 
+            let hasZoomChanged: boolean = (<Microsoft.Maps.Map>e.target).getZoom() != this._currentZoom;
+            if(this._spiderOptions.collapseClusterOnMapChange || hasZoomChanged) this.HideSpiderCluster(); 
         }));
         this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', (e) => { this.LayerClickEvent(e); }));
         this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click', (e) => { this.LayerClickEvent(e); }));
@@ -167,8 +170,10 @@ export class BingClusterLayer implements Layer {
     public Delete(): void{
         if( this._useSpiderCluster){
             this._spiderLayer.clear();
-            (<BingMapService>this._maps).MapInstance.layers.remove(this._spiderLayer);
-            this._spiderLayer = null;
+            (<BingMapService>this._maps).MapPromise.then(m => {
+                m.layers.remove(this._spiderLayer);
+                this._spiderLayer = null;
+            });
             this._events.forEach(e => Microsoft.Maps.Events.removeHandler(e));
             this._events.splice(0);
             this._useSpiderCluster = false;

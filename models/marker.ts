@@ -22,24 +22,26 @@ export abstract class Marker {
     public abstract SetTitle(title: string): void;
     public abstract SetOptions(options: IMarkerOptions): void;
 
-
+    /**
+     * Creates a marker based on the marker info. In turn calls a number of internal members to 
+     * create the actual marker. 
+     * 
+     * @static
+     * @param {IMarkerIconInfo} iconInfo - icon information. Depending on the marker type, various properties 
+     * need to be present. For performance, it is recommended to use an id for markers that are common to facilitate 
+     * reuse.  
+     * @returns {string} - a string containing a data url with the marker image.  
+     * 
+     * @memberof Marker
+     */
     public static CreateMarker(iconInfo: IMarkerIconInfo): string {
-
         switch (iconInfo.markerType) {
-
-            case MarkerTypeId.CanvasMarker:
-                return Marker.CreateCanvasMarker(iconInfo);
-            case MarkerTypeId.DynmaicCircleMarker:
-                return Marker.CreateDynmaicCircleMarker(iconInfo);
-            case MarkerTypeId.FontMarker:
-                return Marker.CreateFontBasedMarker(iconInfo);
-            case MarkerTypeId.RotatedImageMarker:
-                return Marker.CreateRotatedImageMarker(iconInfo);
-            case MarkerTypeId.RoundedImageMarker:
-                return Marker.CreateRoundedImageMarker(iconInfo);
-            case MarkerTypeId.ScaledImageMarker:
-                return Marker.CreateScaledImageMarker(iconInfo);
-
+            case MarkerTypeId.CanvasMarker:         return Marker.CreateCanvasMarker(iconInfo);
+            case MarkerTypeId.DynmaicCircleMarker:  return Marker.CreateDynmaicCircleMarker(iconInfo);
+            case MarkerTypeId.FontMarker:           return Marker.CreateFontBasedMarker(iconInfo);
+            case MarkerTypeId.RotatedImageMarker:   return Marker.CreateRotatedImageMarker(iconInfo);
+            case MarkerTypeId.RoundedImageMarker:   return Marker.CreateRoundedImageMarker(iconInfo);
+            case MarkerTypeId.ScaledImageMarker:    return Marker.CreateScaledImageMarker(iconInfo);
         }
         throw Error("Unsupported marker type: " + iconInfo.markerType);
     }
@@ -47,6 +49,7 @@ export abstract class Marker {
     protected static CreateCanvasMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for canvas markers.");
         if (iconInfo == null || iconInfo.size == null || iconInfo.points == null) throw Error("IMarkerIconInfo.size, and IMarkerIConInfo.points are required for canvas markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) return Marker.MarkerCache.get(iconInfo.id);
 
         let c: HTMLCanvasElement = document.createElement('canvas');
         let ctx: CanvasRenderingContext2D = c.getContext('2d');
@@ -70,12 +73,16 @@ export abstract class Marker {
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
-        return c.toDataURL();
+
+        let s: string = c.toDataURL();
+        if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+        return s;
     }
 
     protected static CreateDynmaicCircleMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for dynamic circle markers.");
         if (iconInfo == null || iconInfo.size == null) throw Error("IMarkerIconInfo.size is required for dynamic circle markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) return Marker.MarkerCache.get(iconInfo.id);
 
         let strokeWidth: number = iconInfo.strokeWidth || 0;
         //Create an SVG string of a circle with the specified radius and color.
@@ -98,12 +105,16 @@ export abstract class Marker {
             iconInfo.color || "red",
             '"/></svg>'
         ];
-        return svg.join("");
+
+        let s: string = svg.join("");
+        if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+        return s;
     }
 
     protected static CreateFontBasedMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for font based markers");
         if (iconInfo == null || iconInfo.fontName == null || iconInfo.fontSize == null) throw Error("IMarkerIconInfo.fontName, IMarkerIconInfo.fontSize and IMarkerIConInfo.text are required for font based markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) return Marker.MarkerCache.get(iconInfo.id);
 
         let c: HTMLCanvasElement = document.createElement('canvas');
         let ctx: CanvasRenderingContext2D = c.getContext('2d');
@@ -131,12 +142,18 @@ export abstract class Marker {
 
         ctx.fillText(iconInfo.text, 0, 0);
         iconInfo.size = { width: c.width, height: c.height };
-        return c.toDataURL();
+        let s: string = c.toDataURL();
+        if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+        return s;
     }
 
     protected static CreateRotatedImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for rotated image markers");
         if (iconInfo == null || iconInfo.rotation == null || iconInfo.url == null || iconInfo.callback == null) throw Error("IMarkerIconInfo.rotation, IMarkerIconInfo.url and IMarkerIConInfo.callback are required for rotated image markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
+            iconInfo.callback(Marker.MarkerCache.get(iconInfo.id), iconInfo);
+            return "";
+        }
 
         let image: HTMLImageElement = new Image();
 
@@ -163,7 +180,10 @@ export abstract class Marker {
             //Draw the image, since the context is rotated, the image will be rotated also.
             ctx.drawImage(image, -image.width / 2, -image.height / 2);
             iconInfo.size = { width: c.width, height: c.height };
-            iconInfo.callback(c.toDataURL(), iconInfo);
+            
+            let s: string = c.toDataURL();
+            if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+            iconInfo.callback(s, iconInfo);
         };
         return "";
     }
@@ -171,6 +191,10 @@ export abstract class Marker {
     protected static CreateRoundedImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for rounded image markers");
         if (iconInfo == null || iconInfo.size == null || iconInfo.url == null || iconInfo.callback == null) throw Error("IMarkerIconInfo.size, IMarkerIconInfo.url and IMarkerIConInfo.callback are required for rounded image markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
+            iconInfo.callback(Marker.MarkerCache.get(iconInfo.id), iconInfo);
+            return "";
+        }
 
         let radius: number = iconInfo.size.width/2;
         let image: HTMLImageElement = new Image();
@@ -192,7 +216,10 @@ export abstract class Marker {
             ctx.clip();
             ctx.drawImage(image, offset.x, offset.y, iconInfo.size.width, iconInfo.size.width);
             iconInfo.size = { width: c.width, height: c.height };
-            iconInfo.callback(c.toDataURL(), iconInfo);
+            
+            let s: string = c.toDataURL();
+            if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+            iconInfo.callback(s, iconInfo);
         };
         return "";
     }
@@ -200,6 +227,10 @@ export abstract class Marker {
     protected static CreateScaledImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) throw Error("Document context (window.document) is required for scaled image markers");
         if (iconInfo == null || iconInfo.scale == null || iconInfo.url == null || iconInfo.callback == null) throw Error("IMarkerIconInfo.scale, IMarkerIconInfo.url and IMarkerIConInfo.callback are required for scaled image markers.");
+        if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
+            iconInfo.callback(Marker.MarkerCache.get(iconInfo.id), iconInfo);
+            return "";
+        }
         let image: HTMLImageElement = new Image();
 
         //Allow cross domain image editting.
@@ -214,9 +245,13 @@ export abstract class Marker {
             //Draw a circle which can be used to clip the image, then draw the image.
             ctx.drawImage(image, 0, 0, c.width, c.height);
             iconInfo.size = { width: c.width, height: c.height };
-            iconInfo.callback(c.toDataURL(), iconInfo);
+
+            let s: string = c.toDataURL();
+            if(iconInfo.id != null) Marker.MarkerCache.set(iconInfo.id, s);
+            iconInfo.callback(s, iconInfo);
         };
         return "";
     }
 
+    protected static MarkerCache: Map<string, string> = new Map<string, string>();
 }
