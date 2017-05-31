@@ -124,42 +124,19 @@ export class BingClusterLayer implements Layer {
         this._useSpiderCluster = true;
         this._spiderLayer = new Microsoft.Maps.Layer();
         this._currentZoom = m.getZoom();
-        m.layers.insert(this._spiderLayer);
         this.SetSpiderOptions(options);
+        m.layers.insert(this._spiderLayer);
 
-        this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', (e) => { 
-            if(this._mapclicks == -1) return;
-            else if(++this._mapclicks >= this._spiderOptions.collapseClusterOnNthClick) this.HideSpiderCluster();
-            else {
-                // do nothing as this._mapclicks has already been incremented above 
-            } 
-        }));
-        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', (e) => { 
-            let hasZoomChanged: boolean = (<Microsoft.Maps.Map>e.target).getZoom() != this._currentZoom;
-            if(this._spiderOptions.collapseClusterOnMapChange || hasZoomChanged) this.HideSpiderCluster(); 
-        }));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', (e) => { this.LayerClickEvent(e); }));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click', (e) => { this.LayerClickEvent(e); }));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseover', (e) => {
-            let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
-            if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
-                let m:BingSpiderClusterMarker = <BingSpiderClusterMarker>this.GetMarkerFromBingMarker(pin);
-                m.Stick.setOptions(this._spiderOptions.stickHoverStyle);
-                if(this._spiderOptions.invokeClickOnHover){
-                    let p: BingMarker = m.ParentMarker;
-                    let ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
-                    if (Microsoft.Maps.Events.hasHandler(ppin, "click")) Microsoft.Maps.Events.invoke(ppin, "click", e);
-                }
-            }
-        }));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseout', (e) => {
-            let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
-            if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
-                let m:BingSpiderClusterMarker = <BingSpiderClusterMarker>this.GetMarkerFromBingMarker(pin);
-                m.Stick.setOptions(this._spiderOptions.stickStyle);
-            }
-        }));
-
+        ///
+        /// Add spider related events....
+        ///
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', this.OnMapClick));
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', this.OnMapViewChangeStart));
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangeend', this.OnMapViewChangeEnd));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', this.OnLayerClick));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click',  this.OnLayerClick));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseover', this.OnSpiderMouseOver));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseout', this.OnSpiderMouseOut));
     }
 
     /**
@@ -323,6 +300,7 @@ export class BingClusterLayer implements Layer {
      * @memberof BingClusterLayer
      */
     private HideSpiderCluster(): void {
+        this._mapclicks = 0;
         if (this._currentCluster) {
             this._spiderLayer.clear();
             this._currentCluster = null;
@@ -335,15 +313,16 @@ export class BingClusterLayer implements Layer {
      * Click event handler for when a shape in the cluster layer is clicked. 
      *
      * @param e The mouse event argurment from the click event.
-     * 
+     * @returns {void} 
+     *
      * @memberof BingClusterLayer
      */
-    private LayerClickEvent(e: Microsoft.Maps.IMouseEventArgs): void {
+    private OnLayerClick(e: Microsoft.Maps.IMouseEventArgs): void {
         if (e.primitive instanceof Microsoft.Maps.ClusterPushpin) {
             let cp: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.primitive;
             let showNewCluster:boolean = cp !== this._currentCluster;
             this.HideSpiderCluster();
-            if(showNewCluster){
+            if(showNewCluster) {
                 this.ShowSpiderCluster(<Microsoft.Maps.ClusterPushpin>e.primitive);
             }
         } 
@@ -360,6 +339,86 @@ export class BingClusterLayer implements Layer {
             else {
                 if (this._spiderOptions.markerSelected) this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null);
                 if (Microsoft.Maps.Events.hasHandler(pin, "click")) Microsoft.Maps.Events.invoke(pin, "click", e);
+            }
+        }
+    }
+
+    /**
+     * Delegate handling the click event on the map (outside a spider cluster). Depending on the 
+     * spider options, closes the cluster or increments the click counter. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event
+     * @returns {void} 
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapClick(e: Microsoft.Maps.IMouseEventArgs): void {
+        if(this._mapclicks == -1) return;
+        else if(++this._mapclicks >= this._spiderOptions.collapseClusterOnNthClick) this.HideSpiderCluster();
+        else {
+            // do nothing as this._mapclicks has already been incremented above 
+        } 
+    }
+
+    /**
+     * Delegate handling the map view changed end event. Hides the spider cluster if the zoom level has changed. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event.
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapViewChangeEnd(e: Microsoft.Maps.IMouseEventArgs): void {
+        let z: number = (<Microsoft.Maps.Map>e.target).getZoom();
+        let hasZoomChanged: boolean = (z != this._currentZoom);
+        this._currentZoom = z;
+        if(hasZoomChanged) this.HideSpiderCluster();
+    }
+
+    /**
+     * Delegate handling the map view change start event. Depending on the spider options, hides the 
+     * the exploded spider or does nothing. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event.
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapViewChangeStart(e: Microsoft.Maps.IMouseEventArgs): void {
+        if(this._spiderOptions.collapseClusterOnMapChange){
+            this.HideSpiderCluster();
+        } 
+    }
+
+    /**
+     * Delegate invoked on mouse out on an exploded spider marker. Resets the hover style on the stick.
+     * 
+     * @param e - Mouse event. 
+     */
+    private OnSpiderMouseOut(e: Microsoft.Maps.IMouseEventArgs): void {
+        let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
+        if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
+            let m:BingSpiderClusterMarker = <BingSpiderClusterMarker>this.GetMarkerFromBingMarker(pin);
+            m.Stick.setOptions(this._spiderOptions.stickStyle);
+        }        
+    }
+
+    /**
+     * Invoked on mouse over on an exploded spider marker. Sets the hover style on the stick. Also invokes the click event
+     * on the underlying original marker dependent on the spider options. 
+     * 
+     * @param e - Mouse event. 
+     */
+    private OnSpiderMouseOver(e: Microsoft.Maps.IMouseEventArgs): void {
+        let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
+        if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
+            let m:BingSpiderClusterMarker = <BingSpiderClusterMarker>this.GetMarkerFromBingMarker(pin);
+            m.Stick.setOptions(this._spiderOptions.stickHoverStyle);
+            if(this._spiderOptions.invokeClickOnHover){
+                let p: BingMarker = m.ParentMarker;
+                let ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
+                if (Microsoft.Maps.Events.hasHandler(ppin, "click")) Microsoft.Maps.Events.invoke(ppin, "click", e);
             }
         }
     }
