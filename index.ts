@@ -64,6 +64,14 @@ import { BingMarkerService } from "./services/bingmarkerservice";
 import { BingLayerService  } from "./services/binglayerservice";
 import { BingClusterService  } from "./services/bingclusterservice";
 
+import { GoogleClusterService } from './services/google/google-cluster.service';
+import { GoogleInfoBoxService } from './services/google/google-infobox.service';
+import { GoogleLayerService } from './services/google/google-layer.service';
+import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './services/google/google-map-api-loader.service';
+import { GoogleMapServiceFactory } from './services/google/google-map.service.factory';
+import { GoogleMapService } from './services/google/google-map.service';
+import { GoogleMarkerService } from './services/google/google-marker.service';
+
 ///
 /// export publics components, models, interfaces etc for external reuse.
 ///
@@ -74,7 +82,10 @@ export {
     MapService, MapServiceFactory, MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, ClusterService,
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingMapAPILoader, BingLayerService, BingClusterService, 
     MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker,
-    BingLayer, BingMarker, BingInfoWindow, BingSpiderClusterMarker
+    BingLayer, BingMarker, BingInfoWindow, BingSpiderClusterMarker,
+
+    GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig, 
+    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService
 }
 
 ///
@@ -105,4 +116,11 @@ export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZo
 }
 export function BingMapLoaderFactory(): MapAPILoader {
     return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
+}
+
+export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory{
+    return new GoogleMapServiceFactory(apiLoader, zone);
+}
+export function GoogleMapLoaderFactory(): MapAPILoader {
+    return new GoogleMapAPILoader(new GoogleMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
 }
