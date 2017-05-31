@@ -130,13 +130,13 @@ export class BingClusterLayer implements Layer {
         ///
         /// Add spider related events....
         ///
-        this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', this.OnMapClick));
-        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', this.OnMapViewChangeStart));
-        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangeend', this.OnMapViewChangeEnd));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', this.OnLayerClick));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click',  this.OnLayerClick));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseover', this.OnSpiderMouseOver));
-        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseout', this.OnSpiderMouseOut));
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', e=>this.OnMapClick(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', e=>this.OnMapViewChangeStart(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangeend', e=>this.OnMapViewChangeEnd(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', e=>this.OnLayerClick(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click',  e=>this.OnLayerClick(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseover', e=>this.OnSpiderMouseOver(e)));
+        this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseout', e=>this.OnSpiderMouseOut(e)));
     }
 
     /**
@@ -348,12 +348,12 @@ export class BingClusterLayer implements Layer {
      * spider options, closes the cluster or increments the click counter. 
      * 
      * @private
-     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event
      * @returns {void} 
      * 
      * @memberof BingClusterLayer
      */
-    private OnMapClick(e: Microsoft.Maps.IMouseEventArgs): void {
+    private OnMapClick(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
         if(this._mapclicks == -1) return;
         else if(++this._mapclicks >= this._spiderOptions.collapseClusterOnNthClick) this.HideSpiderCluster();
         else {
@@ -365,11 +365,11 @@ export class BingClusterLayer implements Layer {
      * Delegate handling the map view changed end event. Hides the spider cluster if the zoom level has changed. 
      * 
      * @private
-     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event.
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
      * 
      * @memberof BingClusterLayer
      */
-    private OnMapViewChangeEnd(e: Microsoft.Maps.IMouseEventArgs): void {
+    private OnMapViewChangeEnd(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
         let z: number = (<Microsoft.Maps.Map>e.target).getZoom();
         let hasZoomChanged: boolean = (z != this._currentZoom);
         this._currentZoom = z;
@@ -381,11 +381,11 @@ export class BingClusterLayer implements Layer {
      * the exploded spider or does nothing. 
      * 
      * @private
-     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse event.
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
      * 
      * @memberof BingClusterLayer
      */
-    private OnMapViewChangeStart(e: Microsoft.Maps.IMouseEventArgs): void {
+    private OnMapViewChangeStart(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
         if(this._spiderOptions.collapseClusterOnMapChange){
             this.HideSpiderCluster();
         } 
