@@ -88,14 +88,14 @@ export class GoogleConversions {
         return l;
     }
 
-    public static TranslateMapTypeId(mapTypeId: MapTypeId): GoogleMapTypes.MapTypeId {
+    public static TranslateMapTypeId(mapTypeId: MapTypeId): string {
         switch(mapTypeId) {
             case MapTypeId.road:
-                return GoogleMapTypes.MapTypeId.ROADMAP;
+                return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.roadmap];
             case MapTypeId.grayscale:
-                return GoogleMapTypes.MapTypeId.TERRAIN;
+                return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.terrain];
             default:
-                return GoogleMapTypes.MapTypeId.SATELLITE;
+                return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.satellite];
         }
     }
 
@@ -105,7 +105,7 @@ export class GoogleConversions {
             .filter(k => GoogleConversions._mapOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
                 if (k == "center") o.center = GoogleConversions.TranslateLocation(options.center);
-                else if (k == "mapTypeId") o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId).toString();
+                else if (k == "mapTypeId") o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
                 else o[k] = (<any>options)[k];
             });
         return o;
