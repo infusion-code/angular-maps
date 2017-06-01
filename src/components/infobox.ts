@@ -78,7 +78,7 @@ export class InfoBox implements OnDestroy, OnChanges {
      * @type {QueryList<InfoBoxAction>}
      * @memberof InfoBox
      */
-    @ContentChildren(InfoBoxAction) private _infoWindowActions: QueryList<InfoBoxAction>;
+    @ContentChildren(InfoBoxAction) public InfoWindowActions: QueryList<InfoBoxAction>;
 
 
     /**

@@ -267,7 +267,7 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
      * @memberof MapLayer
      */
     public ngAfterContentInit() {
-        if (this._infoBox != null)  this._infoBox.hostMarker = this;
+        if (this._infoBox != null)  this._infoBox.HostMarker = this;
         if (this._containerRef.element.nativeElement.parentElement){
             let parentName:string =this._containerRef.element.nativeElement.parentElement.tagName;
             if (parentName.toLowerCase() == "cluster-layer") { this._inClusterLayer = true; }
