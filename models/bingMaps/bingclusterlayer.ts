@@ -1,13 +1,13 @@
-import { IClusterOptions } from "../interfaces/iclusteroptions";
-import { ISpiderClusterOptions } from "../interfaces/ispiderclusteroptions";
-import { Layer } from "./layer";
-import { Marker } from "./marker";
-import { BingSpiderClusterMarker } from "./bingspiderclustermarker";
-import { BingMarker } from "./bingmarker";
-import { InfoWindow } from "./infowindow";
-import { BingConversions } from "../services/bingconversions";
-import { BingMapService } from "../services/bingmapservice";
-import { MapService} from "../services/mapservice";
+import { IClusterOptions }          from "../../interfaces/iclusteroptions";
+import { ISpiderClusterOptions }    from "../../interfaces/ispiderclusteroptions";
+import { BingConversions }          from "../../services/bingmaps/bingconversions";
+import { BingMapService }           from "../../services/bingmaps/bingmapservice";
+import { MapService}                from "../../services/mapservice";
+import { Layer }                    from "../layer";
+import { Marker }                   from "../marker";
+import { InfoWindow }               from "../infowindow";
+import { BingSpiderClusterMarker }  from "./bingspiderclustermarker";
+import { BingMarker }               from "./bingmarker";
 
 /**
  * Concrete implementation of a clustering layer for the Bing Map Provider.

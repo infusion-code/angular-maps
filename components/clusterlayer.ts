@@ -106,7 +106,7 @@ export class ClusterLayer extends MapLayer implements OnInit, OnDestroy, OnChang
 
     /**
      * Gets or sets the callback invoked to create a custom cluster marker. Note that when {@link UseDynamicSizeMarkers} is enabled, 
-     * you cannot set a custom marker callback. 
+     * you cannot set a custom marker callback. The callback must return a marker image as a data url. 
      * 
      * @type (Array<Marker>, IMarkerIconInfo) => string
      * @memberof ClusterLayer

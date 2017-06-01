@@ -1,17 +1,17 @@
-﻿import { Injectable, NgZone } from "@angular/core";
-import { Observer } from "rxjs/Observer";
-import { Observable } from "rxjs/Observable";
-import { ILatLong } from "../interfaces/ilatlong";
-import { IMarkerOptions } from "../interfaces/imarkeroptions";
-import { IPoint } from "../interfaces/ipoint";
-import { MapMarker } from "../components/mapmarker";
-import { MarkerService } from "../services/markerservice";
-import { MapService } from "../services/mapservice";
-import { LayerService } from "../services/layerservice";
-import { ClusterService } from "../services/clusterservice";
-import { Marker } from "../models/marker";
-import { BingMapService } from "./bingmapservice";
-import { BingConversions } from "./bingconversions";
+﻿import { Injectable, NgZone }   from "@angular/core";
+import { Observer }             from "rxjs/Observer";
+import { Observable }           from "rxjs/Observable";
+import { ILatLong }             from "../../interfaces/ilatlong";
+import { IMarkerOptions }       from "../../interfaces/imarkeroptions";
+import { IPoint }               from "../../interfaces/ipoint";
+import { MapMarker }            from "../../components/mapmarker";
+import { Marker }               from "../../models/marker";
+import { MarkerService }        from "../markerservice";
+import { MapService }           from "../mapservice";
+import { LayerService }         from "../layerservice";
+import { ClusterService }       from "../clusterservice";
+import { BingMapService }       from "./bingmapservice";
+import { BingConversions }      from "./bingconversions";
 
 /**
  * Concrete implementation of the MarkerService abstract class for Bing Maps V8. 

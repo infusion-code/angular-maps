@@ -1,9 +1,9 @@
-import { ILayerOptions } from "../interfaces/ilayeroptions";
-import { Layer } from "./layer";
-import { Marker } from "./marker";
-import { InfoWindow } from "./infowindow";
-import { BingMapService } from "../services/bingmapservice";
-import { MapService} from "../services/mapservice";
+import { MapService}        from "../../services/mapservice";
+import { BingMapService }   from "../../services/bingMaps/bingmapservice";
+import { ILayerOptions }    from "../../interfaces/ilayeroptions";
+import { Layer }            from "../layer";
+import { Marker }           from "../marker";
+import { InfoWindow }       from "../infowindow";
 
 /**
  * Concrete implementation of a map layer for the Bing Map Provider.

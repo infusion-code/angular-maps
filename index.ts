@@ -30,11 +30,11 @@ import { Layer } from "./models/layer";
 import { SpiderClusterMarker } from "./models/spiderclustermarker";
 import { ClusterPlacementMode } from "./models/clusterplacementmode";
 import { ClusterClickAction } from "./models/clusterclickaction";
-import { BingLayer } from "./models/binglayer"; 
-import { BingClusterLayer } from "./models/bingclusterlayer";
-import { BingSpiderClusterMarker } from "./models/bingspiderclustermarker";
-import { BingInfoWindow } from "./models/binginfowindow";
-import { BingMarker } from "./models/bingmarker";
+import { BingLayer } from "./models/bingMaps/binglayer"; 
+import { BingClusterLayer } from "./models/bingMaps/bingclusterlayer";
+import { BingSpiderClusterMarker } from "./models/bingMaps/bingspiderclustermarker";
+import { BingInfoWindow } from "./models/bingMaps/binginfowindow";
+import { BingMarker } from "./models/bingMaps/bingmarker";
 
 ///
 /// import module components
@@ -56,13 +56,13 @@ import { InfoBoxService } from "./services/infoboxservice";
 import { LayerService } from  "./services/layerservice";
 import { MarkerService } from "./services/markerservice";
 import { ClusterService } from "./services/clusterservice";
-import { BingMapServiceFactory } from "./services/bingmapservicefactory";
-import { BingMapService } from "./services/bingmapservice";
-import { BingMapAPILoader, BingMapAPILoaderConfig } from "./services/bingmapapiloader";
-import { BingInfoBoxService } from "./services/binginfoboxservice";
-import { BingMarkerService } from "./services/bingmarkerservice";
-import { BingLayerService  } from "./services/binglayerservice";
-import { BingClusterService  } from "./services/bingclusterservice";
+import { BingMapServiceFactory } from "./services/bingmaps/bingmapservicefactory";
+import { BingMapService } from "./services/bingmaps/bingmapservice";
+import { BingMapAPILoader, BingMapAPILoaderConfig } from "./services/bingmaps/bingmapapiloader";
+import { BingInfoBoxService } from "./services/bingmaps/binginfoboxservice";
+import { BingMarkerService } from "./services/bingmaps/bingmarkerservice";
+import { BingLayerService  } from "./services/bingmaps/binglayerservice";
+import { BingClusterService  } from "./services/bingmaps/bingclusterservice";
 
 ///
 /// export publics components, models, interfaces etc for external reuse.

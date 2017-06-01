@@ -1,9 +1,9 @@
-﻿import { ILatLong } from "../interfaces/ilatlong";
-import { IPoint } from "../interfaces/ipoint";
-import { IMarkerOptions } from "../interfaces/Imarkeroptions";
-import { Marker } from "./Marker";
-import { BingMapService } from "../services/bingmapservice";
-import { BingConversions } from "../services/bingconversions";
+﻿import { ILatLong }         from "../../interfaces/ilatlong";
+import { IPoint }           from "../../interfaces/ipoint";
+import { IMarkerOptions }   from "../../interfaces/Imarkeroptions";
+import { BingMapService }   from "../../services/bingMaps/bingmapservice";
+import { BingConversions }  from "../../services/bingMaps/bingconversions";
+import { Marker }           from "../Marker";
 
 /**
  * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture. 
@@ -203,7 +203,7 @@ export class BingMarker implements Marker  {
      * @abstract
      * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are  
      * merged with the underlying marker options. 
-     * @memberof BingMarker
+     * @memberof Marker
      */
     public SetOptions(options: IMarkerOptions): void {
         let o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateOptions(options);

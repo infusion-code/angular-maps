@@ -1,22 +1,22 @@
-import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from "../interfaces/imarkeroptions";
-import { IClusterOptions } from "../interfaces/iclusteroptions"; 
-import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
-import { Marker } from '../models/marker';
-import { BingMarker } from '../models/bingmarker';
-import { BingClusterLayer } from "../models/bingclusterlayer";
-import { Layer } from '../models/layer';
-import { MarkerTypeId } from "../models/markertypeid";
-import { ClusterClickAction } from "../models/clusterclickaction";
-import { MapService } from "./mapservice";
-import { ClusterLayer } from "../components/clusterlayer";
-import { ClusterService } from "./clusterservice";
-import { BingLayerBase } from "./binglayerbase";
-import { BingMapService } from "./bingmapservice";
-import { BingConversions } from "./bingconversions";
+import { Injectable, NgZone }   from '@angular/core';
+import { IMarkerOptions }       from "../../interfaces/imarkeroptions";
+import { IClusterOptions }      from "../../interfaces/iclusteroptions"; 
+import { IMarkerIconInfo }      from "../../interfaces/imarkericoninfo";
+import { Marker }               from '../../models/marker';
+import { Layer }                from '../../models/layer';
+import { MarkerTypeId }         from "../../models/markertypeid";
+import { ClusterClickAction }   from "../../models/clusterclickaction";
+import { BingMarker }           from '../../models/bingMaps/bingmarker';
+import { BingClusterLayer }     from "../../models/bingMaps/bingclusterlayer";
+import { ClusterLayer }         from "../../components/clusterlayer";
+import { MapService }           from "../mapservice";
+import { ClusterService }       from "../clusterservice";
+import { BingLayerBase }        from "./binglayerbase";
+import { BingMapService }       from "./bingmapservice";
+import { BingConversions }      from "./bingconversions";
 
 /**
- * 
+ * Implements the {@link ClusterService} contract for a  Bing Maps V8 specific implementation. 
  * 
  * @export
  * @class BingClusterService
@@ -26,12 +26,39 @@ import { BingConversions } from "./bingconversions";
 @Injectable()
 export class BingClusterService extends BingLayerBase implements ClusterService {
 
+    ///
+    /// Field declarations
+    ///
     protected _layers: Map<ClusterLayer, Promise<Layer>> = new Map<ClusterLayer, Promise<Layer>>();
 
+    ///
+    /// Constructor
+    ///
+
+    /**
+     * Creates an instance of BingClusterService.
+     * @param {MapService} _mapService - Concrete {@link MapService} implementation for Bing Maps V8. An instance of {@link BingMapService}.
+     * @param {NgZone} _zone - NgZone instance to provide zone aware promises. 
+     * 
+     * @memberof BingClusterService
+     */
     constructor(_mapService: MapService, private _zone: NgZone) {
         super(_mapService);
      }
 
+    ///
+    /// Public methods
+    ///
+
+    /**
+     * Adds a layer to the map.
+     * 
+     * @abstract
+     * @param {MapLayer} layer - MapLayer component object. Generally, MapLayer will be injected with an instance of the 
+     * LayerService and then self register on initialization. 
+     * 
+     * @memberof BingLayerBase
+     */
     public AddLayer(layer: ClusterLayer): void{
         let options: IClusterOptions = {
             id: layer.Id,
@@ -62,10 +89,28 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         this._layers.set(layer, layerPromise);       
     }
 
+    /**
+     * Returns the Layer model represented by this layer. 
+     * 
+     * @abstract
+     * @param {MapLayer} layer - MapLayer component object for which to retrieve the layer model.
+     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model. 
+     * 
+     * @memberof BingLayerBase
+     */
     public GetNativeLayer(layer: ClusterLayer): Promise<Layer> {
         return this._layers.get(layer);
     }
 
+    /**
+     * Deletes the layer
+     * 
+     * @abstract
+     * @param {MapLayer} layer - MapLayer component object for which to retrieve the layer.
+     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed. 
+     * 
+     * @memberof BingLayerBase
+     */
     public DeleteLayer(layer: ClusterLayer): Promise<void> {
         const l = this._layers.get(layer);
         if (l == null) {
@@ -79,6 +124,21 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         });
     }
 
+    ///
+    /// Private methods
+    ///
+
+    /**
+     * Creates the default cluster pushpin as a callback from BingMaps when clustering occurs. The {@link ClusterLayer} model
+     * can provide an IconInfo property that would govern the apparenace of the pin. This method will assign the same pin to all 
+     * clusters in the layer. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.ClusterPushpin} cluster - The cluster for which to create the pushpin. 
+     * @param {ClusterLayer} layer - The {@link ClusterLayer} component representing the layer. 
+     * 
+     * @memberof BingClusterService
+     */
     private CreateClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer): void{
         this._layers.get(layer).then((l:BingClusterLayer) =>{
             if(layer.IconInfo){
@@ -102,6 +162,17 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         });
     }
 
+    /**
+     * Provides a hook for consumers to provide a custom function to create cluster bins for a cluster. This is particuarily useful 
+     * in situation where the pin should differ to represent information about the pins in the cluster. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.ClusterPushpin} cluster - The cluster for which to create the pushpin. 
+     * @param {ClusterLayer} layer - The {@link ClusterLayer} component representing the layer. Set the {@link ClusterLayer.CustomMarkerCallback}
+     * property to define the callback generating the pin.
+     * 
+     * @memberof BingClusterService
+     */
     private CreateCustomClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer:ClusterLayer): void{
         this._layers.get(layer).then((l:BingClusterLayer) => {
             // assemble markers for callback
@@ -131,6 +202,14 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         });
     }
 
+    /**
+     * Zooms into the cluster on click so that the members of the cluster comfortable fit into the zommed area. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse Event. 
+     * 
+     * @memberof BingClusterService
+     */
     private ZoomIntoCluster(e:Microsoft.Maps.IMouseEventArgs): void {
         let pin: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.target;
         if (pin && pin.containedPushpins) {
@@ -142,7 +221,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             //Zoom into the bounding box of the cluster. 
             //Add a padding to compensate for the pixel area of the pushpins.
             (<BingMapService>this._mapService).MapPromise.then((m:Microsoft.Maps.Map) => {
-                m.setView({ bounds: bounds, padding: 100 });
+                m.setView({ bounds: bounds, padding: 75 });
             });
         }
     }

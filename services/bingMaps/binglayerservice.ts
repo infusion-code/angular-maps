@@ -1,19 +1,19 @@
-import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from "../interfaces/imarkeroptions";
-import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
-import { Marker } from '../models/marker';
-import { BingMarker } from '../models/bingmarker';
-import { Layer } from '../models/layer';
-import { MarkerTypeId } from "../models/markertypeid";
-import { MapService } from "./mapservice";
-import { MapLayer } from "../components/maplayer";
-import { LayerService } from "./layerservice";
-import { BingMapService } from "./bingmapservice";
-import { BingLayerBase } from "./binglayerbase";
-import { BingConversions } from "./bingconversions";
+import { Injectable, NgZone }   from '@angular/core';
+import { IMarkerOptions }       from "../../interfaces/imarkeroptions";
+import { IMarkerIconInfo }      from "../../interfaces/imarkericoninfo";
+import { Marker }               from '../../models/marker';
+import { Layer }                from '../../models/layer';
+import { MarkerTypeId }         from "../../models/markertypeid";
+import { BingMarker }           from '../../models/bingMaps/bingmarker';
+import { MapLayer }             from "../../components/maplayer";
+import { MapService }           from "../mapservice";
+import { LayerService }         from "../layerservice";
+import { BingMapService }       from "./bingmapservice";
+import { BingLayerBase }        from "./binglayerbase";
+import { BingConversions }      from "./bingconversions";
 
 /**
- * Implements the LayerService contract for a  Bing Maps V8 specific implementation. 
+ * Implements the {@link LayerService} contract for a  Bing Maps V8 specific implementation. 
  * 
  * @export
  * @class BingLayerService

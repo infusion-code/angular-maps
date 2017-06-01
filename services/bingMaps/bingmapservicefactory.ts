@@ -1,16 +1,16 @@
-﻿import { Injectable, NgZone } from "@angular/core";
-import { MapServiceFactory } from "./mapservicefactory";
-import { MapService } from "./mapservice";
-import { MapAPILoader } from "./mapapiloader";
-import { MarkerService } from "./markerservice";
-import { InfoBoxService } from "./infoboxservice";
-import { LayerService } from "./layerservice";
-import { ClusterService } from "./clusterservice";
-import { BingInfoBoxService } from "./binginfoboxservice";
-import { BingMarkerService } from "./bingmarkerservice";
-import { BingMapService } from "./bingmapservice";
-import { BingLayerService } from "./binglayerservice";
-import { BingClusterService } from "./bingclusterservice";
+﻿import { Injectable, NgZone }   from "@angular/core";
+import { MapServiceFactory }    from "../mapservicefactory";
+import { MapService }           from "../mapservice";
+import { MapAPILoader }         from "../mapapiloader";
+import { MarkerService }        from "../markerservice";
+import { InfoBoxService }       from "../infoboxservice";
+import { LayerService }         from "../layerservice";
+import { ClusterService }       from "../clusterservice";
+import { BingInfoBoxService }   from "./binginfoboxservice";
+import { BingMarkerService }    from "./bingmarkerservice";
+import { BingMapService }       from "./bingmapservice";
+import { BingLayerService }     from "./binglayerservice";
+import { BingClusterService }   from "./bingclusterservice";
 
 /**
  * Implements a factory to create thre necessary Bing Maps V8 specific service instances. 
