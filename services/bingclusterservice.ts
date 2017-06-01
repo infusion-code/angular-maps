@@ -122,9 +122,10 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                 cluster.setOptions(o);
             }
             if(layer.ClusterClickAction == ClusterClickAction.ZoomIntoCluster){
-                Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs) => { this.ZoomIntoCluster(e) });
+                Microsoft.Maps.Events.addHandler(cluster, 'click', (e:Microsoft.Maps.IMouseEventArgs)=>this.ZoomIntoCluster(e));
             }
             if(layer.ClusterClickAction == ClusterClickAction.Spider){
+                Microsoft.Maps.Events.addHandler(cluster, 'dblclick', (e:Microsoft.Maps.IMouseEventArgs)=>this.ZoomIntoCluster(e));
                 l.InitializeSpiderClusterSupport();
             }
         });
