@@ -21,8 +21,8 @@ let infoBoxId = 0;
 ///    .map-container { height: 300px; }
 /// `],
 ///  template: `
-///    <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-///      <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'">
+///    <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
+///      <map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'">
 ///        <info-box [disableAutoPan]="true">
 ///          Hi, this is the content of the <strong>info window</strong>
 ///         </info-box>

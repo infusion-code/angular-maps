@@ -28,9 +28,9 @@ import { MapLayer } from "./maplayer";
  *   }
  * `],
  * template: `
- *   <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+ *   <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
  *     <cluster-layer [Visible]="visible">
- *         <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'"></map-marker>
+ *         <map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'"></map-marker>
  *     </cluster-layer>
  *   </x-map>
  * `

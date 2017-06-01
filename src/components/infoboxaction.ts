@@ -14,8 +14,8 @@
  *    .map-container { height: 300px; }
  *  `],
  *  template: `
- *    <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
- *      <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'">
+ *    <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
+ *      <map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'">
  *        <info-box>
  *          <info-box-action [Label]="actionlabel" (ActionClicked)="actionClicked(this)"></info-box-action>
  *        </info-box>

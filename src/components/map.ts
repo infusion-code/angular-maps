@@ -27,7 +27,7 @@ import { MapMarker } from "./mapmarker";
  *    .map-container { height: 300px; }
  * `],
  *  template: `
- *    <map [latitude]="lat" [longitude]="lng" [zoom]="zoom"></map>
+ *    <map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom"></map>
  *  `
  * })
  * ```

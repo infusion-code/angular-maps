@@ -23,9 +23,9 @@ let layerId:number = 0;
  *   }
  * `],
  * template: `
- *   <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+ *   <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
  *     <map-layer [Visible]="visible">
- *         <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'"></map-marker>
+ *         <map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'"></map-marker>
  *     </map-layer>
  *   </x-map>
  * `
