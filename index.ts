@@ -4,65 +4,65 @@ import { CommonModule } from "@angular/common";
 ///
 /// import module interfaces
 ///
-import { ILatLong } from "./interfaces/ilatlong";
-import { IInfoWindowOptions } from "./interfaces/iinfowindowoptions";
-import { IInfoWindowAction } from "./interfaces/iinfowindowaction";
-import { IMarkerOptions } from "./interfaces/imarkeroptions";
-import { IMapOptions } from "./interfaces/imapoptions";
-import { ISize } from "./interfaces/isize";
-import { IPoint } from "./interfaces/ipoint"
-import { IBox } from "./interfaces/ibox";
-import { IMarkerEvent } from "./interfaces/imarkerevent";
-import { IMarkerIconInfo } from "./interfaces/imarkericoninfo";
-import { ILayerOptions } from "./interfaces/ilayeroptions";
-import { IClusterOptions } from "./interfaces/iclusteroptions";
-import { ISpiderClusterOptions } from "./interfaces/ispiderclusteroptions";
-import { ILineOptions } from "./interfaces/ilineoptions";
+import { ILatLong } from "./src/interfaces/ilatlong";
+import { IInfoWindowOptions } from "./src/interfaces/iinfowindowoptions";
+import { IInfoWindowAction } from "./src/interfaces/iinfowindowaction";
+import { IMarkerOptions } from "./src/interfaces/imarkeroptions";
+import { IMapOptions } from "./src/interfaces/imapoptions";
+import { ISize } from "./src/interfaces/isize";
+import { IPoint } from "./src/interfaces/ipoint"
+import { IBox } from "./src/interfaces/ibox";
+import { IMarkerEvent } from "./src/interfaces/imarkerevent";
+import { IMarkerIconInfo } from "./src/interfaces/imarkericoninfo";
+import { ILayerOptions } from "./src/interfaces/ilayeroptions";
+import { IClusterOptions } from "./src/interfaces/iclusteroptions";
+import { ISpiderClusterOptions } from "./src/interfaces/ispiderclusteroptions";
+import { ILineOptions } from "./src/interfaces/ilineoptions";
 
 ///
 /// import module models
 ///
-import { InfoWindow } from "./models/infowindow";
-import { Marker } from "./models/marker";
-import { MarkerTypeId } from "./models/markertypeid";
-import { MapTypeId } from "./models/maptypeid";
-import { Layer } from "./models/layer";
-import { SpiderClusterMarker } from "./models/spiderclustermarker";
-import { ClusterPlacementMode } from "./models/clusterplacementmode";
-import { ClusterClickAction } from "./models/clusterclickaction";
-import { BingLayer } from "./models/bingMaps/binglayer"; 
-import { BingClusterLayer } from "./models/bingMaps/bingclusterlayer";
-import { BingSpiderClusterMarker } from "./models/bingMaps/bingspiderclustermarker";
-import { BingInfoWindow } from "./models/bingMaps/binginfowindow";
-import { BingMarker } from "./models/bingMaps/bingmarker";
+import { InfoWindow } from "./src/models/infowindow";
+import { Marker } from "./src/models/marker";
+import { MarkerTypeId } from "./src/models/markertypeid";
+import { MapTypeId } from "./src/models/maptypeid";
+import { Layer } from "./src/models/layer";
+import { SpiderClusterMarker } from "./src/models/spiderclustermarker";
+import { ClusterPlacementMode } from "./src/models/clusterplacementmode";
+import { ClusterClickAction } from "./src/models/clusterclickaction";
+import { BingLayer } from "./src/models/bingMaps/binglayer"; 
+import { BingClusterLayer } from "./src/models/bingMaps/bingclusterlayer";
+import { BingSpiderClusterMarker } from "./src/models/bingMaps/bingspiderclustermarker";
+import { BingInfoWindow } from "./src/models/bingMaps/binginfowindow";
+import { BingMarker } from "./src/models/bingMaps/bingmarker";
 
 ///
 /// import module components
 ///
-import { Map } from "./components/map";
-import { MapMarker } from "./components/mapmarker";
-import { InfoBox } from "./components/infobox";
-import { InfoBoxAction } from "./components/infoboxaction"
-import { MapLayer } from "./components/maplayer";
-import { ClusterLayer } from "./components/clusterlayer";
+import { Map } from "./src/components/map";
+import { MapMarker } from "./src/components/mapmarker";
+import { InfoBox } from "./src/components/infobox";
+import { InfoBoxAction } from "./src/components/infoboxaction"
+import { MapLayer } from "./src/components/maplayer";
+import { ClusterLayer } from "./src/components/clusterlayer";
 
 ///
 /// import module services
 ///
-import { MapServiceFactory } from "./services/mapservicefactory";
-import { MapService } from "./services/mapservice";
-import { MapAPILoader, WindowRef, DocumentRef } from "./services/mapapiloader";
-import { InfoBoxService } from "./services/infoboxservice";
-import { LayerService } from  "./services/layerservice";
-import { MarkerService } from "./services/markerservice";
-import { ClusterService } from "./services/clusterservice";
-import { BingMapServiceFactory } from "./services/bingmaps/bingmapservicefactory";
-import { BingMapService } from "./services/bingmaps/bingmapservice";
-import { BingMapAPILoader, BingMapAPILoaderConfig } from "./services/bingmaps/bingmapapiloader";
-import { BingInfoBoxService } from "./services/bingmaps/binginfoboxservice";
-import { BingMarkerService } from "./services/bingmaps/bingmarkerservice";
-import { BingLayerService  } from "./services/bingmaps/binglayerservice";
-import { BingClusterService  } from "./services/bingmaps/bingclusterservice";
+import { MapServiceFactory } from "./src/services/mapservicefactory";
+import { MapService } from "./src/services/mapservice";
+import { MapAPILoader, WindowRef, DocumentRef } from "./src/services/mapapiloader";
+import { InfoBoxService } from "./src/services/infoboxservice";
+import { LayerService } from  "./src/services/layerservice";
+import { MarkerService } from "./src/services/markerservice";
+import { ClusterService } from "./src/services/clusterservice";
+import { BingMapServiceFactory } from "./src/services/bingmaps/bingmapservicefactory";
+import { BingMapService } from "./src/services/bingmaps/bingmapservice";
+import { BingMapAPILoader, BingMapAPILoaderConfig } from "./src/services/bingmaps/bingmapapiloader";
+import { BingInfoBoxService } from "./src/services/bingmaps/binginfoboxservice";
+import { BingMarkerService } from "./src/services/bingmaps/bingmarkerservice";
+import { BingLayerService  } from "./src/services/bingmaps/binglayerservice";
+import { BingClusterService  } from "./src/services/bingmaps/bingclusterservice";
 
 ///
 /// export publics components, models, interfaces etc for external reuse.
