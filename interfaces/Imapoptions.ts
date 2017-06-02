@@ -1,10 +1,9 @@
-﻿import { MapTypeId } from "../models/maptypeid";
-import { ILatLong } from "./ilatlong";
-import { IPoint } from "./ipoint";
-import { IBox } from "./ibox";  
+﻿import { MapTypeId } from '../models/maptypeid';
+import { ILatLong } from './ilatlong';
+import { IPoint } from './ipoint';
+import { IBox } from './ibox';
 
 export interface IMapOptions {
-
     credentials?: string;
     customizeOverlays?: boolean;
     disableBirdseye?: boolean;

@@ -1,4 +1,4 @@
-export var google: any;
+export let google: any;
 
 export interface GoogleMap extends MVCObject {
   data?: Data;
@@ -397,7 +397,7 @@ export interface Feature extends MVCObject {
   properties: any;
 }
 
-export interface DataOptions{
+export interface DataOptions {
   controlPosition?: ControlPosition;
   controls?: string[];
   drawingMode?: string;

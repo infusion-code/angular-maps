@@ -1,4 +1,4 @@
-﻿import { Directive, Input, Output, EventEmitter } from "@angular/core";
+﻿import { Directive, Input, Output, EventEmitter } from '@angular/core';
 
 /**
  * InfoBoxAction renders an action in an info window {@link InfoBox}
@@ -23,19 +23,19 @@
  *    </x-map>
  *  `
  * })
- * ``` 
- * 
+ * ```
+ *
  * @export
  * @class InfoBoxAction
  */
 @Directive({
-    selector: 'info-box-action'
+    selector: '[mapInfoBoxAction]'
 })
-export class InfoBoxAction {
+export class InfoBoxActionDirective {
 
     /**
      * The label to display on the action
-     * 
+     *
      * @type {string}
      * @memberof InfoBoxAction
      */
@@ -44,7 +44,7 @@ export class InfoBoxAction {
 
     /**
      * Emits an event when the action has been clicked
-     * 
+     *
      * @type {EventEmitter<void>}
      * @memberof InfoBoxAction
      */

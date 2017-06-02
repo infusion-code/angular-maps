@@ -3,7 +3,7 @@ import { MapAPILoader, WindowRef, DocumentRef } from '../mapapiloader';
 
 /**
  * Protocol enumeration
- * 
+ *
  * @export
  * @enum {number}
  */
@@ -14,8 +14,8 @@ export enum ScriptProtocol {
 }
 
 /**
- * Bing Maps V8 specific loader configuration to be used with the {@link GoogleMapAPILoader} 
- * 
+ * Bing Maps V8 specific loader configuration to be used with the {@link GoogleMapAPILoader}
+ *
  * @export
  * @class GoogleMapAPILoaderConfig
  */
@@ -85,8 +85,8 @@ export class GoogleMapAPILoaderConfig {
 const DEFAULT_CONFIGURATION = new GoogleMapAPILoaderConfig();
 
 /**
- * Bing Maps V8 implementation for the {@link MapAPILoader} service. 
- * 
+ * Bing Maps V8 implementation for the {@link MapAPILoader} service.
+ *
  * @export
  * @class GoogleMapAPILoader
  * @extends {MapAPILoader}
@@ -95,17 +95,17 @@ const DEFAULT_CONFIGURATION = new GoogleMapAPILoaderConfig();
 export class GoogleMapAPILoader extends MapAPILoader {
 
     ///
-    /// Field defintitions. 
+    /// Field defintitions.
     ///
     private _scriptLoadingPromise: Promise<void>;
 
     ///
-    /// Property declarations. 
+    /// Property declarations.
     ///
 
     /**
-     * Gets the loader configuration. 
-     * 
+     * Gets the loader configuration.
+     *
      * @readonly
      * @type {GoogleMapAPILoaderConfig}
      * @memberof GoogleMapAPILoader
@@ -114,10 +114,10 @@ export class GoogleMapAPILoader extends MapAPILoader {
 
     /**
      * Creates an instance of GoogleMapAPILoader.
-     * @param {GoogleMapAPILoaderConfig} _config  - The loader configuration. 
-     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object. 
-     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}. Necessary because Bing Map V8 interacts with the document object. 
-     * 
+     * @param {GoogleMapAPILoaderConfig} _config  - The loader configuration.
+     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
+     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}.
+     *                                     Necessary because Bing Map V8 interacts with the document object.
      * @memberof GoogleMapAPILoader
      */
     constructor( @Optional() private _config: GoogleMapAPILoaderConfig, private _windowRef: WindowRef, private _documentRef: DocumentRef) {
@@ -128,14 +128,14 @@ export class GoogleMapAPILoader extends MapAPILoader {
     }
 
     ///
-    /// Public methods and MapAPILoader implementation. 
+    /// Public methods and MapAPILoader implementation.
     ///
 
     /**
      * Loads the necessary resources for Bing Maps V8.
-     * 
-     * @returns {Promise<void>} 
-     * 
+     *
+     * @returns {Promise<void>}
+     *
      * @memberof GoogleMapAPILoader
      */
     public Load(): Promise<void> {
@@ -147,7 +147,7 @@ export class GoogleMapAPILoader extends MapAPILoader {
         script.type = 'text/javascript';
         script.async = true;
         script.defer = true;
-        const callbackName: string = `Create`;
+        const callbackName = `Create`;
         script.src = this.GetScriptSrc(callbackName);
 
         this._scriptLoadingPromise = new Promise<void>((resolve: Function, reject: Function) => {
@@ -165,16 +165,16 @@ export class GoogleMapAPILoader extends MapAPILoader {
     ///
 
     /**
-     * Gets the Bing Map V8 scripts url for injections into the header. 
-     * 
+     * Gets the Bing Map V8 scripts url for injections into the header.
+     *
      * @private
-     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded. 
-     * @returns {string} - The url to be used to load the Bing Map scripts. 
-     * 
+     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded.
+     * @returns {string} - The url to be used to load the Bing Map scripts.
+     *
      * @memberof GoogleMapAPILoader
      */
     private GetScriptSrc(callbackName: string): string {
-        let protocolType: ScriptProtocol =
+        const protocolType: ScriptProtocol =
             (this._config && this._config.protocol) || ScriptProtocol.HTTPS;
         let protocol: string;
 
@@ -211,7 +211,7 @@ export class GoogleMapAPILoader extends MapAPILoader {
                 })
                 .map((k: string) => {
                     // join arrays as comma seperated strings
-                    let i = queryParams[k];
+                    const i = queryParams[k];
                     if (Array.isArray(i)) {
                         return { key: k, value: i.join(',') };
                     }

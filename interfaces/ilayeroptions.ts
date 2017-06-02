@@ -1,3 +1,3 @@
-export interface ILayerOptions{
+export interface ILayerOptions {
     id: number
 }

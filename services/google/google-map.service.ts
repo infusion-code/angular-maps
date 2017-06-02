@@ -1,28 +1,28 @@
-﻿import { Injectable, NgZone } from "@angular/core";
-import { Observer } from "rxjs/Observer";
-import { Observable } from "rxjs/Observable";
+﻿import { Injectable, NgZone } from '@angular/core';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 import * as GoogleMapTypes from './google-map-types';
 
-import { MapService } from "../mapservice";
-import { MapAPILoader } from "../mapapiloader";
-import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from "./google-map-api-loader.service"
-import { ILayerOptions} from "../../interfaces/ilayeroptions"; 
-import { IClusterOptions } from "../../interfaces/iclusteroptions";
-import { IMapOptions } from "../../interfaces/imapoptions";
-import { ILatLong } from "../../interfaces/ilatlong";
-import { IPoint } from "../../interfaces/ipoint";
-import { IMarkerOptions } from "../../interfaces/imarkeroptions";
-import { IMarkerIconInfo } from "../../interfaces/imarkericoninfo";
-import { IInfoWindowOptions } from "../../interfaces/iinfowindowoptions";
+import { MapService } from '../mapservice';
+import { MapAPILoader } from '../mapapiloader';
+import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service'
+import { ILayerOptions } from '../../interfaces/ilayeroptions';
+import { IClusterOptions } from '../../interfaces/iclusteroptions';
+import { IMapOptions } from '../../interfaces/imapoptions';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { IPoint } from '../../interfaces/ipoint';
+import { IMarkerOptions } from '../../interfaces/imarkeroptions';
+import { IMarkerIconInfo } from '../../interfaces/imarkericoninfo';
+import { IInfoWindowOptions } from '../../interfaces/iinfowindowoptions';
 import { Marker } from '../../models/marker';
 import { Layer } from '../../models/layer';
-import { InfoWindow } from "../../models/infowindow";
-import { GoogleConversions } from "./google-conversions";
+import { InfoWindow } from '../../models/infowindow';
+import { GoogleConversions } from './google-conversions';
 
 declare var google: any;
 /**
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
- * 
+ *
  * @export
  * @class GoogleMapService
  * @implements {MapService}
@@ -46,21 +46,21 @@ export class GoogleMapService implements MapService {
 
     /*
      * Gets the Google Map control instance underlying the implementation
-     * 
+     *
      * @readonly
      * @type {GoogleMapTypes.GoogleMap}
      * @memberof GoogleMapService
      */
-    public get MapInstance(): GoogleMapTypes.GoogleMap {return this._mapInstance; }
+    public get MapInstance(): GoogleMapTypes.GoogleMap { return this._mapInstance; }
 
     /**
-     * Gets a Promise for a Google Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you 
-     * are not sure if and when the instance will be created. 
+     * Gets a Promise for a Google Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
+     * are not sure if and when the instance will be created.
      * @readonly
      * @type {Promise<GoogleMapTypes.GoogleMap>}
      * @memberof GoogleMapService
      */
-    public get MapPromise():Promise<GoogleMapTypes.GoogleMap> { return this._map; }
+    public get MapPromise(): Promise<GoogleMapTypes.GoogleMap> { return this._map; }
 
     ///
     /// Constructor
@@ -68,9 +68,9 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates an instance of GoogleMapService.
-     * @param {MapAPILoader} _loader MapAPILoader instance implemented for Google Maps. This instance will generally be injected. 
-     * @param {NgZone} _zone NgZone object to enable zone aware promises. This will generally be injected. 
-     * 
+     * @param {MapAPILoader} _loader MapAPILoader instance implemented for Google Maps. This instance will generally be injected.
+     * @param {NgZone} _zone NgZone object to enable zone aware promises. This will generally be injected.
+     *
      * @memberof GoogleMapService
      */
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
@@ -84,17 +84,17 @@ export class GoogleMapService implements MapService {
 
     /*
      * Creates a Google map cluster layer within the map context
-     * 
+     *
      * @param {IClusterOptions} options - Options for the layer. See {@link IClusterOptions}.
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.ClusterLayer object. 
-     * 
+     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.ClusterLayer object.
+     *
      * @memberof GoogleMapService
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return Promise.resolve({});
         // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
         //     let p: Promise<Layer> = new Promise<Layer>( resolve => {
-        //         Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", () => {
+        //         Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', () => {
         //             let o:Microsoft.Maps.IClusterLayerOptions = GoogleConversions.TranslateClusterOptions(options);
         //             let layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer( new Array<Microsoft.Maps.Pushpin>(), o);
         //             let bl:GoogleClusterLayer;
@@ -110,10 +110,10 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates an information window for a map position
-     * 
+     *
      * @param {IInfoWindowOptions} [options] - Infowindow options. See {@link IInfoWindowOptions}
-     * @returns {Promise<InfoWindow>} - Promise of a {@link InfoWindow} object, which models the underlying Microsoft.Maps.Infobox object. 
-     * 
+     * @returns {Promise<InfoWindow>} - Promise of a {@link InfoWindow} object, which models the underlying Microsoft.Maps.Infobox object.
+     *
      * @memberof GoogleMapService
      */
     public CreateInfoWindow(options?: IInfoWindowOptions): Promise<InfoWindow> {
@@ -132,10 +132,10 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates a map layer within the map context
-     * 
+     *
      * @param {ILayerOptions} options - Options for the layer. See {@link ILayerOptions}
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.Layer object. 
-     * 
+     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.Layer object.
+     *
      * @memberof GoogleMapService
      */
     public CreateLayer(options: ILayerOptions): Promise<Layer> {
@@ -149,11 +149,11 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates a map instance
-     * 
-     * @param {HTMLElement} el - HTML element to host the map. 
+     *
+     * @param {HTMLElement} el - HTML element to host the map.
      * @param {IMapOptions} mapOptions - Map options
-     * @returns {Promise<void>} - Promise fullfilled once the map has been created. 
-     * 
+     * @returns {Promise<void>} - Promise fullfilled once the map has been created.
+     *
      * @memberof GoogleMapService
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
@@ -167,10 +167,10 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates a Google map marker within the map context
-     * 
+     *
      * @param {IMarkerOptions} [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
-     * @returns {Promise<Marker>} - Promise of a {@link Marker} object, which models the underlying Microsoft.Maps.PushPin object. 
-     * 
+     * @returns {Promise<Marker>} - Promise of a {@link Marker} object, which models the underlying Microsoft.Maps.PushPin object.
+     *
      * @memberof GoogleMapService
      */
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
@@ -190,7 +190,7 @@ export class GoogleMapService implements MapService {
         //                 { x: 38, y: 40 },
         //                 { x: 24, y: 0 }
         //             ],
-        //             color: "#f00",
+        //             color: '#f00',
         //             size: { width: s, height: s }
         //         };
         //         o.icon = Marker.CreateMarker(iconInfo);
@@ -205,44 +205,44 @@ export class GoogleMapService implements MapService {
 
     /**
      * Deletes a layer from the map.
-     * 
-     * @param {Layer} layer - Layer to delete. See {@link Layer}. This method expects the Google specific Layer model implementation. 
-     * @returns {Promise<void>} - Promise fullfilled when the layer has been removed. 
-     * 
+     *
+     * @param {Layer} layer - Layer to delete. See {@link Layer}. This method expects the Google specific Layer model implementation.
+     * @returns {Promise<void>} - Promise fullfilled when the layer has been removed.
+     *
      * @memberof GoogleMapService
      */
     public DeleteLayer(layer: Layer): Promise<void> {
         return Promise.resolve();
         // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
         //     map.layers.remove(layer.NativePrimitve);
-        // });        
+        // });
     }
 
     /**
      * Dispaose the map and associated resoures.
-     * 
-     * @returns {void} 
-     * 
+     *
+     * @returns {void}
+     *
      * @memberof GoogleMapService
      */
     public DisposeMap(): void {
-        if (this._map == null && this._mapInstance == null) return;
+        if (this._map == null && this._mapInstance == null) { return; }
         if (this._mapInstance != null) {
             this._mapInstance = null;
             this._map = new Promise<GoogleMapTypes.GoogleMap>((resolve: () => void) => { this._mapResolver = resolve; });
-        } 
+        }
     }
 
     /**
      * Gets the geo coordinates of the map center
-     * 
-     * @returns {Promise<ILatLong>} - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}. 
-     * 
+     *
+     * @returns {Promise<ILatLong>} - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
+     *
      * @memberof GoogleMapService
      */
     public GetCenter(): Promise<ILatLong> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            let center: GoogleMapTypes.LatLng = map.getCenter();
+            const center: GoogleMapTypes.LatLng = map.getCenter();
             return <ILatLong>{
                 latitude: center.lat(),
                 longitude: center.lng()
@@ -251,10 +251,10 @@ export class GoogleMapService implements MapService {
     }
 
     /**
-     * Gets the current zoom level of the map. 
-     * 
-     * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level. 
-     * 
+     * Gets the current zoom level of the map.
+     *
+     * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level.
+     *
      * @memberof GoogleMapService
      */
     public GetZoom(): Promise<number> {
@@ -262,12 +262,12 @@ export class GoogleMapService implements MapService {
     }
 
     /**
-     * Provides a conversion of geo coordinates to pixels on the map control. 
-     * 
+     * Provides a conversion of geo coordinates to pixels on the map control.
+     *
      * @param {ILatLong} loc - The geo coordinates to translate.
-     * @returns {Promise<IPoint>} - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null 
-     * if the goe coordinates are not in the view port. 
-     * 
+     * @returns {Promise<IPoint>} - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
+     * if the goe coordinates are not in the view port.
+     *
      * @memberof GoogleMapService
      */
     public LocationToPoint(loc: ILatLong): Promise<IPoint> {
@@ -280,11 +280,11 @@ export class GoogleMapService implements MapService {
     }
 
     /**
-     * Centers the map on a geo location. 
-     * 
+     * Centers the map on a geo location.
+     *
      * @param {ILatLong} latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
      * @returns {Promise<void>} - Promise that is fullfilled when the center operations has been completed.
-     * 
+     *
      * @memberof GoogleMapService
      */
     public SetCenter(latLng: ILatLong): Promise<void> {
@@ -295,24 +295,24 @@ export class GoogleMapService implements MapService {
     }
 
     /**
-     * Sets the generic map options. 
-     * 
+     * Sets the generic map options.
+     *
      * @param {IMapOptions} options - Options to set.
-     * 
+     *
      * @memberof GoogleMapService
      */
     public SetMapOptions(options: IMapOptions) {
         this._map.then((m: GoogleMapTypes.GoogleMap) => {
-            let o = GoogleConversions.TranslateOptions(options);
+            const o = GoogleConversions.TranslateOptions(options);
             m.setOptions(o);
         });
     }
 
     /**
-     * Sets the view options of the map. 
-     * 
+     * Sets the view options of the map.
+     *
      * @param {IMapOptions} options - Options to set.
-     * 
+     *
      * @memberof GoogleMapService
      */
     public SetViewOptions(options: IMapOptions) {
@@ -323,11 +323,11 @@ export class GoogleMapService implements MapService {
     }
 
     /**
-     * Sets the zoom level of the map. 
-     * 
-     * @param {number} zoom - Zoom level to set. 
-     * @returns {Promise<void>} - A Promise that is fullfilled once the zoom operation is complete. 
-     * 
+     * Sets the zoom level of the map.
+     *
+     * @param {number} zoom - Zoom level to set.
+     * @returns {Promise<void>} - A Promise that is fullfilled once the zoom operation is complete.
+     *
      * @memberof GoogleMapService
      */
     public SetZoom(zoom: number): Promise<void> {
@@ -339,11 +339,11 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates an event subscription
-     * 
-     * @template E - Generic type of the underlying event. 
-     * @param {string} eventName - The name of the event (e.g. "click")
-     * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs. 
-     * 
+     *
+     * @template E - Generic type of the underlying event.
+     * @param {string} eventName - The name of the event (e.g. 'click')
+     * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs.
+     *
      * @memberof GoogleMapService
      */
     public SubscribeToMapEvent<E>(eventName: string): Observable<E> {
@@ -358,10 +358,10 @@ export class GoogleMapService implements MapService {
 
     /**
      * Triggers the given event name on the map instance.
-     * 
+     *
      * @param {string} eventName - Event to trigger.
-     * @returns {Promise<void>} - A promise that is fullfilled once the event is triggered. 
-     * 
+     * @returns {Promise<void>} - A promise that is fullfilled once the event is triggered.
+     *
      * @memberof GoogleMapService
      */
     public TriggerMapEvent(eventName: string): Promise<void> {

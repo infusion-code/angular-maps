@@ -1,15 +1,16 @@
-﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy, SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from "@angular/core";
-import { MapServiceFactory } from "../services/mapservicefactory";
-import { MapService } from "../services/mapservice";
-import { MarkerService } from "../services/markerservice";
-import { InfoBoxService } from "../services/infoboxservice";
-import { LayerService } from "../services/layerservice";
-import { ClusterService } from "../services/clusterservice";
-import { ILatLong } from "../interfaces/ilatlong";
-import { IBox } from "../interfaces/ibox";
-import { IMapOptions } from "../interfaces/imapoptions";
-import { MapTypeId } from "../models/maptypeid";
-import { MapMarker } from "./mapmarker";
+﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
+    SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from '@angular/core';
+import { MapServiceFactory } from '../services/mapservicefactory';
+import { MapService } from '../services/mapservice';
+import { MarkerService } from '../services/markerservice';
+import { InfoBoxService } from '../services/infoboxservice';
+import { LayerService } from '../services/layerservice';
+import { ClusterService } from '../services/clusterservice';
+import { ILatLong } from '../interfaces/ilatlong';
+import { IBox } from '../interfaces/ibox';
+import { IMapOptions } from '../interfaces/imapoptions';
+import { MapTypeId } from '../models/maptypeid';
+import { MapMarkerDirective } from './mapmarker';
 
 /**
  * Renders a map based on a given provider.
@@ -31,7 +32,7 @@ import { MapMarker } from "./mapmarker";
  *  `
  * })
  * ```
- * 
+ *
  * @export
  * @class Map
  * @implements {OnChanges}
@@ -42,10 +43,10 @@ import { MapMarker } from "./mapmarker";
     selector: 'x-map',
     providers: [
         { provide: MapService, deps: [MapServiceFactory], useFactory: MapServiceCreator },
-        { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: MarkerServiceFactory }, 
+        { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: MarkerServiceFactory },
         { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: InfoBoxServiceFactory },
         { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
-        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory }   
+        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory }
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -59,29 +60,29 @@ import { MapMarker } from "./mapmarker";
         .map-content { display:none; }
     `]
 })
-export class Map implements OnChanges, OnInit, OnDestroy {
+export class MapComponent implements OnChanges, OnInit, OnDestroy {
 
     ///
     /// Field declarations
     ///
-    private _longitude: number = 0;
-    private _latitude: number = 0;
-    private _zoom: number = 0;
+    private _longitude = 0;
+    private _latitude = 0;
+    private _zoom = 0;
     private _clickTimeout: number | NodeJS.Timer;
     private _options: IMapOptions = {};
     private _box: IBox = null;
     private _mapPromise: Promise<void>;
 
     @ViewChild('container') private _container: ElementRef;
-    @ContentChildren(MapMarker) private _markers: Array<MapMarker>;
+    @ContentChildren(MapMarkerDirective) private _markers: Array<MapMarkerDirective>;
 
     ///
     /// Property declarations
     ///
 
     /**
-     * Get or sets the maximum and minimum bounding box for map. 
-     * 
+     * Get or sets the maximum and minimum bounding box for map.
+     *
      * @type {IBox}
      * @memberof Map
      */
@@ -91,7 +92,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Gets or sets the latitude that sets the center of the map.
-     * 
+     *
      * @type {(number | string)}
      * @memberof Map
      */
@@ -104,7 +105,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Gets or sets the longitude that sets the center of the map.
-     * 
+     *
      * @type {(number| string)}
      * @memberof Map
      */
@@ -127,7 +128,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Gets or sets the zoom level of the map. The default value is `8`.
-     * 
+     *
      * @type {(number | string)}
      * @memberof Map
      */
@@ -142,7 +143,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * This event emitter is fired when the map center changes.
-     * 
+     *
      * @type {EventEmitter<ILatLong>}
      * @memberof Map
      */
@@ -152,7 +153,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter gets emitted when the user clicks on the map (but not when they click on a
      * marker or infoWindow).
-     * 
+     *
      * @type {EventEmitter<MouseEvent>}
      * @memberof Map
      */
@@ -162,7 +163,7 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
      * on a marker or infoWindow).
-     * 
+     *
      * @type {EventEmitter<MouseEvent>}
      * @memberof Map
      */
@@ -172,16 +173,16 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter gets emitted when the user right-clicks on the map (but not when they click
      * on a marker or infoWindow).
-     * 
+     *
      * @type {EventEmitter<MouseEvent>}
      * @memberof Map
      */
     @Output()
         MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
-    
+
     /**
      * This event emiiter is fired when the map zoom changes
-     * 
+     *
      * @type {EventEmitter<Number>}
      * @memberof Map
      */
@@ -195,9 +196,9 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Creates an instance of Map.
-     * 
-     * @param {MapService} _mapService - Concreted implementation of a map service for the underlying maps implementations. Generally provided via injections. 
-     * 
+     *
+     * @param {MapService} _mapService - Concreted implementation of a map service for the underlying maps implementations.
+     *                                   Generally provided via injections.
      * @memberof Map
      */
     constructor(private _mapService: MapService) { }
@@ -208,9 +209,9 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Called on Component initialization. Part of ng Component life cycle.
-     * 
+     *
      * @returns {void}
-     * 
+     *
      * @memberof Map
      */
     public ngOnInit(): void {
@@ -218,15 +219,15 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Called when changes to the databoud properties occur. Part of the ng Component life cycle. 
-     * 
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured. 
+     * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
+     *
+     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @return {void}
-     * 
+     *
      * @memberof Map
      */
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if(this._mapPromise){
+        if (this._mapPromise) {
             if (changes['Box']) {
                 if (this._box != null) {
                     this._mapService.SetViewOptions(<IMapOptions>{
@@ -241,10 +242,10 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle. 
-     * 
+     * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
+     *
      * @returns {void}
-     * 
+     *
      * @memberof Map
      */
     public ngOnDestroy(): void {
@@ -253,9 +254,9 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Triggers a resize event on the map instance.
-     * 
+     *
      * @returns {Promise<void>} - A promise that gets resolved after the event was triggered.
-     * 
+     *
      * @memberof Map
      */
     public TriggerResize(): Promise<void> {
@@ -269,34 +270,33 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     ///
-    /// Private methods. 
+    /// Private methods.
     ///
 
     /**
-     * Converts a number-ish value to a number. 
-     * 
+     * Converts a number-ish value to a number.
+     *
      * @private
-     * @param {(string | number)} value - The value to convert. 
+     * @param {(string | number)} value - The value to convert.
      * @param {number} [defaultValue=null] - Default value to use if the conversion cannot be performed.
-     * @returns {number} - Converted number of the default. 
-     * 
+     * @returns {number} - Converted number of the default.
+     *
      * @memberof Map
      */
     private ConvertToDecimal(value: string | number, defaultValue: number = null): number {
         if (typeof value === 'string') {
             return parseFloat(value);
-        }
-        else if (typeof value === 'number') {
+        } else if (typeof value === 'number') {
             return <number>value;
         }
         return defaultValue;
     }
 
     /**
-     * Delegate handling map center change events. 
-     * 
+     * Delegate handling map center change events.
+     *
      * @private
-     * 
+     *
      * @memberof Map
      */
     private HandleMapCenterChange(): void {
@@ -312,10 +312,10 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Delegate handling the map click events. 
-     * 
+     * Delegate handling the map click events.
+     *
      * @private
-     * 
+     *
      * @memberof Map
      */
     private HandleMapClickEvents(): void {
@@ -328,7 +328,9 @@ export class Map implements OnChanges, OnInit, OnDestroy {
             }, 300)
         });
         this._mapService.SubscribeToMapEvent<any>('dblclick').subscribe(e => {
-            if (this._clickTimeout) clearTimeout(<NodeJS.Timer>this._clickTimeout);
+            if (this._clickTimeout) {
+                clearTimeout(<NodeJS.Timer>this._clickTimeout);
+            }
             this.MapDblClick.emit(<MouseEvent>e);
         });
         this._mapService.SubscribeToMapEvent<any>('rightclick').subscribe(e => {
@@ -337,10 +339,10 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Delegate handling map zoom change events. 
-     * 
+     * Delegate handling map zoom change events.
+     *
      * @private
-     * 
+     *
      * @memberof Map
      */
     private HandleMapZoomChange(): void {
@@ -355,18 +357,18 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Initializes the map. 
-     * 
+     * Initializes the map.
+     *
      * @private
-     * @param {HTMLElement} el - Html elements which will host the map canvas.  
-     * 
+     * @param {HTMLElement} el - Html elements which will host the map canvas.
+     *
      * @memberof Map
      */
     private InitMapInstance(el: HTMLElement) {
-        if (this._options.center == null) this._options.center = { latitude: this._latitude, longitude: this._longitude }
-        if (this._options.zoom == null) this._options.zoom = this._zoom;
-        if (this._options.mapTypeId == null) this._options.mapTypeId = MapTypeId.aerial;
-        if (this._box != null) this._options.bounds = this._box;
+        if (this._options.center == null) { this._options.center = { latitude: this._latitude, longitude: this._longitude }; }
+        if (this._options.zoom == null) { this._options.zoom = this._zoom; }
+        if (this._options.mapTypeId == null) { this._options.mapTypeId = MapTypeId.aerial; }
+        if (this._box != null) { this._options.bounds = this._box; }
         this._mapPromise = this._mapService.CreateMap(el, this._options);
         this.HandleMapCenterChange();
         this.HandleMapZoomChange();
@@ -374,11 +376,11 @@ export class Map implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Updates the map center based on the geo properties of the component. 
-     * 
+     * Updates the map center based on the geo properties of the component.
+     *
      * @private
-     * @returns {void} 
-     * 
+     * @returns {void}
+     *
      * @memberof Map
      */
     private UpdateCenter(): void {
@@ -394,57 +396,59 @@ export class Map implements OnChanges, OnInit, OnDestroy {
 
 /**
  * Factory function to generate a cluster service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline. 
- * 
+ * us to use lamda functions inline.
+ *
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance. 
+ * @param {MapService} m - A {@link MapService} instance.
  * @returns {ClusterService} - A concrete instance of a Cluster Service based on the underlying map architecture
  */
-export function ClusterServiceFactory(f: MapServiceFactory, m:MapService): ClusterService { return f.CreateClusterService(m); }
+export function ClusterServiceFactory(f: MapServiceFactory, m: MapService): ClusterService { return f.CreateClusterService(m); }
 
 /**
  * Factory function to generate a infobox service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline. 
- * 
+ * us to use lamda functions inline.
+ *
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance. 
- * @returns {InfoBoxService} - A concrete instance of a InfoBox Service based on the underlying map architecture. 
+ * @param {MapService} m - A {@link MapService} instance.
+ * @returns {InfoBoxService} - A concrete instance of a InfoBox Service based on the underlying map architecture.
  */
-export function InfoBoxServiceFactory(f: MapServiceFactory, m:MapService): InfoBoxService { return f.CreateInfoBoxService(m); } 
+export function InfoBoxServiceFactory(f: MapServiceFactory, m: MapService): InfoBoxService { return f.CreateInfoBoxService(m); }
 
 /**
  * Factory function to generate a layer service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline. 
- * 
+ * us to use lamda functions inline.
+ *
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance. 
- * @returns {LayerService} - - A concrete instance of a Layer Service based on the underlying map architecture. 
+ * @param {MapService} m - A {@link MapService} instance.
+ * @returns {LayerService} - - A concrete instance of a Layer Service based on the underlying map architecture.
  */
-export function LayerServiceFactory(f: MapServiceFactory, m:MapService): LayerService { return f.CreateLayerService(m); }
+export function LayerServiceFactory(f: MapServiceFactory, m: MapService): LayerService { return f.CreateLayerService(m); }
 
 /**
  * Factory function to generate a map service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline. 
- * 
+ * us to use lamda functions inline.
+ *
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @returns {MapService} - A concrete instance of a MapService based on the underlying map architecture. 
+ * @returns {MapService} - A concrete instance of a MapService based on the underlying map architecture.
  */
-export function MapServiceCreator(f: MapServiceFactory): MapService { return f.Create(); } 
+export function MapServiceCreator(f: MapServiceFactory): MapService { return f.Create(); }
 
 /**
  * Factory function to generate a marker service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline. 
- * 
+ * us to use lamda functions inline.
+ *
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance. 
- * @param {LayerService} l - A {@link LayerService} instance. 
- * @param {ClusterService} c - A {@link ClusterService} instance. 
- * @returns {MarkerService} - A concrete instance of a Marker Service based on the underlying map architecture. 
+ * @param {MapService} m - A {@link MapService} instance.
+ * @param {LayerService} l - A {@link LayerService} instance.
+ * @param {ClusterService} c - A {@link ClusterService} instance.
+ * @returns {MarkerService} - A concrete instance of a Marker Service based on the underlying map architecture.
  */
-export function MarkerServiceFactory(f: MapServiceFactory, m:MapService, l:LayerService, c:ClusterService): MarkerService { return f.CreateMarkerService(m, l, c); } 
+export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService, c: ClusterService): MarkerService {
+    return f.CreateMarkerService(m, l, c);
+}
 

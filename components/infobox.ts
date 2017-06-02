@@ -1,9 +1,10 @@
-﻿import { Component, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChildren, QueryList, ViewChild, ElementRef, ViewEncapsulation } from "@angular/core";
-import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
-import { ILatLong } from "../interfaces/ilatlong";
-import { InfoBoxService } from "../services/infoboxservice";
-import { MapMarker } from "./mapmarker";
-import { InfoBoxAction } from "./infoboxaction";
+﻿import { Component, SimpleChange, OnDestroy, OnChanges, EventEmitter, AfterViewInit,
+    ContentChildren, QueryList, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
+import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
+import { ILatLong } from '../interfaces/ilatlong';
+import { InfoBoxService } from '../services/infoboxservice';
+import { MapMarkerDirective } from './mapmarker';
+import { InfoBoxActionDirective } from './infoboxaction';
 
 let infoBoxId = 0;
 
@@ -21,9 +22,9 @@ let infoBoxId = 0;
 ///    .map-container { height: 300px; }
 /// `],
 ///  template: `
-///    <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-///      <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'">
-///        <info-box [disableAutoPan]="true">
+///    <x-map [latitude]='lat' [longitude]='lng' [zoom]='zoom'>
+///      <map-marker [latitude]='lat' [longitude]='lng' [label]=''M''>
+///        <info-box [disableAutoPan]='true'>
 ///          Hi, this is the content of the <strong>info window</strong>
 ///         </info-box>
 ///       </map-marker>
@@ -33,8 +34,8 @@ let infoBoxId = 0;
 /// ```
 ///
 @Component({
-    selector: 'info-box',
-    inputs: ['latitude', 'longitude', 'disableAutoPan', 'title', 'description', 'visible', 'modal', "xOffset", "yOffset"],
+    selector: 'x-info-box',
+    inputs: ['latitude', 'longitude', 'disableAutoPan', 'title', 'description', 'visible', 'modal', 'xOffset', 'yOffset'],
     template: `
         <div #infoBoxContent class='info-box-content'>
             <ng-content></ng-content>
@@ -47,8 +48,13 @@ let infoBoxId = 0;
     outputs: ['infoBoxClose'],
     encapsulation: ViewEncapsulation.None
 })
-// onclick="console.log(window.infoWindow); window.infoWindow.close();return false;"
-export class InfoBox implements OnDestroy, OnChanges {
+// onclick='console.log(window.infoWindow); window.infoWindow.close();return false;'
+export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
+    private static _infoBoxOptionsInputs: string[] = [
+        'disableAutoPan', 'maxWidth', 'title', 'description', 'visible', 'xOffset', 'yOffset'
+    ];
+    private _infoBoxAddedToManager = false;
+    private _id: string = (infoBoxId++).toString();
     ///
     /// The latitude position of the info window (only usefull if you use it ouside of a {@link
     /// SebmGoogleMapMarker}).
@@ -67,7 +73,7 @@ export class InfoBox implements OnDestroy, OnChanges {
     title: string;
 
     ///
-    /// The description to display in the info window. 
+    /// The description to display in the info window.
     ///
     description: string;
 
@@ -85,19 +91,19 @@ export class InfoBox implements OnDestroy, OnChanges {
     maxWidth: number;
 
     ///
-    /// Determine whether only one infobox can be open at a time. Note that ANY info box settings 
+    /// Determine whether only one infobox can be open at a time. Note that ANY info box settings
     ///
-    modal: boolean = true;
+    modal = true;
 
     ///
     /// Holds the marker that is the host of the info window (if available)
     ///
-    hostMarker: MapMarker;
+    hostMarker: MapMarkerDirective;
 
     ///
     /// Determines visibility of infobox
     ///
-    visible: boolean = false;
+    visible = false;
 
     ///
     /// horizontal offset of the infobox from the host marker lat/long or the sepecified coordinates
@@ -117,20 +123,18 @@ export class InfoBox implements OnDestroy, OnChanges {
     ///
     /// Zero or more actions to show on the info window
     ///
-    @ContentChildren(InfoBoxAction) infoWindowActions: QueryList<InfoBoxAction>;
+    @ContentChildren(InfoBoxActionDirective) infoWindowActions: QueryList<InfoBoxActionDirective>;
 
     ///
     /// HTML conent of the infobox
     ///
-    @ViewChild("infoBoxContent") content: ElementRef;
+    @ViewChild('infoBoxContent') content: ElementRef;
     public get HtmlContent(): string {
-        if (this.content.nativeElement && this.content.nativeElement.innerText && this.content.nativeElement.innerText.trim() != "") return this.content.nativeElement.outerHTML;
-        return "";
+        if (this.content.nativeElement && this.content.nativeElement.innerText && this.content.nativeElement.innerText.trim() !== '') {
+            return this.content.nativeElement.outerHTML;
+        }
+        return '';
     }
-
-    private static _infoBoxOptionsInputs: string[] = ["disableAutoPan", "maxWidth", "title", "description", "visible", "xOffset", "yOffset"];
-    private _infoBoxAddedToManager: boolean = false;
-    private _id: string = (infoBoxId++).toString();
 
     public get Id(): string { return this._id; }
 
@@ -150,7 +154,7 @@ export class InfoBox implements OnDestroy, OnChanges {
     public ngOnDestroy() { this._infoBoxService.DeleteInfoWindow(this); }
 
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (!this._infoBoxAddedToManager) return;
+        if (!this._infoBoxAddedToManager) { return; }
         if ((changes['latitude'] || changes['longitude']) && typeof this.latitude === 'number' &&
             typeof this.longitude === 'number') {
             this._infoBoxService.SetPosition(this);
@@ -161,20 +165,19 @@ export class InfoBox implements OnDestroy, OnChanges {
     public Open(loc?: ILatLong): Promise<void> {
         return this._infoBoxService.Open(this, loc);
     }
-    
+
     public ToString(): string { return 'InfoBox-' + this._id.toString(); }
 
     private SetInfoWindowOptions(changes: { [key: string]: SimpleChange }) {
-        let options: IInfoWindowOptions | any = {};
+        const options: IInfoWindowOptions | any = {};
         Object.keys(changes)
-            .filter(k => InfoBox._infoBoxOptionsInputs.indexOf(k) !== -1)
+            .filter(k => InfoBoxComponent._infoBoxOptionsInputs.indexOf(k) !== -1)
             .forEach((k) => {
-                if (k == "xOffset" || k == "yOffset") {
-                    if (options.pixelOffset == null) options.pixelOffset = { x: 0, y: 0 };
-                    if (k == "xOffset") options.pixelOffset.x = changes[k].currentValue;
-                    if (k == "yOffset") options.pixelOffset.y = changes[k].currentValue;
-                }
-                else {
+                if (k === 'xOffset' || k === 'yOffset') {
+                    if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
+                    if (k === 'xOffset') { options.pixelOffset.x = changes[k].currentValue; }
+                    if (k === 'yOffset') { options.pixelOffset.y = changes[k].currentValue; }
+                } else {
                     options[k] = changes[k].currentValue;
                 }
             });

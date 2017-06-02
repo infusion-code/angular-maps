@@ -1,17 +1,17 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from "../interfaces/imarkeroptions";
+import { IMarkerOptions } from '../interfaces/imarkeroptions';
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
-import { ClusterLayer } from '../components/clusterlayer'
+import { ClusterLayerDirective } from '../components/clusterlayer'
 
 @Injectable()
 export abstract class ClusterService {
 
-    public abstract AddLayer(layer: ClusterLayer): void;
+    public abstract AddLayer(layer: ClusterLayerDirective): void;
 
-    public abstract GetNativeLayer(layer: ClusterLayer): Promise<Layer>;
+    public abstract GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer>;
 
-    public abstract DeleteLayer(layer: ClusterLayer): Promise<void>;
+    public abstract DeleteLayer(layer: ClusterLayerDirective): Promise<void>;
 
     public abstract CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker>;
 

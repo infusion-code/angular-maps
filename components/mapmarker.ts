@@ -1,12 +1,13 @@
-﻿import { Directive, SimpleChange, Input, Output, OnDestroy, OnChanges, EventEmitter, ContentChild, AfterContentInit, ViewContainerRef } from '@angular/core';
-import { IPoint } from "../interfaces/ipoint";
-import { ILatLong } from "../interfaces/ilatlong";
-import { IMarkerEvent } from "../interfaces/imarkerevent";
-import { IMarkerIconInfo } from "../interfaces/imarkericoninfo";
+﻿import { Directive, SimpleChange, Input, Output, OnDestroy, OnChanges,
+    EventEmitter, ContentChild, AfterContentInit, ViewContainerRef } from '@angular/core';
+import { IPoint } from '../interfaces/ipoint';
+import { ILatLong } from '../interfaces/ilatlong';
+import { IMarkerEvent } from '../interfaces/imarkerevent';
+import { IMarkerIconInfo } from '../interfaces/imarkericoninfo';
 import { MarkerService } from '../services/markerservice';
-import { InfoBox } from './infobox';
+import { InfoBoxComponent } from './infobox';
 
-let markerId:number = 0;
+let markerId = 0;
 
 ///
 /// MapMarker renders a map marker inside a {@link Map}.
@@ -24,45 +25,45 @@ let markerId:number = 0;
 ///   }
 /// `],
 /// template: `
-///   <x-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-///      <map-marker [latitude]="lat" [longitude]="lng" [label]="'M'"></map-marker>
+///   <x-map [latitude]='lat' [longitude]='lng' [zoom]='zoom'>
+///      <map-marker [latitude]='lat' [longitude]='lng' [label]=''M''></map-marker>
 ///   </x-map>
 /// `
 /// })
 /// ```
 ///
 @Directive({
-    selector: 'map-marker'
+    selector: '[mapMarker]'
 })
-export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
-    private _inCustomLayer: boolean = false;
-    private _inClusterLayer: boolean = false;
-    private _markerAddedToManger: boolean = false;
+export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentInit {
+    private _inCustomLayer = false;
+    private _inClusterLayer = false;
+    private _markerAddedToManger = false;
     private _id: string;
     private _layerId: number;
 
-    public get AddedToManager():boolean { return this._markerAddedToManger; }
+    public get AddedToManager(): boolean { return this._markerAddedToManger; }
     public get Id(): string { return this._id; }
     public get InClusterLayer(): boolean { return this._inClusterLayer; }
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
     public get LayerId(): number { return this._layerId; }
 
     ///
-    /// Any InfoBox that is a direct children of the marker 
-    /// 
-    @ContentChild(InfoBox) protected _infoBox: InfoBox;
+    /// Any InfoBox that is a direct children of the marker
+    ///
+    @ContentChild(InfoBoxComponent) protected _infoBox: InfoBoxComponent;
 
     ///
-    /// Icon anchor relative to marker root 
+    /// Icon anchor relative to marker root
     ///
     @Input() public Anchor: IPoint;
 
     ///
     /// If true, the marker can be dragged. Default value is false.
     ///
-    @Input() public Draggable: boolean = false;
-    
-    /// 
+    @Input() public Draggable = false;
+
+    ///
     /// Icon height
     ///
     @Input() public Height: number;
@@ -127,16 +128,19 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     }
 
     public LocationToPixel(loc?: ILatLong): Promise<IPoint> {
-        return this._markerService.LocationToPoint(loc ? loc: this);
-    } 
+        return this._markerService.LocationToPoint(loc ? loc : this);
+    }
 
     public ngAfterContentInit() {
-        if (this._infoBox != null)  this._infoBox.hostMarker = this;
-        if (this._containerRef.element.nativeElement.parentElement){
-            let parentName:string =this._containerRef.element.nativeElement.parentElement.tagName;
-            if (parentName.toLowerCase() == "cluster-layer") { this._inClusterLayer = true; }
-            else if (parentName.toLowerCase() == "map-layer") { this._inCustomLayer = true; }
-            this._layerId = Number(this._containerRef.element.nativeElement.parentElement.attributes["layerId"]);
+        if (this._infoBox != null) { this._infoBox.hostMarker = this; }
+        if (this._containerRef.element.nativeElement.parentElement) {
+            const parentName: string = this._containerRef.element.nativeElement.parentElement.tagName;
+            if (parentName.toLowerCase() === 'cluster-layer') {
+                this._inClusterLayer = true;
+            } else if (parentName.toLowerCase() === 'map-layer') {
+                this._inCustomLayer = true;
+            }
+            this._layerId = Number(this._containerRef.element.nativeElement.parentElement.attributes['layerId']);
         }
         if (!this._markerAddedToManger) {
             this._markerService.AddMarker(this);
@@ -151,7 +155,7 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
         if (typeof this.Latitude !== 'number' || typeof this.Longitude !== 'number') {
             return;
         }
-        if (!this._markerAddedToManger) return;
+        if (!this._markerAddedToManger) { return; }
         if (changes['Latitude'] || changes['Longitude']) {
             this._markerService.UpdateMarkerPosition(this);
         }
@@ -176,13 +180,13 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
 
     private AddEventListeners(): void {
         this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
-            let t: MapMarker = this;
+            const t: MapMarkerDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
             }
-            this.MarkerClick.emit({ 
-                Marker: this, 
-                Click: e, 
+            this.MarkerClick.emit({
+                Marker: this,
+                Click: e,
                 Location: this._markerService.GetCoordinatesFromClick(e),
                 Pixels: this._markerService.GetPixelsFromClick(e),
             });
@@ -192,7 +196,5 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
                 this.DragEnd.emit(e);
             });
     }
-
-
 
 }
