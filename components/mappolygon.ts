@@ -1,4 +1,5 @@
-﻿import { Directive, Input, Output, OnDestroy, OnChanges,
+﻿import { 
+    Directive, Input, Output, OnDestroy, OnChanges,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
 import { IPoint } from '../interfaces/ipoint';
@@ -31,7 +32,7 @@ import { InfoBoxComponent } from './infobox';
 @Directive({
     selector: '[mapPolygon]'
 })
-export class PolygonDirective implements OnDestroy, OnChanges, AfterContentInit {
+export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentInit {
     ngAfterContentInit(): void {
         throw new Error('Method not implemented.');
     }
