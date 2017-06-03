@@ -50,9 +50,6 @@ let infoBoxId = 0;
 })
 // onclick='console.log(window.infoWindow); window.infoWindow.close();return false;'
 export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
-    private static _infoBoxOptionsInputs: string[] = [
-        'disableAutoPan', 'maxWidth', 'title', 'description', 'visible', 'xOffset', 'yOffset'
-    ];
     private _infoBoxAddedToManager = false;
     private _id: string = (infoBoxId++).toString();
     ///
@@ -169,18 +166,16 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     public ToString(): string { return 'InfoBox-' + this._id.toString(); }
 
     private SetInfoWindowOptions(changes: { [key: string]: SimpleChange }) {
-        const options: IInfoWindowOptions | any = {};
-        Object.keys(changes)
-            .filter(k => InfoBoxComponent._infoBoxOptionsInputs.indexOf(k) !== -1)
-            .forEach((k) => {
-                if (k === 'xOffset' || k === 'yOffset') {
-                    if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
-                    if (k === 'xOffset') { options.pixelOffset.x = changes[k].currentValue; }
-                    if (k === 'yOffset') { options.pixelOffset.y = changes[k].currentValue; }
-                } else {
-                    options[k] = changes[k].currentValue;
-                }
-            });
+        const options: IInfoWindowOptions = {};
+        if (changes['title']) { options.title = this.title; }
+        if (changes['description']) { options.description = this.description; }
+        if (changes['disableAutoPan']) { options.disableAutoPan = this.disableAutoPan; }
+        if (changes['visible']) { options.visible = this.visible; }
+        if (changes['xOffset'] || changes['yOffset']) { 
+            if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
+            options.pixelOffset.x = this.xOffset;
+            options.pixelOffset.y= this.yOffset; 
+        }
         this._infoBoxService.SetOptions(this, options);
     }
 
