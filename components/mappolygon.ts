@@ -48,7 +48,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /// Field declarations
     ///
     private _id: number;
-    private _addedToManager: boolean = false;
+    private _addedToService: boolean = false;
     private _events: Subscription[] = [];
 
 
@@ -257,6 +257,14 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /// Property declarations
     ///
 
+    /** 
+     * Gets whether the polygon has been registered with the service.
+     * @readonly
+     * @type {boolean}
+     * @memberof MapPolygonDirective
+     */
+    public get AddedToService(): boolean {return this._addedToService; }
+
     /**
      * Get the id of the polygon.
      * 
@@ -301,9 +309,9 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     ngAfterContentInit() : void {
-        if (!this._addedToManager) {
+        if (!this._addedToService) {
             this._polygonService.AddPolygon(this);
-            this._addedToManager = true;
+            this._addedToService = true;
             this.AddEventListeners();
         }
         return;
@@ -318,7 +326,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof Map
      */
     ngOnChanges(changes: SimpleChanges): any {
-        if (!this._addedToManager) return;
+        if (!this._addedToService) return;
         
         let o: IPolygonOptions = this.GeneratePolygonChangeSet(changes);
         this._polygonService.SetOptions(this, o);
@@ -395,9 +403,5 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
         if (changes['zIndex']) { options.zIndex = this.zIndex; }
         return options;
     }
-
-
-
-
 
 }

@@ -60,7 +60,7 @@ import { LayerService } from './services/layerservice';
 import { MarkerService } from './services/markerservice';
 import { ClusterService } from './services/clusterservice';
 import { PolygonService } from './services/polygonservice'; 
-import { BingMapServiceFactory } from './services/bingmapservicefactory';
+import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './services/bingmapservicefactory';
 import { BingMapService } from './services/bingmapservice';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './services/bingmapapiloader';
 import { BingInfoBoxService } from './services/binginfoboxservice';
@@ -71,9 +71,10 @@ import { GoogleClusterService } from './services/google/google-cluster.service';
 import { GoogleInfoBoxService } from './services/google/google-infobox.service';
 import { GoogleLayerService } from './services/google/google-layer.service';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './services/google/google-map-api-loader.service';
-import { GoogleMapServiceFactory } from './services/google/google-map.service.factory';
+import { GoogleMapServiceFactory, GoogleMapServiceFactoryFactory, GoogleMapLoaderFactory } from './services/google/google-map.service.factory';
 import { GoogleMapService } from './services/google/google-map.service';
 import { GoogleMarkerService } from './services/google/google-marker.service';
+import { GooglePolygonService } from './services/google/google-polygon.service';
 
 ///
 /// export publics components, models, interfaces etc for external reuse.
@@ -91,7 +92,7 @@ export {
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
-    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService
+    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService
 }
 
 ///
@@ -117,18 +118,28 @@ export class MapModule {
             ]
         }
     }
-}
 
-export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
-    return new BingMapServiceFactory(apiLoader, zone);
-}
-export function BingMapLoaderFactory(): MapAPILoader {
-    return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
-}
+    static forRootBing(): ModuleWithProviders {
+        return {
+            ngModule: MapModule,
+            providers: [
+                { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: BingMapServiceFactoryFactory },
+                { provide: MapAPILoader, useFactory: BingMapLoaderFactory },
+                DocumentRef,
+                WindowRef
+            ]
+        }
+    }
 
-export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
-    return new GoogleMapServiceFactory(apiLoader, zone);
-}
-export function GoogleMapLoaderFactory(): MapAPILoader {
-    return new GoogleMapAPILoader(new GoogleMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
+    static forRootGoogle(): ModuleWithProviders {
+        return {
+            ngModule: MapModule,
+            providers: [
+                { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: GoogleMapServiceFactoryFactory},
+                { provide: MapAPILoader, useFactory: GoogleMapLoaderFactory },
+                DocumentRef,
+                WindowRef
+            ]
+        }
+    }
 }

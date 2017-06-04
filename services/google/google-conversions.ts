@@ -1,7 +1,10 @@
 ﻿import { IMapOptions } from '../../interfaces/imapoptions';
+import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
 import * as GoogleMapTypes from './google-map-types';
 import { MapTypeId } from '../../models/maptypeid';
+
+declare var google: any;
 
 export class GoogleConversions {
 
@@ -83,9 +86,35 @@ export class GoogleConversions {
         'zIndex'
     ];
 
+    private static _polygonOptionsAttributes: string[] = [
+        'clickable',
+        'draggable',
+        'editable',
+        'fillColor',
+        'fillOpacity',
+        'geodesic',
+        'paths',
+        'strokeColor',
+        'strokeOpacity',
+        'strokeWeight',
+        'visible',
+        'zIndex'
+    ];
+
     public static TranslateLocation(latlong: ILatLong): GoogleMapTypes.LatLngLiteral {
         const l: GoogleMapTypes.LatLngLiteral = { lat: latlong.latitude, lng: latlong.longitude };
         return l;
+    }
+
+    public static TranslateLocationObject(latlong: ILatLong): GoogleMapTypes.LatLng {
+        const l: GoogleMapTypes.LatLng = new google.maps.LatLng(latlong.latitude, latlong.longitude);
+        return l;
+    }
+
+    public static TranslateLocationObjectArray(latlongArray: Array<ILatLong>): Array<GoogleMapTypes.LatLng> {
+        let p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
+        latlongArray.forEach(x =>  p.push(GoogleConversions.TranslateLocationObject(x)));
+        return p;
     }
 
     public static TranslateMapTypeId(mapTypeId: MapTypeId): string {
@@ -108,6 +137,30 @@ export class GoogleConversions {
                     o.center = GoogleConversions.TranslateLocation(options.center);
                 } else if (k === 'mapTypeId') {
                     o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
+                } else {
+                    o[k] = (<any>options)[k]
+                };
+            });
+        return o;
+    }
+
+    public static TranslatePolygonOptions(options: IPolygonOptions): GoogleMapTypes.PolygonOptions {
+        const o: GoogleMapTypes.PolygonOptions | any = {};
+        Object.keys(options)
+            .filter(k => GoogleConversions._polygonOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'paths') {
+                    if(!Array.isArray(options.paths)) return;
+                    if(options.paths.length == 0) o.paths = new Array<GoogleMapTypes.LatLng>();
+                    else if(Array.isArray(options.paths[0])){
+                        o.paths = new Array<Array<GoogleMapTypes.LatLng>>();
+                        (<Array<Array<ILatLong>>>options.paths).forEach(path => {
+                            o.paths.push(GoogleConversions.TranslateLocationObjectArray(path));
+                        });
+                    }
+                    else{
+                        o.paths = GoogleConversions.TranslateLocationObjectArray(<Array<ILatLong>>options.paths);
+                    }
                 } else {
                     o[k] = (<any>options)[k]
                 };

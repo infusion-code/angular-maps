@@ -11,6 +11,26 @@ import { IPolygonOptions } from '../interfaces/ipolygonoptions';
 export abstract class Polygon {
 
     /**
+     * Adds a delegate for an event. 
+     *
+     * @abstract 
+     * @param {string} eventType - String containing the event name. 
+     * @param fn - Delegate function to execute when the event occurs.
+     
+     * @memberof Polygon
+     */
+    public abstract AddListener(eventType: string, fn: Function): void;
+
+    /**
+     * Deleted the polygon.
+     * 
+     * @abstract
+     * 
+     * @memberof Polygon
+     */
+    public abstract Delete(): void;
+
+    /**
      * Gets whether the polygon is draggable.
      * 
      * @abstract

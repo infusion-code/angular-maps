@@ -5,10 +5,12 @@ import { IMapOptions } from '../interfaces/imapoptions';
 import { ILayerOptions } from '../interfaces/ilayeroptions';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPoint } from '../interfaces/ipoint';
+import { IPolygonOptions } from '../interfaces/ipolygonoptions';
 import { IMarkerOptions } from '../interfaces/imarkeroptions';
 import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
+import { Polygon } from '../models/polygon';
 import { InfoWindow } from '../models/infowindow'
 
 /**
@@ -68,7 +70,7 @@ export abstract class MapService {
     abstract CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void>;
 
     /**
-     * Creates a Bing map marker within the map context
+     * Creates a map marker within the map context
      *
      * @param {IMarkerOptions} [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
      * @returns {Promise<Marker>} - Promise of a {@link Marker} object, which models the underlying native pushpin object.
@@ -76,6 +78,18 @@ export abstract class MapService {
      * @memberof MapService
      */
     abstract CreateMarker(options: IMarkerOptions): Promise<Marker>;
+
+
+    /**
+     * Creates a polygon within the map context
+     * 
+     * @abstract
+     * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
+     * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
+     * 
+     * @memberof MapService
+     */
+    abstract CreatePolygon(options: IPolygonOptions): Promise<Polygon>;
 
     /**
      * Deletes a layer from the map.

@@ -7,6 +7,7 @@ import { MapAPILoader } from './mapapiloader';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader'
 import { BingConversions } from './bingconversions'
 import { Marker } from '../models/marker';
+import { Polygon } from '../models/polygon';
 import { MarkerTypeId } from '../models/markertypeid';
 import { InfoWindow } from '../models/infowindow'
 import { BingMarker } from '../models/bingmarker';
@@ -22,6 +23,7 @@ import { IPoint } from '../interfaces/ipoint';
 import { IMarkerOptions } from '../interfaces/imarkeroptions';
 import { IMarkerIconInfo } from '../interfaces/imarkericoninfo';
 import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
+import { IPolygonOptions } from '../interfaces/ipolygonoptions';
 
 /**
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
@@ -208,6 +210,19 @@ export class BingMapService implements MapService {
             map.entities.push(pushpin);
             return new BingMarker(pushpin);
         });
+    }
+
+    /**
+     * Creates a polygon within the Bing Maps V8 map context
+     * 
+     * @abstract
+     * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
+     * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
+     * 
+     * @memberof MapService
+     */
+    public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
+        throw("Not Implemented.")
     }
 
     /**

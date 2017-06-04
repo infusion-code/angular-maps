@@ -5,7 +5,14 @@ import { IPolygonOptions } from '../interfaces/ipolygonoptions';
 import { Polygon } from '../models/polygon';
 import { MapPolygonDirective } from '../components/mappolygon';
 
-
+/**
+ * The abstract class represents the contract defintions for a polygon service to be implemented by an acutaly underlying
+ * map architecture.
+ *
+ * @export
+ * @abstract
+ * @class PolygonService
+ */
 @Injectable()
 export abstract class PolygonService {
 
@@ -34,7 +41,7 @@ export abstract class PolygonService {
     public abstract CreateEventObservable<T>(eventName: string, polygon: MapPolygonDirective): Observable<T>;
 
     /**
-      * Deletes a marker.
+      * Deletes a polygon.
       *
       * @abstract
       * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be deleted.
@@ -45,7 +52,7 @@ export abstract class PolygonService {
     public abstract DeletePolygon(polygon: MapPolygonDirective): Promise<void>;
 
     /**
-     * Obtains the marker model for the marker allowing access to native implementation functionatiliy.
+     * Obtains the polygon model for the polygon allowing access to native implementation functionatiliy.
      *
      * @abstract
      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to obtain the polygon model.
@@ -59,7 +66,7 @@ export abstract class PolygonService {
      * Set the polygon options. 
      * 
      * @abstract
-      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
+     * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
      * @param {IPolygonOptions} options - {@link IPolygonOptions} object containing the options. Options will be merged with the  
      * options already on the underlying object.
      * @returns {Promise<void>} - A promise fullfilled once the polygon options have been set.
@@ -69,9 +76,13 @@ export abstract class PolygonService {
     public abstract SetOptions(polygon: MapPolygonDirective, options: IPolygonOptions): Promise<void>;
 
     /**
-     * Updates tghe Polygon
-      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
-      * @returns {Promise<void>} - A promise fullfilled once the polygon has been updated.
+     * Updates the Polygon path
+     * 
+     * @abstract
+     * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
+     * @returns {Promise<void>} - A promise fullfilled once the polygon has been updated.
+     * 
+     * @memberof PolygonService
      */
     public abstract UpdatePolygon(polygon: MapPolygonDirective): Promise<void>;
 

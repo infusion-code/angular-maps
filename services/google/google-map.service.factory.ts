@@ -1,22 +1,25 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { MapServiceFactory } from '../mapservicefactory';
 import { MapService } from '../mapservice';
-import { MapAPILoader } from '../mapapiloader';
+import { MapAPILoader, WindowRef, DocumentRef } from '../mapapiloader';
 import { MarkerService } from '../markerservice';
 import { InfoBoxService } from '../infoboxservice';
 import { LayerService } from '../layerservice';
 import { ClusterService } from '../clusterservice';
+import { PolygonService } from '../polygonservice';
 
 import * as GoogleMapTypes from './google-map-types';
 
+import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service';
 import { GoogleInfoBoxService } from './google-infobox.service';
 import { GoogleMarkerService } from './google-marker.service';
 import { GoogleMapService } from './google-map.service';
 import { GoogleLayerService } from './google-layer.service';
 import { GoogleClusterService } from './google-cluster.service';
+import { GooglePolygonService } from './google-polygon.service';
 
 /**
- * Implements a factory to create three necessary Google Maps V8 specific service instances.
+ * Implements a factory to create three necessary Google Maps specific service instances.
  *
  * @export
  * @class GoogleMapServiceFactory
@@ -33,7 +36,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
 
     /**
      * Creates an instance of GoogleMapServiceFactory.
-     * @param {MapAPILoader} _loader - {@link MapAPILoader} implementation for the Google Map V8 provider.
+     * @param {MapAPILoader} _loader - {@link MapAPILoader} implementation for the Google Map provider.
      * @param {NgZone} _zone - NgZone object to implement zone aware promises.
      *
      * @memberof GoogleMapServiceFactory
@@ -48,7 +51,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     ///
 
     /**
-     * Creates the map service for the Google Maps V8 implementation.
+     * Creates the map service for the Google Maps implementation.
      *
      * @returns {MapService} - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      *
@@ -59,7 +62,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     }
 
     /**
-     * Creates the cluster service for the Google Maps V8 implementation.
+     * Creates the cluster service for the Google Maps implementation.
      *
      * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      * @returns {ClusterService} - {@link ClusterService}. A concreted instance of the {@link GoogleClusterService}.
@@ -71,7 +74,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     }
 
     /**
-     * Creates thh info box service for the Google Maps V8 implementation.
+     * Creates thh info box service for the Google Maps implementation.
      *
      * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      * @returns {InfoBoxService} - {@link InfoBoxService}. A concreted instance of the {@link GoogleInfoBoxService}.
@@ -83,7 +86,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     }
 
     /**
-     * Creates the layer service for the Google Maps V8 implementation.
+     * Creates the layer service for the Google Maps implementation.
      *
      * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      * @returns {LayerService} - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
@@ -95,7 +98,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     }
 
     /**
-     * Creates the marker service for the Google Maps V8 implementation.
+     * Creates the marker service for the Google Maps implementation.
      *
      * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      * @param {LayerService} layers - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
@@ -108,4 +111,39 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
         return new GoogleMarkerService(_mapService, _layerService, _clusterService, this._zone);
     }
 
+    /**
+     * Creates the polygon service for the Google Maps implementation.
+     *
+     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
+     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns {PolygonService} - {@link PolygonService} implementation for the underlying map architecture.
+     *
+     * @memberof MapServiceFactory
+     */
+    public CreatePolygonService(map: MapService, layers: LayerService): PolygonService {
+        return new GooglePolygonService(map, layers, this._zone);
+    }
+
+}
+
+/**
+ *  Creates a new instance of a plaform specific MapServiceFactory.
+ * 
+ * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link GoogleMapAPILoader}. 
+ * @param zone - An NgZone instance to provide zone aware promises.  
+ * 
+ * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance. 
+ */
+export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
+    return new GoogleMapServiceFactory(apiLoader, zone);
+}
+
+/**
+ * Creates a new instance of a plaform specific MapLoaderFactory.
+ * 
+ * @export
+ * @returns {MapAPILoader} - A {@link MapAPILoader} instance. 
+ */
+export function GoogleMapLoaderFactory(): MapAPILoader {
+    return new GoogleMapAPILoader(new GoogleMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
 }

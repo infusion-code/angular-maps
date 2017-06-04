@@ -5,6 +5,7 @@ import { MapService } from '../services/mapservice';
 import { MarkerService } from '../services/markerservice';
 import { InfoBoxService } from '../services/infoboxservice';
 import { LayerService } from '../services/layerservice';
+import { PolygonService } from '../services/polygonservice';
 import { ClusterService } from '../services/clusterservice';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IBox } from '../interfaces/ibox';
@@ -46,7 +47,8 @@ import { MapMarkerDirective } from './mapmarker';
         { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: MarkerServiceFactory },
         { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: InfoBoxServiceFactory },
         { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
-        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory }
+        { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory },
+        { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory }
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -450,5 +452,19 @@ export function MapServiceCreator(f: MapServiceFactory): MapService { return f.C
  */
 export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService, c: ClusterService): MarkerService {
     return f.CreateMarkerService(m, l, c);
+}
+
+/**
+ * Factory function to generate a polygon service instance. This is necessary because of constraints with AOT that do no allow
+ * us to use lamda functions inline.
+ *
+ * @export
+ * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
+ * @param {MapService} m - A {@link MapService} instance.
+ * @param {LayerService} l - A {@link LayerService} instance.
+ * @returns {PolygonService} - A concrete instance of a Polygon Service based on the underlying map architecture.
+ */
+export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolygonService {
+    return f.CreatePolygonService(m, l );
 }
 

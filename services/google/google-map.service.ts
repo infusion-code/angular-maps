@@ -13,15 +13,19 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPoint } from '../../interfaces/ipoint';
 import { IMarkerOptions } from '../../interfaces/imarkeroptions';
 import { IMarkerIconInfo } from '../../interfaces/imarkericoninfo';
+import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { IInfoWindowOptions } from '../../interfaces/iinfowindowoptions';
 import { Marker } from '../../models/marker';
+import { Polygon } from '../../models/polygon';
 import { Layer } from '../../models/layer';
 import { InfoWindow } from '../../models/infowindow';
+import { GooglePolygon } from '../../models/google/google-polygon';
 import { GoogleConversions } from './google-conversions';
 
 declare var google: any;
+
 /**
- * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
+ * Concrete implementation of the MapService abstract implementing a Google Maps provider
  *
  * @export
  * @class GoogleMapService
@@ -44,7 +48,7 @@ export class GoogleMapService implements MapService {
     ///
 
 
-    /*
+    /** 
      * Gets the Google Map control instance underlying the implementation
      *
      * @readonly
@@ -201,6 +205,24 @@ export class GoogleMapService implements MapService {
         //     map.entities.push(pushpin);
         //     return new GoogleMarker(pushpin);
         // });
+    }
+
+    /**
+     * Creates a polygon within the Google Map map context
+     * 
+     * @abstract
+     * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
+     * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
+     * 
+     * @memberof MapService
+     */
+    public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            let o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
+            let polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
+            polygon.setMap(map);
+            return new GooglePolygon(polygon);
+        });
     }
 
     /**
