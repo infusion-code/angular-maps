@@ -61,7 +61,9 @@ export class BingMarkerService implements MarkerService {
             label: marker.Label,
             draggable: marker.Draggable,
             icon: marker.IconUrl,
-            iconInfo: marker.IconInfo
+            iconInfo: marker.IconInfo,
+            isFirst: marker.IsFirstInSet,
+            isLast: marker.IsLastInSet
         };
         if (marker.Width) o.width = marker.Width;
         if (marker.Height) o.height = marker.Height;
@@ -70,7 +72,7 @@ export class BingMarkerService implements MarkerService {
 
         // create marker via promise.
         let markerPromise: Promise<Marker> = null;
-        if(marker.InClusterLayer) markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
+        if(marker.InClusterLayer)  markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
         else if(marker.InCustomLayer) markerPromise = this._layerService.CreateMarker(marker.LayerId, o);
         else markerPromise = this._mapService.CreateMarker(o);
 

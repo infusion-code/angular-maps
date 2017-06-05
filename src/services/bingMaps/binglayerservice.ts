@@ -4,7 +4,7 @@ import { IMarkerIconInfo }      from "../../interfaces/imarkericoninfo";
 import { Marker }               from '../../models/marker';
 import { Layer }                from '../../models/layer';
 import { MarkerTypeId }         from "../../models/markertypeid";
-import { BingMarker }           from '../../models/bingMaps/bingmarker';
+import { BingMarker }           from '../../models/bingmaps/bingmarker';
 import { MapLayer }             from "../../components/maplayer";
 import { MapService }           from "../mapservice";
 import { LayerService }         from "../layerservice";

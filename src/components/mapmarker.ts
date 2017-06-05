@@ -104,6 +104,22 @@ export class MapMarker implements OnDestroy, OnChanges, AfterContentInit {
     @Input() public IconUrl: string;
 
     /**
+     * True to indiciate whether this is the first marker in a set. Use this for bulk operations (particularily clustering) to ensure performance.
+     * 
+     * @type {boolean}
+     * @memberof MapMarker
+     */
+    @Input() public IsFirstInSet: boolean = false;
+
+    /**
+     * True to indiciate whether this is the last marker in a set. Use this for bulk operations (particularily clustering) to ensure performance.
+     * 
+     * @type {boolean}
+     * @memberof MapMarker
+     */
+    @Input() public IsLastInSet: boolean = true;
+
+    /**
      * The label (a single uppercase character) for the marker.
      * 
      * @type {string}

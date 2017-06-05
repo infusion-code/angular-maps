@@ -56,6 +56,26 @@ export abstract class Marker {
     ///
 
     /**
+     * Indicates that the marker is the first marker in a set.  
+     * 
+     * @abstract
+     * @type {boolean}
+     * @memberof Marker
+     */
+    public abstract get IsFirst() : boolean;
+    public abstract set IsFirst(val: boolean);
+
+    /**
+     * Indicates that the marker is the last marker in the set.
+     * 
+     * @abstract
+     * @type {boolean}
+     * @memberof Marker
+     */
+    public abstract get IsLast() : boolean;
+    public abstract set IsLast(val: boolean);
+
+    /**
      * Gets the Location of the marker
      * 
      * @readonly

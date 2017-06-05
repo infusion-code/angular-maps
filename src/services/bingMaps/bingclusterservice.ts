@@ -6,8 +6,8 @@ import { Marker }               from '../../models/marker';
 import { Layer }                from '../../models/layer';
 import { MarkerTypeId }         from "../../models/markertypeid";
 import { ClusterClickAction }   from "../../models/clusterclickaction";
-import { BingMarker }           from '../../models/bingMaps/bingmarker';
-import { BingClusterLayer }     from "../../models/bingMaps/bingclusterlayer";
+import { BingMarker }           from '../../models/bingmaps/bingmarker';
+import { BingClusterLayer }     from "../../models/bingmaps/bingclusterlayer";
 import { ClusterLayer }         from "../../components/clusterlayer";
 import { MapService }           from "../mapservice";
 import { ClusterService }       from "../clusterservice";
@@ -54,10 +54,10 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Adds a layer to the map.
      * 
      * @abstract
-     * @param {MapLayer} layer - MapLayer component object. Generally, MapLayer will be injected with an instance of the 
+     * @param {ClusterLayer} layer - ClusterLayer component object. Generally, MapLayer will be injected with an instance of the 
      * LayerService and then self register on initialization. 
      * 
-     * @memberof BingLayerBase
+     * @memberof BingClusterService
      */
     public AddLayer(layer: ClusterLayer): void{
         let options: IClusterOptions = {
@@ -93,10 +93,10 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Returns the Layer model represented by this layer. 
      * 
      * @abstract
-     * @param {MapLayer} layer - MapLayer component object for which to retrieve the layer model.
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer model.
      * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model. 
      * 
-     * @memberof BingLayerBase
+     * @memberof BingClusterService
      */
     public GetNativeLayer(layer: ClusterLayer): Promise<Layer> {
         return this._layers.get(layer);
@@ -106,10 +106,10 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Deletes the layer
      * 
      * @abstract
-     * @param {MapLayer} layer - MapLayer component object for which to retrieve the layer.
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
      * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed. 
      * 
-     * @memberof BingLayerBase
+     * @memberof BingClusterService
      */
     public DeleteLayer(layer: ClusterLayer): Promise<void> {
         const l = this._layers.get(layer);
@@ -120,6 +120,52 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             return this._zone.run(() => {
                 l.Delete();
                 this._layers.delete(layer);
+            });
+        });
+    }
+
+    /**
+     * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities 
+     * have been added to the cluster. This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
+     * @returns {Promise<void>} 
+     * 
+     * @memberof BingClusterService
+     */
+    public StartClustering(layer: ClusterLayer): Promise<void> {
+        const l = this._layers.get(layer);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l: BingClusterLayer) => {
+            return this._zone.run(() => {
+                l.StartClustering();
+            });
+        });
+    }
+
+    /**
+     * Stop to actually cluster the entities in a cluster layer.  
+     * This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
+     * @returns {Promise<void>} 
+     * 
+     * @memberof BingClusterService
+     */
+    public StopClustering(layer: ClusterLayer): Promise<void> {
+        const l = this._layers.get(layer);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l: BingClusterLayer) => {
+            return this._zone.run(() => {
+                l.StopClustering();
             });
         });
     }
@@ -225,4 +271,5 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             });
         }
     }
+
 }

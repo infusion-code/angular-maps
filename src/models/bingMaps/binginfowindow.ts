@@ -1,5 +1,5 @@
-﻿import { BingMapService }       from "../../services/bingMaps/bingmapservice";
-import { BingConversions }      from "../../services/bingMaps/bingconversions";
+﻿import { BingMapService }       from "../../services/bingmaps/bingmapservice";
+import { BingConversions }      from "../../services/bingmaps/bingconversions";
 import { ILatLong }             from "../../interfaces/ilatlong";
 import { IInfoWindowOptions }   from "../../interfaces/iinfowindowoptions";
 import { InfoWindow }           from "../infowindow";

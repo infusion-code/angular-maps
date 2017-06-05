@@ -1,8 +1,8 @@
 ﻿import { ILatLong }         from "../../interfaces/ilatlong";
 import { IPoint }           from "../../interfaces/ipoint";
 import { IMarkerOptions }   from "../../interfaces/Imarkeroptions";
-import { BingMapService }   from "../../services/bingMaps/bingmapservice";
-import { BingConversions }  from "../../services/bingMaps/bingconversions";
+import { BingMapService }   from "../../services/bingmaps/bingmapservice";
+import { BingConversions }  from "../../services/bingmaps/bingconversions";
 import { Marker }           from "../Marker";
 
 /**
@@ -18,10 +18,30 @@ export class BingMarker implements Marker  {
     /// Field definitions
     ///
     private _metadata: Map<string, any> = new Map<string,any>();
+    private _isFirst: boolean = false;
+    private _isLast: boolean = true;
 
     ///
     /// Property definitions
     ///
+
+    /**
+     * Indicates that the marker is the first marker in a set.  
+     * 
+     * @type {boolean}
+     * @memberof Marker
+     */
+    public get IsFirst(): boolean { return this._isFirst; }
+    public set IsFirst(val: boolean) { this._isFirst = val; }
+
+    /**
+     * Indicates that the marker is the last marker in the set.
+     * 
+     * @type {boolean}
+     * @memberof Marker
+     */
+    public get IsLast(): boolean { return this._isLast; } 
+    public set IsLast(val: boolean) { this._isLast = val; }
 
     /**
      * Gets the Location of the marker

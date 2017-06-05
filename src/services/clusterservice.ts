@@ -32,7 +32,7 @@ export abstract class ClusterService {
      * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer model.
      * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model. 
      * 
-     * @memberof LayerService
+     * @memberof ClusterService
      */
     public abstract GetNativeLayer(layer: ClusterLayer): Promise<Layer>;
 
@@ -43,7 +43,7 @@ export abstract class ClusterService {
      * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
      * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed. 
      * 
-     * @memberof LayerService
+     * @memberof ClusterService
      */
     public abstract DeleteLayer(layer: ClusterLayer): Promise<void>;
 
@@ -55,8 +55,34 @@ export abstract class ClusterService {
      * @param {IMarkerOptions} options - Marker options defining the marker. 
      * @returns {Promise<Marker>} - A promise that when fullfilled contains the an instance of the Marker model.
      * 
-     * @memberof LayerService
+     * @memberof ClusterService
      */
     public abstract CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker>;
+
+    /**
+     * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities 
+     * have been added to the cluster. This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
+     * @returns {Promise<void>} 
+     * 
+     * @memberof ClusterService
+     */
+    public abstract StartClustering(layer: ClusterLayer): Promise<void>;
+
+    /**
+     * Stop to actually cluster the entities in a cluster layer.  
+     * This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @param {ClusterLayer} layer - ClusterLayer component object for which to retrieve the layer.
+     * @returns {Promise<void>} 
+     * 
+     * @memberof ClusterService
+     */
+    public abstract StopClustering(layer: ClusterLayer): Promise<void>;
 
 }

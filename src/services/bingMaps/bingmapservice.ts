@@ -13,10 +13,10 @@ import { Marker }               from "../../models/marker";
 import { MarkerTypeId }         from "../../models/markertypeid";
 import { InfoWindow }           from "../../models/infowindow"
 import { Layer }                from "../../models/layer";
-import { BingMarker }           from "../../models/bingMaps/bingmarker";
-import { BingLayer }            from "../../models/bingMaps/binglayer";
-import { BingClusterLayer }     from "../../models/bingMaps/bingclusterlayer";
-import { BingInfoWindow }       from "../../models/bingMaps/binginfowindow";
+import { BingMarker }           from "../../models/bingmaps/bingmarker";
+import { BingLayer }            from "../../models/bingmaps/binglayer";
+import { BingClusterLayer }     from "../../models/bingmaps/bingclusterlayer";
+import { BingInfoWindow }       from "../../models/bingmaps/binginfowindow";
 import { MapService }           from "../mapservice";
 import { MapAPILoader }         from "../mapapiloader";
 import { BingMapAPILoader, BingMapAPILoaderConfig } from "./bingmapapiloader"

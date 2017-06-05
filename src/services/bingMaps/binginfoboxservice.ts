@@ -1,6 +1,6 @@
 ﻿import { Injectable, NgZone }   from '@angular/core';
 import { InfoWindow }           from '../../models/infowindow';
-import { BingInfoWindow }       from "../../models/bingMaps/binginfowindow";
+import { BingInfoWindow }       from "../../models/bingmaps/binginfowindow";
 import { IInfoWindowOptions }   from "../../interfaces/iinfowindowoptions";
 import { ILatLong }             from "../../interfaces/ilatlong";
 import { InfoBox  }             from "../../components/infobox";

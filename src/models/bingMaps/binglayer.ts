@@ -1,5 +1,5 @@
 import { MapService}        from "../../services/mapservice";
-import { BingMapService }   from "../../services/bingMaps/bingmapservice";
+import { BingMapService }   from "../../services/bingmaps/bingmapservice";
 import { ILayerOptions }    from "../../interfaces/ilayeroptions";
 import { Layer }            from "../layer";
 import { Marker }           from "../marker";

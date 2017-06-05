@@ -9,6 +9,8 @@ export interface IMarkerOptions {
     text?: string;
     label?: string;
     draggable?: boolean;
+    isFirst?: boolean;
+    isLast?: boolean;
     icon?: string;
     width?: number;
     height?: number;

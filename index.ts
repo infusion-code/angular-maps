@@ -30,11 +30,11 @@ import { Layer } from "./src/models/layer";
 import { SpiderClusterMarker } from "./src/models/spiderclustermarker";
 import { ClusterPlacementMode } from "./src/models/clusterplacementmode";
 import { ClusterClickAction } from "./src/models/clusterclickaction";
-import { BingLayer } from "./src/models/bingMaps/binglayer"; 
-import { BingClusterLayer } from "./src/models/bingMaps/bingclusterlayer";
-import { BingSpiderClusterMarker } from "./src/models/bingMaps/bingspiderclustermarker";
-import { BingInfoWindow } from "./src/models/bingMaps/binginfowindow";
-import { BingMarker } from "./src/models/bingMaps/bingmarker";
+import { BingLayer } from "./src/models/bingmaps/binglayer"; 
+import { BingClusterLayer } from "./src/models/bingmaps/bingclusterlayer";
+import { BingSpiderClusterMarker } from "./src/models/bingmaps/bingspiderclustermarker";
+import { BingInfoWindow } from "./src/models/bingmaps/binginfowindow";
+import { BingMarker } from "./src/models/bingmaps/bingmarker";
 
 ///
 /// import module components
