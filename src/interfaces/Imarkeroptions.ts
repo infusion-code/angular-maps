@@ -1,6 +1,6 @@
-﻿import { ILatLong } from "./ilatlong";
-import { IPoint } from "./ipoint";
-import { IMarkerIconInfo } from "./imarkericoninfo";
+﻿import { ILatLong } from './ilatlong';
+import { IPoint } from './ipoint';
+import { IMarkerIconInfo } from './imarkericoninfo';
 
 export interface IMarkerOptions {
     anchor?: IPoint;

@@ -1,6 +1,6 @@
-﻿import { IPoint } from "./ipoint";
-import { ISize } from "./isize";
-import { MarkerTypeId } from "../models/markertypeid";
+﻿import { IPoint } from './ipoint';
+import { ISize } from './isize';
+import { MarkerTypeId } from '../models/markertypeid';
 
 export interface IMarkerIconInfo {
 
@@ -29,5 +29,4 @@ export interface IMarkerIconInfo {
     url?: string;
     callback?: (c: string, i: IMarkerIconInfo) => void;
     scale?: number;
-
 }

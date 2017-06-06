@@ -1,9 +1,9 @@
-﻿import { Injectable, Optional } from "@angular/core";
-import { MapAPILoader, WindowRef, DocumentRef } from "../mapapiloader";
+﻿import { Injectable, Optional } from '@angular/core';
+import { MapAPILoader, WindowRef, DocumentRef } from './mapapiloader';
 
 /**
  * Protocol enumeration
- * 
+ *
  * @export
  * @enum {number}
  */
@@ -14,8 +14,8 @@ export enum ScriptProtocol {
 }
 
 /**
- * Bing Maps V8 specific loader configuration to be used with the {@link BingMapAPILoader} 
- * 
+ * Bing Maps V8 specific loader configuration to be used with the {@link BingMapAPILoader}
+ *
  * @export
  * @class BingMapAPILoaderConfig
  */
@@ -24,13 +24,13 @@ export class BingMapAPILoaderConfig  {
 
     ///
     /// API key for bing maps
-    /// 
-    apiKey: string = "";
+    ///
+    apiKey = '';
 
     ///
     /// Host and Path used for the `<script>` tag.
     ///
-    hostAndPath: string = "www.bing.com/api/maps/mapcontrol";
+    hostAndPath = 'www.bing.com/api/maps/mapcontrol';
 
     ///
     /// Protocol used for the `<script>` tag.
@@ -40,7 +40,7 @@ export class BingMapAPILoaderConfig  {
     ///
     /// The branch to be used. Leave empty for production. Use experimental
     ///
-    branch: string = "";
+    branch = '';
 }
 
 /**
@@ -49,8 +49,8 @@ export class BingMapAPILoaderConfig  {
 const DEFAULT_CONFIGURATION = new BingMapAPILoaderConfig();
 
 /**
- * Bing Maps V8 implementation for the {@link MapAPILoader} service. 
- * 
+ * Bing Maps V8 implementation for the {@link MapAPILoader} service.
+ *
  * @export
  * @class BingMapAPILoader
  * @extends {MapAPILoader}
@@ -59,17 +59,17 @@ const DEFAULT_CONFIGURATION = new BingMapAPILoaderConfig();
 export class BingMapAPILoader extends MapAPILoader {
 
     ///
-    /// Field defintitions. 
+    /// Field defintitions.
     ///
     private _scriptLoadingPromise: Promise<void>;
 
     ///
-    /// Property declarations. 
+    /// Property declarations.
     ///
 
     /**
-     * Gets the loader configuration. 
-     * 
+     * Gets the loader configuration.
+     *
      * @readonly
      * @type {BingMapAPILoaderConfig}
      * @memberof BingMapAPILoader
@@ -78,10 +78,11 @@ export class BingMapAPILoader extends MapAPILoader {
 
     /**
      * Creates an instance of BingMapAPILoader.
-     * @param {BingMapAPILoaderConfig} _config  - The loader configuration. 
-     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object. 
-     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}. Necessary because Bing Map V8 interacts with the document object. 
-     * 
+     * @param {BingMapAPILoaderConfig} _config  - The loader configuration.
+     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
+     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}.
+     * Necessary because Bing Map V8 interacts with the document object.
+     *
      * @memberof BingMapAPILoader
      */
     constructor( @Optional() private _config: BingMapAPILoaderConfig, private _windowRef: WindowRef, private _documentRef: DocumentRef) {
@@ -92,14 +93,14 @@ export class BingMapAPILoader extends MapAPILoader {
     }
 
     ///
-    /// Public methods and MapAPILoader implementation. 
+    /// Public methods and MapAPILoader implementation.
     ///
 
     /**
      * Loads the necessary resources for Bing Maps V8.
-     * 
-     * @returns {Promise<void>} 
-     * 
+     *
+     * @returns {Promise<void>}
+     *
      * @memberof BingMapAPILoader
      */
     public Load(): Promise<void> {
@@ -111,7 +112,7 @@ export class BingMapAPILoader extends MapAPILoader {
         script.type = 'text/javascript';
         script.async = true;
         script.defer = true;
-        const callbackName: string = `angular2bingmaps${new Date().getMilliseconds()}`;
+        const callbackName = `angular2bingmaps${new Date().getMilliseconds()}`;
         script.src = this.GetScriptSrc(callbackName);
 
         this._scriptLoadingPromise = new Promise<void>((resolve: Function, reject: Function) => {
@@ -129,16 +130,16 @@ export class BingMapAPILoader extends MapAPILoader {
     ///
 
     /**
-     * Gets the Bing Map V8 scripts url for injections into the header. 
-     * 
+     * Gets the Bing Map V8 scripts url for injections into the header.
+     *
      * @private
-     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded. 
-     * @returns {string} - The url to be used to load the Bing Map scripts. 
-     * 
+     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded.
+     * @returns {string} - The url to be used to load the Bing Map scripts.
+     *
      * @memberof BingMapAPILoader
      */
     private GetScriptSrc(callbackName: string): string {
-        let protocolType: ScriptProtocol = (this._config && this._config.protocol) || DEFAULT_CONFIGURATION.protocol;
+        const protocolType: ScriptProtocol = (this._config && this._config.protocol) || DEFAULT_CONFIGURATION.protocol;
         let protocol: string;
 
         switch (protocolType) {
@@ -157,7 +158,9 @@ export class BingMapAPILoader extends MapAPILoader {
         const queryParams: { [key: string]: string } = {
             callback: callbackName
         };
-        if (this._config.branch != "") queryParams["branch"] = this._config.branch;
+        if (this._config.branch !== '') {
+            queryParams['branch'] = this._config.branch;
+        }
         const params: string = Object.keys(queryParams)
             .map((k: string, i: number) => {
                 let param = (i === 0) ? '?' : '&';

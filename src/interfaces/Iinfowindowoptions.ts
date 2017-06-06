@@ -1,12 +1,13 @@
-﻿import { IInfoWindowAction } from  "./iinfowindowaction";
-import { IPoint } from "./ipoint";
-import { ILatLong } from "./ilatlong";
+﻿import { IInfoWindowAction } from './iinfowindowaction';
+import { IPoint } from './ipoint';
+import { ILatLong } from './ilatlong';
 
 export interface IInfoWindowOptions {
     title?: string;
     description?: string;
     disableAutoPan?: boolean;
     width?: number;
+    maxWidth?: number;
     height?: number;
     htmlContent?: string;
     pixelOffset?: IPoint;

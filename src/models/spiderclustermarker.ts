@@ -1,4 +1,4 @@
-import { Marker } from "./marker";
+import { Marker } from './marker';
 
 export abstract class SpiderClusterMarker extends Marker {
 
