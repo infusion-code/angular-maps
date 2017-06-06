@@ -1,3 +1,4 @@
+import { IMarkerOptions } from './../../interfaces/Imarkeroptions';
 export let google: any;
 
 export interface GoogleMap extends MVCObject {
@@ -26,12 +27,15 @@ export interface Marker extends MVCObject {
   setPosition(latLng: LatLng|LatLngLiteral): void;
   setTitle(title: string): void;
   setLabel(label: string|MarkerLabel): void;
+  setPosition(latlng: LatLng|LatLngLiteral): void;
   setDraggable(draggable: boolean): void;
   setIcon(icon: string): void;
   setOpacity(opacity: number): void;
+  setOptions(options: IMarkerOptions): void;
   setVisible(visible: boolean): void;
   setZIndex(zIndex: number): void;
   getLabel(): MarkerLabel;
+  getPosition(): LatLng;
 }
 
 export interface MarkerOptions {

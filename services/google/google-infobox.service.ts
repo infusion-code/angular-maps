@@ -1,11 +1,14 @@
-﻿import { MarkerService } from '../markerservice';
+﻿import { GoogleInfoWindow } from './../../models/google/google-infowindow';
+import { GoogleConversions } from './google-conversions';
+import { GoogleMarker } from './../../models/google/google-marker';
+import { MarkerService } from '../markerservice';
 import { MapService } from '../mapservice';
-import { GoogleInfoWindow } from '../../models/google/google-infowindow';
 import { Injectable, NgZone } from '@angular/core';
 import { InfoBoxComponent } from '../../components/infobox';
 import { IInfoWindowOptions } from '../../interfaces/iinfowindowoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { InfoBoxService } from '../infoboxservice';
+import * as GoogleMapTypes from './google-map-types';
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {
@@ -46,8 +49,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
         if (info.HtmlContent !== '') {
             options.htmlContent = info.HtmlContent;
         }
-        if (typeof info.latitude === 'number' && typeof info.longitude === 'number') {
-            options.position = { latitude: info.latitude, longitude: info.longitude };
+        if (typeof info.Latitude === 'number' && typeof info.Longitude === 'number') {
+            options.position = { latitude: info.Latitude, longitude: info.Longitude };
         }
         const infoWindowPromise = this._mapService.CreateInfoWindow(options);
         this._boxes.set(info, infoWindowPromise);
@@ -62,10 +65,9 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public Close(info: InfoBoxComponent): Promise<void> {
-        this._boxes.get(info).then(w => {
+        return this._boxes.get(info).then(w => {
             w.Close();
         });
-        return Promise.resolve();
     };
 
     /**
@@ -77,7 +79,16 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public DeleteInfoWindow(info: InfoBoxComponent): Promise<void> {
-        return Promise.resolve();
+        const w = this._boxes.get(info);
+        if (w == null) {
+            return Promise.resolve();
+        }
+        return w.then((i: GoogleInfoWindow) => {
+            return this._zone.run(() => {
+                i.Close();
+                this._boxes.delete(info);
+            });
+        });
     };
 
     /**
@@ -90,10 +101,16 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
+        if (info.CloseInfoBoxesOnOpen) {
+            // close all info boxes
+            this._boxes.forEach((box: Promise<GoogleInfoWindow>) => {
+                box.then((w) => w.Close());
+            });
+        }
         return this._boxes.get(info).then((w) => {
-            if (info.hostMarker != null) {
-                return this._markerService.GetNativeMarker(info.hostMarker).then((marker) => {
-                    return this._mapService.MapPromise.then((map) => w.Open(map, marker));
+            if (info.HostMarker != null) {
+                return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
+                    return this._mapService.MapPromise.then((map) => w.Open(map, (<GoogleMarker>marker).NativePrimitve));
                 });
             }
             return this._mapService.MapPromise.then((map) => {
@@ -113,7 +130,10 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public SetOptions(info: InfoBoxComponent, options: IInfoWindowOptions): Promise<void> {
-        return Promise.resolve();
+        return this._boxes.get(info).then((w) => {
+            const o: GoogleMapTypes.InfoWindowOptions = GoogleConversions.TranslateInfoWindowOptions(options);
+            w.SetOptions(options);
+        });
     };
 
     /**
@@ -126,10 +146,9 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public SetPosition(info: InfoBoxComponent, latlng: ILatLong): Promise<void> {
-        this._boxes.get(info).then((w) => {
+        return this._boxes.get(info).then((w) => {
             w.SetPosition(latlng);
         });
-        return Promise.resolve();
     };
 
 }

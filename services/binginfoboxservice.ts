@@ -17,10 +17,10 @@ export class BingInfoBoxService implements InfoBoxService {
 
     public AddInfoWindow(info: InfoBoxComponent): void {
         const options: IInfoWindowOptions = {};
-        if (typeof info.latitude === 'number' && typeof info.longitude === 'number') {
+        if (typeof info.Latitude === 'number' && typeof info.Longitude === 'number') {
             options.position = {
-                latitude: info.latitude,
-                longitude: info.longitude
+                latitude: info.Latitude,
+                longitude: info.Longitude
             };
         }
         if (typeof info.infoWindowActions !== 'undefined' && info.infoWindowActions.length > 0) {
@@ -35,8 +35,8 @@ export class BingInfoBoxService implements InfoBoxService {
         if (info.HtmlContent !== '') {
             options.htmlContent = info.HtmlContent;
         } else {
-            options.title = info.title,
-            options.description = info.description;
+            options.title = info.Title,
+            options.description = info.Description;
         }
         if (info.xOffset || info.yOffset) {
             if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
@@ -44,7 +44,7 @@ export class BingInfoBoxService implements InfoBoxService {
             if (info.yOffset) { options.pixelOffset.y = info.yOffset; }
         }
 
-        options.visible = info.visible;
+        options.visible = info.Visible;
         const infoPromise = this._mapService.CreateInfoWindow(options);
         this._boxes.set(info, infoPromise);
     }
@@ -68,7 +68,7 @@ export class BingInfoBoxService implements InfoBoxService {
 
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
         return this._boxes.get(info).then((w) => {
-            if (info.modal) {
+            if (info.Modal) {
                 this._boxes.forEach((v: Promise<InfoWindow>, i: InfoBoxComponent) => {
                     if (info.Id !== i.Id) {
                         v.then(wa => wa.Close());
@@ -76,15 +76,15 @@ export class BingInfoBoxService implements InfoBoxService {
                     }
                 });
             }
-            if (info.latitude && info.longitude) {
-                w.SetPosition({ latitude: info.latitude, longitude: info.longitude });
+            if (info.Latitude && info.Longitude) {
+                w.SetPosition({ latitude: info.Latitude, longitude: info.Longitude });
             } else if (loc) {
                 ///
                 /// this situation is specifically used for cluster layers that use spidering.
                 ///
                 w.SetPosition(loc);
-            } else if (info.hostMarker) {
-                w.SetPosition({ latitude: info.hostMarker.Latitude, longitude: info.hostMarker.Longitude });
+            } else if (info.HostMarker) {
+                w.SetPosition({ latitude: info.HostMarker.Latitude, longitude: info.HostMarker.Longitude });
             } else { };
             w.Open();
         });
@@ -96,8 +96,8 @@ export class BingInfoBoxService implements InfoBoxService {
 
     public SetPosition(info: InfoBoxComponent): Promise<void> {
         return this._boxes.get(info).then((i: InfoWindow) => i.SetPosition({
-            latitude: info.latitude,
-            longitude: info.longitude
+            latitude: info.Latitude,
+            longitude: info.Longitude
         }));
     }
 

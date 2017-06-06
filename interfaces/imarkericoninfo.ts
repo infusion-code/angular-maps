@@ -10,6 +10,7 @@ export interface IMarkerIconInfo {
     color?: string;
     rotation?: number;
     size?: ISize;
+    scaledSize?: ISize;
     drawingOffset?: IPoint;
     textOffset?: IPoint;
     markerOffsetRatio?: IPoint;

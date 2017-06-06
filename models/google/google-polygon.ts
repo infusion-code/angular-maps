@@ -34,7 +34,7 @@ export class GooglePolygon implements Polygon {
      * @memberof Polygon
      */
     public AddListener(eventType: string, fn: Function): void {
-        this._polygon.addListener(eventType, fn)
+        this._polygon.addListener(eventType, fn);
     }
 
     /**
@@ -163,7 +163,8 @@ export class GooglePolygon implements Polygon {
     /**
      * Set the polygon path or paths.
      *
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong} (or array of arrays) describing the polygons path(s).
+     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong} 
+     * (or array of arrays) describing the polygons path(s).
      *
      * @memberof Polygon
      */

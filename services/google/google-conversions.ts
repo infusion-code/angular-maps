@@ -1,4 +1,5 @@
-﻿import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
+﻿import { IMarkerOptions } from './../../interfaces/Imarkeroptions';
+import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
 import { IMapOptions } from '../../interfaces/imapoptions';
 import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
@@ -61,19 +62,17 @@ export class GoogleConversions {
 
     private static _markerOptionsAttributes: string[] = [
         'anchor',
-        'draggable',
-        'height',
-        'htmlContent',
-        'icon',
-        'iconInfo',
-        'infobox',
-        'state',
+        'position',
         'title',
-        'textOffset',
-        'typeName',
-        'visible',
+        'text',
+        'label',
+        'draggable',
+        'icon',
         'width',
-        'zIndex'
+        'height',
+        'iconInfo',
+        'metadata',
+        'visible'
     ];
 
     private static _clusterOptionsAttributes: string[] = [
@@ -148,6 +147,21 @@ export class GoogleConversions {
                     o.center = GoogleConversions.TranslateLocation(options.center);
                 } else if (k === 'mapTypeId') {
                     o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
+                } else {
+                    o[k] = (<any>options)[k]
+                };
+            });
+        return o;
+    }
+
+    public static TranslateMarkerOptions(options: IMarkerOptions): GoogleMapTypes.MarkerOptions {
+        const o: GoogleMapTypes.MarkerOptions | any = {};
+        Object.keys(options)
+            .filter(k => GoogleConversions._markerOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'position') {
+                    const latlng = GoogleConversions.TranslateLocationObject(options[k]);
+                    o.position = latlng;
                 } else {
                     o[k] = (<any>options)[k]
                 };
