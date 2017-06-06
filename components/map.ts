@@ -29,7 +29,7 @@ import { MapMarkerDirective } from './mapmarker';
  *    .map-container { height: 300px; }
  * `],
  *  template: `
- *    <map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom"></map>
+ *    <map [latitude]="lat" [longitude]="lng" [zoom]="zoom"></map>
  *  `
  * })
  * ```

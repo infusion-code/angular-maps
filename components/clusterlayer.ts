@@ -274,10 +274,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         super(_layerService, _containerRef);
     }
 
-    ///
-    /// Public methods
-    ///
-
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
