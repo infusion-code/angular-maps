@@ -42,11 +42,12 @@ export abstract class MapServiceFactory {
      *
      * @abstract
      * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
+     * @param {MarkerService} marker - {@link MarkerService} implementation for thh underlying marker archticture.
      * @returns {InfoBoxService} - {@link InfoBoxService} implementation for the underlying map architecture.
      *
      * @memberof MapServiceFactory
      */
-    abstract CreateInfoBoxService(map: MapService): InfoBoxService;
+    abstract CreateInfoBoxService(map: MapService, marker: MarkerService): InfoBoxService;
 
     /**
      * Creates the layer service.

@@ -45,7 +45,10 @@ import { MapMarkerDirective } from './mapmarker';
     providers: [
         { provide: MapService, deps: [MapServiceFactory], useFactory: MapServiceCreator },
         { provide: MarkerService, deps: [MapServiceFactory, MapService, LayerService, ClusterService], useFactory: MarkerServiceFactory },
-        { provide: InfoBoxService, deps: [MapServiceFactory, MapService], useFactory: InfoBoxServiceFactory },
+        {
+            provide: InfoBoxService, deps: [MapServiceFactory, MapService,
+                MarkerService], useFactory: InfoBoxServiceFactory
+        },
         { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
         { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory },
         { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory }
@@ -89,8 +92,8 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Input()
-        public get Box(): IBox { return this._box; }
-        public set Box(val: IBox) { this._box = val; }
+    public get Box(): IBox { return this._box; }
+    public set Box(val: IBox) { this._box = val; }
 
     /**
      * Gets or sets the latitude that sets the center of the map.
@@ -99,11 +102,11 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Input()
-        public get Latitude(): number | string { return this._longitude; }
-        public set Latitude(value: number | string) {
-            this._latitude = this.ConvertToDecimal(value);
-            this.UpdateCenter();
-        }
+    public get Latitude(): number | string { return this._longitude; }
+    public set Latitude(value: number | string) {
+        this._latitude = this.ConvertToDecimal(value);
+        this.UpdateCenter();
+    }
 
     /**
      * Gets or sets the longitude that sets the center of the map.
@@ -112,11 +115,11 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Input()
-        public get Longitude(): number| string { return this._longitude; }
-        public set Longitude(value: number | string) {
-            this._longitude = this.ConvertToDecimal(value);
-            this.UpdateCenter();
-        }
+    public get Longitude(): number | string { return this._longitude; }
+    public set Longitude(value: number | string) {
+        this._longitude = this.ConvertToDecimal(value);
+        this.UpdateCenter();
+    }
 
     /**
      * Gets or sets general map Options
@@ -125,8 +128,8 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Input()
-        public get Options(): IMapOptions { return this._options };
-        public set Options(val: IMapOptions) { this._options = val; }
+    public get Options(): IMapOptions { return this._options };
+    public set Options(val: IMapOptions) { this._options = val; }
 
     /**
      * Gets or sets the zoom level of the map. The default value is `8`.
@@ -135,13 +138,13 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Input()
-        public get Zoom(): number | string { return this._zoom; }
-        public set Zoom(value: number | string) {
-            this._zoom = this.ConvertToDecimal(value, 8);
-            if (typeof this._zoom === 'number') {
-                this._mapService.SetZoom(this._zoom);
-            }
+    public get Zoom(): number | string { return this._zoom; }
+    public set Zoom(value: number | string) {
+        this._zoom = this.ConvertToDecimal(value, 8);
+        if (typeof this._zoom === 'number') {
+            this._mapService.SetZoom(this._zoom);
         }
+    }
 
     /**
      * This event emitter is fired when the map center changes.
@@ -150,7 +153,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Output()
-        CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
+    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
 
     /**
      * This event emitter gets emitted when the user clicks on the map (but not when they click on a
@@ -160,7 +163,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Output()
-        MapClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    MapClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
@@ -170,7 +173,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Output()
-        MapDblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    MapDblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
      * This event emitter gets emitted when the user right-clicks on the map (but not when they click
@@ -180,7 +183,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Output()
-        MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
      * This event emiiter is fired when the map zoom changes
@@ -189,7 +192,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof Map
      */
     @Output()
-        ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
+    ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
 
 
     ///
@@ -414,9 +417,11 @@ export function ClusterServiceFactory(f: MapServiceFactory, m: MapService): Clus
  * @export
  * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
  * @param {MapService} m - A {@link MapService} instance.
+ * @param {MarkerService} m - A {@link MarkerService} instance.
  * @returns {InfoBoxService} - A concrete instance of a InfoBox Service based on the underlying map architecture.
  */
-export function InfoBoxServiceFactory(f: MapServiceFactory, m: MapService): InfoBoxService { return f.CreateInfoBoxService(m); }
+export function InfoBoxServiceFactory(f: MapServiceFactory, m: MapService,
+    ma: MarkerService): InfoBoxService { return f.CreateInfoBoxService(m, ma); }
 
 /**
  * Factory function to generate a layer service instance. This is necessary because of constraints with AOT that do no allow
@@ -465,6 +470,6 @@ export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: Lay
  * @returns {PolygonService} - A concrete instance of a Polygon Service based on the underlying map architecture.
  */
 export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolygonService {
-    return f.CreatePolygonService(m, l );
+    return f.CreatePolygonService(m, l);
 }
 

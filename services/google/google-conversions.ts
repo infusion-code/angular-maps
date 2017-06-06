@@ -1,4 +1,5 @@
-﻿import { IMapOptions } from '../../interfaces/imapoptions';
+﻿import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
+import { IMapOptions } from '../../interfaces/imapoptions';
 import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
 import * as GoogleMapTypes from './google-map-types';
@@ -106,14 +107,24 @@ export class GoogleConversions {
         return l;
     }
 
+    public static TranslateLatLng(latlng: GoogleMapTypes.LatLngLiteral) {
+        const l: ILatLong = { latitude: latlng.lat, longitude: latlng.lng };
+        return l;
+    }
+
     public static TranslateLocationObject(latlong: ILatLong): GoogleMapTypes.LatLng {
         const l: GoogleMapTypes.LatLng = new google.maps.LatLng(latlong.latitude, latlong.longitude);
         return l;
     }
 
+    public static TranslateLatLngObject(latlng: GoogleMapTypes.LatLng) {
+        const l: ILatLong = { latitude: latlng.lat(), longitude: latlng.lng() };
+        return l;
+    }
+
     public static TranslateLocationObjectArray(latlongArray: Array<ILatLong>): Array<GoogleMapTypes.LatLng> {
-        let p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
-        latlongArray.forEach(x =>  p.push(GoogleConversions.TranslateLocationObject(x)));
+        const p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
+        latlongArray.forEach(x => p.push(GoogleConversions.TranslateLocationObject(x)));
         return p;
     }
 
@@ -150,17 +161,31 @@ export class GoogleConversions {
             .filter(k => GoogleConversions._polygonOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
                 if (k === 'paths') {
-                    if(!Array.isArray(options.paths)) return;
-                    if(options.paths.length == 0) o.paths = new Array<GoogleMapTypes.LatLng>();
-                    else if(Array.isArray(options.paths[0])){
+                    if (!Array.isArray(options.paths)) { return; }
+                    if (options.paths.length === 0) {
+                        o.paths = new Array<GoogleMapTypes.LatLng>();
+                    } else if (Array.isArray(options.paths[0])) {
                         o.paths = new Array<Array<GoogleMapTypes.LatLng>>();
                         (<Array<Array<ILatLong>>>options.paths).forEach(path => {
                             o.paths.push(GoogleConversions.TranslateLocationObjectArray(path));
                         });
-                    }
-                    else{
+                    } else {
                         o.paths = GoogleConversions.TranslateLocationObjectArray(<Array<ILatLong>>options.paths);
                     }
+                } else {
+                    o[k] = (<any>options)[k]
+                };
+            });
+        return o;
+    }
+
+    public static TranslateInfoWindowOptions(options: IInfoWindowOptions): GoogleMapTypes.InfoWindowOptions {
+        const o: GoogleMapTypes.InfoWindowOptions | any = {};
+        Object.keys(options)
+            .filter(k => GoogleConversions._infoWindowOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'htmlContent') {
+                    o.content = (<any>options)[k];
                 } else {
                     o[k] = (<any>options)[k]
                 };

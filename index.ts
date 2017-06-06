@@ -47,7 +47,7 @@ import { InfoBoxComponent } from './components/infobox';
 import { InfoBoxActionDirective } from './components/infoboxaction'
 import { MapLayerDirective } from './components/maplayer';
 import { ClusterLayerDirective } from './components/clusterlayer';
-import { MapPolygonDirective } from './components/mappolygon'; 
+import { MapPolygonDirective } from './components/mappolygon';
 
 ///
 /// import module services
@@ -59,19 +59,22 @@ import { InfoBoxService } from './services/infoboxservice';
 import { LayerService } from './services/layerservice';
 import { MarkerService } from './services/markerservice';
 import { ClusterService } from './services/clusterservice';
-import { PolygonService } from './services/polygonservice'; 
+import { PolygonService } from './services/polygonservice';
 import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './services/bingmapservicefactory';
 import { BingMapService } from './services/bingmapservice';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './services/bingmapapiloader';
 import { BingInfoBoxService } from './services/binginfoboxservice';
 import { BingMarkerService } from './services/bingmarkerservice';
-import { BingLayerService  } from './services/binglayerservice';
-import { BingClusterService  } from './services/bingclusterservice';
+import { BingLayerService } from './services/binglayerservice';
+import { BingClusterService } from './services/bingclusterservice';
 import { GoogleClusterService } from './services/google/google-cluster.service';
 import { GoogleInfoBoxService } from './services/google/google-infobox.service';
 import { GoogleLayerService } from './services/google/google-layer.service';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './services/google/google-map-api-loader.service';
-import { GoogleMapServiceFactory, GoogleMapServiceFactoryFactory, GoogleMapLoaderFactory } from './services/google/google-map.service.factory';
+import {
+    GoogleMapServiceFactory, GoogleMapServiceFactoryFactory,
+    GoogleMapLoaderFactory
+} from './services/google/google-map.service.factory';
 import { GoogleMapService } from './services/google/google-map.service';
 import { GoogleMarkerService } from './services/google/google-marker.service';
 import { GooglePolygonService } from './services/google/google-polygon.service';
@@ -82,9 +85,10 @@ import { GooglePolygonService } from './services/google/google-polygon.service';
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
     IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions,
-    MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective,
-    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon,
-    MapService, MapServiceFactory, MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, ClusterService
+    MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, InfoBoxActionDirective,
+    MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
+    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, MapService, MapServiceFactory,
+    MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, ClusterService
 }
 export {
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService,
@@ -99,19 +103,20 @@ export {
 /// define module
 ///
 @NgModule({
-    declarations: [MapLayerDirective, MapComponent, MapMarkerDirective, InfoBoxComponent, InfoBoxActionDirective, MapPolygonDirective, ClusterLayerDirective ],
-    imports: [ CommonModule ],
-    exports: [ CommonModule, MapComponent, MapMarkerDirective, MapPolygonDirective,
-        InfoBoxComponent, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective ]
+    declarations: [MapLayerDirective, MapComponent, MapMarkerDirective, InfoBoxComponent,
+        InfoBoxActionDirective, MapPolygonDirective, ClusterLayerDirective],
+    imports: [CommonModule],
+    exports: [CommonModule, MapComponent, MapMarkerDirective, MapPolygonDirective,
+        InfoBoxComponent, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective]
 })
 export class MapModule {
 
-    static forRoot(mapServiceFactory?: MapServiceFactory, loader?: MapAPILoader ): ModuleWithProviders {
+    static forRoot(mapServiceFactory?: MapServiceFactory, loader?: MapAPILoader): ModuleWithProviders {
         return {
             ngModule: MapModule,
             providers: [
                 mapServiceFactory ? { provide: MapServiceFactory, useValue: mapServiceFactory } :
-                    { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: BingMapServiceFactoryFactory},
+                    { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: BingMapServiceFactoryFactory },
                 loader ? { provide: MapAPILoader, useValue: loader } : { provide: MapAPILoader, useFactory: BingMapLoaderFactory },
                 DocumentRef,
                 WindowRef
@@ -135,7 +140,7 @@ export class MapModule {
         return {
             ngModule: MapModule,
             providers: [
-                { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: GoogleMapServiceFactoryFactory},
+                { provide: MapServiceFactory, deps: [MapAPILoader, NgZone], useFactory: GoogleMapServiceFactoryFactory },
                 { provide: MapAPILoader, useFactory: GoogleMapLoaderFactory },
                 DocumentRef,
                 WindowRef

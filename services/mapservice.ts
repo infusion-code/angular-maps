@@ -82,11 +82,11 @@ export abstract class MapService {
 
     /**
      * Creates a polygon within the map context
-     * 
+     *
      * @abstract
      * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
      * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
-     * 
+     *
      * @memberof MapService
      */
     abstract CreatePolygon(options: IPolygonOptions): Promise<Polygon>;
@@ -138,6 +138,24 @@ export abstract class MapService {
      * @memberof BingMapService
      */
     abstract LocationToPoint(loc: ILatLong): Promise<IPoint>;
+
+    /**
+     * Gets the Map control instance underlying the implementation
+     *
+     * @readonly
+     * @type {any}
+     * @memberof BingMapService
+     */
+    abstract get MapInstance(): any;
+
+    /**
+     * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
+     * are not sure if and when the instance will be created.
+     * @readonly
+     * @type {Promise<any>}
+     * @memberof BingMapService
+     */
+    abstract get MapPromise(): Promise<any>;
 
     /**
      * Centers the map on a geo location.

@@ -7,6 +7,7 @@ export interface IInfoWindowOptions {
     description?: string;
     disableAutoPan?: boolean;
     width?: number;
+    maxWidth?: number;
     height?: number;
     htmlContent?: string;
     pixelOffset?: IPoint;

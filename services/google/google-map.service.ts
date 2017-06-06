@@ -1,4 +1,5 @@
-﻿import { Injectable, NgZone } from '@angular/core';
+﻿import { GoogleInfoWindow } from './../../models/google/google-infowindow';
+import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import * as GoogleMapTypes from './google-map-types';
@@ -48,7 +49,7 @@ export class GoogleMapService implements MapService {
     ///
 
 
-    /** 
+    /**
      * Gets the Google Map control instance underlying the implementation
      *
      * @readonly
@@ -120,18 +121,12 @@ export class GoogleMapService implements MapService {
      *
      * @memberof GoogleMapService
      */
-    public CreateInfoWindow(options?: IInfoWindowOptions): Promise<InfoWindow> {
-        return Promise.resolve({});
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-        //     let loc: Microsoft.Maps.Location;
-        //     if (options.position == null) loc = map.getCenter();
-        //     else {
-        //         loc = new Microsoft.Maps.Location(options.position.latitude, options.position.longitude);
-        //     }
-        //     let infoBox: Microsoft.Maps.Infobox = new Microsoft.Maps.Infobox(loc, GoogleConversions.TranslateInfoBoxOptions(options));
-        //     infoBox.setMap(map);
-        //     return new GoogleInfoWindow(infoBox);
-        // });
+    public CreateInfoWindow(options?: IInfoWindowOptions): Promise<GoogleInfoWindow> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const o: GoogleMapTypes.InfoWindowOptions = GoogleConversions.TranslateInfoWindowOptions(options);
+            const infoWindow: GoogleMapTypes.InfoWindow = new google.maps.InfoWindow(o);
+            return new GoogleInfoWindow(infoWindow);
+        });
     }
 
     /**
@@ -209,17 +204,17 @@ export class GoogleMapService implements MapService {
 
     /**
      * Creates a polygon within the Google Map map context
-     * 
+     *
      * @abstract
      * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
      * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
-     * 
+     *
      * @memberof MapService
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            let o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
-            let polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
+            const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
+            const polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
             polygon.setMap(map);
             return new GooglePolygon(polygon);
         });

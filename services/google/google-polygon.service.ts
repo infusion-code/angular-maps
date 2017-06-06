@@ -1,3 +1,4 @@
+import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
@@ -45,7 +46,7 @@ export class GooglePolygonService implements PolygonService {
     ///
 
     /**
-     * Adds a polygon to a map. Depending on the polygon context, the polygon will either by added to the map or a 
+     * Adds a polygon to a map. Depending on the polygon context, the polygon will either by added to the map or a
      * correcsponding layer.
      *
      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} to be added.
@@ -113,6 +114,19 @@ export class GooglePolygonService implements PolygonService {
     };
 
     /**
+     * Obtains geo coordinates for the marker on the click location
+     *
+     * @abstract
+     * @param {(MouseEvent| any)} e - The mouse event.
+     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     *
+     * @memberof MarkerService
+     */
+    public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
+        return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
+    };
+
+    /**
      * Obtains the marker model for the marker allowing access to native implementation functionatiliy.
      *
      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to obtain the polygon model.
@@ -125,13 +139,13 @@ export class GooglePolygonService implements PolygonService {
     }
 
     /**
-     * Set the polygon options. 
-     * 
+     * Set the polygon options.
+     *
      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
-     * @param {IPolygonOptions} options - {@link IPolygonOptions} object containing the options. Options will be merged with the  
+     * @param {IPolygonOptions} options - {@link IPolygonOptions} object containing the options. Options will be merged with the
      * options already on the underlying object.
      * @returns {Promise<void>} - A promise fullfilled once the polygon options have been set.
-     * 
+     *
      * @memberof GooglePolygonService
      */
     public SetOptions(polygon: MapPolygonDirective, options: IPolygonOptions): Promise<void> {
@@ -140,10 +154,10 @@ export class GooglePolygonService implements PolygonService {
 
     /**
      * Updates the Polygon path
-     * 
+     *
      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
      * @returns {Promise<void>} - A promise fullfilled once the polygon has been updated.
-     * 
+     *
      * @memberof GooglePolygonService
      */
     public UpdatePolygon(polygon: MapPolygonDirective): Promise<void> {
@@ -153,6 +167,5 @@ export class GooglePolygonService implements PolygonService {
         }
         return m.then((l: Polygon) => this._zone.run(() => { l.SetPaths(polygon.Paths); }));
     }
-
 
 }

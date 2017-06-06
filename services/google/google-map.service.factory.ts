@@ -77,12 +77,13 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
      * Creates thh info box service for the Google Maps implementation.
      *
      * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @param {MarkerService} map - {@link MarkerService}. A concreted instance of the {@link GoogleMarkerService}.
      * @returns {InfoBoxService} - {@link InfoBoxService}. A concreted instance of the {@link GoogleInfoBoxService}.
      *
      * @memberof GoogleMapServiceFactory
      */
-    public CreateInfoBoxService(_mapService: MapService) {
-        return new GoogleInfoBoxService(_mapService, this._zone);
+    public CreateInfoBoxService(_mapService: MapService, _markerService: MarkerService) {
+        return new GoogleInfoBoxService(_mapService, _markerService, this._zone);
     }
 
     /**
@@ -128,11 +129,11 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
 
 /**
  *  Creates a new instance of a plaform specific MapServiceFactory.
- * 
- * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link GoogleMapAPILoader}. 
- * @param zone - An NgZone instance to provide zone aware promises.  
- * 
- * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance. 
+ *
+ * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link GoogleMapAPILoader}.
+ * @param zone - An NgZone instance to provide zone aware promises.
+ *
+ * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance.
  */
 export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
     return new GoogleMapServiceFactory(apiLoader, zone);
@@ -140,9 +141,9 @@ export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: Ng
 
 /**
  * Creates a new instance of a plaform specific MapLoaderFactory.
- * 
+ *
  * @export
- * @returns {MapAPILoader} - A {@link MapAPILoader} instance. 
+ * @returns {MapAPILoader} - A {@link MapAPILoader} instance.
  */
 export function GoogleMapLoaderFactory(): MapAPILoader {
     return new GoogleMapAPILoader(new GoogleMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
