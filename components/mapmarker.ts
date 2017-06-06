@@ -359,7 +359,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      */
     private AddEventListeners(): void {
         this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
-            const t: MapMarkerDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open();
             }

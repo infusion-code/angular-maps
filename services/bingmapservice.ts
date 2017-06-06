@@ -1,4 +1,6 @@
-﻿import { Injectable, NgZone } from '@angular/core';
+﻿import { IPolylineOptions } from './../interfaces/Ipolylineoptions';
+import { Polyline } from '../models/polyline';
+import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 
@@ -222,7 +224,20 @@ export class BingMapService implements MapService {
      * @memberof MapService
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
-        throw("Not Implemented.")
+        throw('Not Implemented.')
+    }
+
+    /**
+     * Creates a polyline within the Bing Maps V8 map context
+     * 
+     * @abstract
+     * @param {IPolylinenOptions} options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polygon.
+     * 
+     * @memberof MapService
+     */
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
+        throw('Not Implemented.')
     }
 
     /**

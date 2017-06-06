@@ -1,4 +1,7 @@
-﻿import { GoogleMarker } from './../../models/google/google-marker';
+﻿import { Polyline } from '../../models/polyline';
+import { GooglePolyline } from './../../models/google/google-polyline';
+import { IPolylineOptions } from './../../interfaces/Ipolylineoptions';
+import { GoogleMarker } from './../../models/google/google-marker';
 import { GoogleInfoWindow } from './../../models/google/google-infowindow';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
@@ -197,6 +200,24 @@ export class GoogleMapService implements MapService {
             const polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
             polygon.setMap(map);
             return new GooglePolygon(polygon);
+        });
+    }
+
+    /**
+     * Creates a polyline within the Google Map map context
+     *
+     * @abstract
+     * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
+     *
+     * @memberof MapService
+     */
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const o: GoogleMapTypes.PolylineOptions = GoogleConversions.TranslatePolylineOptions(options);
+            const polyline: GoogleMapTypes.Polyline = new google.maps.Polyline(o);
+            polyline.setMap(map);
+            return new GooglePolyline(polyline);
         });
     }
 

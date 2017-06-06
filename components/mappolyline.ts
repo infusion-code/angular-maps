@@ -1,24 +1,24 @@
-﻿import { InfoBoxComponent } from './infobox';
+import { PolylineService } from '../services/polylineservice';
+import { IPolylineOptions } from './../interfaces/Ipolylineoptions';
+import { InfoBoxComponent } from './infobox';
 import {
-    Directive, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
+    Component, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
 import { Subscription } from 'rxjs/subscription';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
-import { IPolygonOptions } from '../interfaces/ipolygonoptions';
-import { PolygonService } from '../services/polygonservice';
 
-let polygonId = 0;
+let polylineId = 0;
 
 /**
  *
- * MapPolygon renders a polygon inside a {@link Map}.
+ * MapPolyline renders a polyline inside a {@link Map}.
  *
  * ### Example
  * ```typescript
  * import {Component} from '@angular/core';
- * import {MapComponent, MapPolygonDirective} from '...';
+ * import {MapComponent, MapPolylineComponent} from '...';
  *
  * @Component({
  *  selector: 'my-map,
@@ -27,7 +27,7 @@ let polygonId = 0;
  * `],
  * template: `
  *   <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
- *      <mapPolygon [Paths]="path"></mapPolygon>
+ *      <x-map-polyline [Paths]="path"></x-map-polyline>
  *   </x-map>
  * `
  * })
@@ -35,15 +35,16 @@ let polygonId = 0;
  *
  *
  * @export
- * @class MapPolygonDirective
+ * @class MapPolylineComponent
  * @implements {OnDestroy}
  * @implements {OnChanges}
  * @implements {AfterContentInit}
  */
-@Directive({
-    selector: '[mapPolygon]'
+@Component({
+    selector: 'x-map-polyline',
+    template: ''
 })
-export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentInit {
+export class MapPolylineComponent implements OnDestroy, OnChanges, AfterContentInit {
 
     ///
     /// Field declarations
@@ -53,16 +54,16 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     private _events: Subscription[] = [];
 
     ///
-    /// Any InfoBox that is a direct children of the polygon
+    /// Any InfoBox that is a direct children of the polyline
     ///
     @ContentChild(InfoBoxComponent) protected _infoBox: InfoBoxComponent;
 
 
     /**
-     * Gets or sets whether this Polygon handles mouse events.
+     * Gets or sets whether this Polyline handles mouse events.
      *
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public Clickable = true;
 
@@ -70,7 +71,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * If set to true, the user can drag this shape over the map.
      *
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public Draggable = false;
 
@@ -79,59 +80,43 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * points shown at the vertices and on each segment.
      *
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public Editable = false;
 
     /**
-     * The fill color of the polygon.
-     *
-     * @type {string}
-     * @memberof MapPolygonDirective
-     */
-    @Input() public FillColor: string;
-
-    /**
-     * The fill opacity between 0.0 and 1.0
-     *
-     * @type {number}
-     * @memberof MapPolygonDirective
-     */
-    @Input() public FillOpacity: number;
-
-    /**
-     * When true, edges of the polygon are interpreted as geodesic and will
-     * follow the curvature of the Earth. When false, edges of the polygon are
+     * When true, edges of the polyline are interpreted as geodesic and will
+     * follow the curvature of the Earth. When false, edges of the polyline are
      * rendered as straight lines in screen space. Note that the shape of a
-     * geodesic polygon may appear to change when dragged, as the dimensions
+     * geodesic polyline may appear to change when dragged, as the dimensions
      * are maintained relative to the surface of the earth. Defaults to false.
      *
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public Geodesic = false;
 
     /**
      * The ordered sequence of coordinates that designates a closed loop.
-     * Unlike polylines, a polygon may consist of one or more paths.
+     * Unlike polylines, a polyline may consist of one or more paths.
      *  As a result, the paths property may specify one or more arrays of
      * LatLng coordinates. Paths are closed automatically; do not repeat the
-     * first vertex of the path as the last vertex. Simple polygons may be
-     * defined using a single array of LatLngs. More complex polygons may
+     * first vertex of the path as the last vertex. Simple polylines may be
+     * defined using a single array of LatLngs. More complex polylines may
      * specify an array of arrays. Any simple arrays are converted into Arrays.
      * Inserting or removing LatLngs from the Array will automatically update
-     * the polygon on the map.
+     * the polyline on the map.
      *
      * @type {(Array<ILatLong> | Array<Array<ILatLong>>)}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
-    @Input() public Paths: Array<ILatLong> | Array<Array<ILatLong>> = [];
+    @Input() public Path: Array<ILatLong> | Array<Array<ILatLong>> = [];
 
     /**
      * The stroke color.
      *
      * @type {string}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public StrokeColor: string;
 
@@ -139,7 +124,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * The stroke opacity between 0.0 and 1.0
      *
      * @type {number}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public StrokeOpacity: number;
 
@@ -147,15 +132,15 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * The stroke width in pixels.
      *
      * @type {number}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public StrokeWeight: number;
 
     /**
-     * Whether this polygon is visible on the map. Defaults to true.
+     * Whether this polyline is visible on the map. Defaults to true.
      *
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public Visible: boolean;
 
@@ -163,7 +148,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * The zIndex compared to other polys.
      *
      * @type {number}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Input() public zIndex: number;
 
@@ -172,90 +157,90 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ///
 
     /**
-     * This event is fired when the DOM click event is fired on the Polygon.
+     * This event is fired when the DOM click event is fired on the Polyline.
      *
      *   @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() Click: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired when the DOM dblclick event is fired on the Polygon.
+     * This event is fired when the DOM dblclick event is fired on the Polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() DblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is repeatedly fired while the user drags the polygon.
+     * This event is repeatedly fired while the user drags the polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() Drag: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired when the user stops dragging the polygon.
+     * This event is fired when the user stops dragging the polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired when the user starts dragging the polygon.
+     * This event is fired when the user starts dragging the polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() DragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired when the DOM mousedown event is fired on the Polygon.
+     * This event is fired when the DOM mousedown event is fired on the Polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() MouseDown: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired when the DOM mousemove event is fired on the Polygon.
+     * This event is fired when the DOM mousemove event is fired on the Polyline.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() MouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired on Polygon mouseout.
+     * This event is fired on Polyline mouseout.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() MouseOut: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired on Polygon mouseover.
+     * This event is fired on Polyline mouseover.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() MouseOver: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This event is fired whe the DOM mouseup event is fired on the Polygon
+     * This event is fired whe the DOM mouseup event is fired on the Polyline
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() MouseUp: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
-     * This even is fired when the Polygon is right-clicked on.
+     * This even is fired when the Polyline is right-clicked on.
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     @Output() RightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
@@ -264,28 +249,28 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ///
 
     /**
-     * Gets whether the polygon has been registered with the service.
+     * Gets whether the polyline has been registered with the service.
      * @readonly
      * @type {boolean}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     public get AddedToService(): boolean { return this._addedToService; }
 
     /**
-     * Get the id of the polygon.
+     * Get the id of the polyline.
      *
      * @readonly
      * @type {number}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     public get Id(): number { return this._id; }
 
     /**
-     * Gets the id of the polygon as a string.
+     * Gets the id of the polyline as a string.
      *
      * @readonly
      * @type {string}
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     public get IdAsString(): string { return this._id.toString(); }
 
@@ -294,13 +279,13 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ///
 
     /**
-     * Creates an instance of MapPolygonDirective.
-     * @param {PolygonManager} _polygonManager
+     * Creates an instance of MapPolylineComponent.
+     * @param {PolylineManager} _polylineManager
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
-    constructor(private _polygonService: PolygonService, private _containerRef: ViewContainerRef) {
-        this._id = polygonId++;
+    constructor(private _polylineService: PolylineService, private _containerRef: ViewContainerRef) {
+        this._id = polylineId++;
     }
 
     ///
@@ -312,11 +297,11 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      *
      * @return {void}
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     ngAfterContentInit(): void {
         if (!this._addedToService) {
-            this._polygonService.AddPolygon(this);
+            this._polylineService.AddPolyline(this);
             this._addedToService = true;
             this.AddEventListeners();
         }
@@ -329,23 +314,23 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @return {void}
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     ngOnChanges(changes: SimpleChanges): any {
         if (!this._addedToService) { return; }
 
-        const o: IPolygonOptions = this.GeneratePolygonChangeSet(changes);
-        this._polygonService.SetOptions(this, o);
+        const o: IPolylineOptions = this.GeneratePolylineChangeSet(changes);
+        this._polylineService.SetOptions(this, o);
     }
 
     /**
-     * Called when the polygon is being destroyed. Part of the ng Component life cycle. Release resources.
+     * Called when the polyline is being destroyed. Part of the ng Component life cycle. Release resources.
      *
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     ngOnDestroy() {
-        this._polygonService.DeletePolygon(this);
+        this._polylineService.DeletePolyline(this);
         this._events.forEach((s) => s.unsubscribe());
         ///
         /// remove event subscriptions
@@ -361,12 +346,12 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      *
      * @private
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
     private AddEventListeners() {
-        this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
+        this._polylineService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
             if (this._infoBox != null) {
-                this._infoBox.Open(this._polygonService.GetCoordinatesFromClick(ev));
+                this._infoBox.Open(this._polylineService.GetCoordinatesFromClick(ev));
             }
         });
         const handlers = [
@@ -382,30 +367,28 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
             { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(ev) },
         ];
         handlers.forEach((obj) => {
-            const os = this._polygonService.CreateEventObservable(obj.name, this).subscribe(obj.handler);
+            const os = this._polylineService.CreateEventObservable(obj.name, this).subscribe(obj.handler);
             this._events.push(os);
         });
     }
 
 
     /**
-     * Generates IPolygon option changeset from directive settings.
+     * Generates IPolyline option changeset from directive settings.
      *
      * @private
      * @param {SimpleChanges} changes - {@link SimpleChanges} identifying the changes that occured.
-     * @returns {IPolygonOptions} - {@link IPolygonOptions} containing the polygon options.
+     * @returns {IPolylineOptions} - {@link IPolylineOptions} containing the polyline options.
      *
-     * @memberof MapPolygonDirective
+     * @memberof MapPolylineComponent
      */
-    private GeneratePolygonChangeSet(changes: SimpleChanges): IPolygonOptions {
-        const options: IPolygonOptions = { id: this._id };
+    private GeneratePolylineChangeSet(changes: SimpleChanges): IPolylineOptions {
+        const options: IPolylineOptions = { id: this._id };
         if (changes['Clickable']) { options.clickable = this.Clickable; }
         if (changes['Draggable']) { options.draggable = this.Draggable; }
         if (changes['Editable']) { options.editable = this.Editable; }
-        if (changes['FillColor']) { options.fillColor = this.FillColor; }
-        if (changes['FillOpacity']) { options.fillOpacity = this.FillOpacity; }
         if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
-        if (changes['Paths']) { options.paths = this.Paths; }
+        if (changes['Path']) { options.path = this.Path; }
         if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
         if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
         if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }
