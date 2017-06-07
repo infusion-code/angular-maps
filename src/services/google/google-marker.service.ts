@@ -4,12 +4,15 @@ import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { IPoint } from '../../interfaces/ipoint';
 import { ILatLong } from '../../interfaces/ilatlong';
+import { IMarkerOptions } from '../../interfaces/imarkeroptions';
 import { Marker } from '../../models/marker';
 import { MapMarkerDirective } from '../../components/mapmarker'
 import { MarkerService } from '../markerservice';
 import { MapService } from '../mapservice';
 import { LayerService } from '../layerservice';
 import { ClusterService } from '../clusterservice';
+import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { GoogleConversions } from './google-conversions';
 
 /**
  * Concrete implementation of the MarkerService abstract class for Google.
@@ -57,6 +60,17 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public AddMarker(marker: MapMarkerDirective): void {
+        const o: IMarkerOptions = {
+            anchor: marker.Anchor,
+            position: { latitude: marker.Latitude, longitude: marker.Longitude },
+            title: marker.Title,
+            draggable: marker.Draggable,
+            icon: marker.IconUrl || marker.IconInfo,
+            width: marker.Width,
+            height: marker.Height
+        }
+        const markerPromise = this._mapService.CreateMarker(o);
+        this._markers.set(marker, markerPromise);
     };
 
     /**
@@ -71,7 +85,11 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public CreateEventObservable<T>(eventName: string, marker: MapMarkerDirective): Observable<T> {
-        return new BehaviorSubject<T>(null).asObservable();
+        return Observable.create((observer: Observer<T>) => {
+            this._markers.get(marker).then((m: Marker) => {
+                m.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
+            });
+        });
     };
 
     /**
@@ -84,7 +102,16 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public DeleteMarker(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        const m = this._markers.get(marker);
+        if (m == null) {
+            return Promise.resolve();
+        }
+        return m.then((ma: Marker) => {
+            return this._zone.run(() => {
+                ma.DeleteMarker();
+                this._markers.delete(marker);
+            });
+        });
     };
 
     /**
@@ -97,7 +124,16 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
-        return {latitude: 0, longitude: 0};
+        if (!e) {
+            return null;
+        }
+        if (!e.latLng) {
+            return null;
+        }
+        if (!e.latLng.lat || !e.latLng.lng) {
+            return null;
+        }
+        return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
     };
     /**
      * Obtains the marker model for the marker allowing access to native implementation functionatiliy.
@@ -109,7 +145,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public GetNativeMarker(marker: MapMarkerDirective): Promise<Marker> {
-        return Promise.resolve({});
+       return this._markers.get(marker);
     };
 
     /**
@@ -137,7 +173,17 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public LocationToPoint(target: MapMarkerDirective | ILatLong): Promise<IPoint> {
-        return Promise.resolve({});
+        if (target == null) {
+            return Promise.resolve(null);
+        }
+        if (target instanceof MapMarkerDirective) {
+            return this._markers.get(target).then((m: Marker) => {
+                const l: ILatLong = m.Location;
+                const p: Promise<IPoint> = this._mapService.LocationToPoint(l);
+                return p;
+            });
+        }
+        return this._mapService.LocationToPoint(target);
     };
 
     /**
@@ -150,8 +196,10 @@ export class GoogleMarkerService implements MarkerService {
      *
      * @memberof MarkerService
      */
-    public UpdateAnchor(maker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+    public UpdateAnchor(marker: MapMarkerDirective): Promise<void> {
+        return this._markers.get(marker).then((m: Marker) => {
+            m.SetAnchor(marker.Anchor);
+        });
     };
 
     /**
@@ -165,7 +213,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public UpdateDraggable(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        return this._markers.get(marker).then((m: Marker) => m.SetDraggable(marker.Draggable));
     };
 
     /**
@@ -179,7 +227,20 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public UpdateIcon(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        return this._markers.get(marker).then((m: Marker) => {
+            if (marker.IconInfo) {
+                const x: IMarkerOptions = {
+                    position: { latitude: marker.Latitude, longitude: marker.Longitude },
+                    iconInfo: marker.IconInfo
+                }
+                const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(x);
+                m.SetIcon(o.icon);
+                marker.DynamicMarkerCreated.emit(x.iconInfo);
+            } else {
+                m.SetIcon(marker.IconUrl)
+            }
+
+        });
     };
 
     /**
@@ -193,7 +254,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public UpdateLabel(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        return this._markers.get(marker).then((m: Marker) => { m.SetLabel(marker.Label); });
     };
 
     /**
@@ -207,7 +268,11 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public UpdateMarkerPosition(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        return this._markers.get(marker).then(
+            (m: Marker) => m.SetPosition({
+                latitude: marker.Latitude,
+                longitude: marker.Longitude
+            }));
     };
 
     /**
@@ -221,7 +286,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public UpdateTitle(marker: MapMarkerDirective): Promise<void> {
-        return Promise.resolve();
+        return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.Title));
     };
 
 }

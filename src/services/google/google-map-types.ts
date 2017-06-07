@@ -26,12 +26,15 @@ export interface Marker extends MVCObject {
   setPosition(latLng: LatLng|LatLngLiteral): void;
   setTitle(title: string): void;
   setLabel(label: string|MarkerLabel): void;
+  setPosition(latlng: LatLng|LatLngLiteral): void;
   setDraggable(draggable: boolean): void;
   setIcon(icon: string): void;
   setOpacity(opacity: number): void;
+  setOptions(options: MarkerOptions): void;
   setVisible(visible: boolean): void;
   setZIndex(zIndex: number): void;
   getLabel(): MarkerLabel;
+  getPosition(): LatLng;
 }
 
 export interface MarkerOptions {

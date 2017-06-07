@@ -1,5 +1,6 @@
 ﻿import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
 import { IMapOptions } from '../../interfaces/imapoptions';
+import { IMarkerOptions } from '../../interfaces/imarkeroptions';
 import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
 import * as GoogleMapTypes from './google-map-types';
@@ -13,20 +14,40 @@ export class GoogleConversions {
     /// Map option attributes that can change over time
     ///
     private static _mapOptionsAttributes: string[] = [
-        // 'disableKeyboardInput',
-        // 'disablePanning',
-        // 'disableTouchInput',
-        // 'disableUserInput',
-        // 'disableZooming',
-        // 'disableStreetside',
-        // 'enableClickableLogo',
-        // 'navigationBarMode',
-        // 'showDashboard',
-        // 'showMapTypeSelector',
-        // 'showScalebar',
+        'backgroundColor',
         'center',
+        'clickableIcons',
+        'disableDefaultUI',
+        'disableDoubleClickZoom',
+        'draggable',
+        'draggableCursor',
+        'draggingCursor',
+        'fullscreenControl',
+        'fullscreenControlOptions',
+        'gestureHandling',
+        'heading',
+        'keyboardShortcuts',
+        'mapTypeControl',
+        'mapTypeControlOptions',
+        'mapTypeId',
+        'maxZoom',
+        'minZoom',
+        'noClear',
+        'panControl',
+        'panControlOptions',
+        'rotateControl',
+        'rotateControlOptions',
+        'scaleControl',
+        'scaleControlOptions',
+        'scrollwheel',
+        'streetView',
+        'streetViewControl',
+        'streetViewControlOptions',
+        'styles',
+        'tilt',
         'zoom',
-        'mapTypeId'
+        'zoomControl',
+        'zoomControlOptions'
     ];
 
     private static _viewOptionsAttributes: string[] = [
@@ -61,19 +82,17 @@ export class GoogleConversions {
 
     private static _markerOptionsAttributes: string[] = [
         'anchor',
-        'draggable',
-        'height',
-        'htmlContent',
-        'icon',
-        'iconInfo',
-        'infobox',
-        'state',
+        'position',
         'title',
-        'textOffset',
-        'typeName',
-        'visible',
+        'text',
+        'label',
+        'draggable',
+        'icon',
         'width',
-        'zIndex'
+        'height',
+        'iconInfo',
+        'metadata',
+        'visible'
     ];
 
     private static _clusterOptionsAttributes: string[] = [
@@ -148,6 +167,21 @@ export class GoogleConversions {
                     o.center = GoogleConversions.TranslateLocation(options.center);
                 } else if (k === 'mapTypeId') {
                     o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
+                } else {
+                    o[k] = (<any>options)[k]
+                };
+            });
+        return o;
+    }
+
+    public static TranslateMarkerOptions(options: IMarkerOptions): GoogleMapTypes.MarkerOptions {
+        const o: GoogleMapTypes.MarkerOptions | any = {};
+        Object.keys(options)
+            .filter(k => GoogleConversions._markerOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'position') {
+                    const latlng = GoogleConversions.TranslateLocationObject(options[k]);
+                    o.position = latlng;
                 } else {
                     o[k] = (<any>options)[k]
                 };

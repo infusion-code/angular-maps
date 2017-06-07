@@ -185,6 +185,14 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      */
     @Input() public yOffset: number;
 
+    /**
+     * Determines if other info boxes should be closed before opening this one
+     *
+     * @type {boolean}
+     * @memberof InfoBox
+     */
+    @Input() public CloseInfoBoxesOnOpen = true;
+
     ///
     /// Delegate defintions
     ///

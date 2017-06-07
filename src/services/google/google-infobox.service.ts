@@ -1,11 +1,12 @@
-﻿import { MarkerService } from '../markerservice';
-import { MapService } from '../mapservice';
-import { GoogleInfoWindow } from '../../models/google/google-infowindow';
+﻿import { GoogleMarker } from './../../models/google/google-marker';
+import { MarkerService } from './../markerservice';
+import { MapService } from './../mapservice';
+import { GoogleInfoWindow } from './../../models/google/google-infowindow';
 import { Injectable, NgZone } from '@angular/core';
-import { InfoBoxComponent } from '../../components/infobox';
-import { IInfoWindowOptions } from '../../interfaces/iinfowindowoptions';
-import { ILatLong } from '../../interfaces/ilatlong';
-import { InfoBoxService } from '../infoboxservice';
+import { InfoBoxComponent } from './../../components/infobox';
+import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
+import { ILatLong } from './../../interfaces/ilatlong';
+import { InfoBoxService } from './../infoboxservice';
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {
@@ -90,10 +91,16 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
+        if (info.CloseInfoBoxesOnOpen) {
+            // close all info boxes
+            this._boxes.forEach((box: Promise<GoogleInfoWindow>) => {
+                box.then((w) => w.Close());
+            });
+        }
         return this._boxes.get(info).then((w) => {
             if (info.HostMarker != null) {
                 return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
-                    return this._mapService.MapPromise.then((map) => w.Open(map, marker));
+                    return this._mapService.MapPromise.then((map) => w.Open(map, (<GoogleMarker>marker).NativePrimitve));
                 });
             }
             return this._mapService.MapPromise.then((map) => {

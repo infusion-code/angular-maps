@@ -1,7 +1,7 @@
 import { IClusterOptions } from '../../interfaces/iclusteroptions';
 import { ISpiderClusterOptions } from '../../interfaces/ispiderclusteroptions';
-import { BingConversions } from '../../services/bingmaps/bingconversions';
-import { BingMapService } from '../../services/bingmaps/bingmapservice';
+import { BingConversions } from '../../services/bingMaps/bingconversions';
+import { BingMapService } from '../../services/bingMaps/bingmapservice';
 import { MapService } from '../../services/mapservice';
 import { Layer } from '../layer';
 import { Marker } from '../marker';
