@@ -1,8 +1,4 @@
-﻿import { Polyline } from '../../models/polyline';
-import { GooglePolyline } from './../../models/google/google-polyline';
-import { IPolylineOptions } from './../../interfaces/Ipolylineoptions';
-import { GoogleMarker } from './../../models/google/google-marker';
-import { GoogleInfoWindow } from './../../models/google/google-infowindow';
+﻿import { GoogleInfoWindow } from './../../models/google/google-infowindow';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
@@ -177,12 +173,33 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
-        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(options);
-            const marker = new google.maps.Marker(o);
-            marker.setMap(map);
-            return new GoogleMarker(marker);
-        });
+        return Promise.resolve({});
+        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+        //     let loc: Microsoft.Maps.Location = GoogleConversions.TranslateLocation(options.position);
+        //     let o: Microsoft.Maps.IPushpinOptions = GoogleConversions.TranslateMarkerOptions(options);
+        //     if (o.icon == null) {
+        //         let s: number = 48;
+        //         let iconInfo: IMarkerIconInfo = {
+        //             markerType: MarkerTypeId.CanvasMarker,
+        //             rotation: 45,
+        //             drawingOffset: { x: 24, y: 0 },
+        //             points: [
+        //                 { x: 10, y: 40 },
+        //                 { x: 24, y: 30 },
+        //                 { x: 38, y: 40 },
+        //                 { x: 24, y: 0 }
+        //             ],
+        //             color: '#f00',
+        //             size: { width: s, height: s }
+        //         };
+        //         o.icon = Marker.CreateMarker(iconInfo);
+        //         o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
+        //         o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
+        //     }
+        //     let pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+        //     map.entities.push(pushpin);
+        //     return new GoogleMarker(pushpin);
+        // });
     }
 
     /**
@@ -200,24 +217,6 @@ export class GoogleMapService implements MapService {
             const polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
             polygon.setMap(map);
             return new GooglePolygon(polygon);
-        });
-    }
-
-    /**
-     * Creates a polyline within the Google Map map context
-     *
-     * @abstract
-     * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
-     *
-     * @memberof MapService
-     */
-    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
-        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            const o: GoogleMapTypes.PolylineOptions = GoogleConversions.TranslatePolylineOptions(options);
-            const polyline: GoogleMapTypes.Polyline = new google.maps.Polyline(o);
-            polyline.setMap(map);
-            return new GooglePolyline(polyline);
         });
     }
 

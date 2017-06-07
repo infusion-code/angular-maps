@@ -5,27 +5,7 @@ import { IPoint } from '../interfaces/ipoint';
 import { ISize } from '../interfaces/isize';
 import { MarkerTypeId } from '../models/markertypeid';
 
-/**
- * This class defines the contract for a marker.
- *
- * @export
- * @abstract
- * @class Marker
- */
 export abstract class Marker {
-
-    /**
-     * Creates a marker based on the marker info. In turn calls a number of internal members to
-     * create the actual marker.
-     *
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - icon information. Depending on the marker type, various properties
-     * need to be present. For performance, it is recommended to use an id for markers that are common to facilitate
-     * reuse.
-     * @returns {string} - a string containing a data url with the marker image.
-     *
-     * @memberof Marker
-     */
     public static CreateMarker(iconInfo: IMarkerIconInfo): string {
 
         switch (iconInfo.markerType) {
@@ -47,16 +27,6 @@ export abstract class Marker {
         throw Error('Unsupported marker type: ' + iconInfo.markerType);
     }
 
-    /**
-     * Creates a canvased based marker using the point collection contained in the iconInfo parameter.
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
-     *
-     * @memberof Marker
-     */
     protected static CreateCanvasMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) { throw Error('Document context (window.document) is required for canvas markers.'); }
         if (iconInfo == null || iconInfo.size == null || iconInfo.points == null) {
@@ -87,16 +57,6 @@ export abstract class Marker {
         return c.toDataURL();
     }
 
-    /**
-     * Creates a circle marker image using information contained in the iconInfo parameter.
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
-     *
-     * @memberof Marker
-     */
     protected static CreateDynmaicCircleMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) { throw Error('Document context (window.document) is required for dynamic circle markers.'); }
         if (iconInfo == null || iconInfo.size == null) { throw Error('IMarkerIconInfo.size is required for dynamic circle markers.'); }
@@ -125,16 +85,6 @@ export abstract class Marker {
         return svg.join('');
     }
 
-    /**
-     * Creates a font based marker image (such as Font-Awesome), by using information supplied in the parameters (such as Font-Awesome).
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
-     *
-     * @memberof Marker
-     */
     protected static CreateFontBasedMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) {
             throw Error('Document context (window.document) is required for font based markers');
@@ -171,16 +121,6 @@ export abstract class Marker {
         return c.toDataURL();
     }
 
-    /**
-     * Creates an image marker by applying a roation to a supplied image.
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
-     *
-     * @memberof Marker
-     */
     protected static CreateRotatedImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) {
             throw Error('Document context (window.document) is required for rotated image markers');
@@ -219,16 +159,6 @@ export abstract class Marker {
         return '';
     }
 
-    /**
-     * Creates a rounded image marker by applying a circle mask to a supplied image.
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
-     *
-     * @memberof Marker
-     */
     protected static CreateRoundedImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) {
             throw Error('Document context (window.document) is required for rounded image markers');
@@ -261,16 +191,6 @@ export abstract class Marker {
         return '';
     }
 
-    /**
-     * Creates a scaled image marker by scaling a supplied image by a factor using a canvas.
-     *
-     * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
-     *
-     * @memberof Marker
-     */
     protected static CreateScaledImageMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) {
             throw Error('Document context (window.document) is required for scaled image markers');
@@ -297,162 +217,19 @@ export abstract class Marker {
         return '';
     }
 
-    ///
-    /// Property definitions
-    ///
-
-    /**
-     * Indicates that the marker is the first marker in a set.
-     *
-     * @abstract
-     * @type {boolean}
-     * @memberof Marker
-     */
-    public abstract get IsFirst(): boolean;
-    public abstract set IsFirst(val: boolean);
-
-    /**
-     * Indicates that the marker is the last marker in the set.
-     *
-     * @abstract
-     * @type {boolean}
-     * @memberof Marker
-     */
-    public abstract get IsLast(): boolean;
-    public abstract set IsLast(val: boolean);
-
-    /**
-     * Gets the Location of the marker
-     *
-     * @readonly
-     * @abstract
-     * @type {ILatLong}
-     * @memberof Marker
-     */
     public abstract get Location(): ILatLong;
-
-    /**
-     * Gets the native primitve implementing the marker (e.g. Microsoft.Maps.Pushpin)
-     *
-     * @readonly
-     * @abstract
-     * @type {*}
-     * @memberof Marker
-     */
     public abstract get NativePrimitve(): any;
-
-    /**
-     * Gets the marker metadata.
-     *
-     * @readonly
-     * @abstract
-     * @type {Map<string, any>}
-     * @memberof Marker
-     */
     public abstract get Metadata(): Map<string, any>;
 
-    ///
-    /// Public methods
-    ///
-
-    /**
-     * Adds a delegate for an event.
-     *
-     * @abstract
-     * @param {string} eventType - String containing the event name.
-     * @param fn - Delegate function to execute when the event occurs.
-     *
-     * @memberof Polygon
-     */
     public abstract AddListener(eventType: string, fn: Function): void;
-
-    /**
-     * Deletes the marker.
-     *
-     * @abstract
-     *
-     * @memberof Marker
-     */
     public abstract DeleteMarker(): void;
-
-    /**
-     * Gets the marker label
-     *
-     * @abstract
-     * @returns {string}
-     *
-     * @memberof Marker
-     */
     public abstract GetLabel(): string;
-
-    /**
-     * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
-     *
-     * @abstract
-     * @param {IPoint} anchor - Point coordinates for the marker anchor.
-     *
-     * @memberof Marker
-     */
     public abstract SetAnchor(anchor: IPoint): void;
-
-    /**
-     * Sets the draggability of a marker.
-     *
-     * @abstract
-     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
-     *
-     * @memberof Marker
-     */
     public abstract SetDraggable(draggable: boolean): void;
-
-    /**
-     * Sets the icon for the marker.
-     *
-     * @abstract
-     * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
-     *
-     * @memberof Marker
-     */
     public abstract SetIcon(icon: string): void;
-
-    /**
-     * Sets the marker label.
-     *
-     * @abstract
-     * @param {string} label - String containing the label to set.
-     *
-     * @memberof Marker
-     */
     public abstract SetLabel(label: string): void;
-
-    /**
-     * Sets the marker position.
-     *
-     * @abstract
-     * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
-     *
-     * @memberof Marker
-     */
     public abstract SetPosition(latLng: ILatLong): void;
-
-    /**
-     * Sets the marker title.
-     *
-     * @abstract
-     * @param {string} title - String containing the title to set.
-     *
-     * @memberof Marker
-     */
     public abstract SetTitle(title: string): void;
-
-    /**
-     * Sets the marker options.
-     *
-     * @abstract
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
-     * merged with the underlying marker options.
-     * @memberof Marker
-     */
     public abstract SetOptions(options: IMarkerOptions): void;
 
 }

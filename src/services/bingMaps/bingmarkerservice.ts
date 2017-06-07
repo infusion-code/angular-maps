@@ -67,7 +67,9 @@ export class BingMarkerService implements MarkerService {
             label: marker.Label,
             draggable: marker.Draggable,
             icon: marker.IconUrl,
-            iconInfo: marker.IconInfo
+            iconInfo: marker.IconInfo,
+            isFirst: marker.IsFirstInSet,
+            isLast: marker.IsLastInSet
         };
         if (marker.Width) { o.width = marker.Width; }
         if (marker.Height) { o.height = marker.Height; }

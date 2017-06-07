@@ -26,6 +26,7 @@ export class BingClusterLayer implements Layer {
     private _mapclicks = 0;
     private _spiderLayer: Microsoft.Maps.Layer;
     private _events: Array<Microsoft.Maps.IHandlerId> = new Array<Microsoft.Maps.IHandlerId>();
+    private _currentZoom: number = 0;
     private _spiderOptions: ISpiderClusterOptions = {
         circleSpiralSwitchover: 9,
         collapseClusterOnMapChange: false,
@@ -94,18 +95,35 @@ export class BingClusterLayer implements Layer {
     }
 
     /**
-     * Adds an entity to the layer.
+     * Adds an entity to the layer. Use this method with caution as it will trigger a recaluation of the clusters (and associated markers if approprite) for 
+     * each invocation. If you use this method to add many markers to the cluster, use 
      *
      * @param entity Marker|InfoWindow|any. Entity to add to the layer.
      *
      * @memberof BingClusterLayer
      */
-    public AddEntity(entity: Marker | InfoWindow | any): void {
-        if (entity.NativePrimitve && entity.Location) {
-            const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
-            p.push(entity.NativePrimitve)
-            this._layer.setPushpins(p);
-            this._markers.push(entity);
+    public AddEntity(entity: Marker|InfoWindow|any): void {
+        if(entity instanceof Marker || entity instanceof BingMarker){
+            if((<Marker>entity).IsFirst) {
+                this.StopClustering();
+            }
+        }
+        if(entity.NativePrimitve && entity.Location){
+
+            if(this._isClustering){
+                let p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
+                p.push(entity.NativePrimitve)
+                this._layer.setPushpins(p);
+                this._markers.push(entity);
+            }
+            else{
+                this._pendingMarkers.push(entity);
+            }
+        }
+        if(entity instanceof Marker || entity instanceof BingMarker){
+            if((<Marker>entity).IsLast) {
+                this.StartClustering();
+            }
         }
     }
 
@@ -122,8 +140,9 @@ export class BingClusterLayer implements Layer {
         const m: Microsoft.Maps.Map = (<BingMapService>this._maps).MapInstance;
         this._useSpiderCluster = true;
         this._spiderLayer = new Microsoft.Maps.Layer();
-        m.layers.insert(this._spiderLayer);
+        this._currentZoom = m.getZoom();
         this.SetSpiderOptions(options);
+        m.layers.insert(this._spiderLayer);
 
         this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', (e) => {
             if (this._mapclicks === -1) {
@@ -169,13 +188,17 @@ export class BingClusterLayer implements Layer {
     public Delete(): void {
         if (this._useSpiderCluster) {
             this._spiderLayer.clear();
-            (<BingMapService>this._maps).MapInstance.layers.remove(this._spiderLayer);
-            this._spiderLayer = null;
+            (<BingMapService>this._maps).MapPromise.then(m => {
+                m.layers.remove(this._spiderLayer);
+                this._spiderLayer = null;
+            });
             this._events.forEach(e => Microsoft.Maps.Events.removeHandler(e));
             this._events.splice(0);
             this._useSpiderCluster = false;
         }
         this._markers.splice(0);
+        this._spiderMarkers.splice(0);
+        this._pendingMarkers.splice(0);
         this._maps.DeleteLayer(this);
     }
 
@@ -232,14 +255,20 @@ export class BingClusterLayer implements Layer {
      *
      * @memberof BingClusterLayer
      */
-    public RemoveEntity(entity: Marker | InfoWindow | any): void {
-        if (entity.NativePrimitve && entity.Location) {
-            const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
-            const i: number = p.findIndex(x => x === entity.NativePrimitve);
-            const j: number = this._markers.findIndex(m => m === entity);
-            if (i > -1) { p.splice(i, 1); }
-            if (j > -1) { this._markers.splice(j, 1); }
-            this._layer.setPushpins(p);
+    public RemoveEntity(entity: Marker|InfoWindow|any): void {
+        if(entity.NativePrimitve && entity.Location){
+            let j: number = this._markers.findIndex( m => m === entity);
+            let k: number = this._pendingMarkers.findIndex( m => m === entity);
+            if(j > -1) this._markers.splice(j, 1);
+            if(k > -1) this._pendingMarkers.splice(k, 1);
+            if(this._isClustering){
+                let p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
+                let i: number = p.findIndex(x => x===entity.NativePrimitve);
+                if(i > -1) {
+                    p.splice(i, 1);
+                    this._layer.setPushpins(p);
+                }
+            }
         }
     }
 
@@ -292,6 +321,51 @@ export class BingClusterLayer implements Layer {
         this._layer.setOptions(o);
     }
 
+    /**
+     * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities 
+     * have been added to the cluster. This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @returns {void} 
+     * 
+     * @memberof BingClusterLayer
+     */
+    public StartClustering(): void {
+        if(this._isClustering) return;
+
+        let p: Array<Microsoft.Maps.Pushpin> = new Array<Microsoft.Maps.Pushpin>();
+        this._markers.forEach(e => { 
+            if(e.NativePrimitve && e.Location) {
+                p.push(<Microsoft.Maps.Pushpin>e.NativePrimitve);
+            } 
+        }); 
+        this._pendingMarkers.forEach(e => {
+            if(e.NativePrimitve && e.Location && p.findIndex(x => x===e.NativePrimitve) === -1) {
+                p.push(<Microsoft.Maps.Pushpin>e.NativePrimitve);
+            }
+        });
+        this._layer.setPushpins(p);
+        this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+        this._isClustering = true;
+    };
+
+    /**
+     * Stop to actually cluster the entities in a cluster layer.  
+     * This method is used for performance reasons as adding an entitiy will recalculate all clusters.
+     * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is 
+     * complete to recalculate the clusters.
+     * 
+     * @returns 
+     * 
+     * @memberof BingClusterLayer
+     */
+    public StopClustering() {
+        if(!this._isClustering) return;
+        this._isClustering = false;
+    };
+
+
     ///
     /// Private methods
     ///
@@ -319,11 +393,25 @@ export class BingClusterLayer implements Layer {
     }
 
     /**
-     * Hides the spider cluster and resotres the original pin.
+     * Returns the abstract marker used to wrap the Bing Pushpin.
      *
+     * @returns {@BingSpiderClusterMarker} . The abstract marker object representing the pushpin.
+     * 
+     * @memberof BingClusterLayer
+     */
+    public GetSpiderMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): BingSpiderClusterMarker {
+        let i: number = this._spiderMarkers.findIndex(e => e.NativePrimitve === pin);
+        if (i > -1) return this._spiderMarkers[i];
+        return null;
+    }
+
+    /**
+     * Hides the spider cluster and resotres the original pin. 
+     * 
      * @memberof BingClusterLayer
      */
     private HideSpiderCluster(): void {
+        this._mapclicks = 0;
         if (this._currentCluster) {
             this._spiderLayer.clear();
             this._currentCluster = null;
@@ -338,10 +426,11 @@ export class BingClusterLayer implements Layer {
      * Click event handler for when a shape in the cluster layer is clicked.
      *
      * @param e The mouse event argurment from the click event.
+     * @returns {void} 
      *
      * @memberof BingClusterLayer
      */
-    private LayerClickEvent(e: Microsoft.Maps.IMouseEventArgs): void {
+    private OnLayerClick(e: Microsoft.Maps.IMouseEventArgs): void {
         if (e.primitive instanceof Microsoft.Maps.ClusterPushpin) {
             const cp: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.primitive;
             const showNewCluster: boolean = cp !== this._currentCluster;
@@ -361,6 +450,86 @@ export class BingClusterLayer implements Layer {
             } else {
                 if (this._spiderOptions.markerSelected) { this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null); }
                 if (Microsoft.Maps.Events.hasHandler(pin, 'click')) { Microsoft.Maps.Events.invoke(pin, 'click', e); }
+            }
+        }
+    }
+
+    /**
+     * Delegate handling the click event on the map (outside a spider cluster). Depending on the 
+     * spider options, closes the cluster or increments the click counter. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event
+     * @returns {void} 
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapClick(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
+        if(this._mapclicks == -1) return;
+        else if(++this._mapclicks >= this._spiderOptions.collapseClusterOnNthClick) this.HideSpiderCluster();
+        else {
+            // do nothing as this._mapclicks has already been incremented above 
+        } 
+    }
+
+    /**
+     * Delegate handling the map view changed end event. Hides the spider cluster if the zoom level has changed. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapViewChangeEnd(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
+        let z: number = (<Microsoft.Maps.Map>e.target).getZoom();
+        let hasZoomChanged: boolean = (z != this._currentZoom);
+        this._currentZoom = z;
+        if(hasZoomChanged) this.HideSpiderCluster();
+    }
+
+    /**
+     * Delegate handling the map view change start event. Depending on the spider options, hides the 
+     * the exploded spider or does nothing. 
+     * 
+     * @private
+     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
+     * 
+     * @memberof BingClusterLayer
+     */
+    private OnMapViewChangeStart(e: Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs): void {
+        if(this._spiderOptions.collapseClusterOnMapChange){
+            this.HideSpiderCluster();
+        } 
+    }
+
+    /**
+     * Delegate invoked on mouse out on an exploded spider marker. Resets the hover style on the stick.
+     * 
+     * @param e - Mouse event. 
+     */
+    private OnSpiderMouseOut(e: Microsoft.Maps.IMouseEventArgs): void {
+        let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
+        if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
+            let m:BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
+            m.Stick.setOptions(this._spiderOptions.stickStyle);
+        }        
+    }
+
+    /**
+     * Invoked on mouse over on an exploded spider marker. Sets the hover style on the stick. Also invokes the click event
+     * on the underlying original marker dependent on the spider options. 
+     * 
+     * @param e - Mouse event. 
+     */
+    private OnSpiderMouseOver(e: Microsoft.Maps.IMouseEventArgs): void {
+        let pin: Microsoft.Maps.Pushpin =  <Microsoft.Maps.Pushpin>e.primitive;
+        if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
+            let m:BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
+            m.Stick.setOptions(this._spiderOptions.stickHoverStyle);
+            if(this._spiderOptions.invokeClickOnHover){
+                let p: BingMarker = m.ParentMarker;
+                let ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
+                if (Microsoft.Maps.Events.hasHandler(ppin, "click")) Microsoft.Maps.Events.invoke(ppin, "click", e);
             }
         }
     }
@@ -466,7 +635,7 @@ export class BingClusterLayer implements Layer {
                 const spiderMarker: BingSpiderClusterMarker = new BingSpiderClusterMarker(pin);
                 spiderMarker.Stick = stick;
                 spiderMarker.ParentMarker = <BingMarker>this.GetMarkerFromBingMarker(pins[i]);
-                this._markers.push(spiderMarker);
+                this._spiderMarkers.push(spiderMarker);
             }
             this._mapclicks = 0;
         }

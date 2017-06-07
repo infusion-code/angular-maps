@@ -26,15 +26,12 @@ export interface Marker extends MVCObject {
   setPosition(latLng: LatLng|LatLngLiteral): void;
   setTitle(title: string): void;
   setLabel(label: string|MarkerLabel): void;
-  setPosition(latlng: LatLng|LatLngLiteral): void;
   setDraggable(draggable: boolean): void;
   setIcon(icon: string): void;
   setOpacity(opacity: number): void;
-  setOptions(options: MarkerOptions): void;
   setVisible(visible: boolean): void;
   setZIndex(zIndex: number): void;
   getLabel(): MarkerLabel;
-  getPosition(): LatLng;
 }
 
 export interface MarkerOptions {
@@ -310,37 +307,6 @@ export interface Polygon extends MVCObject {
   setMap(map: GoogleMap): void;
   setPath(path: Array<LatLng>|Array<LatLng|LatLngLiteral>): void;
   setOptions(options: PolygonOptions): void;
-  setPaths(paths: Array<Array<LatLng|LatLngLiteral>>|Array<LatLng|LatLngLiteral>): void;
-  setVisible(visible: boolean): void;
-}
-
-export interface PolylineOptions {
-  clickable?: boolean;
-  draggable?: boolean;
-  editable?: boolean;
-  geodesic?: boolean;
-  icon?: Array<IconSequence>;
-  map?: GoogleMap;
-  paths?: Array<LatLng|LatLngLiteral>|Array<Array<LatLng|LatLngLiteral>>;
-  strokeColor?: string;
-  strokeOpacity?: number;
-  strokeWeight?: number;
-  visible?: boolean;
-  zIndex?: number;
-}
-
-export interface Polyline extends MVCObject {
-  getDraggable(): boolean;
-  getEditable(): boolean;
-  getMap(): GoogleMap;
-  getPath(): Array<LatLng>;
-  getPaths(): Array<Array<LatLng>>;
-  getVisible(): boolean;
-  setDraggable(draggable: boolean): void;
-  setEditable(editable: boolean): void;
-  setMap(map: GoogleMap): void;
-  setPath(path: Array<LatLng>|Array<LatLng|LatLngLiteral>): void;
-  setOptions(options: PolylineOptions): void;
   setPaths(paths: Array<Array<LatLng|LatLngLiteral>>|Array<LatLng|LatLngLiteral>): void;
   setVisible(visible: boolean): void;
 }

@@ -5,7 +5,6 @@ import { InfoBoxService } from './infoboxservice';
 import { LayerService } from './layerservice';
 import { ClusterService } from './clusterservice';
 import { PolygonService } from './polygonservice';
-import { PolylineService } from './polylineservice';
 
 /**
  * Implements a factory to create all the implementation specifc services for a map implementation
@@ -85,17 +84,5 @@ export abstract class MapServiceFactory {
      * @memberof MapServiceFactory
      */
     abstract CreatePolygonService(map: MapService, layers: LayerService): PolygonService;
-
-    /**
-     * Creates the polyline service.
-     *
-     * @abstract
-     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
-     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
-     * @returns {PolylineService} - {@link PolylineService} implementation for the underlying map architecture.
-     *
-     * @memberof MapServiceFactory
-     */
-    abstract CreatePolylineService(map: MapService, layers: LayerService): PolylineService;
 
 }

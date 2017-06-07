@@ -123,15 +123,6 @@ export class GooglePolygonService implements PolygonService {
      * @memberof MarkerService
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
-        if (!e) {
-            return null;
-        }
-        if (!e.latLng) {
-            return null;
-        }
-        if (!e.latLng.lat || !e.latLng.lng) {
-            return null;
-        }
         return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
     };
 

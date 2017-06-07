@@ -1,6 +1,4 @@
-﻿import { Polyline } from '../models/polyline';
-import { IPolylineOptions } from './../interfaces/Ipolylineoptions';
-import { Injectable, NgZone } from '@angular/core';
+﻿import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { IMapOptions } from '../interfaces/imapoptions';
@@ -92,18 +90,6 @@ export abstract class MapService {
      * @memberof MapService
      */
     abstract CreatePolygon(options: IPolygonOptions): Promise<Polygon>;
-
-
-    /**
-     * Creates a polyline within the map context
-     *
-     * @abstract
-     * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
-     *
-     * @memberof MapService
-     */
-    abstract CreatePolyline(options: IPolylineOptions): Promise<Polyline>;
 
     /**
      * Deletes a layer from the map.

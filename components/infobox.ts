@@ -59,145 +59,93 @@ let infoBoxId = 0;
     `],
     encapsulation: ViewEncapsulation.None
 })
+// onclick='console.log(window.infoWindow); window.infoWindow.close();return false;'
 export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
-
-    ///
-    /// Field declarations
-    ///
     private _infoBoxAddedToManager = false;
     private _id: string = (infoBoxId++).toString();
-
-    /**
-       * The latitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
-       *
-       * @type {number}
-       * @memberof InfoBox
-       */
-    @Input() public Latitude: number;
-
-    /**
-     * The longitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
-     *
-     * @type {number}
-     * @memberof InfoBox
-     */
-    @Input() public Longitude: number;
-
-    /**
-     * The title to display in the info window
-     *
-     * @type {string}
-     * @memberof InfoBox
-     */
-    @Input() public Title: string;
-
-    /**
-     * The description to display in the info window.
-     *
-     * @type {string}
-     * @memberof InfoBox
-     */
-    @Input() public Description: string;
-
-    /**
-     * Disable auto-pan on open. By default, the info window will pan the map so that it is fully
-     * visible when it opens.
-     *
-     * @type {boolean}
-     * @memberof InfoBox
-     */
-    @Input() public DisableAutoPan: boolean;
-
-    /**
-     *  Maximum width of the infowindow, regardless of content's width. This value is only considered
-     *  if it is set before a call to open. To change the maximum width when changing content, call
-     *  close, update maxWidth, and then open.
-     *
-     * @type {number}
-     * @memberof InfoBox
-     */
-    @Input() public MaxWidth: number;
-
-    /**
-     * Determine whether only one infobox can be open at a time. Note that ANY info box settings.
-     *
-     * @type {boolean}
-     * @memberof InfoBox
-     */
-    @Input() public Modal = true;
-
-    /**
-     * Holds the marker that is the host of the info window (if available)
-     *
-     * @type {MapMarker}
-     * @memberof InfoBox
-     */
-    @Input() public HostMarker: MapMarkerDirective;
-
-    /**
-     * Determines visibility of infobox
-     *
-     * @type {boolean}
-     * @memberof InfoBox
-     */
-    @Input() public Visible = false;
-
-    /**
-     * Horizontal offset of the infobox from the host marker lat/long or the sepecified coordinates.
-     *
-     * @type {number}
-     * @memberof InfoBox
-     */
-    @Input() public xOffset: number;
-
-    /**
-     * Vertical offset for the infobox from the host marker lat/long or the specified coordinates.
-     *
-     * @type {number}
-     * @memberof InfoBox
-     */
-    @Input() public yOffset: number;
-
-    /**
-     * Determines if other info boxes should be closed before opening this one
-     *
-     * @type {number}
-     * @memberof InfoBox
-     */
-    @Input() public CloseInfoBoxesOnOpen = false;
+    ///
+    /// The latitude position of the info window (only usefull if you use it ouside of a {@link
+    /// SebmGoogleMapMarker}).
+    ///
+    @Input()
+    latitude: number;
 
     ///
-    /// Delegate defintions
+    /// The longitude position of the info window (only usefull if you use it ouside of a {@link
+    /// SebmGoogleMapMarker}).
     ///
+    @Input()
+    longitude: number;
 
-    /**
-     * Emits an event when the info window is closed.
-     *
-     * @type {EventEmitter<void>}
-     * @memberof InfoBox
-     */
-    @Output() public InfoBoxClose: EventEmitter<void> = new EventEmitter<void>();
+    ///
+    /// The title to display in the info window
+    ///
+    @Input()
+    title: string;
 
-    /**
-     * Zero or more actions to show on the info window
-     *
-     * @private
-     * @type {QueryList<InfoBoxAction>}
-     * @memberof InfoBox
-     */
+    ///
+    /// The description to display in the info window.
+    ///
+    @Input()
+    description: string;
+
+    ///
+    /// Disable auto-pan on open. By default, the info window will pan the map so that it is fully
+    /// visible when it opens.
+    ///
+    @Input()
+    disableAutoPan: boolean;
+
+    ///
+    /// Maximum width of the infowindow, regardless of content's width. This value is only considered
+    /// if it is set before a call to open. To change the maximum width when changing content, call
+    /// close, update maxWidth, and then open.
+    ///
+    maxWidth: number;
+
+    ///
+    /// Determine whether only one infobox can be open at a time. Note that ANY info box settings
+    ///
+    @Input()
+    modal = true;
+
+    ///
+    /// Holds the marker that is the host of the info window (if available)
+    ///
+    hostMarker: MapMarkerDirective;
+
+    ///
+    /// Determines visibility of infobox
+    ///
+    @Input()
+    visible = false;
+
+    ///
+    /// horizontal offset of the infobox from the host marker lat/long or the sepecified coordinates
+    ///
+    @Input()
+    xOffset: number;
+
+    ///
+    /// vertical offset for the infobox from the host marker lat/long or the specified coordinates
+    ///
+    @Input()
+    yOffset: number;
+
+    ///
+    /// Emits an event when the info window is closed.
+    ///
+    @Output()
+    infoBoxClose: EventEmitter<void> = new EventEmitter<void>();
+
+    ///
+    /// Zero or more actions to show on the info window
+    ///
     @ContentChildren(InfoBoxActionDirective) infoWindowActions: QueryList<InfoBoxActionDirective>;
 
     ///
-    /// Property declarations.
+    /// HTML conent of the infobox
     ///
-
-    /**
-     * Gets the HTML content of the info box.
-     *
-     * @readonly
-     * @type {string}
-     * @memberof InfoBox
-     */
     @ViewChild('infoBoxContent') content: ElementRef;
     public get HtmlContent(): string {
         if (this.content.nativeElement && this.content.nativeElement.innerText && this.content.nativeElement.innerText.trim() !== '') {
@@ -240,7 +188,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      */
     public Close(): Promise<void> {
         return this._infoBoxService.Close(this).then(() => {
-            this.InfoBoxClose.emit(void 0);
+            this.infoBoxClose.emit(void 0);
         });
     }
 
@@ -273,8 +221,8 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (!this._infoBoxAddedToManager) { return; }
-        if ((changes['latitude'] || changes['longitude']) && typeof this.Latitude === 'number' &&
-            typeof this.Longitude === 'number') {
+        if ((changes['latitude'] || changes['longitude']) && typeof this.latitude === 'number' &&
+            typeof this.longitude === 'number') {
             this._infoBoxService.SetPosition(this, {
                 latitude: changes['latitude'].currentValue,
                 longitude: changes['longitude'].currentValue
@@ -314,10 +262,10 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      */
     private SetInfoWindowOptions(changes: { [key: string]: SimpleChange }) {
         const options: IInfoWindowOptions = {};
-        if (changes['title']) { options.title = this.Title; }
-        if (changes['description']) { options.description = this.Description; }
-        if (changes['disableAutoPan']) { options.disableAutoPan = this.DisableAutoPan; }
-        if (changes['visible']) { options.visible = this.Visible; }
+        if (changes['title']) { options.title = this.title; }
+        if (changes['description']) { options.description = this.description; }
+        if (changes['disableAutoPan']) { options.disableAutoPan = this.disableAutoPan; }
+        if (changes['visible']) { options.visible = this.visible; }
         if (changes['xOffset'] || changes['yOffset']) {
             if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
             options.pixelOffset.x = this.xOffset;

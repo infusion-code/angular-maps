@@ -1,4 +1,4 @@
-import { MVCObject } from './../../services/google/google-map-types';
+import { MVCObject } from './../../dist/services/google/google-map-types.d';
 import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { GoogleConversions } from '../../services/google/google-conversions';

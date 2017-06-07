@@ -13,7 +13,7 @@ let polygonId = 0;
 
 /**
  *
- * MapPolygon renders a polygon inside a {@link Map}.
+ * MpaPolygon renders a polygon inside a {@link Map}.
  *
  * ### Example
  * ```typescript
@@ -339,7 +339,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     }
 
     /**
-     * Called when the polygon is being destroyed. Part of the ng Component life cycle. Release resources.
+     * Called when the poygon is being destroyed. Part of the ng Component life cycle. Release resources.
      *
      *
      * @memberof MapPolygonDirective
@@ -365,6 +365,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      */
     private AddEventListeners() {
         this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
+            const t: MapPolygonDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open(this._polygonService.GetCoordinatesFromClick(ev));
             }

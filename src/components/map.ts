@@ -1,5 +1,4 @@
-﻿import { PolylineService } from '../services/polylineservice';
-import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
+﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
     SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
 import { MapService } from '../services/mapservice';
@@ -30,7 +29,7 @@ import { MapMarkerDirective } from './mapmarker';
  *    .map-container { height: 300px; }
  * `],
  *  template: `
- *    <map [latitude]="lat" [longitude]="lng" [zoom]="zoom"></map>
+ *    <map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom"></map>
  *  `
  * })
  * ```
@@ -52,8 +51,7 @@ import { MapMarkerDirective } from './mapmarker';
         },
         { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
         { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory },
-        { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory },
-        { provide: PolylineService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolylineServiceFactory }
+        { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory }
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -473,19 +471,5 @@ export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: Lay
  */
 export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolygonService {
     return f.CreatePolygonService(m, l);
-}
-
-/**
- * Factory function to generate a polyline service instance. This is necessary because of constraints with AOT that do no allow
- * us to use lamda functions inline.
- *
- * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @param {LayerService} l - A {@link LayerService} instance.
- * @returns {PolylineService} - A concrete instance of a Polyline Service based on the underlying map architecture.
- */
-export function PolylineServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolylineService {
-    return f.CreatePolylineService(m, l);
 }
 
