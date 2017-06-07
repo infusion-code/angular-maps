@@ -22,6 +22,7 @@
         "src/components/maplayer.ts",
         "src/components/mapmarker.ts",
         "src/components/mappolygon.ts",
+        "src/components/mappolyline.ts",
         "src/interfaces/ibox.ts",
         "src/interfaces/iclusteroptions.ts",
         "src/interfaces/iinfowindowaction.ts",
@@ -35,6 +36,7 @@
         "src/interfaces/imarkeroptions.ts",
         "src/interfaces/ipoint.ts",
         "src/interfaces/ipolygonoptions.ts",
+        "src/interfaces/ipolylineoptions.ts",
         "src/interfaces/isize.ts",
         "src/interfaces/ispiderclusteroptions.ts",
         "src/models/bingMaps/bingclusterlayer.ts",
@@ -43,7 +45,9 @@
         "src/models/bingMaps/bingmarker.ts",
         "src/models/bingMaps/bingspiderclustermarker.ts",
         "src/models/google/google-infowindow.ts",
+        "src/models/google/google-marker.ts",
         "src/models/google/google-polygon.ts",
+        "src/models/google/google-polyline.ts",
         "src/models/clusterclickaction.ts",
         "src/models/clusterplacementmode.ts",
         "src/models/infowindow.ts",
@@ -52,6 +56,7 @@
         "src/models/marker.ts",
         "src/models/markertypeid.ts",
         "src/models/polygon.ts",
+        "src/models/polyline.ts",
         "src/models/spiderclustermarker.ts",
         "src/services/bingmaps/bingclusterservice.ts",
         "src/services/bingmaps/bingconversions.ts",
@@ -73,6 +78,7 @@
         "src/services/google/google-map.service.ts",
         "src/services/google/google-marker.service.ts",
         "src/services/google/google-polygon.service.ts",
+        "src/services/google/google-polyline.service.ts",
         "src/services/clusterservice.ts",
         "src/services/infoboxservice.ts",
         "src/services/layerservice.ts",
@@ -80,7 +86,8 @@
         "src/services/mapservice.ts",
         "src/services/mapservicefactory.ts",
         "src/services/markerservice.ts",
-        "src/services/polygonservice.ts"
+        "src/services/polygonservice.ts",
+        "src/services/polylineservice.ts"
     ],
     "exclude": [
         "node_modules"
