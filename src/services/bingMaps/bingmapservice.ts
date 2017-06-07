@@ -8,6 +8,7 @@ import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader'
 import { BingConversions } from './bingconversions'
 import { Marker } from './../../models/marker';
 import { Polygon } from './../../models/polygon';
+import { Polyline } from './../../models/polyline';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { InfoWindow } from './../../models/infowindow'
 import { BingMarker } from './../../models/bingMaps/bingmarker';
@@ -24,6 +25,7 @@ import { IMarkerOptions } from './../../interfaces/imarkeroptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
 import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
 
 /**
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
@@ -223,6 +225,19 @@ export class BingMapService implements MapService {
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
         throw ('Not Implemented.')
+    }
+
+    /**
+     * Creates a polyline within the Bing Maps V8 map context
+     * 
+     * @abstract
+     * @param {IPolylinenOptions} options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polygon.
+     * 
+     * @memberof MapService
+     */
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
+        throw('Not Implemented.')
     }
 
     /**

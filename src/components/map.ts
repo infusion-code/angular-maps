@@ -6,6 +6,7 @@ import { MarkerService } from '../services/markerservice';
 import { InfoBoxService } from '../services/infoboxservice';
 import { LayerService } from '../services/layerservice';
 import { PolygonService } from '../services/polygonservice';
+import { PolylineService } from '../services/polylineservice';
 import { ClusterService } from '../services/clusterservice';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IBox } from '../interfaces/ibox';
@@ -51,7 +52,8 @@ import { MapMarkerDirective } from './mapmarker';
         },
         { provide: LayerService, deps: [MapServiceFactory, MapService], useFactory: LayerServiceFactory },
         { provide: ClusterService, deps: [MapServiceFactory, MapService], useFactory: ClusterServiceFactory },
-        { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory }
+        { provide: PolygonService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolygonServiceFactory },
+        { provide: PolylineService, deps: [MapServiceFactory, MapService, LayerService], useFactory: PolylineServiceFactory }
     ],
     template: `
         <div #container class='map-container-inner'></div>
@@ -473,3 +475,16 @@ export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: La
     return f.CreatePolygonService(m, l);
 }
 
+/**
+ * Factory function to generate a polyline service instance. This is necessary because of constraints with AOT that do no allow
+ * us to use lamda functions inline.
+ *
+ * @export
+ * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
+ * @param {MapService} m - A {@link MapService} instance.
+ * @param {LayerService} l - A {@link LayerService} instance.
+ * @returns {PolylineService} - A concrete instance of a Polyline Service based on the underlying map architecture.
+ */
+export function PolylineServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolylineService {
+    return f.CreatePolylineService(m, l);
+}

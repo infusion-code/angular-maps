@@ -7,6 +7,7 @@ import { InfoBoxService } from './../infoboxservice';
 import { LayerService } from './../layerservice';
 import { ClusterService } from './../clusterservice';
 import { PolygonService } from './../polygonservice';
+import { PolylineService } from './../polylineservice';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader';
 import { BingInfoBoxService } from './binginfoboxservice';
 import { BingMarkerService } from './bingmarkerservice';
@@ -113,6 +114,20 @@ export class BingMapServiceFactory implements MapServiceFactory {
      * @memberof MapServiceFactory
      */
     public CreatePolygonService(map: MapService, layers: LayerService): PolygonService {
+        // no implementation yet...
+        return null;
+    }
+
+    /**
+     * Creates the polyline service for the Bing Maps V8 implementation.
+     *
+     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
+     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns {PolylineService} - {@link PolylineService} implementation for the underlying map architecture.
+     *
+     * @memberof MapServiceFactory
+     */
+    public CreatePolylineService(map: MapService, layers: LayerService): PolylineService {
         // no implementation yet...
         return null;
     }

@@ -7,6 +7,7 @@ import { InfoBoxService } from '../infoboxservice';
 import { LayerService } from '../layerservice';
 import { ClusterService } from '../clusterservice';
 import { PolygonService } from '../polygonservice';
+import { PolylineService } from '../polylineservice';
 
 import * as GoogleMapTypes from './google-map-types';
 
@@ -17,6 +18,7 @@ import { GoogleMapService } from './google-map.service';
 import { GoogleLayerService } from './google-layer.service';
 import { GoogleClusterService } from './google-cluster.service';
 import { GooglePolygonService } from './google-polygon.service';
+import { GooglePolylineService } from './google-polyline.service';
 
 /**
  * Implements a factory to create three necessary Google Maps specific service instances.
@@ -123,6 +125,19 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
      */
     public CreatePolygonService(map: MapService, layers: LayerService): PolygonService {
         return new GooglePolygonService(map, layers, this._zone);
+    }
+
+    /**
+     * Creates the polyline service for the Google Maps implementation.
+     *
+     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
+     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns {PolylineService} - {@link PolylineService} implementation for the underlying map architecture.
+     *
+     * @memberof MapServiceFactory
+     */
+    public CreatePolylineService(map: MapService, layers: LayerService): PolylineService {
+        return new GooglePolylineService(map, layers, this._zone);
     }
 
 }

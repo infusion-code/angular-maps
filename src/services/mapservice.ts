@@ -6,11 +6,13 @@ import { ILayerOptions } from '../interfaces/ilayeroptions';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPoint } from '../interfaces/ipoint';
 import { IPolygonOptions } from '../interfaces/ipolygonoptions';
+import { IPolylineOptions } from '../interfaces/ipolylineoptions';
 import { IMarkerOptions } from '../interfaces/imarkeroptions';
 import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
+import { Polyline } from '../models/polyline';
 import { InfoWindow } from '../models/infowindow'
 
 /**
@@ -90,6 +92,17 @@ export abstract class MapService {
      * @memberof MapService
      */
     abstract CreatePolygon(options: IPolygonOptions): Promise<Polygon>;
+
+    /**
+     * Creates a polyline within the map context
+     *
+     * @abstract
+     * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
+     *
+     * @memberof MapService
+     */
+    abstract CreatePolyline(options: IPolylineOptions): Promise<Polyline>;
 
     /**
      * Deletes a layer from the map.

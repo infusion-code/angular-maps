@@ -19,6 +19,7 @@ import { IClusterOptions } from './src/interfaces/iclusteroptions';
 import { ISpiderClusterOptions } from './src/interfaces/ispiderclusteroptions';
 import { ILineOptions } from './src/interfaces/ilineoptions';
 import { IPolygonOptions } from './src/interfaces/ipolygonoptions';
+import { IPolylineOptions } from './src/interfaces/ipolylineoptions';
 
 ///
 /// import module models
@@ -29,6 +30,7 @@ import { MarkerTypeId } from './src/models/markertypeid';
 import { MapTypeId } from './src/models/maptypeid';
 import { Layer } from './src/models/layer';
 import { Polygon } from './src/models/polygon';
+import { Polyline } from './src/models/polyline';
 import { SpiderClusterMarker } from './src/models/spiderclustermarker';
 import { ClusterPlacementMode } from './src/models/clusterplacementmode';
 import { ClusterClickAction } from './src/models/clusterclickaction';
@@ -48,6 +50,7 @@ import { InfoBoxActionDirective } from './src/components/infoboxaction'
 import { MapLayerDirective } from './src/components/maplayer';
 import { ClusterLayerDirective } from './src/components/clusterlayer';
 import { MapPolygonDirective } from './src/components/mappolygon';
+import { MapPolylineDirective } from './src/components/mappolyline';
 
 ///
 /// import module services
@@ -60,6 +63,7 @@ import { LayerService } from './src/services/layerservice';
 import { MarkerService } from './src/services/markerservice';
 import { ClusterService } from './src/services/clusterservice';
 import { PolygonService } from './src/services/polygonservice';
+import { PolylineService } from './src/services/polylineservice';
 import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bingmapservicefactory';
 import { BingMapService } from './src/services/bingMaps/bingmapservice';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bingMaps/bingmapapiloader';
@@ -78,17 +82,18 @@ import {
 import { GoogleMapService } from './src/services/google/google-map.service';
 import { GoogleMarkerService } from './src/services/google/google-marker.service';
 import { GooglePolygonService } from './src/services/google/google-polygon.service';
+import { GooglePolylineService } from './src/services/google/google-polyline.service';
 
 ///
 /// export publics components, models, interfaces etc for external reuse.
 ///
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
-    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions,
-    MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, InfoBoxActionDirective,
+    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions,
+    MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
     MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
-    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, MapService, MapServiceFactory,
-    MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, ClusterService
+    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory,
+    MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService,
@@ -96,7 +101,7 @@ export {
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
-    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService
+    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService
 }
 
 ///
@@ -104,9 +109,9 @@ export {
 ///
 @NgModule({
     declarations: [MapLayerDirective, MapComponent, MapMarkerDirective, InfoBoxComponent,
-        InfoBoxActionDirective, MapPolygonDirective, ClusterLayerDirective],
+        InfoBoxActionDirective, MapPolygonDirective, MapPolylineDirective, ClusterLayerDirective],
     imports: [CommonModule],
-    exports: [CommonModule, MapComponent, MapMarkerDirective, MapPolygonDirective,
+    exports: [CommonModule, MapComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective,
         InfoBoxComponent, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective]
 })
 export class MapModule {
