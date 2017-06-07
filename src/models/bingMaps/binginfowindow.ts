@@ -1,8 +1,8 @@
-﻿import { ILatLong } from '../interfaces/ilatlong';
-import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
-import { InfoWindow } from './infowindow';
-import { BingMapService } from '../services/bingmapservice';
-import { BingConversions } from '../services/bingconversions';
+﻿import { ILatLong } from './../../interfaces/ilatlong';
+import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
+import { InfoWindow } from './../infowindow';
+import { BingMapService } from './../../services/bingMaps/bingmapservice';
+import { BingConversions } from './../../services/bingMaps/bingconversions';
 
 export class BingInfoWindow implements InfoWindow {
 

@@ -46,8 +46,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
         if (info.HtmlContent !== '') {
             options.htmlContent = info.HtmlContent;
         }
-        if (typeof info.latitude === 'number' && typeof info.longitude === 'number') {
-            options.position = { latitude: info.latitude, longitude: info.longitude };
+        if (typeof info.Latitude === 'number' && typeof info.Longitude === 'number') {
+            options.position = { latitude: info.Latitude, longitude: info.Longitude };
         }
         const infoWindowPromise = this._mapService.CreateInfoWindow(options);
         this._boxes.set(info, infoWindowPromise);
@@ -91,8 +91,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
      */
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
         return this._boxes.get(info).then((w) => {
-            if (info.hostMarker != null) {
-                return this._markerService.GetNativeMarker(info.hostMarker).then((marker) => {
+            if (info.HostMarker != null) {
+                return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
                     return this._mapService.MapPromise.then((map) => w.Open(map, marker));
                 });
             }

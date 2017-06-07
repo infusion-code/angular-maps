@@ -29,7 +29,7 @@
  * @class InfoBoxAction
  */
 @Directive({
-    selector: '[mapInfoBoxAction]'
+    selector: 'x-info-box-action'
 })
 export class InfoBoxActionDirective {
 

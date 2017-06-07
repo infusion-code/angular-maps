@@ -41,7 +41,7 @@ let polygonId = 0;
  * @implements {AfterContentInit}
  */
 @Directive({
-    selector: '[mapPolygon]'
+    selector: 'x-map-polygon'
 })
 export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentInit {
 

@@ -46,7 +46,7 @@ import { MapLayerDirective } from './maplayer';
  * @implements {OnChanges}
  */
 @Directive({
-    selector: '[mapClusterLayer]'
+    selector: 'x-cluster-layer'
 })
 export class ClusterLayerDirective extends MapLayerDirective implements OnInit, OnDestroy, OnChanges {
 

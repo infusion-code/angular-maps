@@ -1,12 +1,11 @@
-import { IMarkerOptions } from '../../interfaces/imarkeroptions';
-import { IMarkerIconInfo } from '../../interfaces/imarkericoninfo';
-import { Marker } from '../../models/marker';
-import { BingMarker } from '../../models/bingmarker';
-import { Layer } from '../../models/layer';
-import { MarkerTypeId } from '../../models/markertypeid';
-import { MapService } from '../mapservice';
-import { MapLayerDirective } from '../../components/maplayer';
-import { LayerService } from '../layerservice';
+import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
+import { Marker } from './../../models/marker';
+import { Layer } from './../../models/layer';
+import { MarkerTypeId } from './../../models/markertypeid';
+import { MapService } from './../mapservice';
+import { MapLayerDirective } from './../../components/maplayer';
+import { LayerService } from './../layerservice';
 import { GoogleMapService } from './google-map.service';
 import { GoogleConversions } from './google-conversions';
 

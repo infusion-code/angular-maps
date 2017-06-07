@@ -31,4 +31,12 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
         return Promise.resolve({});
     };
 
+    public StartClustering(layer: ClusterLayerDirective): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public StopClustering(layer: ClusterLayerDirective): Promise<void> {
+        return Promise.resolve();
+    }
+
 }

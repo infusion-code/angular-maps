@@ -1,14 +1,28 @@
-﻿import { Component, SimpleChange, OnDestroy, OnChanges, EventEmitter, ContentChildren, QueryList, ViewChild, ElementRef, ViewEncapsulation, Input, Output } from "@angular/core";
-import { IInfoWindowOptions } from "../interfaces/iinfowindowoptions";
-import { ILatLong } from "../interfaces/ilatlong";
-import { InfoBoxService } from "../services/infoboxservice";
-import { MapMarker } from "./mapmarker";
-import { InfoBoxAction } from "./infoboxaction";
+﻿import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    QueryList,
+    SimpleChange,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
+import { ILatLong } from '../interfaces/ilatlong';
+import { InfoBoxService } from '../services/infoboxservice';
+import { MapMarkerDirective } from './mapmarker';
+import { InfoBoxActionDirective } from './infoboxaction';
 
 /**
- * internal counter to use as ids for multiple infoboxes. 
+ * internal counter to use as ids for multiple infoboxes.
  */
-let infoBoxId:number = 0;
+let infoBoxId = 0;
 
 /**
  * InfoBox renders a info window inside a {@link MapMarker} or standalone.
@@ -34,14 +48,14 @@ let infoBoxId:number = 0;
  *  `
  * })
  * ```
- * 
+ *
  * @export
  * @class InfoBox
  * @implements {OnDestroy}
  * @implements {OnChanges}
  */
 @Component({
-    selector: 'info-box',
+    selector: 'x-info-box',
     template: `
         <div #infoBoxContent class='info-box-content'>
             <ng-content></ng-content>
@@ -53,37 +67,36 @@ let infoBoxId:number = 0;
     `],
     encapsulation: ViewEncapsulation.None
 })
-export class InfoBox implements OnDestroy, OnChanges {
+export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
 
     ///
     /// Field declarations
     ///
-    private static _infoBoxOptionsInputs: string[] = ["disableAutoPan", "maxWidth", "title", "description", "visible", "xOffset", "yOffset"];
-    private _infoBoxAddedToManager: boolean = false;
+    private _infoBoxAddedToManager = false;
     private _id: string = (infoBoxId++).toString();
 
     /**
      * HTML conent of the infobox
-     * 
+     *
      * @private
      * @type {ElementRef}
      * @memberof InfoBox
      */
-    @ViewChild("infoBoxContent") private _content: ElementRef;
+    @ViewChild('infoBoxContent') private _content: ElementRef;
 
     /**
      * Zero or more actions to show on the info window
-     * 
+     *
      * @private
      * @type {QueryList<InfoBoxAction>}
      * @memberof InfoBox
      */
-    @ContentChildren(InfoBoxAction) public InfoWindowActions: QueryList<InfoBoxAction>;
+    @ContentChildren(InfoBoxActionDirective) public InfoWindowActions: QueryList<InfoBoxActionDirective>;
 
 
     /**
      * The latitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
-     * 
+     *
      * @type {number}
      * @memberof InfoBox
      */
@@ -91,7 +104,7 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * The longitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
-     * 
+     *
      * @type {number}
      * @memberof InfoBox
      */
@@ -99,7 +112,7 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * The title to display in the info window
-     * 
+     *
      * @type {string}
      * @memberof InfoBox
      */
@@ -107,7 +120,7 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * The description to display in the info window.
-     * 
+     *
      * @type {string}
      * @memberof InfoBox
      */
@@ -116,7 +129,7 @@ export class InfoBox implements OnDestroy, OnChanges {
     /**
      * Disable auto-pan on open. By default, the info window will pan the map so that it is fully
      * visible when it opens.
-     * 
+     *
      * @type {boolean}
      * @memberof InfoBox
      */
@@ -126,7 +139,7 @@ export class InfoBox implements OnDestroy, OnChanges {
      *  Maximum width of the infowindow, regardless of content's width. This value is only considered
      *  if it is set before a call to open. To change the maximum width when changing content, call
      *  close, update maxWidth, and then open.
-     * 
+     *
      * @type {number}
      * @memberof InfoBox
      */
@@ -134,31 +147,31 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * Determine whether only one infobox can be open at a time. Note that ANY info box settings.
-     * 
+     *
      * @type {boolean}
      * @memberof InfoBox
      */
-    @Input() public Modal: boolean = true;
+    @Input() public Modal = true;
 
     /**
      * Holds the marker that is the host of the info window (if available)
-     * 
+     *
      * @type {MapMarker}
      * @memberof InfoBox
      */
-    @Input() public HostMarker: MapMarker;
+    @Input() public HostMarker: MapMarkerDirective;
 
     /**
      * Determines visibility of infobox
-     * 
+     *
      * @type {boolean}
      * @memberof InfoBox
      */
-    @Input() public Visible: boolean = false;
+    @Input() public Visible = false;
 
     /**
      * Horizontal offset of the infobox from the host marker lat/long or the sepecified coordinates.
-     * 
+     *
      * @type {number}
      * @memberof InfoBox
      */
@@ -166,7 +179,7 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * Vertical offset for the infobox from the host marker lat/long or the specified coordinates.
-     * 
+     *
      * @type {number}
      * @memberof InfoBox
      */
@@ -178,7 +191,7 @@ export class InfoBox implements OnDestroy, OnChanges {
 
     /**
      * Emits an event when the info window is closed.
-     * 
+     *
      * @type {EventEmitter<void>}
      * @memberof InfoBox
      */
@@ -189,20 +202,22 @@ export class InfoBox implements OnDestroy, OnChanges {
     ///
 
     /**
-     * Gets the HTML content of the info box. 
-     * 
+     * Gets the HTML content of the info box.
+     *
      * @readonly
      * @type {string}
      * @memberof InfoBox
      */
     public get HtmlContent(): string {
-        if (this._content.nativeElement && this._content.nativeElement.innerText && this._content.nativeElement.innerText.trim() != "") return this._content.nativeElement.outerHTML;
-        return "";
+        if (this._content.nativeElement && this._content.nativeElement.innerText && this._content.nativeElement.innerText.trim() !== '') {
+            return this._content.nativeElement.outerHTML;
+        }
+        return '';
     }
 
     /**
      * Gets the Id of the info box as a string.
-     * 
+     *
      * @readonly
      * @type {string}
      * @memberof InfoBox
@@ -216,7 +231,7 @@ export class InfoBox implements OnDestroy, OnChanges {
     /**
      * Creates an instance of InfoBox.
      * @param {InfoBoxService} _infoBoxService - Concrete {@link InfoBoxService} implementation for underlying Map architecture.
-     * 
+     *
      * @memberof InfoBox
      */
     constructor(private _infoBoxService: InfoBoxService) { }
@@ -226,10 +241,10 @@ export class InfoBox implements OnDestroy, OnChanges {
     ///
 
     /**
-     * Closes the Infobox. 
-     * 
-     * @returns {Promise<void>} -  
-     * 
+     * Closes the Infobox.
+     *
+     * @returns {Promise<void>} -
+     *
      * @memberof InfoBox
      */
     public Close(): Promise<void> {
@@ -239,10 +254,10 @@ export class InfoBox implements OnDestroy, OnChanges {
     }
 
     /**
-     * Called on after component view as been initialized. Part of the ng Component life cycle. 
-     * 
+     * Called on after component view as been initialized. Part of the ng Component life cycle.
+     *
      * @returns {void}
-     * 
+     *
      * @memberof Map
      */
     public ngAfterViewInit() {
@@ -251,48 +266,51 @@ export class InfoBox implements OnDestroy, OnChanges {
     }
 
     /**
-     * Called when changes to the databoud properties occur. Part of the ng Component life cycle. 
-     * 
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured. 
+     * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
+     *
+     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @return {void}
-     * 
+     *
      * @memberof Map
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (!this._infoBoxAddedToManager) return;
+        if (!this._infoBoxAddedToManager) { return; }
         if ((changes['latitude'] || changes['longitude']) && typeof this.Latitude === 'number' &&
             typeof this.Longitude === 'number') {
-            this._infoBoxService.SetPosition(this);
+            this._infoBoxService.SetPosition(this, {
+                latitude: changes['latitude'].currentValue,
+                longitude: changes['longitude'].currentValue
+            });
         }
         this.SetInfoWindowOptions(changes);
     }
 
     /**
-     * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle. 
-     * 
+     * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
+     *
      * @returns {void}
-     * 
+     *
      * @memberof Map
      */
     public ngOnDestroy() { this._infoBoxService.DeleteInfoWindow(this); }
 
     /**
      * Opens a closed info window.
-     * 
-     * @param {ILatLong} [loc]  - {@link ILatLong } representing position on which to open the window. 
-     * @returns {Promise<void>} - Promise that is fullfilled when the infobox has been opened. 
-     * 
+     *
+     * @param {ILatLong} [loc]  - {@link ILatLong } representing position on which to open the window.
+     * @returns {Promise<void>} - Promise that is fullfilled when the infobox has been opened.
+     *
      * @memberof InfoBox
      */
     public Open(loc?: ILatLong): Promise<void> {
         return this._infoBoxService.Open(this, loc);
     }
-    
+
     /**
-     * Returns a string representation of the info box. 
-     * 
+     * Returns a string representation of the info box.
+     *
      * @returns {string} - string representation of the info box.
-     * 
+     *
      * @memberof InfoBox
      */
     public ToString(): string { return 'InfoBox-' + this._id.toString(); }
@@ -302,28 +320,24 @@ export class InfoBox implements OnDestroy, OnChanges {
     ///
 
     /**
-     * Sets the options on the underlying infobox model. 
-     * 
+     * Sets the info window options
+     *
      * @private
-     * @param {{ [key: string]: SimpleChange }} changes - changes based on which to update the options.  
-     * 
-     * @memberof InfoBox
+     * @param {{ [key: string]: SimpleChange }} changes
+     *
+     * @memberof InfoBoxComponent
      */
     private SetInfoWindowOptions(changes: { [key: string]: SimpleChange }) {
-        let options: IInfoWindowOptions | any = {};
-        Object.keys(changes)
-            .filter(k => InfoBox._infoBoxOptionsInputs.indexOf(k) !== -1)
-            .forEach((k) => {
-                if (k == "xOffset" || k == "yOffset") {
-                    if (options.pixelOffset == null) options.pixelOffset = { x: 0, y: 0 };
-                    if (k == "xOffset") options.pixelOffset.x = changes[k].currentValue;
-                    if (k == "yOffset") options.pixelOffset.y = changes[k].currentValue;
-                }
-                else {
-                    options[k] = changes[k].currentValue;
-                }
-            });
+        const options: IInfoWindowOptions = {};
+        if (changes['title']) { options.title = this.Title; }
+        if (changes['description']) { options.description = this.Description; }
+        if (changes['disableAutoPan']) { options.disableAutoPan = this.DisableAutoPan; }
+        if (changes['visible']) { options.visible = this.Visible; }
+        if (changes['xOffset'] || changes['yOffset']) {
+            if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
+            options.pixelOffset.x = this.xOffset;
+            options.pixelOffset.y = this.yOffset;
+        }
         this._infoBoxService.SetOptions(this, options);
     }
-
 }

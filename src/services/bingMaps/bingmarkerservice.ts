@@ -1,15 +1,15 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
-import { ILatLong } from '../interfaces/ilatlong';
-import { IMarkerOptions } from '../interfaces/imarkeroptions';
-import { IPoint } from '../interfaces/ipoint';
-import { MapMarkerDirective } from '../components/mapmarker';
-import { MarkerService } from '../services/markerservice';
-import { MapService } from '../services/mapservice';
-import { LayerService } from '../services/layerservice';
-import { ClusterService } from '../services/clusterservice';
-import { Marker } from '../models/marker';
+import { ILatLong } from './../../interfaces/ilatlong';
+import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IPoint } from './../../interfaces/ipoint';
+import { MapMarkerDirective } from './../../components/mapmarker';
+import { MarkerService } from './../../services/markerservice';
+import { MapService } from './../../services/mapservice';
+import { LayerService } from './../../services/layerservice';
+import { ClusterService } from './../../services/clusterservice';
+import { Marker } from './../../models/marker';
 import { BingMapService } from './bingmapservice';
 import { BingConversions } from './bingconversions';
 

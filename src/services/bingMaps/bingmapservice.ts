@@ -2,28 +2,28 @@
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 
-import { MapService } from './mapservice';
-import { MapAPILoader } from './mapapiloader';
+import { MapService } from './../mapservice';
+import { MapAPILoader } from './../mapapiloader';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader'
 import { BingConversions } from './bingconversions'
-import { Marker } from '../models/marker';
-import { Polygon } from '../models/polygon';
-import { MarkerTypeId } from '../models/markertypeid';
-import { InfoWindow } from '../models/infowindow'
-import { BingMarker } from '../models/bingmarker';
-import { Layer } from '../models/layer';
-import { BingLayer } from '../models/binglayer';
-import { BingClusterLayer } from '../models/bingclusterlayer';
-import { BingInfoWindow } from '../models/binginfowindow';
-import { ILayerOptions} from '../interfaces/ilayeroptions';
-import { IClusterOptions } from '../interfaces/iclusteroptions';
-import { IMapOptions } from '../interfaces/imapoptions';
-import { ILatLong } from '../interfaces/ilatlong';
-import { IPoint } from '../interfaces/ipoint';
-import { IMarkerOptions } from '../interfaces/imarkeroptions';
-import { IMarkerIconInfo } from '../interfaces/imarkericoninfo';
-import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
-import { IPolygonOptions } from '../interfaces/ipolygonoptions';
+import { Marker } from './../../models/marker';
+import { Polygon } from './../../models/polygon';
+import { MarkerTypeId } from './../../models/markertypeid';
+import { InfoWindow } from './../../models/infowindow'
+import { BingMarker } from './../../models/bingMaps/bingmarker';
+import { Layer } from './../../models/layer';
+import { BingLayer } from './../../models/bingMaps/binglayer';
+import { BingClusterLayer } from './../../models/bingMaps/bingclusterlayer';
+import { BingInfoWindow } from './../../models/bingMaps/binginfowindow';
+import { ILayerOptions } from './../../interfaces/ilayeroptions';
+import { IClusterOptions } from './../../interfaces/iclusteroptions';
+import { IMapOptions } from './../../interfaces/imapoptions';
+import { ILatLong } from './../../interfaces/ilatlong';
+import { IPoint } from './../../interfaces/ipoint';
+import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
+import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
+import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
 
 /**
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
@@ -56,7 +56,7 @@ export class BingMapService implements MapService {
      * @type {Microsoft.Maps.Map}
      * @memberof BingMapService
      */
-    public get MapInstance(): Microsoft.Maps.Map {return this._mapInstance; }
+    public get MapInstance(): Microsoft.Maps.Map { return this._mapInstance; }
 
     /**
      * Gets a Promise for a Bing Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
@@ -97,10 +97,10 @@ export class BingMapService implements MapService {
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: Microsoft.Maps.Map) => {
-            const p: Promise<Layer> = new Promise<Layer>( resolve => {
+            const p: Promise<Layer> = new Promise<Layer>(resolve => {
                 Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', () => {
                     const o: Microsoft.Maps.IClusterLayerOptions = BingConversions.TranslateClusterOptions(options);
-                    const layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer( new Array<Microsoft.Maps.Pushpin>(), o);
+                    const layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer(new Array<Microsoft.Maps.Pushpin>(), o);
                     let bl: BingClusterLayer;
                     map.layers.insert(layer);
                     bl = new BingClusterLayer(layer, this);
@@ -222,7 +222,7 @@ export class BingMapService implements MapService {
      * @memberof MapService
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
-        throw("Not Implemented.")
+        throw ('Not Implemented.')
     }
 
     /**

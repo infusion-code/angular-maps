@@ -1,5 +1,5 @@
 ﻿import { Injectable, Optional } from '@angular/core';
-import { MapAPILoader, WindowRef, DocumentRef } from './mapapiloader';
+import { MapAPILoader, WindowRef, DocumentRef } from './../mapapiloader';
 
 /**
  * Protocol enumeration

@@ -40,7 +40,7 @@ let layerId = 0;
  * @implements {OnChanges}
  */
 @Directive({
-    selector: '[mapLayer]'
+    selector: 'x-map-layer'
 })
 export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
 

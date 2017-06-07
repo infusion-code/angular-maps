@@ -1,33 +1,33 @@
-﻿import { ILatLong }         from "../../interfaces/ilatlong";
-import { IPoint }           from "../../interfaces/ipoint";
-import { IMarkerOptions }   from "../../interfaces/Imarkeroptions";
-import { BingMapService }   from "../../services/bingmaps/bingmapservice";
-import { BingConversions }  from "../../services/bingmaps/bingconversions";
-import { Marker }           from "../Marker";
+﻿import { ILatLong } from './../../interfaces/Ilatlong';
+import { IPoint } from './../../interfaces/ipoint';
+import { IMarkerOptions } from './../../interfaces/Imarkeroptions';
+import { Marker } from './../Marker';
+import { BingMapService } from './../../services/bingMaps/bingmapservice';
+import { BingConversions } from './../../services/bingMaps/bingconversions';
 
 /**
- * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture. 
- * 
+ * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture.
+ *
  * @export
  * @class BingMarker
  * @implements {Marker}
  */
-export class BingMarker implements Marker  {
-    
+export class BingMarker implements Marker {
+
     ///
     /// Field definitions
     ///
-    private _metadata: Map<string, any> = new Map<string,any>();
-    private _isFirst: boolean = false;
-    private _isLast: boolean = true;
+    private _metadata: Map<string, any> = new Map<string, any>();
+    private _isFirst = false;
+    private _isLast = true;
 
     ///
     /// Property definitions
     ///
 
     /**
-     * Indicates that the marker is the first marker in a set.  
-     * 
+     * Indicates that the marker is the first marker in a set.
+     *
      * @type {boolean}
      * @memberof Marker
      */
@@ -36,23 +36,23 @@ export class BingMarker implements Marker  {
 
     /**
      * Indicates that the marker is the last marker in the set.
-     * 
+     *
      * @type {boolean}
      * @memberof Marker
      */
-    public get IsLast(): boolean { return this._isLast; } 
+    public get IsLast(): boolean { return this._isLast; }
     public set IsLast(val: boolean) { this._isLast = val; }
 
     /**
      * Gets the Location of the marker
-     * 
+     *
      * @readonly
      * @abstract
      * @type {ILatLong}
      * @memberof BingMarker
      */
     public get Location(): ILatLong {
-        let l: Microsoft.Maps.Location = this._pushpin.getLocation();
+        const l: Microsoft.Maps.Location = this._pushpin.getLocation();
         return {
             latitude: l.latitude,
             longitude: l.longitude
@@ -60,8 +60,8 @@ export class BingMarker implements Marker  {
     }
 
     /**
-     * Gets the marker metadata. 
-     * 
+     * Gets the marker metadata.
+     *
      * @readonly
      * @type {Map<string, any>}
      * @memberof BingMarker
@@ -70,13 +70,13 @@ export class BingMarker implements Marker  {
 
     /**
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Pushpin}
-     * 
+     *
      * @readonly
      * @abstract
      * @type {*}
      * @memberof BingMarker
      */
-    public get NativePrimitve(): any { return this._pushpin;}
+    public get NativePrimitve(): any { return this._pushpin; }
 
     ///
     /// Constructor
@@ -84,8 +84,8 @@ export class BingMarker implements Marker  {
 
     /**
      * Creates an instance of BingMarker.
-     * @param {Microsoft.Maps.Pushpin} _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model. 
-     * 
+     * @param {Microsoft.Maps.Pushpin} _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model.
+     *
      * @memberof BingMarker
      */
     constructor(private _pushpin: Microsoft.Maps.Pushpin) { }
@@ -95,14 +95,14 @@ export class BingMarker implements Marker  {
     ///
 
     /**
-     * Adds an event listener to the marker. 
-     * 
+     * Adds an event listener to the marker.
+     *
      * @abstract
      * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs. 
-     * 
+     * @param {Function} fn - Delegate invoked when the event occurs.
+     *
      * @memberof BingMarker
-     */    
+     */
     public AddListener(eventType: string, fn: Function): void {
         Microsoft.Maps.Events.addHandler(this._pushpin, eventType, (e) => {
             fn(e);
@@ -110,24 +110,24 @@ export class BingMarker implements Marker  {
     }
 
     /**
-     * Deletes the marker. 
-     * 
+     * Deletes the marker.
+     *
      * @abstract
-     * 
+     *
      * @memberof BingMarker
      */
     public DeleteMarker(): void {
-        let o: Microsoft.Maps.IPushpinOptions = {};
+        const o: Microsoft.Maps.IPushpinOptions = {};
         o.visible = false;
         this._pushpin.setOptions(o);
     }
 
     /**
      * Gets the marker label
-     * 
+     *
      * @abstract
-     * @returns {string} 
-     * 
+     * @returns {string}
+     *
      * @memberof BingMarker
      */
     public GetLabel(): string {
@@ -136,97 +136,97 @@ export class BingMarker implements Marker  {
 
     /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
-     * 
+     *
      * @abstract
-     * @param {IPoint} anchor - Point coordinates for the marker anchor. 
-     * 
+     * @param {IPoint} anchor - Point coordinates for the marker anchor.
+     *
      * @memberof BingMarker
      */
     public SetAnchor(anchor: IPoint): void {
-        let o: Microsoft.Maps.IPushpinOptions = {};
+        const o: Microsoft.Maps.IPushpinOptions = {};
         o.anchor = new Microsoft.Maps.Point(anchor.x, anchor.y);
         this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the draggability of a marker.
-     * 
+     *
      * @abstract
-     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise. 
-     * 
+     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
+     *
      * @memberof BingMarker
      */
     public SetDraggable(draggable: boolean): void {
-        let o: Microsoft.Maps.IPushpinOptions = {};
+        const o: Microsoft.Maps.IPushpinOptions = {};
         o.draggable = draggable;
         this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the icon for the marker.
-     * 
+     *
      * @abstract
      * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
-     * 
+     *
      * @memberof BingMarker
      */
     public SetIcon(icon: string): void {
-        let o: Microsoft.Maps.IPushpinOptions = {};
+        const o: Microsoft.Maps.IPushpinOptions = {};
         o.icon = icon;
         this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the marker label.
-     * 
+     *
      * @abstract
-     * @param {string} label - String containing the label to set. 
-     * 
+     * @param {string} label - String containing the label to set.
+     *
      * @memberof BingMarker
      */
     public SetLabel(label: string): void {
-        let o: Microsoft.Maps.IPushpinOptions = {};
+        const o: Microsoft.Maps.IPushpinOptions = {};
         o.text = label;
         this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the marker position.
-     * 
+     *
      * @abstract
-     * @param {ILatLong} latLng - Geo coordinates to set the marker position to. 
-     * 
+     * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
+     *
      * @memberof BingMarker
      */
     public SetPosition(latLng: ILatLong): void {
-        let p: Microsoft.Maps.Location = BingConversions.TranslateLocation(latLng);
+        const p: Microsoft.Maps.Location = BingConversions.TranslateLocation(latLng);
         this._pushpin.setLocation(p);
     }
 
     /**
-     * Sets the marker title. 
-     * 
+     * Sets the marker title.
+     *
      * @abstract
-     * @param {string} title - String containing the title to set. 
-     * 
+     * @param {string} title - String containing the title to set.
+     *
      * @memberof BingMarker
      */
     public SetTitle(title: string): void {
-        let o: Microsoft.Maps.IPushpinOptions | any = {};
+        const o: Microsoft.Maps.IPushpinOptions | any = {};
         o.title = title;
         this._pushpin.setOptions(o);
     }
 
     /**
-     * Sets the marker options. 
-     * 
+     * Sets the marker options.
+     *
      * @abstract
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are  
-     * merged with the underlying marker options. 
+     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
+     * merged with the underlying marker options.
      * @memberof Marker
      */
     public SetOptions(options: IMarkerOptions): void {
-        let o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateOptions(options);
+        const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateOptions(options);
         this._pushpin.setOptions(o);
     }
 

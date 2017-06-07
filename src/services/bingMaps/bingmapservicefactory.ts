@@ -1,12 +1,12 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { MapServiceFactory } from './mapservicefactory';
-import { MapService } from './mapservice';
-import { MapAPILoader, WindowRef, DocumentRef } from './mapapiloader';
-import { MarkerService } from './markerservice';
-import { InfoBoxService } from './infoboxservice';
-import { LayerService } from './layerservice';
-import { ClusterService } from './clusterservice';
-import { PolygonService } from './polygonservice';
+import { MapServiceFactory } from './../mapservicefactory';
+import { MapService } from './../mapservice';
+import { MapAPILoader, WindowRef, DocumentRef } from './../mapapiloader';
+import { MarkerService } from './../markerservice';
+import { InfoBoxService } from './../infoboxservice';
+import { LayerService } from './../layerservice';
+import { ClusterService } from './../clusterservice';
+import { PolygonService } from './../polygonservice';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader';
 import { BingInfoBoxService } from './binginfoboxservice';
 import { BingMarkerService } from './bingmarkerservice';
@@ -121,12 +121,12 @@ export class BingMapServiceFactory implements MapServiceFactory {
 
 /**
  * Creates a new instance of a plaform specific MapServiceFactory.
- * 
+ *
  * @export
- * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link BingMapAPILoader}. 
- * @param zone - An NgZone instance to provide zone aware promises.  
- * 
- * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance. 
+ * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link BingMapAPILoader}.
+ * @param zone - An NgZone instance to provide zone aware promises.
+ *
+ * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance.
  */
 export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
     return new BingMapServiceFactory(apiLoader, zone);
@@ -134,9 +134,9 @@ export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZo
 
 /**
  * Creates a new instance of a plaform specific MapLoaderFactory.
- * 
+ *
  * @export
- * @returns {MapAPILoader} - A {@link MapAPILoader} instance. 
+ * @returns {MapAPILoader} - A {@link MapAPILoader} instance.
  */
 export function BingMapLoaderFactory(): MapAPILoader {
     return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());
