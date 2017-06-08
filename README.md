@@ -7,6 +7,13 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 > - [Simple Map With Marker](https://plnkr.co/edit/KNOozNmAkxOtz30uCyug?p=preview)
 
 # Latest Updates
+0.4.0
+- Support for Polygon/Polyline (Goolge only for now, Bing to come in the next few weeks)
+- Support for Google maps (markers, polygon, polyline, infobox, no layers or clustering yet, to come)
+- Added linting and refactored for code consistency. 
+- Note: 0.4.0 is a breaking change, however migration should be super easy, just update the selectors for the components to x-... (like x-map-marker)
+  and update any broken class imports with the new names (should be obvious). 
+
 0.3.11
 - Support for spider clusters. Super cool...
 
