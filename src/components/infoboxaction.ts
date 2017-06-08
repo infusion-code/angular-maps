@@ -6,7 +6,7 @@
  * ### Example
  * ```typescript
  * import {Component} from '@angular/core';
- * import {Map, MapMarker, InfoBox, InfoBoxAction} from '...';
+ * import {MapComponent, MapMarkerDirective, InfoBoxComponent, InfoBoxActionDirective} from '...';
  *
  * @Component({
  *  selector: 'my-map-cmp',
@@ -15,18 +15,18 @@
  *  `],
  *  template: `
  *    <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
- *      <map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'">
- *        <info-box>
- *          <info-box-action [Label]="actionlabel" (ActionClicked)="actionClicked(this)"></info-box-action>
- *        </info-box>
- *      </map-marker>
+ *      <x-map-marker [Latitude]="lat" [Longitude]="lng" [Label]="'M'">
+ *        <x-info-box>
+ *          <x-info-box-action [Label]="actionlabel" (ActionClicked)="actionClicked(this)"></x-info-box-action>
+ *        </x-info-box>
+ *      </x-map-marker>
  *    </x-map>
  *  `
  * })
  * ```
  *
  * @export
- * @class InfoBoxAction
+ * @class InfoBoxActionDirective
  */
 @Directive({
     selector: 'x-info-box-action'
@@ -37,7 +37,7 @@ export class InfoBoxActionDirective {
      * The label to display on the action
      *
      * @type {string}
-     * @memberof InfoBoxAction
+     * @memberof InfoBoxActionDirective
      */
     @Input()
     Label: string;
@@ -46,7 +46,7 @@ export class InfoBoxActionDirective {
      * Emits an event when the action has been clicked
      *
      * @type {EventEmitter<void>}
-     * @memberof InfoBoxAction
+     * @memberof InfoBoxActionDirective
      */
     @Output()
     ActionClicked: EventEmitter<void> = new EventEmitter<void>();

@@ -22,7 +22,7 @@ import { MapMarkerDirective } from './mapmarker';
  * ### Example
  * ```typescript
  * import {Component} from '@angular/core';
- * import {BingMap} from '...';
+ * import {MapComponent} from '...';
  *
  * @Component({
  *  selector: 'my-map',
@@ -30,13 +30,13 @@ import { MapMarkerDirective } from './mapmarker';
  *    .map-container { height: 300px; }
  * `],
  *  template: `
- *    <map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom"></map>
+ *    <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom"></x-map>
  *  `
  * })
  * ```
  *
  * @export
- * @class Map
+ * @class MapComponent
  * @implements {OnChanges}
  * @implements {OnInit}
  * @implements {OnDestroy}
@@ -91,7 +91,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Get or sets the maximum and minimum bounding box for map.
      *
      * @type {IBox}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Input()
     public get Box(): IBox { return this._box; }
@@ -101,7 +101,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Gets or sets the latitude that sets the center of the map.
      *
      * @type {(number | string)}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Input()
     public get Latitude(): number | string { return this._longitude; }
@@ -114,7 +114,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Gets or sets the longitude that sets the center of the map.
      *
      * @type {(number| string)}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Input()
     public get Longitude(): number | string { return this._longitude; }
@@ -127,7 +127,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Gets or sets general map Options
      *
      * @type {IMapOptions}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Input()
     public get Options(): IMapOptions { return this._options };
@@ -137,7 +137,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Gets or sets the zoom level of the map. The default value is `8`.
      *
      * @type {(number | string)}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Input()
     public get Zoom(): number | string { return this._zoom; }
@@ -152,7 +152,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter is fired when the map center changes.
      *
      * @type {EventEmitter<ILatLong>}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Output()
     CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
@@ -162,7 +162,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * marker or infoWindow).
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Output()
     MapClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
@@ -172,7 +172,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * on a marker or infoWindow).
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Output()
     MapDblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
@@ -182,7 +182,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * on a marker or infoWindow).
      *
      * @type {EventEmitter<MouseEvent>}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Output()
     MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
@@ -191,7 +191,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emiiter is fired when the map zoom changes
      *
      * @type {EventEmitter<Number>}
-     * @memberof Map
+     * @memberof MapComponent
      */
     @Output()
     ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
@@ -202,11 +202,11 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     ///
 
     /**
-     * Creates an instance of Map.
+     * Creates an instance of MapComponent.
      *
      * @param {MapService} _mapService - Concreted implementation of a map service for the underlying maps implementations.
      *                                   Generally provided via injections.
-     * @memberof Map
+     * @memberof MapComponent
      */
     constructor(private _mapService: MapService) { }
 
@@ -219,7 +219,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @returns {void}
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     public ngOnInit(): void {
         this.InitMapInstance(this._container.nativeElement);
@@ -231,7 +231,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @return {void}
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (this._mapPromise) {
@@ -253,7 +253,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @returns {void}
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     public ngOnDestroy(): void {
         this._mapService.DisposeMap();
@@ -264,7 +264,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @returns {Promise<void>} - A promise that gets resolved after the event was triggered.
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     public TriggerResize(): Promise<void> {
         // Note: When we would trigger the resize event and show the map in the same turn (which is a
@@ -288,7 +288,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @param {number} [defaultValue=null] - Default value to use if the conversion cannot be performed.
      * @returns {number} - Converted number of the default.
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private ConvertToDecimal(value: string | number, defaultValue: number = null): number {
         if (typeof value === 'string') {
@@ -304,7 +304,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @private
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private HandleMapCenterChange(): void {
         this._mapService.SubscribeToMapEvent<void>('viewchangeend').subscribe(() => {
@@ -323,7 +323,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @private
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private HandleMapClickEvents(): void {
         this._mapService.SubscribeToMapEvent<any>('click').subscribe(e => {
@@ -350,7 +350,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *
      * @private
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private HandleMapZoomChange(): void {
         this._mapService.SubscribeToMapEvent<void>('viewchangeend').subscribe(() => {
@@ -369,7 +369,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @private
      * @param {HTMLElement} el - Html elements which will host the map canvas.
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private InitMapInstance(el: HTMLElement) {
         if (this._options.center == null) { this._options.center = { latitude: this._latitude, longitude: this._longitude }; }
@@ -388,7 +388,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @private
      * @returns {void}
      *
-     * @memberof Map
+     * @memberof MapComponent
      */
     private UpdateCenter(): void {
         if (typeof this._latitude !== 'number' || typeof this._longitude !== 'number') {

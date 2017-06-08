@@ -9,12 +9,12 @@ import { MapMarkerDirective } from './mapmarker';
 let layerId = 0;
 
 /**
- * MapLayer creates a layer on a {@link Map}.
+ * MapLayerDirective creates a layer on a {@link MapComponent}.
  *
  * ### Example
  * ```typescript
  * import {Component} from '@angular/core';
- * import {Map, MapMarker} from '...';
+ * import {MapComponent, MapMarkerDirective} from '...';
  *
  * @Component({
  *  selector: 'my-map-cmp',
@@ -24,17 +24,17 @@ let layerId = 0;
  *   }
  * `],
  * template: `
- *   <x-map [latitude]='lat' [longitude]='lng' [zoom]='zoom'>
- *     <map-layer [Visible]='visible'>
- *         <map-marker [latitude]='lat' [longitude]='lng' [label]=''M''></map-marker>
- *     </map-layer>
+ *   <x-map [Latitude]='lat' [Longitude]='lng' [Zoom]='zoom'>
+ *     <x-map-layer [Visible]='visible'>
+ *         <x-map-marker [Latitude]='lat' [Longitude]='lng' [Label]=''M''></x-map-marker>
+ *     </x-map-layer>
  *   </x-map>
  * `
  * })
  * ```
  *
  * @export
- * @class MapLayer
+ * @class MapLayerDirective
  * @implements {OnInit}
  * @implements {OnDestroy}
  * @implements {OnChanges}
@@ -61,7 +61,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * Gets or sets the layer visibility.
      *
      * @type {boolean}
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     @Input()
         public get Visible(): boolean { return this._visible; }
@@ -72,7 +72,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      *
      * @readonly
      * @type {number}
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     public get Id(): number { return this._id; }
 
@@ -81,12 +81,12 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
     ///
 
     /**
-     * Creates an instance of MapLayer.
+     * Creates an instance of MapLayerDirective.
      * @param {LayerService} _layerService - Concreted implementation of a layer service for the underlying maps implementations.
      * Generally provided via injections.
      * @param {ViewContainerRef} _containerRef - Reference to the container hosting the map canvas. Generally provided via injection.
      *
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     constructor(protected _layerService: LayerService, protected _containerRef: ViewContainerRef) {
         this._id = layerId++
@@ -100,7 +100,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * Called on Component initialization. Part of ng Component life cycle.
      * @returns {void}
      *
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     public ngOnInit(): void {
         this._containerRef.element.nativeElement.attributes['layerId'] = this._id.toString();
@@ -114,7 +114,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @returns {void}
      *
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (!this._addedToManager) { return; }
@@ -129,7 +129,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
      *
-     * @memberof MapLayer
+     * @memberof MapLayerDirective
      */
     public ngOnDestroy(): void {
         this._layerService.DeleteLayer(this);

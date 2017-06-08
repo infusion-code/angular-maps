@@ -13,7 +13,7 @@ let polygonId = 0;
 
 /**
  *
- * MpaPolygon renders a polygon inside a {@link Map}.
+ * MapPolygonDirective renders a polygon inside a {@link MapComponent}.
  *
  * ### Example
  * ```typescript
@@ -27,7 +27,7 @@ let polygonId = 0;
  * `],
  * template: `
  *   <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
- *      <mapPolygon [Paths]="path"></mapPolygon>
+ *      <x-map-polygon [Paths]="path"></x-map-polygon>
  *   </x-map>
  * `
  * })

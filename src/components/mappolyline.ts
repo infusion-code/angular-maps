@@ -13,7 +13,7 @@ let polylineId = 0;
 
 /**
  *
- * MapPolyline renders a polyline inside a {@link Map}.
+ * MapPolylineDirective renders a polyline inside a {@link MapComponent}.
  *
  * ### Example
  * ```typescript
