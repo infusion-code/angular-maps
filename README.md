@@ -5,6 +5,10 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 
 > Try it out on Plunker (more complex plunks coming soon):
 > - [Simple Map With Marker](https://plnkr.co/edit/KNOozNmAkxOtz30uCyug?p=preview)
+> - [Basic Map with Multiple Data Bound Markers.](https://plnkr.co/edit/EVQ14fufagHiiFlmXcV0?p=preview)
+> - [Layered Map with Multiple Data Bound Markers.](https://plnkr.co/edit/L542M1L9vblkYuRrPi49?p=preview)
+> - [Map with Multiple Data Bound Markers in a cluster layer.](https://plnkr.co/edit/yOOCqNceJBy3mzrCuJGJ?p=preview)
+> - [Map with sider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/edit/pOsmBVwQMzF69sz55U2F?p=preview)
 
 # Latest Updates
 0.4.2 
