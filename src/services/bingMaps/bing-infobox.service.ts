@@ -6,8 +6,8 @@ import { InfoBoxActionDirective } from './../../components/infoboxaction';
 import { InfoBoxService } from './../infoboxservice';
 import { MapService } from './../../services/mapservice';
 import { InfoBoxComponent } from './../../components/infobox';
-import { BingMapService } from './bingmapservice';
-import { BingInfoWindow } from './../../models/bingMaps/binginfowindow';
+import { BingMapService } from './bing-map.service';
+import { BingInfoWindow } from './../../models/bingMaps/bing-infowindow';
 
 /**
  * Concrete implementation of the {@link InfoBoxService} contract for the Bing Maps V8 architecture.

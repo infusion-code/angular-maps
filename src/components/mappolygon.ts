@@ -48,7 +48,9 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ///
     /// Field declarations
     ///
+    private _inCustomLayer = false;
     private _id: number;
+    private _layerId: number;
     private _addedToService = false;
     private _events: Subscription[] = [];
 
@@ -289,6 +291,24 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      */
     public get IdAsString(): string { return this._id.toString(); }
 
+    /**
+     * Gets whether the polygon is in a custom layer. See {@link MapLayer}.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberof MapPolygonDirective
+     */
+    public get InCustomLayer(): boolean { return this._inCustomLayer; }
+
+    /**
+     * gets the id of the Layer the polygon belongs to.
+     *
+     * @readonly
+     * @type {number}
+     * @memberof MapPolygonDirective
+     */
+    public get LayerId(): number { return this._layerId; }
+
     ///
     /// Constructor
     ///
@@ -315,6 +335,13 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     ngAfterContentInit(): void {
+        if (this._containerRef.element.nativeElement.parentElement) {
+            const parentName: string = this._containerRef.element.nativeElement.parentElement.tagName;
+            if (parentName.toLowerCase() === 'x-map-layer') {
+                this._inCustomLayer = true;
+                this._layerId = Number(this._containerRef.element.nativeElement.parentElement.attributes['layerId']);
+            }
+        }
         if (!this._addedToService) {
             this._polygonService.AddPolygon(this);
             this._addedToService = true;
@@ -347,9 +374,9 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ngOnDestroy() {
         this._polygonService.DeletePolygon(this);
         this._events.forEach((s) => s.unsubscribe());
-        ///
-        /// remove event subscriptions
-        ///
+            ///
+            /// remove event subscriptions
+            ///
     }
 
     ///
@@ -364,14 +391,14 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     private AddEventListeners() {
-        this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
+        this._events.push(this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
             const t: MapPolygonDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open(this._polygonService.GetCoordinatesFromClick(ev));
             }
-        });
+        }));
         const handlers = [
-            { name: 'dbclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
+            { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
             { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(ev) },
             { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(ev) },
             { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(ev) },

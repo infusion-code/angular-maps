@@ -1,16 +1,19 @@
 import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { Marker } from './../../models/marker';
-import { BingMarker } from './../../models/bingMaps/bingmarker';
+import { Polygon } from './../../models/polygon';
+import { BingMarker } from './../../models/bingMaps/bing-marker';
+import { BingPolygon } from './../../models/bingMaps/bing-polygon';
 import { Layer } from './../../models/layer';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { MapService } from './../mapservice';
 import { MapLayerDirective } from './../../components/maplayer';
 import { LayerService } from './../layerservice';
-import { BingMapService } from './bingmapservice';
-import { BingLayerBase } from './binglayerbase';
-import { BingConversions } from './bingconversions';
+import { BingMapService } from './bing-map.service';
+import { BingLayerBase } from './bing-layer-base';
+import { BingConversions } from './bing-conversions';
 
 /**
  * Implements the {@link LayerService} contract for a  Bing Maps V8 specific implementation.
@@ -58,17 +61,28 @@ export class BingLayerService extends BingLayerBase implements LayerService {
         this._layers.set(layer, layerPromise);
     }
 
+
     /**
-     * Returns the Layer model represented by this layer.
+     * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
+     * @param {number} layer - The id of the layer to which to add the marker.
+     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof LayerService
      */
-    public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return this._layers.get(layer);
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        return p.then((l: Layer) => {
+            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
+            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
+            const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
+            const polygon: Polygon = new BingPolygon(poly);
+            l.AddEntity(polygon);
+            return polygon;
+        });
     }
 
     /**
@@ -91,6 +105,19 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                 this._layers.delete(layer);
             });
         });
+    }
+
+    /**
+     * Returns the Layer model represented by this layer.
+     *
+     * @abstract
+     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
+     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
+     *
+     * @memberof LayerService
+     */
+    public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
+        return this._layers.get(layer);
     }
 
 }

@@ -8,12 +8,13 @@ import { LayerService } from './../layerservice';
 import { ClusterService } from './../clusterservice';
 import { PolygonService } from './../polygonservice';
 import { PolylineService } from './../polylineservice';
-import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader';
-import { BingInfoBoxService } from './binginfoboxservice';
-import { BingMarkerService } from './bingmarkerservice';
-import { BingMapService } from './bingmapservice';
-import { BingLayerService } from './binglayerservice';
-import { BingClusterService } from './bingclusterservice';
+import { BingMapAPILoader, BingMapAPILoaderConfig } from './bing-map.api-loader.service';
+import { BingInfoBoxService } from './bing-infobox.service';
+import { BingMarkerService } from './bing-marker.service';
+import { BingMapService } from './bing-map.service';
+import { BingLayerService } from './bing-layer.service';
+import { BingClusterService } from './bing-cluster.service';
+import { BingPolygonService } from './bing-polygon.service';
 
 /**
  * Implements a factory to create thre necessary Bing Maps V8 specific service instances.
@@ -114,8 +115,7 @@ export class BingMapServiceFactory implements MapServiceFactory {
      * @memberof MapServiceFactory
      */
     public CreatePolygonService(map: MapService, layers: LayerService): PolygonService {
-        // no implementation yet...
-        return null;
+        return new BingPolygonService(map, layers, this._zone);
     }
 
     /**

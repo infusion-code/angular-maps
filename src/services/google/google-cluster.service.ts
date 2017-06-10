@@ -1,6 +1,9 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from '../../interfaces/imarkeroptions';
+import { IClusterOptions } from './../../interfaces/iclusteroptions';
+import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
 import { Marker } from '../../models/marker';
+import { Polygon } from '../../models/polygon';
 import { Layer } from '../../models/layer';
 import { ClusterLayerDirective } from '../../components/clusterlayer'
 import { ClusterService } from '../clusterservice';
@@ -18,6 +21,20 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
 
     public AddLayer(layer: ClusterLayerDirective): void {
     };
+
+    /**
+     * Adds a polygon to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the marker.
+     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     *
+     * @memberof BingClusterService
+     */
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
+        throw ("Polygons are not supported in clustering layers. You can only use markers.")
+    }
 
     public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
         return Promise.resolve({});

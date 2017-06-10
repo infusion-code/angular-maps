@@ -10,8 +10,8 @@ import { MapService } from './../../services/mapservice';
 import { LayerService } from './../../services/layerservice';
 import { ClusterService } from './../../services/clusterservice';
 import { Marker } from './../../models/marker';
-import { BingMapService } from './bingmapservice';
-import { BingConversions } from './bingconversions';
+import { BingMapService } from './bing-map.service';
+import { BingConversions } from './bing-conversions';
 
 /**
  * Concrete implementation of the MarkerService abstract class for Bing Maps V8.

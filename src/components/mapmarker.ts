@@ -2,6 +2,7 @@
     Directive, SimpleChange, Input, Output, OnDestroy, OnChanges,
     EventEmitter, ContentChild, AfterContentInit, ViewContainerRef
 } from '@angular/core';
+import { Subscription } from 'rxjs/subscription';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IMarkerEvent } from '../interfaces/imarkerevent';
@@ -56,6 +57,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     private _markerAddedToManger = false;
     private _id: string;
     private _layerId: number;
+    private _events: Subscription[] = [];
 
     /**
      * Any InfoBox that is a direct children of the marker
@@ -313,7 +315,10 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      *
      * @memberof MapLayer
      */
-    public ngOnDestroy() { this._markerService.DeleteMarker(this); }
+    public ngOnDestroy() { 
+        this._markerService.DeleteMarker(this); 
+        this._events.forEach((s) => s.unsubscribe());    
+    }
 
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
@@ -347,6 +352,10 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
         }
     }
 
+    /**
+     * Obtains a string representation of the Marker Id. 
+     * @return {string} - string representation of the marker id. 
+     */
     public toString(): string { return 'MapMarker-' + this._id.toString(); }
 
     ///
@@ -361,7 +370,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * @memberof MapMarkerDirective
      */
     private AddEventListeners(): void {
-        this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
+        this._events.push(this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
             const t: MapMarkerDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
@@ -372,11 +381,11 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
                 Location: this._markerService.GetCoordinatesFromClick(e),
                 Pixels: this._markerService.GetPixelsFromClick(e),
             });
-        });
-        this._markerService.CreateEventObservable<MouseEvent>('dragend', this)
+        }));
+        this._events.push(this._markerService.CreateEventObservable<MouseEvent>('dragend', this)
             .subscribe((e: MouseEvent) => {
                 this.DragEnd.emit(e);
-            });
+            }));
     }
 
 }

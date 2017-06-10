@@ -5,11 +5,12 @@ import { IMarkerOptions } from './../../interfaces/imarkeroptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
 import { IInfoWindowAction } from './../../interfaces/iinfowindowaction';
+import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
 import { IPoint } from './../../interfaces/ipoint';
 import { MapTypeId } from './../../models/maptypeid';
 import { Marker } from './../../models/marker';
 import { ClusterPlacementMode } from './../../models/clusterplacementmode';
-import { BingMapService } from './bingmapservice';
+import { BingMapService } from './bing-map.service';
 
 /**
  * This class contains helperfunctions to map various interfaces used to represent options and structures into the
@@ -133,6 +134,24 @@ export class BingConversions {
         'visible',
         'width',
         'zIndex'
+    ];
+
+    /**
+     * Polygon option attributes that are supported for conversion to Bing Map Polygon properties
+     *
+     * @private
+     * @static
+     * @type {string[]}
+     * @memberof BingConversions
+     */
+    private static _polygonOptionsAttributes: string[] = [
+        'cursor',
+        'fillColor',
+        'fillOpacity',
+        'strokeColor',
+        'strokeOpacity',
+        'strokeWeight',
+        'visible'
     ];
 
     /**
@@ -358,6 +377,37 @@ export class BingConversions {
     }
 
     /**
+     * Translates an array of locations or an array or arrays of location to and array of arrays of Bing Map Locations
+     * 
+     * @static
+     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert. 
+     * @returns {Array<Array<Microsoft.Maps.Location>>} - converted locations. 
+     * 
+     * @memberof BingConversions
+     */
+    public static TranslatePaths(paths:Array<ILatLong> | Array<Array<ILatLong>>): Array<Array<Microsoft.Maps.Location>> {
+        let p: Array<Array<Microsoft.Maps.Location>> = new Array<Array<Microsoft.Maps.Location>>();
+        if (paths == null || !Array.isArray(paths) || paths.length === 0) { 
+            p.push(new Array<Microsoft.Maps.Location>());
+        }
+        else if (Array.isArray(paths[0])){
+            // parameter is an array or arrays
+             (<Array<Array<ILatLong>>>paths).forEach(path => {
+                const _p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
+                path.forEach(x => _p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+                p.push(_p);
+            });
+        }
+        else{
+            // parameter is a simple array....
+            const y: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
+            (<Array<ILatLong>>paths).forEach(x => y.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+            p.push(y);
+        }
+        return p;
+    }
+
+    /**
      *  Maps an IPoint object to a Microsoft.Maps.Point object.
      *
      * @static
@@ -369,6 +419,65 @@ export class BingConversions {
     public static TranslatePoint(point: IPoint): Microsoft.Maps.Point {
         const p: Microsoft.Maps.Point = new Microsoft.Maps.Point(point.x, point.y);
         return p;
+    }
+
+    /**
+     *  Maps an IPolygonOptions object to a Microsoft.Maps.IPolygonOptions.
+     *
+     * @static
+     * @param {IPolygonOptions} options - Object to be mapped.
+     * @returns {Microsoft.Maps.IPolygonOptions} - Mapped object.
+     *
+     * @memberof BingConversions
+     */
+    public static TranslatePolygonOptions(options: IPolygonOptions): Microsoft.Maps.IPolygonOptions {
+        const o: Microsoft.Maps.IPolygonOptions | any = {};
+        const f: (s:string, a:number) => string = (s, a) => {
+            let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
+            if (m.length > 3) {
+                a = a > 1 ? (a / 100) : a;
+                return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
+            }
+            else if(s[0] === '#') {
+                let x: number = Math.floor(a * 255);
+                let y: string = x.toString(16);
+                let z: string = s;
+                if (z.length > 7) { z = z.substr(0, 7); }
+                if (x < 16) { z = z + '0'; } 
+                return z + y; 
+            }   
+            else {
+                return s;
+            }
+        }; 
+
+        Object.keys(options)
+            .filter(k => BingConversions._polygonOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'strokeWeight') {
+                    o.strokeThickness = options.strokeWeight;
+                } else if (k === 'strokeColor') {
+                    if(options.strokeOpacity){
+                        o.strokeColor = f(options.strokeColor, options.strokeOpacity);
+                    }
+                    else{
+                        o.strokeColor = options.strokeColor;
+                    }
+                } else if (k === 'strokeColor') {    
+                } else if (k === 'strokeOpacity') {
+                    if(options.fillOpacity){
+                        o.fillColor = f(options.fillColor, options.fillOpacity);;;
+                    }
+                    else{
+                        o.fillColor = options.fillColor;
+                    }
+                } else if (k === 'fillOpacity') {
+                } else {
+                    o[k] = (<any>options)[k];
+                }
+            });
+
+        return o;
     }
 
     /**

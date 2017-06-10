@@ -4,18 +4,20 @@ import { Observable } from 'rxjs/Observable';
 
 import { MapService } from './../mapservice';
 import { MapAPILoader } from './../mapapiloader';
-import { BingMapAPILoader, BingMapAPILoaderConfig } from './bingmapapiloader'
-import { BingConversions } from './bingconversions'
+import { BingMapAPILoader, BingMapAPILoaderConfig } from './bing-map.api-loader.service';
+import { BingConversions } from './bing-conversions';
 import { Marker } from './../../models/marker';
 import { Polygon } from './../../models/polygon';
 import { Polyline } from './../../models/polyline';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { InfoWindow } from './../../models/infowindow'
-import { BingMarker } from './../../models/bingMaps/bingmarker';
+import { BingMarker } from './../../models/bingMaps/bing-marker';
 import { Layer } from './../../models/layer';
-import { BingLayer } from './../../models/bingMaps/binglayer';
-import { BingClusterLayer } from './../../models/bingMaps/bingclusterlayer';
-import { BingInfoWindow } from './../../models/bingMaps/binginfowindow';
+import { BingLayer } from './../../models/bingMaps/bing-layer';
+import { BingClusterLayer } from './../../models/bingMaps/bing-cluster-layer';
+import { BingInfoWindow } from './../../models/bingMaps/bing-infowindow';
+import { BingPolygon } from './../../models/bingMaps/bing-polygon';
+
 import { ILayerOptions } from './../../interfaces/ilayeroptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IMapOptions } from './../../interfaces/imapoptions';
@@ -224,7 +226,13 @@ export class BingMapService implements MapService {
      * @memberof MapService
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
-        throw ('Not Implemented.')
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
+            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
+            const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
+            map.entities.push(poly);
+            return new BingPolygon(poly);
+        });
     }
 
     /**

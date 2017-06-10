@@ -2,8 +2,8 @@
 import { IPoint } from './../../interfaces/ipoint';
 import { IMarkerOptions } from './../../interfaces/Imarkeroptions';
 import { Marker } from './../Marker';
-import { BingMapService } from './../../services/bingMaps/bingmapservice';
-import { BingConversions } from './../../services/bingMaps/bingconversions';
+import { BingMapService } from './../../services/bingMaps/bing-map.service';
+import { BingConversions } from './../../services/bingMaps/bing-conversions';
 
 /**
  * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture.
@@ -47,7 +47,6 @@ export class BingMarker implements Marker {
      * Gets the Location of the marker
      *
      * @readonly
-     * @abstract
      * @type {ILatLong}
      * @memberof BingMarker
      */
@@ -72,7 +71,6 @@ export class BingMarker implements Marker {
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Pushpin}
      *
      * @readonly
-     * @abstract
      * @type {*}
      * @memberof BingMarker
      */

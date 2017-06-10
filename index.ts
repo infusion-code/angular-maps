@@ -34,11 +34,16 @@ import { Polyline } from './src/models/polyline';
 import { SpiderClusterMarker } from './src/models/spiderclustermarker';
 import { ClusterPlacementMode } from './src/models/clusterplacementmode';
 import { ClusterClickAction } from './src/models/clusterclickaction';
-import { BingLayer } from './src/models/bingMaps/binglayer';
-import { BingClusterLayer } from './src/models/bingMaps/bingclusterlayer';
-import { BingSpiderClusterMarker } from './src/models/bingMaps/bingspiderclustermarker';
-import { BingInfoWindow } from './src/models/bingMaps/binginfowindow';
-import { BingMarker } from './src/models/bingMaps/bingmarker';
+import { BingLayer } from './src/models/bingMaps/bing-layer';
+import { BingClusterLayer } from './src/models/bingMaps/bing-cluster-layer';
+import { BingSpiderClusterMarker } from './src/models/bingMaps/bing-spidercluster-marker';
+import { BingInfoWindow } from './src/models/bingMaps/bing-infowindow';
+import { BingMarker } from './src/models/bingMaps/bing-marker';
+import { BingPolygon } from './src/models/bingMaps/bing-polygon';
+import { GoogleInfoWindow } from './src/models/google/google-infowindow';
+import { GoogleMarker } from './src/models/google/google-marker';
+import { GooglePolygon } from './src/models/google/google-polygon';
+import { GooglePolyline } from './src/models/google/google-polyline';
 
 ///
 /// import module components
@@ -64,13 +69,14 @@ import { MarkerService } from './src/services/markerservice';
 import { ClusterService } from './src/services/clusterservice';
 import { PolygonService } from './src/services/polygonservice';
 import { PolylineService } from './src/services/polylineservice';
-import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bingmapservicefactory';
-import { BingMapService } from './src/services/bingMaps/bingmapservice';
-import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bingMaps/bingmapapiloader';
-import { BingInfoBoxService } from './src/services/bingMaps/binginfoboxservice';
-import { BingMarkerService } from './src/services/bingMaps/bingmarkerservice';
-import { BingLayerService } from './src/services/bingMaps/binglayerservice';
-import { BingClusterService } from './src/services/bingMaps/bingclusterservice';
+import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bing-map.service.factory';
+import { BingMapService } from './src/services/bingMaps/bing-map.service';
+import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bingMaps/bing-map.api-loader.service';
+import { BingInfoBoxService } from './src/services/bingMaps/bing-infobox.service';
+import { BingMarkerService } from './src/services/bingMaps/bing-marker.service';
+import { BingLayerService } from './src/services/bingMaps/bing-layer.service';
+import { BingClusterService } from './src/services/bingMaps/bing-cluster.service';
+import { BingPolygonService } from './src/services/bingMaps/bing-polygon.service';
 import { GoogleClusterService } from './src/services/google/google-cluster.service';
 import { GoogleInfoBoxService } from './src/services/google/google-infobox.service';
 import { GoogleLayerService } from './src/services/google/google-layer.service';
@@ -96,12 +102,13 @@ export {
     MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
-    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService,
+    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingPolygonService,
     BingMapAPILoader, BingLayerService, BingClusterService, BingLayer, BingMarker, BingInfoWindow, BingSpiderClusterMarker
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
-    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService
+    GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService,
+    GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline
 }
 
 ///

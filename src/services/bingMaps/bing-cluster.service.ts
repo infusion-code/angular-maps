@@ -1,19 +1,21 @@
 import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { Marker } from './../../models/marker';
-import { BingMarker } from './../../models/bingMaps/bingmarker';
-import { BingClusterLayer } from './../../models/bingMaps/bingclusterlayer';
+import { Polygon } from './../../models/polygon';
+import { BingMarker } from './../../models/bingMaps/bing-marker';
+import { BingClusterLayer } from './../../models/bingMaps/bing-cluster-layer';
 import { Layer } from './../../models/layer';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { ClusterClickAction } from './../../models/clusterclickaction';
 import { MapService } from './../mapservice';
 import { ClusterLayerDirective } from './../../components/clusterlayer';
 import { ClusterService } from './../clusterservice';
-import { BingLayerBase } from './binglayerbase';
-import { BingMapService } from './bingmapservice';
-import { BingConversions } from './bingconversions';
+import { BingLayerBase } from './bing-layer-base';
+import { BingMapService } from './bing-map.service';
+import { BingConversions } from './bing-conversions';
 
 /**
  * Implements the {@link ClusterService} contract for a  Bing Maps V8 specific implementation.
@@ -96,6 +98,20 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             })
         });
         this._layers.set(layer, layerPromise);
+    }
+
+    /**
+     * Adds a polygon to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the marker.
+     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     *
+     * @memberof BingClusterService
+     */
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
+        throw ("Polygons are not supported in clustering layers. You can only use markers.")
     }
 
     /**

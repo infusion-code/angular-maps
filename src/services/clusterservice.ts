@@ -1,7 +1,9 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../interfaces/imarkeroptions';
+import { IPolygonOptions } from './../interfaces/ipolygonoptions';
 import { Marker } from './../models/marker';
 import { Layer } from './../models/layer';
+import { Polygon } from './../models/polygon';
 import { ClusterLayerDirective } from './../components/clusterlayer'
 
 /**
@@ -59,6 +61,18 @@ export abstract class ClusterService {
      * @memberof ClusterService
      */
     public abstract CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker>;
+
+    /**
+     * Adds a polygon to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the marker.
+     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     *
+     * @memberof ClusterService
+     */
+    public abstract CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>;
 
     /**
      * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities

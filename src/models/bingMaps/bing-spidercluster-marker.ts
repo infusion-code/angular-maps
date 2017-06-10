@@ -1,4 +1,4 @@
-import { BingMarker } from './bingmarker';
+import { BingMarker } from './bing-marker';
 import { SpiderClusterMarker } from './../spiderclustermarker';
 
 export class BingSpiderClusterMarker extends BingMarker implements SpiderClusterMarker {

@@ -2,7 +2,7 @@ import { ILayerOptions } from './../../interfaces/ilayeroptions';
 import { Layer } from './../layer';
 import { Marker } from './../marker';
 import { InfoWindow } from './../infowindow';
-import { BingMapService } from './../../services/bingMaps/bingmapservice';
+import { BingMapService } from './../../services/bingMaps/bing-map.service';
 import { MapService} from './../../services/mapservice';
 
 /**

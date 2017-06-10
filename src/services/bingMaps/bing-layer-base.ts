@@ -1,14 +1,14 @@
 import { IMarkerOptions } from './../../interfaces/imarkeroptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { Marker } from './../../models/marker';
-import { BingMarker } from './../../models/bingMaps/bingmarker';
+import { BingMarker } from './../../models/bingMaps/bing-marker';
 import { Layer } from './../../models/layer';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { MapService } from './../mapservice';
 import { MapLayerDirective } from './../../components/maplayer';
 import { LayerService } from './../layerservice';
-import { BingMapService } from './bingmapservice';
-import { BingConversions } from './bingconversions';
+import { BingMapService } from './bing-map.service';
+import { BingConversions } from './bing-conversions';
 
 /**
  * This abstract partially implements the contract for the {@link LayerService}
