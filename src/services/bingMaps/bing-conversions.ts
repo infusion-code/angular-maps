@@ -451,16 +451,16 @@ export class BingConversions {
         const o: Microsoft.Maps.IPolygonOptions | any = {};
         const f: (s:string, a:number) => string = (s, a) => {
             let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
-            if (m.length > 3) {
+            if (m && m.length > 3) {
                 a = a > 1 ? (a / 100) : a;
                 return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
             }
             else if(s[0] === '#') {
                 let x: number = Math.floor(a * 255);
                 let y: string = x.toString(16);
-                let z: string = s;
+                let z: string = s.substr(0);
                 if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { z = z + '0'; } 
+                if (x < 16) { y = y + '0'; } 
                 return z + y; 
             }   
             else {
@@ -509,16 +509,16 @@ export class BingConversions {
         const o: Microsoft.Maps.IPolylineOptions | any = {};
         const f: (s:string, a:number) => string = (s, a) => {
             let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
-            if (m.length > 3) {
+            if (m && m.length > 3) {
                 a = a > 1 ? (a / 100) : a;
                 return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
             }
             else if(s[0] === '#') {
                 let x: number = Math.floor(a * 255);
                 let y: string = x.toString(16);
-                let z: string = s;
+                let z: string = s.substr(0);
                 if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { z = z + '0'; } 
+                if (x < 16) { y = y + '0'; } 
                 return z + y; 
             }   
             else {

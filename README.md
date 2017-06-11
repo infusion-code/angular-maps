@@ -11,6 +11,10 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 > - [Map with sider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/edit/pOsmBVwQMzF69sz55U2F?p=preview)
 
 # Latest Updates
+0.4.4 
+- Support for Polylines in Bing (both directly and in layer).
+- Added a number of example plunks.
+
 0.4.2 
 - Support for Polygons in Bing (both directly on map and in layer).
 

@@ -2,6 +2,7 @@ import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { Subject } from 'rxjs/Subject';
 import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
 import { Polyline } from '../../models/polyline';
 import { MapPolylineDirective } from './../../components/mappolyline';
@@ -72,7 +73,7 @@ export class BingPolylineService implements PolylineService {
             polylinePromise = this._layerService.CreatePolyline(polyline.LayerId, o);
         }
         else {
-            polylinePromise = this._mapService.CreatePolygon(o);
+            polylinePromise = this._mapService.CreatePolyline(o);
         }
         this._polylines.set(polyline, polylinePromise);
     }
@@ -88,6 +89,12 @@ export class BingPolylineService implements PolylineService {
       * @memberof BingPolylineService
       */
     public CreateEventObservable<T>(eventName: string, polyline: MapPolylineDirective): Observable<T> {
+        let b: Subject<T> = new Subject<T>();
+        if(eventName === 'mousemove') return b.asObservable();
+        if(eventName === 'rightclick') return b.asObservable();
+            ///
+            /// mousemove and rightclick are not supported by bing polygons.
+            ///
         return Observable.create((observer: Observer<T>) => {
             this._polylines.get(polyline).then((p: Polyline) => {
                 p.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));

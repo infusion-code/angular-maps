@@ -103,7 +103,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
         if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
         return p.then((l: Layer) => {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
-            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
+            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
             const poly: Microsoft.Maps.Polyline = new Microsoft.Maps.Polyline(locs[0], o);
             const polyline: Polyline = new BingPolyline(poly);
             l.AddEntity(polyline);
