@@ -1,10 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../../interfaces/imarkeroptions';
 import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { Marker } from './../../models/marker';
 import { Polygon } from './../../models/polygon';
+import { Polyline } from './../../models/polyline';
 import { BingMarker } from './../../models/bingMaps/bing-marker';
 import { BingClusterLayer } from './../../models/bingMaps/bing-cluster-layer';
 import { Layer } from './../../models/layer';
@@ -104,14 +106,28 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Adds a polygon to the layer.
      * 
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the marker.
-     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {IPolygonOptions} options - Polygon options defining the polygon.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof BingClusterService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
         throw ("Polygons are not supported in clustering layers. You can only use markers.")
+    }
+
+    /**
+     * Adds a polyline to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolylineOptions} options - Polyline options defining the line.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof BingClusterService
+     */
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>{
+        throw ("Polylines are not supported in clustering layers. You can only use markers.")
     }
 
     /**

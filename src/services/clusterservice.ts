@@ -1,9 +1,11 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../interfaces/imarkeroptions';
 import { IPolygonOptions } from './../interfaces/ipolygonoptions';
+import { IPolylineOptions } from './../interfaces/ipolylineoptions';
 import { Marker } from './../models/marker';
 import { Layer } from './../models/layer';
 import { Polygon } from './../models/polygon';
+import { Polyline } from './../models/polyline';
 import { ClusterLayerDirective } from './../components/clusterlayer'
 
 /**
@@ -66,13 +68,25 @@ export abstract class ClusterService {
      * Adds a polygon to the layer.
      * 
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the marker.
-     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {IPolygonOptions} options - Polygon options defining the polygon.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof ClusterService
      */
     public abstract CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>;
+
+    /**
+     * Adds a polyline to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolylineOptions} options - Polyline options defining the line.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof ClusterService
+     */
+    public abstract CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>;
 
     /**
      * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities

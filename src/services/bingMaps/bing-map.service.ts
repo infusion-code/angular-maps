@@ -17,6 +17,7 @@ import { BingLayer } from './../../models/bingMaps/bing-layer';
 import { BingClusterLayer } from './../../models/bingMaps/bing-cluster-layer';
 import { BingInfoWindow } from './../../models/bingMaps/bing-infowindow';
 import { BingPolygon } from './../../models/bingMaps/bing-polygon';
+import { BingPolyline } from './../../models/bingMaps/bing-polyline';
 
 import { ILayerOptions } from './../../interfaces/ilayeroptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
@@ -245,7 +246,13 @@ export class BingMapService implements MapService {
      * @memberof MapService
      */
     public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
-        throw('Not Implemented.')
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
+            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
+            const poly: Microsoft.Maps.Polyline = new Microsoft.Maps.Polyline(locs[0], o);
+            map.entities.push(poly);
+            return new BingPolyline(poly);
+        });
     }
 
     /**

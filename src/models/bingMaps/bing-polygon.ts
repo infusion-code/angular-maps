@@ -20,6 +20,7 @@ export class BingPolygon implements Polygon {
     ///
     /// Property declarations
     ///
+    
     /**
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Polygon}
      *
@@ -38,7 +39,7 @@ export class BingPolygon implements Polygon {
      * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
      *
      * @memberof BingPolygon
-     */  
+     */
     constructor(private _polygon: Microsoft.Maps.Polygon) { }
 
     /**
@@ -50,7 +51,7 @@ export class BingPolygon implements Polygon {
      * @memberof BingPolygon
      */
     public AddListener(eventType: string, fn: Function): void {
-      Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
+        Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
             fn(e);
         });
     }
@@ -103,7 +104,7 @@ export class BingPolygon implements Polygon {
     public GetPath(): Array<ILatLong> {
         const p: Array<Microsoft.Maps.Location> = this._polygon.getLocations();
         const path: Array<ILatLong> = new Array<ILatLong>();
-        p.forEach(l => path.push({ latitude: l.latitude, longitude: l.longitude}));
+        p.forEach(l => path.push({ latitude: l.latitude, longitude: l.longitude }));
         return path;
     }
 
@@ -119,7 +120,7 @@ export class BingPolygon implements Polygon {
         const paths: Array<Array<ILatLong>> = new Array<Array<ILatLong>>();
         p.forEach(x => {
             const path: Array<ILatLong> = new Array<ILatLong>();
-            x.forEach(y => path.push({ latitude: y.latitude, longitude: y.longitude}));
+            x.forEach(y => path.push({ latitude: y.latitude, longitude: y.longitude }));
             paths.push(path);
         });
         return paths;
@@ -184,7 +185,7 @@ export class BingPolygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetPath(path: Array<ILatLong>): void {
-        if(!this._isEditable) throw ("Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.");
+        if (!this._isEditable) throw ("Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.");
 
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
@@ -199,7 +200,7 @@ export class BingPolygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetPaths(paths: Array<Array<ILatLong>> | Array<ILatLong>): void {
-        if(!this._isEditable) throw ("Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.");
+        if (!this._isEditable) throw ("Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.");
         if (paths == null) { return; }
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {

@@ -6,6 +6,7 @@ import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
 import { IInfoWindowAction } from './../../interfaces/iinfowindowaction';
 import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
 import { IPoint } from './../../interfaces/ipoint';
 import { MapTypeId } from './../../models/maptypeid';
 import { Marker } from './../../models/marker';
@@ -148,6 +149,22 @@ export class BingConversions {
         'cursor',
         'fillColor',
         'fillOpacity',
+        'strokeColor',
+        'strokeOpacity',
+        'strokeWeight',
+        'visible'
+    ];
+
+    /**
+     * Polyline option attributes that are supported for conversion to Bing Map Polyline properties
+     *
+     * @private
+     * @static
+     * @type {string[]}
+     * @memberof BingConversions
+     */
+    private static _polylineOptionsAttributes: string[] = [
+        'cursor',
         'strokeColor',
         'strokeOpacity',
         'strokeWeight',
@@ -463,8 +480,8 @@ export class BingConversions {
                     else{
                         o.strokeColor = options.strokeColor;
                     }
-                } else if (k === 'strokeColor') {    
-                } else if (k === 'strokeOpacity') {
+                } else if (k === 'strokeOpacity') {    
+                } else if (k === 'fillColor') {
                     if(options.fillOpacity){
                         o.fillColor = f(options.fillColor, options.fillOpacity);;;
                     }
@@ -476,7 +493,56 @@ export class BingConversions {
                     o[k] = (<any>options)[k];
                 }
             });
+        return o;
+    }
 
+    /**
+     *  Maps an IPolylineOptions object to a Microsoft.Maps.IPolylineOptions.
+     *
+     * @static
+     * @param {IPolygonOptions} options - Object to be mapped.
+     * @returns {Microsoft.Maps.IPolylineOptions} - Mapped object.
+     *
+     * @memberof BingConversions
+     */
+    public static TranslatePolylineOptions(options: IPolylineOptions): Microsoft.Maps.IPolylineOptions{
+        const o: Microsoft.Maps.IPolylineOptions | any = {};
+        const f: (s:string, a:number) => string = (s, a) => {
+            let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
+            if (m.length > 3) {
+                a = a > 1 ? (a / 100) : a;
+                return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
+            }
+            else if(s[0] === '#') {
+                let x: number = Math.floor(a * 255);
+                let y: string = x.toString(16);
+                let z: string = s;
+                if (z.length > 7) { z = z.substr(0, 7); }
+                if (x < 16) { z = z + '0'; } 
+                return z + y; 
+            }   
+            else {
+                return s;
+            }
+        }; 
+        
+        Object.keys(options)
+            .filter(k => BingConversions._polylineOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'strokeWeight') {
+                    o.strokeThickness = options.strokeWeight;
+                } else if (k === 'strokeColor') {
+                    if(options.strokeOpacity){
+                        o.strokeColor = f(options.strokeColor, options.strokeOpacity);
+                    }
+                    else{
+                        o.strokeColor = options.strokeColor;
+                    }
+                } else if (k === 'strokeOpacity') {    
+                } else {
+                    o[k] = (<any>options)[k];
+                }
+            });
         return o;
     }
 

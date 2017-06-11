@@ -1,11 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../../interfaces/imarkeroptions';
 import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
 import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { Marker } from './../../models/marker';
 import { Polygon } from './../../models/polygon';
+import { Polyline } from './../../models/polyline';
 import { BingMarker } from './../../models/bingMaps/bing-marker';
 import { BingPolygon } from './../../models/bingMaps/bing-polygon';
+import { BingPolyline } from './../../models/bingMaps/bing-polyline';
 import { Layer } from './../../models/layer';
 import { MarkerTypeId } from './../../models/markertypeid';
 import { MapService } from './../mapservice';
@@ -66,8 +69,8 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the marker.
-     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {IPolygonOptions} options - Polygon options defining the polygon.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof LayerService
@@ -82,6 +85,29 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const polygon: Polygon = new BingPolygon(poly);
             l.AddEntity(polygon);
             return polygon;
+        });
+    }
+
+    /**
+     * Adds a polyline to the layer.
+     *
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolylineOptions} options - Polyline options defining the line.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof LayerService
+     */
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>{
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        return p.then((l: Layer) => {
+            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
+            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
+            const poly: Microsoft.Maps.Polyline = new Microsoft.Maps.Polyline(locs[0], o);
+            const polyline: Polyline = new BingPolyline(poly);
+            l.AddEntity(polyline);
+            return polyline;
         });
     }
 

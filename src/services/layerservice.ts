@@ -3,6 +3,7 @@ import { IMarkerOptions } from './../interfaces/imarkeroptions';
 import { IPolygonOptions } from './../interfaces/ipolygonoptions';
 import { Marker } from './../models/marker';
 import { Polygon } from './../models/polygon';
+import { Polyline } from './../models/polyline';
 import { Layer } from './../models/layer';
 import { MapLayerDirective } from './../components/maplayer';
 
@@ -44,13 +45,25 @@ export abstract class LayerService {
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the marker.
-     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolygonOptions} options - Polygon options defining the line.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof LayerService
      */
     public abstract CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>;
+
+    /**
+     * Adds a polyline to the layer.
+     *
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolylineOptions} options - Polyline options defining the marker.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof LayerService
+     */
+    public abstract CreatePolyline(layer: number, options: IPolygonOptions): Promise<Polyline>;
 
     /**
      * Deletes the layer

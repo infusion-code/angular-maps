@@ -2,8 +2,10 @@
 import { IMarkerOptions } from '../../interfaces/imarkeroptions';
 import { IClusterOptions } from './../../interfaces/iclusteroptions';
 import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
+import { Polyline } from '../../models/polyline';
 import { Layer } from '../../models/layer';
 import { ClusterLayerDirective } from '../../components/clusterlayer'
 import { ClusterService } from '../clusterservice';
@@ -30,11 +32,26 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @param {IPolygonOptions} options - Polygon options defining the marker.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
-     * @memberof BingClusterService
+     * @memberof GoogleClusterService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
         throw ("Polygons are not supported in clustering layers. You can only use markers.")
     }
+
+    /**
+     * Adds a polyline to the layer.
+     * 
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the line.
+     * @param {IPolylineOptions} options - Polyline options defining the line.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof GoogleClusterService
+     */
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>{
+        throw ("Polylines are not supported in clustering layers. You can only use markers.")
+    }
+    
 
     public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
         return Promise.resolve({});

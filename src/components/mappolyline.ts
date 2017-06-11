@@ -48,7 +48,9 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     ///
     /// Field declarations
     ///
+    private _inCustomLayer = false;
     private _id: number;
+    private _layerId: number;
     private _addedToService = false;
     private _events: Subscription[] = [];
 
@@ -269,6 +271,24 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      */
     public get IdAsString(): string { return this._id.toString(); }
 
+    /**
+     * Gets whether the polyline is in a custom layer. See {@link MapLayer}.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberof MapPolylineDirective
+     */
+    public get InCustomLayer(): boolean { return this._inCustomLayer; }
+
+    /**
+     * gets the id of the Layer the polyline belongs to.
+     *
+     * @readonly
+     * @type {number}
+     * @memberof MapPolylineDirective
+     */
+    public get LayerId(): number { return this._layerId; }
+
     ///
     /// Constructor
     ///
@@ -295,6 +315,13 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * @memberof MapPolylineDirective
      */
     ngAfterContentInit(): void {
+        if (this._containerRef.element.nativeElement.parentElement) {
+            const parentName: string = this._containerRef.element.nativeElement.parentElement.tagName;
+            if (parentName.toLowerCase() === 'x-map-layer') {
+                this._inCustomLayer = true;
+                this._layerId = Number(this._containerRef.element.nativeElement.parentElement.attributes['layerId']);
+            }
+        }
         if (!this._addedToService) {
             this._polylineService.AddPolyline(this);
             this._addedToService = true;
@@ -327,9 +354,9 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     ngOnDestroy() {
         this._polylineService.DeletePolyline(this);
         this._events.forEach((s) => s.unsubscribe());
-        ///
-        /// remove event subscriptions
-        ///
+            ///
+            /// remove event subscriptions
+            ///
     }
 
     ///

@@ -40,6 +40,7 @@ import { BingSpiderClusterMarker } from './src/models/bingMaps/bing-spidercluste
 import { BingInfoWindow } from './src/models/bingMaps/bing-infowindow';
 import { BingMarker } from './src/models/bingMaps/bing-marker';
 import { BingPolygon } from './src/models/bingMaps/bing-polygon';
+import { BingPolyline } from './src/models/bingMaps/bing-polyline';
 import { GoogleInfoWindow } from './src/models/google/google-infowindow';
 import { GoogleMarker } from './src/models/google/google-marker';
 import { GooglePolygon } from './src/models/google/google-polygon';
@@ -77,6 +78,7 @@ import { BingMarkerService } from './src/services/bingMaps/bing-marker.service';
 import { BingLayerService } from './src/services/bingMaps/bing-layer.service';
 import { BingClusterService } from './src/services/bingMaps/bing-cluster.service';
 import { BingPolygonService } from './src/services/bingMaps/bing-polygon.service';
+import { BingPolylineService } from './src/services/bingMaps/bing-polyline.service';
 import { GoogleClusterService } from './src/services/google/google-cluster.service';
 import { GoogleInfoBoxService } from './src/services/google/google-infobox.service';
 import { GoogleLayerService } from './src/services/google/google-layer.service';
@@ -102,8 +104,9 @@ export {
     MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
-    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, BingMarkerService, BingPolygonService,
-    BingMapAPILoader, BingLayerService, BingClusterService, BingLayer, BingMarker, BingInfoWindow, BingSpiderClusterMarker
+    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, 
+    BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader, 
+    BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingPolygon, BingInfoWindow, BingSpiderClusterMarker
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,

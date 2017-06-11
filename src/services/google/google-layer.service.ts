@@ -1,8 +1,10 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from '../../interfaces/imarkeroptions';
 import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
+import { Polyline } from '../../models/polyline';
 import { Layer } from '../../models/layer';
 import { MapLayerDirective } from '../../components/maplayer'
 import { LayerService } from '../layerservice';
@@ -33,18 +35,31 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
         return Promise.resolve({});
     };
 
-
     /**
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the marker.
-     * @param {IPolygonOptions} options - Polygon options defining the marker.
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {IPolygonOptions} options - Polygon options defining the polygon.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof GoogleLayerService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
+        return Promise.resolve({});
+    };
+
+    /**
+     * Adds a polyline to the layer.
+     *
+     * @abstract
+     * @param {number} layer - The id of the layer to which to add the polyline.
+     * @param {IPolylineOptions} options - Polyline options defining the polyline.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     *
+     * @memberof GoogleLayerService
+     */
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
         return Promise.resolve({});
     };
 

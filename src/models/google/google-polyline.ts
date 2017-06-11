@@ -18,11 +18,26 @@ export class GooglePolyline implements Polyline {
     ///
     /// Property declarations
     ///
-    public get NativePrimitve(): any { return this._polyline; }
+
+    /**
+     * Gets the native primitve implementing the marker, in this case {@link GoogleMApTypes.Polyline}
+     *
+     * @readonly
+     * @type {GoogleMApTypes.Polyline}
+     * @memberof GooglePolygon
+     */
+    public get NativePrimitve(): GoogleMapTypes.Polyline { return this._polyline; }
 
     ///
     /// constructor
     ///
+
+     /**
+     * Creates an instance of GooglePolygon.
+     * @param {GoogleMapTypes.Polyline} _polyline - The {@link GoogleMApTypes.Polyline} underlying the model.
+     *
+     * @memberof GooglePolyline
+     */   
     constructor(private _polyline: GoogleMapTypes.Polyline) { }
 
     /**
