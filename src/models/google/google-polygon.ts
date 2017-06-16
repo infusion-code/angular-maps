@@ -25,7 +25,7 @@ export class GooglePolygon implements Polygon {
      * @readonly
      * @type {GoogleMapTypes.Polygon}
      * @memberof GooglePolygon
-     */  
+     */
     public get NativePrimitve(): GoogleMapTypes.Polygon { return this._polygon; }
 
     ///
@@ -37,7 +37,7 @@ export class GooglePolygon implements Polygon {
      * @param {GoogleMapTypes.Polygon} _polygon - The {@link GoogleMapTypes.Polygon} underlying the model.
      *
      * @memberof GooglePolygon
-     */  
+     */
     constructor(private _polygon: GoogleMapTypes.Polygon) { }
 
     /**
@@ -177,7 +177,8 @@ export class GooglePolygon implements Polygon {
     /**
      * Set the polygon path or paths.
      *
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong} (or array of arrays) describing the polygons path(s).
+     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong}
+     * (or array of arrays) describing the polygons path(s).
      *
      * @memberof GooglePolygon
      */

@@ -25,6 +25,8 @@ import { GooglePolygon } from '../../models/google/google-polygon';
 import { GooglePolyline } from '../../models/google/google-polyline';
 import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from './../../models/google/google-marker';
+import { IBox } from '../../interfaces/ibox';
+import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
 
 declare var google: any;
 
@@ -268,6 +270,26 @@ export class GoogleMapService implements MapService {
     }
 
     /**
+     * Gets the geo coordinates of the map bounding box
+     *
+     * @returns {Promise<IBox>} - A promise that when fullfilled contains the goe location of the bounding box. See {@link IBox}.
+     *
+     * @memberof GoogleMapService
+     */
+    GetBounds(): Promise<IBox> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const box = map.getBounds();
+            return <IBox>{
+                maxLatitude: box.getNorthEast().lat(),
+                maxLongitude: box.getSouthWest().lng(),
+                minLatitude: box.getSouthWest().lat(),
+                minLongitude: box.getNorthEast().lng(),
+                padding: 0
+            };
+        });
+    }
+
+    /**
      * Gets the current zoom level of the map.
      *
      * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level.
@@ -348,10 +370,7 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public SetZoom(zoom: number): Promise<void> {
-        return Promise.resolve();
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => map.setView({
-        //     zoom: zoom
-        // }));
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => map.setZoom(zoom));
     }
 
     /**
@@ -359,16 +378,17 @@ export class GoogleMapService implements MapService {
      *
      * @template E - Generic type of the underlying event.
      * @param {string} eventName - The name of the event (e.g. 'click')
-     * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs.
+     * @returns {Observable<E>} - An observable of type E that fires when the event occurs.
      *
      * @memberof GoogleMapService
      */
     public SubscribeToMapEvent<E>(eventName: string): Observable<E> {
+        const eventNameTranslated = GoogleMapEventsLookup[eventName];
         return Observable.create((observer: Observer<E>) => {
             this._map.then((m: GoogleMapTypes.GoogleMap) => {
-                // Microsoft.Maps.Events.addHandler(m, eventName, (e: any) => {
-                //     this._zone.run(() => observer.next(e));
-                // });
+                m.addListener(eventNameTranslated, (e: any) => {
+                    this._zone.run(() => observer.next(e));
+                });
             });
         });
     }

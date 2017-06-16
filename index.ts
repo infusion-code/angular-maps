@@ -20,6 +20,7 @@ import { ISpiderClusterOptions } from './src/interfaces/ispiderclusteroptions';
 import { ILineOptions } from './src/interfaces/ilineoptions';
 import { IPolygonOptions } from './src/interfaces/ipolygonoptions';
 import { IPolylineOptions } from './src/interfaces/ipolylineoptions';
+import { IMapEventLookup } from './src/interfaces/Imapeventlookup';
 
 ///
 /// import module models
@@ -41,10 +42,12 @@ import { BingInfoWindow } from './src/models/bingMaps/bing-infowindow';
 import { BingMarker } from './src/models/bingMaps/bing-marker';
 import { BingPolygon } from './src/models/bingMaps/bing-polygon';
 import { BingPolyline } from './src/models/bingMaps/bing-polyline';
+import { BingMapEventsLookup } from './src/models/bingMaps/bing-events-lookup';
 import { GoogleInfoWindow } from './src/models/google/google-infowindow';
 import { GoogleMarker } from './src/models/google/google-marker';
 import { GooglePolygon } from './src/models/google/google-polygon';
 import { GooglePolyline } from './src/models/google/google-polyline';
+import { GoogleMapEventsLookup } from './src/models/google/google-events-lookup';
 
 ///
 /// import module components
@@ -70,7 +73,8 @@ import { MarkerService } from './src/services/markerservice';
 import { ClusterService } from './src/services/clusterservice';
 import { PolygonService } from './src/services/polygonservice';
 import { PolylineService } from './src/services/polylineservice';
-import { BingMapServiceFactory, BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bing-map.service.factory';
+import { BingMapServiceFactory,
+    BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bing-map.service.factory';
 import { BingMapService } from './src/services/bingMaps/bing-map.service';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bingMaps/bing-map.api-loader.service';
 import { BingInfoBoxService } from './src/services/bingMaps/bing-infobox.service';
@@ -99,14 +103,15 @@ export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
     IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions,
     MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
-    MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
-    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory,
-    MarkerService, InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
+    MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
+    ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory, MarkerService,
+    InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
-    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService, 
-    BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader, 
-    BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingPolygon, BingInfoWindow, BingSpiderClusterMarker
+    BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService,
+    BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader,
+    BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingPolygon,
+    BingInfoWindow, BingSpiderClusterMarker
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,

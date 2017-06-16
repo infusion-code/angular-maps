@@ -29,6 +29,9 @@ import { IMarkerIconInfo } from './../../interfaces/imarkericoninfo';
 import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
 import { IPolygonOptions } from './../../interfaces/ipolygonoptions';
 import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
+import { IBox } from '../../interfaces/ibox';
+
+import { BingMapEventsLookup } from '../../models/bingMaps/bing-events-lookup';
 
 /**
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
@@ -39,7 +42,6 @@ import { IPolylineOptions } from './../../interfaces/ipolylineoptions';
  */
 @Injectable()
 export class BingMapService implements MapService {
-
     ///
     /// Field Declarations
     ///
@@ -219,11 +221,11 @@ export class BingMapService implements MapService {
 
     /**
      * Creates a polygon within the Bing Maps V8 map context
-     * 
+     *
      * @abstract
      * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
      * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
-     * 
+     *
      * @memberof MapService
      */
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
@@ -238,11 +240,11 @@ export class BingMapService implements MapService {
 
     /**
      * Creates a polyline within the Bing Maps V8 map context
-     * 
+     *
      * @abstract
      * @param {IPolylinenOptions} options - Options for the polyline. See {@link IPolylineOptions}.
      * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polygon.
-     * 
+     *
      * @memberof MapService
      */
     public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
@@ -300,6 +302,28 @@ export class BingMapService implements MapService {
             return <ILatLong>{
                 latitude: center.latitude,
                 longitude: center.longitude
+            };
+        });
+    }
+
+    /**
+     * Gets the geo coordinates of the map bounding box
+     *
+     * @returns {Promise<IBox>} - A promise that when fullfilled contains the goe location of the bounding box. See {@link IBox}.
+     *
+     * @memberof BingMapService
+     */
+    GetBounds(): Promise<IBox> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            const box = map.getBounds();
+            const halfWidth = (box.width / 2);
+            const halfHeight = (box.height / 2);
+            return <IBox>{
+                maxLatitude: box.center.latitude + halfWidth,
+                maxLongitude: box.center.longitude + halfHeight,
+                minLatitude: box.center.latitude - halfWidth,
+                minLongitude: box.center.longitude - halfHeight,
+                padding: 0
             };
         });
     }
@@ -401,9 +425,10 @@ export class BingMapService implements MapService {
      * @memberof BingMapService
      */
     public SubscribeToMapEvent<E>(eventName: string): Observable<E> {
+        const eventNameTranslated = BingMapEventsLookup[eventName];
         return Observable.create((observer: Observer<E>) => {
             this._map.then((m: Microsoft.Maps.Map) => {
-                Microsoft.Maps.Events.addHandler(m, eventName, (e: any) => {
+                Microsoft.Maps.Events.addHandler(m, eventNameTranslated, (e: any) => {
                     this._zone.run(() => observer.next(e));
                 });
             });

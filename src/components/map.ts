@@ -149,15 +149,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * This event emitter is fired when the map center changes.
-     *
-     * @type {EventEmitter<ILatLong>}
-     * @memberof MapComponent
-     */
-    @Output()
-    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
-
-    /**
      * This event emitter gets emitted when the user clicks on the map (but not when they click on a
      * marker or infoWindow).
      *
@@ -186,6 +177,54 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      */
     @Output()
     MapRightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    /**
+     * This event emitter gets emitted when the user double-clicks on the map (but not when they click
+     * on a marker or infoWindow).
+     *
+     * @type {EventEmitter<MouseEvent>}
+     * @memberof MapComponent
+     */
+    @Output()
+    MapMouseOver: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    /**
+     * This event emitter gets emitted when the user double-clicks on the map (but not when they click
+     * on a marker or infoWindow).
+     *
+     * @type {EventEmitter<MouseEvent>}
+     * @memberof MapComponent
+     */
+    @Output()
+    MapMouseOut: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    /**
+     * This event emitter gets emitted when the user double-clicks on the map (but not when they click
+     * on a marker or infoWindow).
+     *
+     * @type {EventEmitter<MouseEvent>}
+     * @memberof MapComponent
+     */
+    @Output()
+    MapMouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    /**
+     * This event emitter is fired when the map center changes.
+     *
+     * @type {EventEmitter<ILatLong>}
+     * @memberof MapComponent
+     */
+    @Output()
+    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
+
+    /**
+     * This event emitter is fired when the map center changes.
+     *
+     * @type {EventEmitter<ILatLong>}
+     * @memberof MapComponent
+     */
+    @Output()
+    BoundsChange: EventEmitter<IBox> = new EventEmitter<IBox>();
 
     /**
      * This event emiiter is fired when the map zoom changes
@@ -300,25 +339,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Delegate handling map center change events.
-     *
-     * @private
-     *
-     * @memberof MapComponent
-     */
-    private HandleMapCenterChange(): void {
-        this._mapService.SubscribeToMapEvent<void>('viewchangeend').subscribe(() => {
-            this._mapService.GetCenter().then((center: ILatLong) => {
-                if (this._latitude !== center.latitude || this._longitude !== center.longitude) {
-                    this._latitude = center.latitude;
-                    this._longitude = center.longitude;
-                    this.CenterChange.emit(<ILatLong>{ latitude: this._latitude, longitude: this._longitude });
-                }
-            });
-        });
-    }
-
-    /**
      * Delegate handling the map click events.
      *
      * @private
@@ -343,6 +363,49 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
         this._mapService.SubscribeToMapEvent<any>('rightclick').subscribe(e => {
             this.MapRightClick.emit(<MouseEvent>e);
         });
+        this._mapService.SubscribeToMapEvent<any>('mouseover').subscribe(e => {
+            this.MapMouseOver.emit(<MouseEvent>e);
+        });
+        this._mapService.SubscribeToMapEvent<any>('mouseout').subscribe(e => {
+            this.MapMouseOut.emit(<MouseEvent>e);
+        });
+        this._mapService.SubscribeToMapEvent<any>('mousemove').subscribe(e => {
+            this.MapMouseMove.emit(<MouseEvent>e);
+        });
+    }
+
+    /**
+     * Delegate handling map center change events.
+     *
+     * @private
+     *
+     * @memberof MapComponent
+     */
+    private HandleMapBoundsChange(): void {
+        this._mapService.SubscribeToMapEvent<void>('boundschanged').subscribe(() => {
+            this._mapService.GetBounds().then((bounds: IBox) => {
+                this.BoundsChange.emit(bounds);
+            });
+        });
+    }
+
+    /**
+     * Delegate handling map center change events.
+     *
+     * @private
+     *
+     * @memberof MapComponent
+     */
+    private HandleMapCenterChange(): void {
+        this._mapService.SubscribeToMapEvent<void>('centerchanged').subscribe(() => {
+            this._mapService.GetCenter().then((center: ILatLong) => {
+                if (this._latitude !== center.latitude || this._longitude !== center.longitude) {
+                    this._latitude = center.latitude;
+                    this._longitude = center.longitude;
+                    this.CenterChange.emit(<ILatLong>{ latitude: this._latitude, longitude: this._longitude });
+                }
+            });
+        });
     }
 
     /**
@@ -353,7 +416,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof MapComponent
      */
     private HandleMapZoomChange(): void {
-        this._mapService.SubscribeToMapEvent<void>('viewchangeend').subscribe(() => {
+        this._mapService.SubscribeToMapEvent<void>('zoomchanged').subscribe(() => {
             this._mapService.GetZoom().then((z: number) => {
                 if (this._zoom !== z) {
                     this._zoom = z;

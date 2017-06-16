@@ -14,6 +14,7 @@ import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
 import { Polyline } from '../models/polyline';
 import { InfoWindow } from '../models/infowindow'
+import { IBox } from "../interfaces/ibox";
 
 /**
  * Abstract class to implement map api. A concrete implementation should be created for each
@@ -110,7 +111,7 @@ export abstract class MapService {
      * @param {Layer} layer - Layer to delete. See {@link Layer}.
      * @returns {Promise<void>} - Promise fullfilled when the layer has been removed.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract DeleteLayer(layer: Layer): Promise<void>;
 
@@ -124,11 +125,20 @@ export abstract class MapService {
     abstract DisposeMap(): void;
 
     /**
+     * Gets the geo coordinates of the map bounds
+     *
+     * @returns {Promise<IBox>} - A promise that when fullfilled contains the bounding box of the screen. See {@link IBox}.
+     *
+     * @memberof MapService
+     */
+    abstract GetBounds(): Promise<IBox>;
+
+    /**
      * Gets the geo coordinates of the map center
      *
      * @returns {Promise<ILatLong>} - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract GetCenter(): Promise<ILatLong>;
 
@@ -137,7 +147,7 @@ export abstract class MapService {
      *
      * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract GetZoom(): Promise<number>;
 
@@ -148,7 +158,7 @@ export abstract class MapService {
      * @returns {Promise<IPoint>} - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
      * if the goe coordinates are not in the view port.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract LocationToPoint(loc: ILatLong): Promise<IPoint>;
 
@@ -157,7 +167,7 @@ export abstract class MapService {
      *
      * @readonly
      * @type {any}
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract get MapInstance(): any;
 
@@ -166,7 +176,7 @@ export abstract class MapService {
      * are not sure if and when the instance will be created.
      * @readonly
      * @type {Promise<any>}
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract get MapPromise(): Promise<any>;
 
@@ -176,7 +186,7 @@ export abstract class MapService {
      * @param {ILatLong} latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
      * @returns {Promise<void>} - Promise that is fullfilled when the center operations has been completed.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract SetCenter(latLng: ILatLong): Promise<void>;
 
@@ -185,7 +195,7 @@ export abstract class MapService {
      *
      * @param {IMapOptions} options - Options to set.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract SetMapOptions(options: IMapOptions): void;
 
@@ -204,7 +214,7 @@ export abstract class MapService {
      * @param {number} zoom - Zoom level to set.
      * @returns {Promise<void>} - A Promise that is fullfilled once the zoom operation is complete.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract SetZoom(zoom: number): Promise<void>;
 
@@ -215,7 +225,7 @@ export abstract class MapService {
      * @param {string} eventName - The name of the event (e.g. 'click')
      * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract SubscribeToMapEvent<E>(eventName: string): Observable<E>;
 
@@ -225,7 +235,7 @@ export abstract class MapService {
      * @param {string} eventName - Event to trigger.
      * @returns {Promise<void>} - A promise that is fullfilled once the event is triggered.
      *
-     * @memberof BingMapService
+     * @memberof MapService
      */
     abstract TriggerMapEvent(eventName: string): Promise<void>;
 }
