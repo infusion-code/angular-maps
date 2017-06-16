@@ -218,9 +218,9 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
 
     /**
-     * This event emitter is fired when the map center changes.
+     * This event emitter is fired when the map bounding box changes.
      *
-     * @type {EventEmitter<ILatLong>}
+     * @type {EventEmitter<IBox>}
      * @memberof MapComponent
      */
     @Output()
@@ -441,6 +441,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
         if (this._box != null) { this._options.bounds = this._box; }
         this._mapPromise = this._mapService.CreateMap(el, this._options);
         this.HandleMapCenterChange();
+        this.HandleMapBoundsChange();
         this.HandleMapZoomChange();
         this.HandleMapClickEvents();
     }

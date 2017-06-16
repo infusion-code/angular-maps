@@ -14,7 +14,7 @@ import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
 import { Polyline } from '../models/polyline';
 import { InfoWindow } from '../models/infowindow'
-import { IBox } from "../interfaces/ibox";
+import { IBox } from '../interfaces/ibox';
 
 /**
  * Abstract class to implement map api. A concrete implementation should be created for each

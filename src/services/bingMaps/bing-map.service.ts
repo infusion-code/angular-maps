@@ -313,7 +313,7 @@ export class BingMapService implements MapService {
      *
      * @memberof BingMapService
      */
-    GetBounds(): Promise<IBox> {
+    public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
             const halfWidth = (box.width / 2);

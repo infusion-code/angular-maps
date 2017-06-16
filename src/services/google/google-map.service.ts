@@ -272,11 +272,11 @@ export class GoogleMapService implements MapService {
     /**
      * Gets the geo coordinates of the map bounding box
      *
-     * @returns {Promise<IBox>} - A promise that when fullfilled contains the goe location of the bounding box. See {@link IBox}.
+     * @returns {Promise<IBox>} - A promise that when fullfilled contains the geo location of the bounding box. See {@link IBox}.
      *
      * @memberof GoogleMapService
      */
-    GetBounds(): Promise<IBox> {
+    public GetBounds(): Promise<IBox> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
             const box = map.getBounds();
             return <IBox>{
