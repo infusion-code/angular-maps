@@ -149,6 +149,24 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
+     * This event emitter is fired when the map bounding box changes.
+     *
+     * @type {EventEmitter<IBox>}
+     * @memberof MapComponent
+     */
+    @Output()
+    BoundsChange: EventEmitter<IBox> = new EventEmitter<IBox>();
+
+    /**
+     * This event emitter is fired when the map center changes.
+     *
+     * @type {EventEmitter<ILatLong>}
+     * @memberof MapComponent
+     */
+    @Output()
+    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
+
+    /**
      * This event emitter gets emitted when the user clicks on the map (but not when they click on a
      * marker or infoWindow).
      *
@@ -207,24 +225,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      */
     @Output()
     MapMouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
-
-    /**
-     * This event emitter is fired when the map center changes.
-     *
-     * @type {EventEmitter<ILatLong>}
-     * @memberof MapComponent
-     */
-    @Output()
-    CenterChange: EventEmitter<ILatLong> = new EventEmitter<ILatLong>();
-
-    /**
-     * This event emitter is fired when the map bounding box changes.
-     *
-     * @type {EventEmitter<IBox>}
-     * @memberof MapComponent
-     */
-    @Output()
-    BoundsChange: EventEmitter<IBox> = new EventEmitter<IBox>();
 
     /**
      * This event emiiter is fired when the map zoom changes

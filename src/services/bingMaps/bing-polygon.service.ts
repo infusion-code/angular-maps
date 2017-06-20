@@ -43,7 +43,7 @@ export class BingPolygonService implements PolygonService {
         private _zone: NgZone) {
     }
 
-/**
+    /**
      * Adds a polygon to a map. Depending on the polygon context, the polygon will either by added to the map or a
      * correcsponding layer.
      *

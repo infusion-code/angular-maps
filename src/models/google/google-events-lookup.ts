@@ -1,5 +1,10 @@
 import { IMapEventLookup } from '../../interfaces/Imapeventlookup';
 
+/**
+ * This contstant translates the abstract map events into their corresponding google map
+ * equivalents.
+ * @implements {IMapEventLookup}
+ */
 export const GoogleMapEventsLookup: IMapEventLookup = {
     click :         'click',
     dblclick :      'dblclick',
