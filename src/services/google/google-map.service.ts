@@ -1,4 +1,5 @@
-﻿import { GoogleInfoWindow } from './../../models/google/google-infowindow';
+﻿import { GoogleMarkerClusterer } from './../../models/google/google-markerClusterer';
+import { GoogleInfoWindow } from './../../models/google/google-infowindow';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
@@ -27,6 +28,7 @@ import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from './../../models/google/google-marker';
 
 declare var google: any;
+declare var MarkerClusterer: any;
 
 /**
  * Concrete implementation of the MapService abstract implementing a Google Maps provider
@@ -99,21 +101,10 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
-        return Promise.resolve({});
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-        //     let p: Promise<Layer> = new Promise<Layer>( resolve => {
-        //         Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', () => {
-        //             let o:Microsoft.Maps.IClusterLayerOptions = GoogleConversions.TranslateClusterOptions(options);
-        //             let layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer( new Array<Microsoft.Maps.Pushpin>(), o);
-        //             let bl:GoogleClusterLayer;
-        //             map.layers.insert(layer);
-        //             bl = new GoogleClusterLayer(layer, this);
-        //             bl.SetOptions(options);
-        //             resolve(bl);
-        //         });
-        //     });
-        //     return p;
-        // });
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
+            return new GoogleMarkerClusterer(markerClusterer)
+        });
     }
 
     /**
@@ -305,10 +296,10 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public SetCenter(latLng: ILatLong): Promise<void> {
-        return Promise.resolve();
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => map.setView({
-        //     center: GoogleConversions.TranslateLocation(latLng)
-        // }));
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const center: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(latLng);
+            map.setCenter(center);
+        });
     }
 
     /**
@@ -320,7 +311,7 @@ export class GoogleMapService implements MapService {
      */
     public SetMapOptions(options: IMapOptions) {
         this._map.then((m: GoogleMapTypes.GoogleMap) => {
-            const o = GoogleConversions.TranslateOptions(options);
+            const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(options);
             m.setOptions(o);
         });
     }
@@ -333,10 +324,10 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public SetViewOptions(options: IMapOptions) {
-        // this._map.then((m: GoogleMapTypes.GoogleMap) => {
-        //     let o: Microsoft.Maps.IViewOptions = GoogleConversions.TranslateViewOptions(options);
-        //     m.setView(o);
-        // });
+        this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(options);
+            m.setOptions(o);
+        });
     }
 
     /**
@@ -348,10 +339,7 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public SetZoom(zoom: number): Promise<void> {
-        return Promise.resolve();
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => map.setView({
-        //     zoom: zoom
-        // }));
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => map.setZoom(zoom));
     }
 
     /**
@@ -364,11 +352,12 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public SubscribeToMapEvent<E>(eventName: string): Observable<E> {
+        const googleEventName: string = GoogleConversions.TranslateMapEvent(eventName);
         return Observable.create((observer: Observer<E>) => {
             this._map.then((m: GoogleMapTypes.GoogleMap) => {
-                // Microsoft.Maps.Events.addHandler(m, eventName, (e: any) => {
-                //     this._zone.run(() => observer.next(e));
-                // });
+                m.addListener(googleEventName, () => {
+                    return observer.next(null);
+                });
             });
         });
     }
@@ -382,8 +371,7 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public TriggerMapEvent(eventName: string): Promise<void> {
-        return Promise.resolve();
-        // return this._map.then((m) => Microsoft.Maps.Events.invoke(m, eventName, null));
+        return this._map.then((m) => google.maps.event.trigger(m, eventName, null));
     }
 
 }
