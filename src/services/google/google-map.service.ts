@@ -281,9 +281,9 @@ export class GoogleMapService implements MapService {
             const box = map.getBounds();
             return <IBox>{
                 maxLatitude: box.getNorthEast().lat(),
-                maxLongitude: box.getSouthWest().lng(),
+                maxLongitude: box.getNorthEast().lng(),
                 minLatitude: box.getSouthWest().lat(),
-                minLongitude: box.getNorthEast().lng(),
+                minLongitude: box.getSouthWest().lng(),
                 padding: 0
             };
         });
