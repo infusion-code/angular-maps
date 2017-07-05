@@ -319,10 +319,15 @@ export class BingMapService implements MapService {
             const halfWidth = (box.width / 2);
             const halfHeight = (box.height / 2);
             return <IBox>{
-                maxLatitude: box.center.latitude + halfWidth,
-                maxLongitude: box.center.longitude + halfHeight,
-                minLatitude: box.center.latitude - halfWidth,
-                minLongitude: box.center.longitude - halfHeight,
+                maxLatitude: box.center.latitude + halfWidth > 180 ?
+                    box.center.latitude - halfWidth : box.center.latitude + halfWidth,
+                maxLongitude: box.center.longitude + halfHeight > 90 ?
+                    box.center.longitude - halfHeight : box.center.longitude + halfHeight,
+                minLatitude: box.center.latitude - halfWidth < -180 ?
+                    box.center.latitude + halfWidth : box.center.latitude - halfWidth,
+                minLongitude: box.center.longitude - halfHeight < -90 ?
+                    box.center.longitude + halfHeight : box.center.longitude - halfHeight,
+                center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
         });
