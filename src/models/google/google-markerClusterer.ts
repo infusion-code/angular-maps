@@ -1,8 +1,6 @@
 import { GoogleMarker } from './google-marker';
 import { IClusterOptions } from '../../interfaces/iclusteroptions';
 import { ISpiderClusterOptions } from '../../interfaces/ispiderclusteroptions';
-import { BingConversions } from '../../services/bingMaps/bingconversions';
-import { BingMapService } from '../../services/bingMaps/bingmapservice';
 import { MapService } from '../../services/mapservice';
 import { Layer } from '../layer';
 import { Marker } from '../marker';
@@ -382,27 +380,33 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     // private OnLayerClick(e: Microsoft.Maps.IMouseEventArgs): void {
-    //     // if (e.primitive instanceof Microsoft.Maps.ClusterPushpin) {
-    //     //     const cp: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.primitive;
-    //     //     const showNewCluster: boolean = cp !== this._currentCluster;
-    //     //     this.HideSpiderCluster();
-    //     //     if (showNewCluster) {
-    //     //         this.ShowSpiderCluster(<Microsoft.Maps.ClusterPushpin>e.primitive);
-    //     //     }
-    //     // } else {
-    //     //     const pin: Microsoft.Maps.Pushpin = <Microsoft.Maps.Pushpin>e.primitive;
-    //     //     if (pin.metadata && pin.metadata.isClusterMarker) {
-    //     //         const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
-    //     //         const p: BingMarker = m.ParentMarker;
-    //     //         const ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
-    //     //         if (this._spiderOptions.markerSelected) { this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster)); }
-    //     //         if (Microsoft.Maps.Events.hasHandler(ppin, 'click')) { Microsoft.Maps.Events.invoke(ppin, 'click', e); }
-    //     //         this._mapclicks = 0;
-    //     //     } else {
-    //     //         if (this._spiderOptions.markerSelected) { this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null); }
-    //     //         if (Microsoft.Maps.Events.hasHandler(pin, 'click')) { Microsoft.Maps.Events.invoke(pin, 'click', e); }
-    //     //     }
-    //     // }
+    //     if (e.primitive instanceof Microsoft.Maps.ClusterPushpin) {
+    //         const cp: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.primitive;
+    //         const showNewCluster: boolean = cp !== this._currentCluster;
+    //         this.HideSpiderCluster();
+    //         if (showNewCluster) {
+    //             this.ShowSpiderCluster(<Microsoft.Maps.ClusterPushpin>e.primitive);
+    //         }
+    //     } else {
+    //         const pin: Microsoft.Maps.Pushpin = <Microsoft.Maps.Pushpin>e.primitive;
+    //         if (pin.metadata && pin.metadata.isClusterMarker) {
+    //             const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
+    //             const p: BingMarker = m.ParentMarker;
+    //             const ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
+    //             if (this._spiderOptions.markerSelected) {
+    //                 this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster));
+    //             }
+    //             if (Microsoft.Maps.Events.hasHandler(ppin, 'click')) {
+    //                 Microsoft.Maps.Events.invoke(ppin, 'click', e);
+    //             }
+    //             this._mapclicks = 0;
+    //         } else {
+    //             if (this._spiderOptions.markerSelected) {
+    //                 this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null);
+    //             }
+    //             if (Microsoft.Maps.Events.hasHandler(pin, 'click')) { Microsoft.Maps.Events.invoke(pin, 'click', e); }
+    //         }
+    //     }
     // }
 
     /**

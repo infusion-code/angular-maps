@@ -9,6 +9,10 @@ import { ClusterLayerDirective } from './../../components/clusterlayer'
 import { ClusterService } from './../clusterservice';
 import { MapService } from './../mapservice';
 import { GoogleLayerBase } from './google-layer-base';
+import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
+import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+import { Polygon } from '../../models/polygon';
+import { Polyline } from '../../models/polyline';
 
 @Injectable()
 export class GoogleClusterService extends GoogleLayerBase implements ClusterService {
@@ -88,7 +92,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      */
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
         const p: Promise<Layer> = this.GetLayerById(layer);
-        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
             return this._mapService.CreateMarker(options)
                 .then((marker: Marker) => {
@@ -136,6 +140,13 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
             }
         });
         return styles;
+    }
+
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
+        throw new Error('Method not implemented.');
+    }
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
+        throw new Error('Method not implemented.');
     }
 
 }
