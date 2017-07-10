@@ -1,3 +1,4 @@
+import { IClusterIconInfo } from './Iclustericoninfo';
 import { IPoint } from './ipoint';
 import { ILayerOptions } from './ilayeroptions';
 import { IMarkerIconInfo } from './imarkericoninfo';
@@ -15,6 +16,14 @@ import { ClusterPlacementMode } from '../models/clusterplacementmode';
 export interface IClusterOptions extends ILayerOptions {
 
         /**
+         * The average center of the cluser
+         *
+         * @type {boolean}
+         * @memberof IClusterOptions
+         */
+        averageCenter?: boolean;
+
+        /**
          * A callback function that is fired after the clustering for a map view has completed.
          * This is useful if you want to generate a list of locations based on what is in the current view.
          *
@@ -30,6 +39,22 @@ export interface IClusterOptions extends ILayerOptions {
          * @memberof IClusterOptions
          */
         clusterIconInfo?: IMarkerIconInfo;
+
+        /**
+         * The url of the cluster image
+         *
+         * @type {string}
+         * @memberof IClusterOptions
+         */
+        imagePath?: string;
+
+        /**
+         * The file extension of the cluster image
+         *
+         * @type {string}
+         * @memberof IClusterOptions
+         */
+        imageExtension?: string;
 
         /**
          * A callback function that allows you to process a clustered pushpin before it is added to a layer.
@@ -66,6 +91,22 @@ export interface IClusterOptions extends ILayerOptions {
         layerOffset?: IPoint;
 
         /**
+         * Maximum zoom level for the cluster
+         *
+         * @type {number}
+         * @memberof IClusterOptions
+         */
+        maxZoom?: number;
+
+        /**
+         * The minimum number of pins required to form a cluster
+         *
+         * @type {number}
+         * @memberof IClusterOptions
+         */
+        minimumClusterSize?: number;
+
+        /**
          * Determines the cluster placement mode
          *
          * @type {ClusterPlacementMode}
@@ -82,6 +123,14 @@ export interface IClusterOptions extends ILayerOptions {
         spiderClusterOptions?: ISpiderClusterOptions;
 
         /**
+         * Cluster image styles
+         *
+         * @type {Array<IClusterIconInfo>}
+         * @memberof IClusterOptions
+         */
+        styles?: Array<IClusterIconInfo>;
+
+        /**
          * A boolean indicating if the layer is visible or not.
          *
          * @type {boolean}
@@ -92,9 +141,17 @@ export interface IClusterOptions extends ILayerOptions {
         /**
          * The z-index of the layer.
          *
+                * @type {number}
+                * @memberof IClusterOptions
+         */
+        zIndex?: number;
+
+        /**
+         * Whether to zoom in on click.
+         *
          * @type {number}
          * @memberof IClusterOptions
          */
-        zIndex?: number;
+        zoomOnClick?: boolean;
 
 }

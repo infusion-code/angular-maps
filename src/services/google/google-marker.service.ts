@@ -46,9 +46,9 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof GoogleMarkerService
      */
     constructor(private _mapService: MapService,
-                private _layerService: LayerService,
-                private _clusterService: ClusterService,
-                private _zone: NgZone) {
+        private _layerService: LayerService,
+        private _clusterService: ClusterService,
+        private _zone: NgZone) {
     }
 
     /**
@@ -69,7 +69,19 @@ export class GoogleMarkerService implements MarkerService {
             width: marker.Width,
             height: marker.Height
         }
-        const markerPromise = this._mapService.CreateMarker(o);
+
+        if (marker.IconInfo && marker.IconInfo.markerType) {
+            o.icon = Marker.CreateMarker(marker.IconInfo);
+        }
+
+        // create marker via promise.
+        let markerPromise: Promise<Marker> = null;
+        if (marker.InClusterLayer) {
+            markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
+        } else {
+            markerPromise = this._mapService.CreateMarker(o);
+        }
+
         this._markers.set(marker, markerPromise);
     };
 
@@ -145,7 +157,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public GetNativeMarker(marker: MapMarkerDirective): Promise<Marker> {
-       return this._markers.get(marker);
+        return this._markers.get(marker);
     };
 
     /**
