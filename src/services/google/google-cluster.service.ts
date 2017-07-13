@@ -1,16 +1,16 @@
-﻿import { IClusterIconInfo } from '../../interfaces/Iclustericoninfo';
-import { MarkerService } from './../markerservice';
-import { IClusterOptions } from './../../interfaces/iclusteroptions';
+﻿import { IClusterIconInfo } from '../../interfaces/icluster-icon-info';
+import { MarkerService } from './../marker.service';
+import { IClusterOptions } from './../../interfaces/icluster-options';
 import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from './../../interfaces/imarkeroptions';
+import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { Marker } from './../../models/marker';
 import { Layer } from './../../models/layer';
-import { ClusterLayerDirective } from './../../components/clusterlayer'
-import { ClusterService } from './../clusterservice';
-import { MapService } from './../mapservice';
+import { ClusterLayerDirective } from './../../components/cluster-layer';
+import { ClusterService } from './../cluster.service';
+import { MapService } from './../map.service';
 import { GoogleLayerBase } from './google-layer-base';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
 

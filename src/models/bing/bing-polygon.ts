@@ -1,44 +1,46 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
-import { GoogleConversions } from '../../services/google/google-conversions';
-import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { BingConversions } from '../../services/bing/bing-conversions';
 import { Polygon } from '../polygon';
 
-declare var google: any;
-
 /**
- * Concrete implementation for a polygon model for Google Maps.
+ * Concrete implementation for a polygon model for Bing Maps V8.
  *
  * @export
  * @implements Polygon
- * @class GooglePolygon
+ * @class BingPolygon
  */
-export class GooglePolygon implements Polygon {
+export class BingPolygon implements Polygon {
+
+    ///
+    /// Field declarations
+    ///
+    private _isEditable: boolean = true;
 
     ///
     /// Property declarations
     ///
 
     /**
-     * Gets the native primitve implementing the marker, in this case {@link GoogleMapTypes.Polygon}
+     * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Polygon}
      *
      * @readonly
-     * @type {GoogleMapTypes.Polygon}
-     * @memberof GooglePolygon
+     * @type {*}
+     * @memberof BingPolygon
      */
-    public get NativePrimitve(): GoogleMapTypes.Polygon { return this._polygon; }
+    public get NativePrimitve(): any { return this._polygon; }
 
     ///
     /// constructor
     ///
 
     /**
-     * Creates an instance of GooglePolygon.
-     * @param {GoogleMapTypes.Polygon} _polygon - The {@link GoogleMapTypes.Polygon} underlying the model.
+     * Creates an instance of BingPolygon.
+     * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
-    constructor(private _polygon: GoogleMapTypes.Polygon) { }
+    constructor(private _polygon: Microsoft.Maps.Polygon) { }
 
     /**
      * Adds a delegate for an event.
@@ -46,19 +48,23 @@ export class GooglePolygon implements Polygon {
      * @param {string} eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
 
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public AddListener(eventType: string, fn: Function): void {
-        this._polygon.addListener(eventType, fn)
+        Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
+            fn(e);
+        });
     }
 
     /**
      * Deleted the polygon.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public Delete(): void {
-        this._polygon.setMap(null);
+        const o: Microsoft.Maps.IPolygonOptions = {};
+        o.visible = false;
+        this._polygon.setOptions(o);
     }
 
     /**
@@ -66,10 +72,15 @@ export class GooglePolygon implements Polygon {
      *
      * @returns {boolean} - True if the polygon is dragable, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public GetDraggable(): boolean {
-        return this._polygon.getDraggable();
+        ///
+        /// Bing polygons are not draggable by default.
+        /// See https://social.msdn.microsoft.com/Forums/en-US/7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8?forum=bingmaps
+        /// for a possible approach to be implemented in the model.
+        ///
+        return false;
     }
 
     /**
@@ -77,10 +88,10 @@ export class GooglePolygon implements Polygon {
      *
      * @returns {boolean} - True if the path can be edited, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public GetEditable(): boolean {
-        return this._polygon.getEditable();
+        return this._isEditable;
     }
 
     /**
@@ -88,12 +99,12 @@ export class GooglePolygon implements Polygon {
      *
      * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polygon path.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public GetPath(): Array<ILatLong> {
-        const p: Array<GoogleMapTypes.LatLng> = this._polygon.getPath();
+        const p: Array<Microsoft.Maps.Location> = this._polygon.getLocations();
         const path: Array<ILatLong> = new Array<ILatLong>();
-        p.forEach(x => path.push({ latitude: x.lat(), longitude: x.lng() }));
+        p.forEach(l => path.push({ latitude: l.latitude, longitude: l.longitude }));
         return path;
     }
 
@@ -102,14 +113,14 @@ export class GooglePolygon implements Polygon {
      *
      * @returns {Array<Array<ILatLong>>} - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public GetPaths(): Array<Array<ILatLong>> {
-        const p: Array<Array<GoogleMapTypes.LatLng>> = this._polygon.getPaths();
+        const p: Array<Array<Microsoft.Maps.Location>> = this._polygon.getRings();
         const paths: Array<Array<ILatLong>> = new Array<Array<ILatLong>>();
         p.forEach(x => {
             const path: Array<ILatLong> = new Array<ILatLong>();
-            x.forEach(y => path.push({ latitude: y.lat(), longitude: y.lng() }));
+            x.forEach(y => path.push({ latitude: y.latitude, longitude: y.longitude }));
             paths.push(path);
         });
         return paths;
@@ -120,7 +131,7 @@ export class GooglePolygon implements Polygon {
      *
      * @returns {boolean} - True if the polygon is visible, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public GetVisible(): boolean {
         return this._polygon.getVisible();
@@ -131,10 +142,15 @@ export class GooglePolygon implements Polygon {
      *
      * @param {boolean} draggable - True to make the polygon dragable, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public SetDraggable(draggable: boolean): void {
-        this._polygon.setDraggable(draggable);
+        ///
+        /// Bing polygons are not draggable by default.
+        /// See https://social.msdn.microsoft.com/Forums/en-US/7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8?forum=bingmaps
+        /// for a possible approach to be implemented in the model.
+        ///
+        throw(new Error('The bing maps implementation currently does not support draggable polygons.'));
     }
 
     /**
@@ -142,10 +158,10 @@ export class GooglePolygon implements Polygon {
      *
      * @param {boolean} editable - True to make polygon path editable, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public SetEditable(editable: boolean): void {
-        this._polygon.setEditable(editable);
+        this._isEditable = editable;
     }
 
     /**
@@ -154,10 +170,10 @@ export class GooglePolygon implements Polygon {
      * @param {IPolygonOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
-     * @memberof GooglePolygon
+     * @memberof Polygon
      */
     public SetOptions(options: IPolygonOptions): void {
-        const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
+        const o: Microsoft.Maps.IPolygonOptions = BingConversions.TranslatePolygonOptions(options);
         this._polygon.setOptions(o);
     }
 
@@ -166,38 +182,44 @@ export class GooglePolygon implements Polygon {
      *
      * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public SetPath(path: Array<ILatLong>): void {
-        const p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
-        path.forEach(x => p.push(new google.maps.LatLng(x.latitude, x.longitude)));
-        this._polygon.setPath(p);
+        if (!this._isEditable) {
+            throw(new Error('Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.'));
+        }
+        const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
+        path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+        this._polygon.setLocations(p);
     }
 
     /**
      * Set the polygon path or paths.
      *
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong}
-     * (or array of arrays) describing the polygons path(s).
+     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths
+     * An Array of {@link ILatLong} (or array of arrays) describing the polygons path(s).
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public SetPaths(paths: Array<Array<ILatLong>> | Array<ILatLong>): void {
+        if (!this._isEditable) {
+            throw(new Error('Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.'));
+        }
         if (paths == null) { return; }
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {
-            this._polygon.setPaths(new Array<GoogleMapTypes.LatLng>());
+            this._polygon.setRings(new Array<Microsoft.Maps.Location>());
             return;
         }
         if (Array.isArray(paths[0])) {
             // parameter is an array or arrays
-            const p: Array<Array<GoogleMapTypes.LatLng>> = new Array<Array<GoogleMapTypes.LatLng>>();
+            const p: Array<Array<Microsoft.Maps.Location>> = new Array<Array<Microsoft.Maps.Location>>();
             (<Array<Array<ILatLong>>>paths).forEach(path => {
-                const _p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
-                path.forEach(x => _p.push(new google.maps.LatLng(x.latitude, x.longitude)));
+                const _p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
+                path.forEach(x => _p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
                 p.push(_p);
             });
-            this._polygon.setPaths(p);
+            this._polygon.setRings(p);
         } else {
             // parameter is a simple array....
             this.SetPath(<Array<ILatLong>>paths);
@@ -209,10 +231,10 @@ export class GooglePolygon implements Polygon {
      *
      * @param {boolean} visible - True to set the polygon visible, false otherwise.
      *
-     * @memberof GooglePolygon
+     * @memberof BingPolygon
      */
     public SetVisible(visible: boolean): void {
-        this._polygon.setVisible(visible);
+        this._polygon.setOptions(<Microsoft.Maps.IPolygonOptions>{ visible: visible });
     }
 
 }

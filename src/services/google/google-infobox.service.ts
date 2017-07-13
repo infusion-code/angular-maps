@@ -1,12 +1,12 @@
-﻿import { GoogleMarker } from './../../models/google/google-marker';
-import { MarkerService } from './../markerservice';
-import { MapService } from './../mapservice';
-import { GoogleInfoWindow } from './../../models/google/google-infowindow';
-import { Injectable, NgZone } from '@angular/core';
+﻿import { Injectable, NgZone } from '@angular/core';
 import { InfoBoxComponent } from './../../components/infobox';
-import { IInfoWindowOptions } from './../../interfaces/iinfowindowoptions';
+import { GoogleInfoWindow } from './../../models/google/google-info-window';
+import { GoogleMarker } from './../../models/google/google-marker';
+import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { ILatLong } from './../../interfaces/ilatlong';
-import { InfoBoxService } from './../infoboxservice';
+import { InfoBoxService } from './../infobox.service';
+import { MarkerService } from './../marker.service';
+import { MapService } from './../map.service';
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {

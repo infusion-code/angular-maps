@@ -1,22 +1,24 @@
-import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { Subject } from 'rxjs/Subject';
+import { ILatLong } from './../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { Polygon } from '../../models/polygon';
 import { MapPolygonDirective } from '../../components/map-polygon';
 import { PolygonService } from '../polygon.service';
 import { MapService } from '../map.service';
 import { LayerService } from '../layer.service';
+
 /**
- * Concrete implementation of the Polygon Service abstract class for Google Maps.
+ * Concrete implementation of the Polygon Service abstract class for Bing Maps V8.
  *
  * @export
- * @class GooglePolygonService
+ * @class BingPolygonService
  * @implements {PolygonService}
  */
 @Injectable()
-export class GooglePolygonService implements PolygonService {
+export class BingPolygonService implements PolygonService {
 
     ///
     /// Field declarations
@@ -28,22 +30,18 @@ export class GooglePolygonService implements PolygonService {
     ///
 
     /**
-     * Creates an instance of GooglePolygonService.
-     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
-     * @param {LayerService} _layerService - {@link GoogleLayerService} instance.
-     * The concrete {@link GoogleLayerService} implementation is expected.
+     * Creates an instance of BingPolygonService.
+     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link BingMapService} implementation is expected.
+     * @param {LayerService} _layerService - {@link BingLayerService} instance.
+     * The concrete {@link BingLayerService} implementation is expected.
      * @param {NgZone} _zone - NgZone instance to support zone aware promises.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     constructor(private _mapService: MapService,
         private _layerService: LayerService,
         private _zone: NgZone) {
     }
-
-    ///
-    /// Public members and MarkerService implementation
-    ///
 
     /**
      * Adds a polygon to a map. Depending on the polygon context, the polygon will either by added to the map or a
@@ -51,7 +49,7 @@ export class GooglePolygonService implements PolygonService {
      *
      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} to be added.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     public AddPolygon(polygon: MapPolygonDirective): void {
         const o: IPolygonOptions = {
@@ -69,7 +67,12 @@ export class GooglePolygonService implements PolygonService {
             visible: polygon.Visible,
             zIndex: polygon.zIndex,
         }
-        const polygonPromise: Promise<Polygon> = this._mapService.CreatePolygon(o);
+        let polygonPromise: Promise<Polygon>;
+        if (polygon.InCustomLayer) {
+            polygonPromise = this._layerService.CreatePolygon(polygon.LayerId, o);
+        } else {
+            polygonPromise = this._mapService.CreatePolygon(o);
+        }
         this._polygons.set(polygon, polygonPromise);
     }
 
@@ -81,9 +84,20 @@ export class GooglePolygonService implements PolygonService {
       * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to register the event.
       * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
       *
-      * @memberof GooglePolygonService
+      * @memberof BingPolygonService
       */
     public CreateEventObservable<T>(eventName: string, polygon: MapPolygonDirective): Observable<T> {
+        const b: Subject<T> = new Subject<T>();
+        if (eventName === 'mousemove') {
+            return b.asObservable();
+        }
+        if (eventName === 'rightclick') {
+            return b.asObservable();
+        }
+        ///
+        /// mousemove and rightclick are not supported by bing polygons.
+        ///
+
         return Observable.create((observer: Observer<T>) => {
             this._polygons.get(polygon).then((p: Polygon) => {
                 p.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
@@ -97,7 +111,7 @@ export class GooglePolygonService implements PolygonService {
       * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be deleted.
       * @returns {Promise<void>} - A promise fullfilled once the polygon has been deleted.
       *
-      * @memberof GooglePolygonService
+      * @memberof BingPolygonService
       */
     public DeletePolygon(polygon: MapPolygonDirective): Promise<void> {
         const m = this._polygons.get(polygon);
@@ -117,13 +131,14 @@ export class GooglePolygonService implements PolygonService {
      * Obtains geo coordinates for the polygon on the click location
      *
      * @abstract
-     * @param {(MouseEvent| any)} e - The mouse event.
+     * @param {(MouseEvent| any)} e - The mouse event. Expected to implement {@link Microsoft.Maps.IMouseEventArgs}.
      * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
-        return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
+        const x: Microsoft.Maps.IMouseEventArgs = <Microsoft.Maps.IMouseEventArgs>e;
+        return { latitude: x.location.latitude, longitude: x.location.longitude };
     };
 
     /**
@@ -132,7 +147,7 @@ export class GooglePolygonService implements PolygonService {
      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to obtain the polygon model.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the {@link Polygon} implementation of the underlying platform.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     public GetNativeMarker(polygon: MapPolygonDirective): Promise<Polygon> {
         return this._polygons.get(polygon);
@@ -146,7 +161,7 @@ export class GooglePolygonService implements PolygonService {
      * options already on the underlying object.
      * @returns {Promise<void>} - A promise fullfilled once the polygon options have been set.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     public SetOptions(polygon: MapPolygonDirective, options: IPolygonOptions): Promise<void> {
         return this._polygons.get(polygon).then((l: Polygon) => { l.SetOptions(options); });
@@ -158,7 +173,7 @@ export class GooglePolygonService implements PolygonService {
      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
      * @returns {Promise<void>} - A promise fullfilled once the polygon has been updated.
      *
-     * @memberof GooglePolygonService
+     * @memberof BingPolygonService
      */
     public UpdatePolygon(polygon: MapPolygonDirective): Promise<void> {
         const m = this._polygons.get(polygon);

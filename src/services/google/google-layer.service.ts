@@ -1,15 +1,15 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from '../../interfaces/imarkeroptions';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
 import { Layer } from '../../models/layer';
-import { MapLayerDirective } from '../../components/maplayer'
-import { LayerService } from '../layerservice';
+import { MapLayerDirective } from '../../components/map-layer'
+import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
-import { MapService } from '../mapservice';
+import { MapService } from '../map.service';
 
 @Injectable()
 export class GoogleLayerService extends GoogleLayerBase implements LayerService  {

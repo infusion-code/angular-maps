@@ -1,9 +1,9 @@
 ﻿import { ILatLong } from '../interfaces/ilatlong';
-import { IMarkerOptions } from '../interfaces/Imarkeroptions';
-import { IMarkerIconInfo } from '../interfaces/imarkericoninfo';
+import { IMarkerOptions } from '../interfaces/imarker-options';
+import { IMarkerIconInfo } from '../interfaces/imarker-icon-info';
 import { IPoint } from '../interfaces/ipoint';
 import { ISize } from '../interfaces/isize';
-import { MarkerTypeId } from '../models/markertypeid';
+import { MarkerTypeId } from '../models/marker-type-id';
 
 /**
  * This interface defines the contract for an icon cache entry.

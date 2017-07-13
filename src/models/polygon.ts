@@ -1,5 +1,5 @@
 import { ILatLong } from '../interfaces/ilatlong';
-import { IPolygonOptions } from '../interfaces/ipolygonoptions';
+import { IPolygonOptions } from '../interfaces/ipolygon-options';
 
 /**
  * Abstract class defining the contract for a polygon in the architecture specific implementation.

@@ -1,11 +1,11 @@
-﻿import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
-import { IMapOptions } from '../../interfaces/imapoptions';
-import { IMarkerOptions } from '../../interfaces/imarkeroptions';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+﻿import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
+import { IMapOptions } from '../../interfaces/imap-options';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import * as GoogleMapTypes from './google-map-types';
-import { MapTypeId } from '../../models/maptypeid';
+import { MapTypeId } from '../../models/map-type-id';
 
 declare var google: any;
 

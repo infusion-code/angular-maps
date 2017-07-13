@@ -1,5 +1,5 @@
 import { ILatLong } from '../interfaces/ilatlong';
-import { IPolylineOptions } from '../interfaces/ipolylineoptions';
+import { IPolylineOptions } from '../interfaces/ipolyline-options';
 
 /**
  * Abstract class defining the contract for a polyline in the architecture specific implementation.

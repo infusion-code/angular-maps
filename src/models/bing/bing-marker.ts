@@ -1,27 +1,28 @@
-import { GoogleConversions } from './../../services/google/google-conversions';
+﻿import { ILatLong } from './../../interfaces/ilatlong';
+import { IPoint } from './../../interfaces/ipoint';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { ILatLong } from './../../interfaces/ilatlong';
 import { Marker } from './../marker';
-import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { BingMapService } from './../../services/bing/bing-map.service';
+import { BingConversions } from './../../services/bing/bing-conversions';
 
 /**
- * Concrete implementation of the {@link Marker} contract for the Google Maps map architecture.
+ * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture.
  *
  * @export
- * @class GoogleMarker
+ * @class BingMarker
  * @implements {Marker}
  */
-export class GoogleMarker implements Marker {
+export class BingMarker implements Marker {
 
     ///
-    /// Field declarations
+    /// Field definitions
     ///
     private _metadata: Map<string, any> = new Map<string, any>();
     private _isFirst = false;
     private _isLast = true;
 
     ///
-    /// Public properties
+    /// Property definitions
     ///
 
     /**
@@ -43,6 +44,21 @@ export class GoogleMarker implements Marker {
     public set IsLast(val: boolean) { this._isLast = val; }
 
     /**
+     * Gets the Location of the marker
+     *
+     * @readonly
+     * @type {ILatLong}
+     * @memberof BingMarker
+     */
+    public get Location(): ILatLong {
+        const l: Microsoft.Maps.Location = this._pushpin.getLocation();
+        return {
+            latitude: l.latitude,
+            longitude: l.longitude
+        }
+    }
+
+    /**
      * Gets the marker metadata.
      *
      * @readonly
@@ -55,39 +71,22 @@ export class GoogleMarker implements Marker {
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Pushpin}
      *
      * @readonly
-     * @abstract
      * @type {*}
      * @memberof BingMarker
      */
-    public get NativePrimitve(): any { return this._marker; }
+    public get NativePrimitve(): any { return this._pushpin; }
+
+    ///
+    /// Constructor
+    ///
 
     /**
-     * Gets the Location of the marker
+     * Creates an instance of BingMarker.
+     * @param {Microsoft.Maps.Pushpin} _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model.
      *
-     * @readonly
-     * @abstract
-     * @type {ILatLong}
      * @memberof BingMarker
      */
-    public get Location(): ILatLong {
-        const l: GoogleMapTypes.LatLng = this._marker.getPosition();
-        return {
-            latitude: l.lat(),
-            longitude: l.lng()
-        }
-    }
-
-    ///
-    /// Constructors
-    ///
-
-    /**
-     * Creates an instance of GoogleMarker.
-     * @param {GoogleMapTypes.Marker} _marker
-     *
-     * @memberof GoogleMarker
-     */
-    constructor(private _marker: GoogleMapTypes.Marker) { }
+    constructor(private _pushpin: Microsoft.Maps.Pushpin) { }
 
     ///
     /// Public methods
@@ -96,114 +95,137 @@ export class GoogleMarker implements Marker {
     /**
      * Adds an event listener to the marker.
      *
+     * @abstract
      * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
      * @param {Function} fn - Delegate invoked when the event occurs.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public AddListener(eventType: string, fn: Function): void {
-        this._marker.addListener(eventType, fn);
+        Microsoft.Maps.Events.addHandler(this._pushpin, eventType, (e) => {
+            fn(e);
+        });
     }
 
     /**
      * Deletes the marker.
      *
+     * @abstract
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public DeleteMarker(): void {
-        this._marker.setVisible(false);
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        o.visible = false;
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Gets the marker label
      *
+     * @abstract
      * @returns {string}
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public GetLabel(): string {
-        return this._marker.getLabel().text;
+        return this._pushpin.getText();
     }
 
     /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
+     * @abstract
      * @param {IPoint} anchor - Point coordinates for the marker anchor.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
-    public SetAnchor(anchor: any): void {
-        // not implemented
+    public SetAnchor(anchor: IPoint): void {
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        o.anchor = new Microsoft.Maps.Point(anchor.x, anchor.y);
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the draggability of a marker.
      *
+     * @abstract
      * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public SetDraggable(draggable: boolean): void {
-        this._marker.setDraggable(draggable);
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        o.draggable = draggable;
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the icon for the marker.
      *
+     * @abstract
      * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public SetIcon(icon: string): void {
-        this._marker.setIcon(icon);
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        o.icon = icon;
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the marker label.
      *
+     * @abstract
      * @param {string} label - String containing the label to set.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public SetLabel(label: string): void {
-        this._marker.setLabel(label);
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        o.text = label;
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the marker position.
      *
+     * @abstract
      * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public SetPosition(latLng: ILatLong): void {
-        const p: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(latLng);
-        this._marker.setPosition(p);
+        const p: Microsoft.Maps.Location = BingConversions.TranslateLocation(latLng);
+        this._pushpin.setLocation(p);
     }
 
     /**
      * Sets the marker title.
      *
+     * @abstract
      * @param {string} title - String containing the title to set.
      *
-     * @memberof GoogleMarker
+     * @memberof BingMarker
      */
     public SetTitle(title: string): void {
-        this._marker.setTitle(title);
+        const o: Microsoft.Maps.IPushpinOptions | any = {};
+        o.title = title;
+        this._pushpin.setOptions(o);
     }
 
     /**
      * Sets the marker options.
      *
+     * @abstract
      * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
      * merged with the underlying marker options.
-     *
-     * @memberof GoogleMarker
+     * @memberof Marker
      */
     public SetOptions(options: IMarkerOptions): void {
-        const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(options);
-        this._marker.setOptions(o);
+        const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateOptions(options);
+        this._pushpin.setOptions(o);
     }
 
 }

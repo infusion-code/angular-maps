@@ -1,18 +1,18 @@
 import { IMapEventLookup } from '../../interfaces/imap-event-lookup';
 
 /**
- * This contstant translates the abstract map events into their corresponding google map
+ * This contstant translates the abstract map events into their corresponding bing map
  * equivalents.
  * @implements {IMapEventLookup}
  */
-export const GoogleMapEventsLookup: IMapEventLookup = {
+export const BingMapEventsLookup: IMapEventLookup = {
     click :         'click',
     dblclick :      'dblclick',
     rightclick :    'rightclick',
     resize :        'resize',
-    boundschanged : 'bounds_changed',
-    centerchanged : 'center_changed',
-    zoomchanged :   'zoom_changed',
+    boundschanged : 'viewchangeend',
+    centerchanged : 'viewchangeend',
+    zoomchanged :   'viewchangeend',
     mouseover:      'mouseover',
     mouseout :      'mouseout',
     mousemove :     'mousemove'

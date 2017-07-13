@@ -1,6 +1,6 @@
-import { ILayerOptions } from '../interfaces/ilayeroptions';
+import { ILayerOptions } from '../interfaces/ilayer-options';
 import { Marker } from './marker';
-import { InfoWindow } from './infowindow';
+import { InfoWindow } from './info-window';
 
 /**
  * Defines the contract for a map layer implementation. Deriving providers should implements this abstract

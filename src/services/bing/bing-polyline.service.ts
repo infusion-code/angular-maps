@@ -1,22 +1,24 @@
-import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { Subject } from 'rxjs/Subject';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
+import { ILatLong } from './../../interfaces/ilatlong';
 import { Polyline } from '../../models/polyline';
 import { MapPolylineDirective } from './../../components/map-polyline';
 import { PolylineService } from '../polyline.service';
 import { MapService } from '../map.service';
 import { LayerService } from '../layer.service';
+
 /**
- * Concrete implementation of the Polyline Service abstract class for Google Maps.
+ * Concrete implementation of the Polyline Service abstract class for Bing Maps V8.
  *
  * @export
- * @class GooglePolylineService
+ * @class BingPolylineService
  * @implements {PolylineService}
  */
 @Injectable()
-export class GooglePolylineService implements PolylineService {
+export class BingPolylineService implements PolylineService {
 
     ///
     /// Field declarations
@@ -28,13 +30,13 @@ export class GooglePolylineService implements PolylineService {
     ///
 
     /**
-     * Creates an instance of GooglePolylineService.
-     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
+     * Creates an instance of BingPolylineService.
+     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link BingMapService} implementation is expected.
      * @param {LayerService} _layerService - {@link LayerService} instance.
-     * The concrete {@link GoogleLayerService} implementation is expected.
+     * The concrete {@link BingLayerService} implementation is expected.
      * @param {NgZone} _zone - NgZone instance to support zone aware promises.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     constructor(private _mapService: MapService,
         private _layerService: LayerService,
@@ -47,11 +49,11 @@ export class GooglePolylineService implements PolylineService {
 
     /**
      * Adds a polyline to a map. Depending on the polyline context, the polyline will either by added to the map or a
-     * correcsponding layer.
+     * corresponding layer.
      *
      * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} to be added.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     public AddPolyline(polyline: MapPolylineDirective): void {
         const o: IPolylineOptions = {
@@ -67,7 +69,12 @@ export class GooglePolylineService implements PolylineService {
             visible: polyline.Visible,
             zIndex: polyline.zIndex,
         }
-        const polylinePromise: Promise<Polyline> = this._mapService.CreatePolyline(o);
+        let polylinePromise: Promise<Polyline>;
+        if (polyline.InCustomLayer) {
+            polylinePromise = this._layerService.CreatePolyline(polyline.LayerId, o);
+        } else {
+            polylinePromise = this._mapService.CreatePolyline(o);
+        }
         this._polylines.set(polyline, polylinePromise);
     }
 
@@ -79,9 +86,19 @@ export class GooglePolylineService implements PolylineService {
       * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to register the event.
       * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
       *
-      * @memberof GooglePolylineService
+      * @memberof BingPolylineService
       */
     public CreateEventObservable<T>(eventName: string, polyline: MapPolylineDirective): Observable<T> {
+        const b: Subject<T> = new Subject<T>();
+        if (eventName === 'mousemove') {
+            return b.asObservable();
+        }
+        if (eventName === 'rightclick') {
+            return b.asObservable();
+        }
+        ///
+        /// mousemove and rightclick are not supported by bing polygons.
+        ///
         return Observable.create((observer: Observer<T>) => {
             this._polylines.get(polyline).then((p: Polyline) => {
                 p.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
@@ -95,7 +112,7 @@ export class GooglePolylineService implements PolylineService {
       * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be deleted.
       * @returns {Promise<void>} - A promise fullfilled once the polyline has been deleted.
       *
-      * @memberof GooglePolylineService
+      * @memberof BingPolylineService
       */
     public DeletePolyline(polyline: MapPolylineDirective): Promise<void> {
         const m = this._polylines.get(polyline);
@@ -112,13 +129,13 @@ export class GooglePolylineService implements PolylineService {
     };
 
     /**
-     * Obtains geo coordinates for the line on the click location
+     * Obtains geo coordinates for the marker on the click location
      *
      * @abstract
      * @param {(MouseEvent| any)} e - The mouse event.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked line.
+     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
         if (!e) {
@@ -134,13 +151,13 @@ export class GooglePolylineService implements PolylineService {
     };
 
     /**
-     * Obtains the polyline model for the line allowing access to native implementation functionatiliy.
+     * Obtains the marker model for the marker allowing access to native implementation functionatiliy.
      *
      * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
      * @returns {Promise<Polyline>} - A promise that when fullfilled contains the {@link Polyline}
      * implementation of the underlying platform.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     public GetNativeMarker(polyline: MapPolylineDirective): Promise<Polyline> {
         return this._polylines.get(polyline);
@@ -154,7 +171,7 @@ export class GooglePolylineService implements PolylineService {
      * options already on the underlying object.
      * @returns {Promise<void>} - A promise fullfilled once the polyline options have been set.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     public SetOptions(polyline: MapPolylineDirective, options: IPolylineOptions): Promise<void> {
         return this._polylines.get(polyline).then((l: Polyline) => { l.SetOptions(options); });
@@ -166,7 +183,7 @@ export class GooglePolylineService implements PolylineService {
      * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be updated.
      * @returns {Promise<void>} - A promise fullfilled once the polyline has been updated.
      *
-     * @memberof GooglePolylineService
+     * @memberof BingPolylineService
      */
     public UpdatePolyline(polyline: MapPolylineDirective): Promise<void> {
         const m = this._polylines.get(polyline);

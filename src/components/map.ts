@@ -1,18 +1,18 @@
 ﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
     SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
-import { MapService } from '../services/mapservice';
-import { MarkerService } from '../services/markerservice';
-import { InfoBoxService } from '../services/infoboxservice';
-import { LayerService } from '../services/layerservice';
-import { PolygonService } from '../services/polygonservice';
-import { PolylineService } from '../services/polylineservice';
-import { ClusterService } from '../services/clusterservice';
+import { MapService } from '../services/map.service';
+import { MarkerService } from '../services/marker.service';
+import { InfoBoxService } from '../services/infobox.service';
+import { LayerService } from '../services/layer.service';
+import { PolygonService } from '../services/polygon.service';
+import { PolylineService } from '../services/polyline.service';
+import { ClusterService } from '../services/cluster.service';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IBox } from '../interfaces/ibox';
-import { IMapOptions } from '../interfaces/imapoptions';
-import { MapTypeId } from '../models/maptypeid';
-import { MapMarkerDirective } from './mapmarker';
+import { IMapOptions } from '../interfaces/imap-options';
+import { MapTypeId } from '../models/map-type-id';
+import { MapMarkerDirective } from './map-marker';
 
 /**
  * Renders a map based on a given provider.

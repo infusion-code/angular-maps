@@ -1,13 +1,13 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { MapServiceFactory } from '../mapservicefactory';
-import { MapService } from '../mapservice';
+import { MapService } from '../map.service';
 import { MapAPILoader, WindowRef, DocumentRef } from '../mapapiloader';
-import { MarkerService } from '../markerservice';
-import { InfoBoxService } from '../infoboxservice';
-import { LayerService } from '../layerservice';
-import { ClusterService } from '../clusterservice';
-import { PolygonService } from '../polygonservice';
-import { PolylineService } from '../polylineservice';
+import { MarkerService } from '../marker.service';
+import { InfoBoxService } from '../infobox.service';
+import { LayerService } from '../layer.service';
+import { ClusterService } from '../cluster.service';
+import { PolygonService } from '../polygon.service';
+import { PolylineService } from '../polyline.service';
 
 import * as GoogleMapTypes from './google-map-types';
 
