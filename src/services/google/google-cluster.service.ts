@@ -48,10 +48,6 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
             zoomOnClick: layer.ZoomOnClick
         };
         if (layer.GridSize) { options.gridSize = layer.GridSize; }
-        if (layer.MaxZoom) { options.maxZoom = layer.MaxZoom; }
-        if (layer.ImagePath) { options.imagePath = layer.ImagePath; }
-        if (layer.ImageExtension) { options.imageExtension = layer.ImageExtension; }
-        if (layer.AverageCenter) { options.averageCenter = layer.AverageCenter; }
         if (layer.MinimumClusterSize) { options.minimumClusterSize = layer.MinimumClusterSize; }
         if (layer.Styles) { options.styles = this.CreateClusterIcons(layer.Styles); }
 

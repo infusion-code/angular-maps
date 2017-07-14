@@ -54,7 +54,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Field declarations
     ///
-    private _averageCenter = false;
     private _clusteringEnabled = true;
     private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
     private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
@@ -63,11 +62,8 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
-    private _imagePath: string;
-    private _imageExtension: string;
-    private _maxZoom: number;
     private _minimumClusterSize: number;
-    private _styles: Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>;
+    private _styles: Array<IClusterIconInfo>;
     private _useDynamicSizeMarker = false;
     private _dynamicMarkerBaseSize = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number, string>([
@@ -81,16 +77,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Property defintions
     ///
-
-    /**
-     * Gets or sets the average center of the cluster
-     *
-     * @type {AverageCenter}
-     * @memberof ClusterLayerDirective
-     */
-    @Input()
-        public get AverageCenter(): boolean  { return this._averageCenter; }
-        public set AverageCenter(val: boolean) { this._averageCenter = val; }
 
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
@@ -187,28 +173,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         public set IconInfo(val: IMarkerIconInfo) { this._iconInfo = val; }
 
     /**
-     * Gets or sets the image url used for the cluster
-     *
-     * @readonly
-     * @type {string}
-     * @memberof ClusterLayerDirective
-     */
-    @Input()
-        public get ImagePath(): string  { return this._imagePath; }
-        public set ImagePath(val: string) { this._imagePath = val; }
-
-    /**
-     * Gets or sets the cluster image extension
-     *
-     * @readonly
-     * @type {string}
-     * @memberof ClusterLayerDirective
-     */
-    @Input()
-        public get ImageExtension(): string  { return this._imageExtension; }
-        public set ImageExtension(val: string) { this._imageExtension = val; }
-
-    /**
      * Gets or sets An offset applied to the positioning of the layer.
      *
      * @type {IPoint}
@@ -217,17 +181,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     @Input()
         public get LayerOffset(): IPoint  { return this._layerOffset; }
         public set LayerOffset(val: IPoint) { this._layerOffset = val; }
-
-    /**
-     * Gets or sets the max zoom
-     *
-     * @readonly
-     * @type {number}
-     * @memberof ClusterLayerDirective
-     */
-    @Input()
-        public get MaxZoom(): number  { return this._maxZoom; }
-        public set MaxZoom(val: number) { this._maxZoom = val; }
 
     /**
      * Gets or sets the minimum pins required to form a cluster
@@ -254,12 +207,12 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the cluster styles
      *
      * @readonly
-     * @type {(Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>)}
+     * @type {Array<IClusterIconInfo>)}
      * @memberof ClusterLayerDirective
      */
     @Input()
-        public get Styles(): Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo> { return this._styles; }
-        public set Styles(val: Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>) { this._styles = val; }
+        public get Styles(): Array<IClusterIconInfo> { return this._styles; }
+        public set Styles(val: Array<IClusterIconInfo>) { this._styles = val; }
 
     /**
      * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
