@@ -460,6 +460,16 @@ export abstract class Marker {
     public abstract GetLabel(): string;
 
     /**
+     * Gets the marker visibility
+     *
+     * @abstract
+     * @returns {boolean}
+     *
+     * @memberof Marker
+     */
+    public abstract GetVisible(): boolean;
+
+    /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
      * @abstract
@@ -528,5 +538,15 @@ export abstract class Marker {
      * @memberof Marker
      */
     public abstract SetOptions(options: IMarkerOptions): void;
+
+    /**
+     * Sets the visiblilty of the marker.
+     *
+     * @abstract
+     * @param {boolean} visible - Boolean which determines if the marker is visible or not.
+     *
+     * @memberof Marker
+     */
+    public abstract SetVisible(visible: boolean): void;
 
 }

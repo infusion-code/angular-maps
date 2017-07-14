@@ -314,4 +314,17 @@ export class BingMarkerService implements MarkerService {
     public UpdateTitle(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.Title));
     }
+
+    /**
+     * Updates the visibility on the marker.
+     *
+     * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the visiblity.
+     * Visibility information is present in the underlying {@link Marker} model object.
+     * @returns {Promise<void>} - A promise that is fullfilled when the visibility has been updated.
+     *
+     * @memberof BingMarkerService
+     */
+    public UpdateVisible(marker: MapMarkerDirective): Promise<void> {
+        return this._markers.get(marker).then((m: Marker) => m.SetVisible(marker.Visible));
+    }
 }

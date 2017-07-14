@@ -169,4 +169,16 @@ export abstract class MarkerService {
      */
     public abstract UpdateTitle(marker: MapMarkerDirective): Promise<void>;
 
+    /**
+     * Updates the visibility on the marker.
+     *
+     * @abstract
+     * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the visibility.
+     * Visibility information is present in the underlying {@link Marker} model object.
+     * @returns {Promise<void>} - A promise that is fullfilled when the visibility has been updated.
+     *
+     * @memberof MarkerService
+     */
+    public abstract UpdateVisible(marker: MapMarkerDirective): Promise<void>;
+
 }

@@ -35,6 +35,7 @@ export interface Marker extends MVCObject {
   setZIndex(zIndex: number): void;
   getLabel(): MarkerLabel;
   getPosition(): LatLng;
+  getVisible(): boolean;
 }
 
 export interface MarkerOptions {

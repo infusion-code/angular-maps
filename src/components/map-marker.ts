@@ -167,6 +167,14 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     @Input() public Title: string;
 
     /**
+     * Sets the visibility of the marker
+     *
+     * @type {string}
+     * @memberof MapMarkerDirective
+     */
+    @Input() public Visible: boolean;
+
+    /**
      * Icon Width
      *
      * @type {number}
@@ -349,6 +357,9 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
         }
         if (changes['Anchor']) {
             this._markerService.UpdateAnchor(this);
+        }
+        if (changes['Visible']) {
+            this._markerService.UpdateVisible(this);
         }
     }
 

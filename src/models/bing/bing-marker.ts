@@ -133,6 +133,17 @@ export class BingMarker implements Marker {
     }
 
     /**
+     * Gets whether the marker is visible.
+     *
+     * @returns {boolean} - True if the marker is visible, false otherwise.
+     *
+     * @memberof BingMarker
+     */
+    public GetVisible(): boolean {
+        return this._pushpin.getVisible();
+    }
+
+    /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
      * @abstract
@@ -225,6 +236,19 @@ export class BingMarker implements Marker {
      */
     public SetOptions(options: IMarkerOptions): void {
         const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateOptions(options);
+        this._pushpin.setOptions(o);
+    }
+
+    /**
+     * Sets whether the marker is visible.
+     *
+     * @param {boolean} visible - True to set the marker visible, false otherwise.
+     *
+     * @memberof Marker
+     */
+    public SetVisible(visible: boolean): void {
+        const o: Microsoft.Maps.IPushpinOptions | any = {};
+        o.visible = visible;
         this._pushpin.setOptions(o);
     }
 
