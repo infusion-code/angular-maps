@@ -57,6 +57,27 @@ export interface MarkerLabel {
   text: string;
 }
 
+export interface MarkerClusterer {
+  isZoomOnClick(): boolean;
+  isAverageCenter(): boolean;
+  getMarkers(): Array<Marker>;
+  getTotalMarkers(): number;
+  setMaxZoom(maxZoom: number): void;
+  getMaxZoom(): number;
+  addMarkers(markers: Array<Marker>, opt_nodraw?: boolean): void;
+  addMarker(marker: Marker, opt_nodraw?: boolean): void;
+  removeMarkers(markers: Array<Marker>, opt_nodraw?: boolean): void;
+  removeMarker(marker: Marker, opt_nodraw?: boolean): void;
+  getTotalClusters(): number;
+  getMap(): GoogleMap;
+  setMap(map: GoogleMap): void;
+  getGridSize(): number;
+  setGridSize(gridSize: number): void;
+  getMinClusterSize(): number;
+  setMinClusterSize(minClusterSize: number): void;
+  clearMarkers(): void;
+}
+
 export interface Circle extends MVCObject {
   getBounds(): LatLngBounds;
   getCenter(): LatLng;

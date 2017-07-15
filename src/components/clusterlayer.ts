@@ -1,4 +1,5 @@
-﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange,
+﻿import { IClusterIconInfo } from './../interfaces/Iclustericoninfo';
+import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange,
     ContentChildren, Input, ElementRef, ViewContainerRef } from '@angular/core';
 import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
@@ -53,6 +54,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Field declarations
     ///
+    private _averageCenter = false;
     private _clusteringEnabled = true;
     private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
     private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
@@ -61,6 +63,11 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     private _gridSize: number;
     private _layerOffset: IPoint;
     private _iconInfo: IMarkerIconInfo;
+    private _imagePath: string;
+    private _imageExtension: string;
+    private _maxZoom: number;
+    private _minimumClusterSize: number;
+    private _styles: Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>;
     private _useDynamicSizeMarker = false;
     private _dynamicMarkerBaseSize = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number, string>([
@@ -68,11 +75,22 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         [100, 'rgba(20, 180, 20, 0.5)'],
         [Number.MAX_SAFE_INTEGER , 'rgba(255, 210, 40, 0.5)']
     ]);
+    private _zoomOnClick = true;
     private _iconCreationCallback: (m: Array<Marker>, i: IMarkerIconInfo) => string;
 
     ///
     /// Property defintions
     ///
+
+    /**
+     * Gets or sets the average center of the cluster
+     *
+     * @type {AverageCenter}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get AverageCenter(): boolean  { return this._averageCenter; }
+        public set AverageCenter(val: boolean) { this._averageCenter = val; }
 
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
@@ -169,6 +187,28 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         public set IconInfo(val: IMarkerIconInfo) { this._iconInfo = val; }
 
     /**
+     * Gets or sets the image url used for the cluster
+     *
+     * @readonly
+     * @type {string}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get ImagePath(): string  { return this._imagePath; }
+        public set ImagePath(val: string) { this._imagePath = val; }
+
+    /**
+     * Gets or sets the cluster image extension
+     *
+     * @readonly
+     * @type {string}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get ImageExtension(): string  { return this._imageExtension; }
+        public set ImageExtension(val: string) { this._imageExtension = val; }
+
+    /**
      * Gets or sets An offset applied to the positioning of the layer.
      *
      * @type {IPoint}
@@ -179,6 +219,28 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         public set LayerOffset(val: IPoint) { this._layerOffset = val; }
 
     /**
+     * Gets or sets the max zoom
+     *
+     * @readonly
+     * @type {number}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get MaxZoom(): number  { return this._maxZoom; }
+        public set MaxZoom(val: number) { this._maxZoom = val; }
+
+    /**
+     * Gets or sets the minimum pins required to form a cluster
+     *
+     * @readonly
+     * @type {number}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get MinimumClusterSize(): number  { return this._minimumClusterSize; }
+        public set MinimumClusterSize(val: number) { this._minimumClusterSize = val; }
+
+    /**
      * Gets or sets the options for spider clustering behavior. See {@link ISpiderClusterOptions}
      *
      * @type {ISpiderClusterOptions}
@@ -187,6 +249,17 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     @Input()
         public get SpiderClusterOptions(): ISpiderClusterOptions { return this._spiderClusterOptions; }
         public set SpiderClusterOptions(val: ISpiderClusterOptions) { this._spiderClusterOptions = val; }
+
+    /**
+     * Gets or sets the cluster styles
+     *
+     * @readonly
+     * @type {(Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>)}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get Styles(): Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo> { return this._styles; }
+        public set Styles(val: Array<Array<IClusterIconInfo>> | Array<IClusterIconInfo>) { this._styles = val; }
 
     /**
      * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
@@ -215,6 +288,17 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     @Input()
         public get ZIndex(): number { return this._zIndex; }
         public set ZIndex(val: number) { this._zIndex = val; }
+
+    /**
+     * Gets or sets whether the cluster should zoom in on click
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get ZoomOnClick(): boolean { return this._zoomOnClick; }
+        public set ZoomOnClick(val: boolean) { this._zoomOnClick = val; }
 
     /**
      * Creates the dynamic size marker to be used for cluster markers if UseDynamicSizeMarkers is set to true.
