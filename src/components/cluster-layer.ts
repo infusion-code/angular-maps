@@ -1,4 +1,4 @@
-﻿import { IClusterIconInfo } from './../interfaces/icluster-icon-info';
+import { IClusterIconInfo } from './../interfaces/icluster-icon-info';
 import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange,
     ContentChildren, Input, ElementRef, ViewContainerRef } from '@angular/core';
 import { Marker } from '../models/marker';
@@ -54,6 +54,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Field declarations
     ///
+    private _averageCenter = false;
     private _clusteringEnabled = true;
     private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
     private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
@@ -77,6 +78,16 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Property defintions
     ///
+
+    /**
+     * Gets or sets the average center of the cluster
+     *
+     * @type {AverageCenter}
+     * @memberof ClusterLayerDirective
+     */
+    @Input()
+        public get AverageCenter(): boolean  { return this._averageCenter; }
+        public set AverageCenter(val: boolean) { this._averageCenter = val; }
 
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.

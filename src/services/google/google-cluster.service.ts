@@ -1,4 +1,4 @@
-﻿import { IClusterIconInfo } from '../../interfaces/icluster-icon-info';
+﻿﻿import { IClusterIconInfo } from '../../interfaces/icluster-icon-info';
 import { MarkerService } from './../marker.service';
 import { IClusterOptions } from './../../interfaces/icluster-options';
 import { Injectable, NgZone } from '@angular/core';

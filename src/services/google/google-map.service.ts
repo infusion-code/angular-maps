@@ -1,4 +1,4 @@
-﻿import { GoogleMarkerClusterer } from './../../models/google/google-marker-clusterer';
+import { GoogleMarkerClusterer } from './../../models/google/google-marker-clusterer';
 import { GoogleInfoWindow } from './../../models/google/google-info-window';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
@@ -134,7 +134,7 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public CreateLayer(options: ILayerOptions): Promise<Layer> {
-        return Promise.resolve({});
+        return Promise.resolve(<any>{});
         // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
         //     let layer: Microsoft.Maps.Layer = new Microsoft.Maps.Layer(options.id.toString());
         //     map.layers.insert(layer);
