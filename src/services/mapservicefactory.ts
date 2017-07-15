@@ -1,11 +1,11 @@
 ﻿import { Injectable } from '@angular/core';
-import { MapService } from './mapservice';
-import { MarkerService } from './markerservice';
-import { InfoBoxService } from './infoboxservice';
-import { LayerService } from './layerservice';
-import { ClusterService } from './clusterservice';
-import { PolygonService } from './polygonservice';
-import { PolylineService } from './polylineservice';
+import { MapService } from './map.service';
+import { MarkerService } from './marker.service';
+import { InfoBoxService } from './infobox.service';
+import { LayerService } from './layer.service';
+import { ClusterService } from './cluster.service';
+import { PolygonService } from './polygon.service';
+import { PolylineService } from './polyline.service';
 
 /**
  * Implements a factory to create all the implementation specifc services for a map implementation

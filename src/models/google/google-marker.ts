@@ -1,7 +1,7 @@
 import { GoogleConversions } from './../../services/google/google-conversions';
-import { IMarkerOptions } from './../../interfaces/Imarkeroptions';
+import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { ILatLong } from './../../interfaces/ilatlong';
-import { Marker } from './../Marker';
+import { Marker } from './../marker';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 /**
@@ -127,6 +127,17 @@ export class GoogleMarker implements Marker {
     }
 
     /**
+     * Gets whether the marker is visible.
+     *
+     * @returns {boolean} - True if the marker is visible, false otherwise.
+     *
+     * @memberof GoogleMarker
+     */
+    public GetVisible(): boolean {
+        return this._marker.getVisible();
+    }
+
+    /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
      * @param {IPoint} anchor - Point coordinates for the marker anchor.
@@ -204,6 +215,17 @@ export class GoogleMarker implements Marker {
     public SetOptions(options: IMarkerOptions): void {
         const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(options);
         this._marker.setOptions(o);
+    }
+
+    /**
+     * Sets whether the marker is visible.
+     *
+     * @param {boolean} visible - True to set the marker visible, false otherwise.
+     *
+     * @memberof GoogleMarker
+     */
+    public SetVisible(visible: boolean): void {
+        this._marker.setVisible(visible);
     }
 
 }

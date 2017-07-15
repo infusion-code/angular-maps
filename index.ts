@@ -5,45 +5,45 @@ import { CommonModule } from '@angular/common';
 /// import module interfaces
 ///
 import { ILatLong } from './src/interfaces/ilatlong';
-import { IInfoWindowOptions } from './src/interfaces/iinfowindowoptions';
-import { IInfoWindowAction } from './src/interfaces/iinfowindowaction';
-import { IMarkerOptions } from './src/interfaces/imarkeroptions';
-import { IMapOptions } from './src/interfaces/imapoptions';
+import { IInfoWindowOptions } from './src/interfaces/iinfo-window-options';
+import { IInfoWindowAction } from './src/interfaces/iinfo-window-action';
+import { IMarkerOptions } from './src/interfaces/imarker-options';
+import { IMapOptions } from './src/interfaces/imap-options';
 import { ISize } from './src/interfaces/isize';
 import { IPoint } from './src/interfaces/ipoint'
 import { IBox } from './src/interfaces/ibox';
-import { IMarkerEvent } from './src/interfaces/imarkerevent';
-import { IMarkerIconInfo } from './src/interfaces/imarkericoninfo';
-import { ILayerOptions } from './src/interfaces/ilayeroptions';
-import { IClusterOptions } from './src/interfaces/iclusteroptions';
-import { ISpiderClusterOptions } from './src/interfaces/ispiderclusteroptions';
-import { ILineOptions } from './src/interfaces/ilineoptions';
-import { IPolygonOptions } from './src/interfaces/ipolygonoptions';
-import { IPolylineOptions } from './src/interfaces/ipolylineoptions';
-import { IMapEventLookup } from './src/interfaces/Imapeventlookup';
+import { IMarkerEvent } from './src/interfaces/imarker-event';
+import { IMarkerIconInfo } from './src/interfaces/imarker-icon-info';
+import { ILayerOptions } from './src/interfaces/ilayer-options';
+import { IClusterOptions } from './src/interfaces/icluster-options';
+import { ISpiderClusterOptions } from './src/interfaces/ispider-cluster-options';
+import { ILineOptions } from './src/interfaces/iline-options';
+import { IPolygonOptions } from './src/interfaces/ipolygon-options';
+import { IPolylineOptions } from './src/interfaces/ipolyline-options';
+import { IMapEventLookup } from './src/interfaces/imap-event-lookup';
 
 ///
 /// import module models
 ///
-import { InfoWindow } from './src/models/infowindow';
+import { InfoWindow } from './src/models/info-window';
 import { Marker } from './src/models/marker';
-import { MarkerTypeId } from './src/models/markertypeid';
-import { MapTypeId } from './src/models/maptypeid';
+import { MarkerTypeId } from './src/models/marker-type-id';
+import { MapTypeId } from './src/models/map-type-id';
 import { Layer } from './src/models/layer';
 import { Polygon } from './src/models/polygon';
 import { Polyline } from './src/models/polyline';
-import { SpiderClusterMarker } from './src/models/spiderclustermarker';
-import { ClusterPlacementMode } from './src/models/clusterplacementmode';
-import { ClusterClickAction } from './src/models/clusterclickaction';
-import { BingLayer } from './src/models/bingMaps/bing-layer';
-import { BingClusterLayer } from './src/models/bingMaps/bing-cluster-layer';
-import { BingSpiderClusterMarker } from './src/models/bingMaps/bing-spidercluster-marker';
-import { BingInfoWindow } from './src/models/bingMaps/bing-infowindow';
-import { BingMarker } from './src/models/bingMaps/bing-marker';
-import { BingPolygon } from './src/models/bingMaps/bing-polygon';
-import { BingPolyline } from './src/models/bingMaps/bing-polyline';
-import { BingMapEventsLookup } from './src/models/bingMaps/bing-events-lookup';
-import { GoogleInfoWindow } from './src/models/google/google-infowindow';
+import { SpiderClusterMarker } from './src/models/spider-cluster-marker';
+import { ClusterPlacementMode } from './src/models/cluster-placement-mode';
+import { ClusterClickAction } from './src/models/cluster-click-action';
+import { BingLayer } from './src/models/bing/bing-layer';
+import { BingClusterLayer } from './src/models/bing/bing-cluster-layer';
+import { BingSpiderClusterMarker } from './src/models/bing/bing-spider-cluster-marker';
+import { BingInfoWindow } from './src/models/bing/bing-info-window';
+import { BingMarker } from './src/models/bing/bing-marker';
+import { BingPolygon } from './src/models/bing/bing-polygon';
+import { BingPolyline } from './src/models/bing/bing-polyline';
+import { BingMapEventsLookup } from './src/models/bing/bing-events-lookup';
+import { GoogleInfoWindow } from './src/models/google/google-info-window';
 import { GoogleMarker } from './src/models/google/google-marker';
 import { GooglePolygon } from './src/models/google/google-polygon';
 import { GooglePolyline } from './src/models/google/google-polyline';
@@ -53,36 +53,36 @@ import { GoogleMapEventsLookup } from './src/models/google/google-events-lookup'
 /// import module components
 ///
 import { MapComponent } from './src/components/map';
-import { MapMarkerDirective } from './src/components/mapmarker';
+import { MapMarkerDirective } from './src/components/map-marker';
 import { InfoBoxComponent } from './src/components/infobox';
-import { InfoBoxActionDirective } from './src/components/infoboxaction'
-import { MapLayerDirective } from './src/components/maplayer';
-import { ClusterLayerDirective } from './src/components/clusterlayer';
-import { MapPolygonDirective } from './src/components/mappolygon';
-import { MapPolylineDirective } from './src/components/mappolyline';
+import { InfoBoxActionDirective } from './src/components/infobox-action'
+import { MapLayerDirective } from './src/components/map-layer';
+import { ClusterLayerDirective } from './src/components/cluster-layer';
+import { MapPolygonDirective } from './src/components/map-polygon';
+import { MapPolylineDirective } from './src/components/map-polyline';
 
 ///
 /// import module services
 ///
 import { MapServiceFactory } from './src/services/mapservicefactory';
-import { MapService } from './src/services/mapservice';
+import { MapService } from './src/services/map.service';
 import { MapAPILoader, WindowRef, DocumentRef } from './src/services/mapapiloader';
-import { InfoBoxService } from './src/services/infoboxservice';
-import { LayerService } from './src/services/layerservice';
-import { MarkerService } from './src/services/markerservice';
-import { ClusterService } from './src/services/clusterservice';
-import { PolygonService } from './src/services/polygonservice';
-import { PolylineService } from './src/services/polylineservice';
+import { InfoBoxService } from './src/services/infobox.service';
+import { LayerService } from './src/services/layer.service';
+import { MarkerService } from './src/services/marker.service';
+import { ClusterService } from './src/services/cluster.service';
+import { PolygonService } from './src/services/polygon.service';
+import { PolylineService } from './src/services/polyline.service';
 import { BingMapServiceFactory,
-    BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bingMaps/bing-map.service.factory';
-import { BingMapService } from './src/services/bingMaps/bing-map.service';
-import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bingMaps/bing-map.api-loader.service';
-import { BingInfoBoxService } from './src/services/bingMaps/bing-infobox.service';
-import { BingMarkerService } from './src/services/bingMaps/bing-marker.service';
-import { BingLayerService } from './src/services/bingMaps/bing-layer.service';
-import { BingClusterService } from './src/services/bingMaps/bing-cluster.service';
-import { BingPolygonService } from './src/services/bingMaps/bing-polygon.service';
-import { BingPolylineService } from './src/services/bingMaps/bing-polyline.service';
+    BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bing/bing-map.service.factory';
+import { BingMapService } from './src/services/bing/bing-map.service';
+import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bing/bing-map.api-loader.service';
+import { BingInfoBoxService } from './src/services/bing/bing-infobox.service';
+import { BingMarkerService } from './src/services/bing/bing-marker.service';
+import { BingLayerService } from './src/services/bing/bing-layer.service';
+import { BingClusterService } from './src/services/bing/bing-cluster.service';
+import { BingPolygonService } from './src/services/bing/bing-polygon.service';
+import { BingPolylineService } from './src/services/bing/bing-polyline.service';
 import { GoogleClusterService } from './src/services/google/google-cluster.service';
 import { GoogleInfoBoxService } from './src/services/google/google-infobox.service';
 import { GoogleLayerService } from './src/services/google/google-layer.service';

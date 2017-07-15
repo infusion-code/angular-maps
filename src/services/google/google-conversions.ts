@@ -1,11 +1,11 @@
-﻿import { IInfoWindowOptions } from './../../interfaces/Iinfowindowoptions';
-import { IMapOptions } from '../../interfaces/imapoptions';
-import { IMarkerOptions } from '../../interfaces/imarkeroptions';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+﻿import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
+import { IMapOptions } from '../../interfaces/imap-options';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import * as GoogleMapTypes from './google-map-types';
-import { MapTypeId } from '../../models/maptypeid';
+import { MapTypeId } from '../../models/map-type-id';
 
 declare var google: any;
 
@@ -50,6 +50,28 @@ export class GoogleConversions {
         'zoomControl',
         'zoomControlOptions'
     ];
+
+    private static _mapEventMapping: any = {
+        'bounds_changed': 'bounds_changed',
+        'center_changed': 'center_changed',
+        'click': 'click',
+        'dblclick': 'dblclick',
+        'drag': 'drag',
+        'dragend': 'dragend',
+        'dragstart': 'dragstart',
+        'heading_changed': 'heading_changed',
+        'idle': 'idle',
+        'maptypeid_changed': 'maptypeid_changed',
+        'mousemove': 'mousemove',
+        'mouseout': 'mouseout',
+        'mouseover': 'mouseover',
+        'projection_changed': 'projection_changed',
+        'resize': 'resize',
+        'rightclick': 'rightclick',
+        'tilesloaded': 'tilesloaded',
+        'tilt_changed': 'tilt_changed',
+        'viewchangeend': 'zoom_changed'
+    };
 
     private static _viewOptionsAttributes: string[] = [
         'animate',
@@ -170,6 +192,10 @@ export class GoogleConversions {
             default:
                 return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.satellite];
         }
+    }
+
+    public static TranslateMapEvent(eventName: string): string {
+        return GoogleConversions._mapEventMapping[eventName];
     }
 
     public static TranslateOptions(options: IMapOptions): GoogleMapTypes.MapOptions {

@@ -13,11 +13,11 @@
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { IInfoWindowOptions } from '../interfaces/iinfowindowoptions';
+import { IInfoWindowOptions } from '../interfaces/iinfo-window-options';
 import { ILatLong } from '../interfaces/ilatlong';
-import { InfoBoxService } from '../services/infoboxservice';
-import { MapMarkerDirective } from './mapmarker';
-import { InfoBoxActionDirective } from './infoboxaction';
+import { InfoBoxService } from '../services/infobox.service';
+import { MapMarkerDirective } from './map-marker';
+import { InfoBoxActionDirective } from './infobox-action';
 
 /**
  * internal counter to use as ids for multiple infoboxes.

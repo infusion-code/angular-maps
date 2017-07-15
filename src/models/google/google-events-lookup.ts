@@ -1,4 +1,4 @@
-import { IMapEventLookup } from '../../interfaces/Imapeventlookup';
+import { IMapEventLookup } from '../../interfaces/imap-event-lookup';
 
 /**
  * This contstant translates the abstract map events into their corresponding google map

@@ -2,12 +2,12 @@ import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { Polyline } from '../../models/polyline';
-import { MapPolylineDirective } from './../../components/mappolyline';
-import { PolylineService } from '../polylineservice';
-import { MapService } from '../mapservice';
-import { LayerService } from '../layerservice';
+import { MapPolylineDirective } from './../../components/map-polyline';
+import { PolylineService } from '../polyline.service';
+import { MapService } from '../map.service';
+import { LayerService } from '../layer.service';
 /**
  * Concrete implementation of the Polyline Service abstract class for Google Maps.
  *
@@ -30,7 +30,8 @@ export class GooglePolylineService implements PolylineService {
     /**
      * Creates an instance of GooglePolylineService.
      * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
-     * @param {LayerService} _layerService - {@link LayerService} instance. The concrete {@link GoogleLayerService} implementation is expected.
+     * @param {LayerService} _layerService - {@link LayerService} instance.
+     * The concrete {@link GoogleLayerService} implementation is expected.
      * @param {NgZone} _zone - NgZone instance to support zone aware promises.
      *
      * @memberof GooglePolylineService

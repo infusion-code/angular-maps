@@ -1,5 +1,5 @@
 import { ILatLong } from '../../interfaces/ilatlong';
-import { IPolylineOptions } from '../../interfaces/ipolylineoptions';
+import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { Polyline } from '../polyline';

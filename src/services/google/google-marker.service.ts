@@ -4,13 +4,13 @@ import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { IPoint } from '../../interfaces/ipoint';
 import { ILatLong } from '../../interfaces/ilatlong';
-import { IMarkerOptions } from '../../interfaces/imarkeroptions';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { Marker } from '../../models/marker';
-import { MapMarkerDirective } from '../../components/mapmarker'
-import { MarkerService } from '../markerservice';
-import { MapService } from '../mapservice';
-import { LayerService } from '../layerservice';
-import { ClusterService } from '../clusterservice';
+import { MapMarkerDirective } from '../../components/map-marker'
+import { MarkerService } from '../marker.service';
+import { MapService } from '../map.service';
+import { LayerService } from '../layer.service';
+import { ClusterService } from '../cluster.service';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { GoogleConversions } from './google-conversions';
 
@@ -46,9 +46,9 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof GoogleMarkerService
      */
     constructor(private _mapService: MapService,
-                private _layerService: LayerService,
-                private _clusterService: ClusterService,
-                private _zone: NgZone) {
+        private _layerService: LayerService,
+        private _clusterService: ClusterService,
+        private _zone: NgZone) {
     }
 
     /**
@@ -69,7 +69,19 @@ export class GoogleMarkerService implements MarkerService {
             width: marker.Width,
             height: marker.Height
         }
-        const markerPromise = this._mapService.CreateMarker(o);
+
+        if (marker.IconInfo && marker.IconInfo.markerType) {
+            o.icon = Marker.CreateMarker(marker.IconInfo);
+        }
+
+        // create marker via promise.
+        let markerPromise: Promise<Marker> = null;
+        if (marker.InClusterLayer) {
+            markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
+        } else {
+            markerPromise = this._mapService.CreateMarker(o);
+        }
+
         this._markers.set(marker, markerPromise);
     };
 
@@ -145,7 +157,7 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof MarkerService
      */
     public GetNativeMarker(marker: MapMarkerDirective): Promise<Marker> {
-       return this._markers.get(marker);
+        return this._markers.get(marker);
     };
 
     /**
@@ -287,6 +299,20 @@ export class GoogleMarkerService implements MarkerService {
      */
     public UpdateTitle(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.Title));
+    };
+
+    /**
+     * Updates the visibility on the marker.
+     *
+     * @abstract
+     * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the title.
+     * Title information is present in the underlying {@link Marker} model object.
+     * @returns {Promise<void>} - A promise that is fullfilled when the title has been updated.
+     *
+     * @memberof MarkerService
+     */
+    public UpdateVisible(marker: MapMarkerDirective): Promise<void> {
+        return this._markers.get(marker).then((m: Marker) => m.SetVisible(marker.Visible));
     };
 
 }

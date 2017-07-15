@@ -1,5 +1,5 @@
 import { ILatLong } from '../../interfaces/ilatlong';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { Polygon } from '../polygon';

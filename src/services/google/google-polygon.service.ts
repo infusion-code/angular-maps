@@ -2,12 +2,12 @@ import { ILatLong } from './../../interfaces/Ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { IPolygonOptions } from '../../interfaces/ipolygonoptions';
+import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { Polygon } from '../../models/polygon';
-import { MapPolygonDirective } from '../../components/mappolygon';
-import { PolygonService } from '../polygonservice';
-import { MapService } from '../mapservice';
-import { LayerService } from '../layerservice';
+import { MapPolygonDirective } from '../../components/map-polygon';
+import { PolygonService } from '../polygon.service';
+import { MapService } from '../map.service';
+import { LayerService } from '../layer.service';
 /**
  * Concrete implementation of the Polygon Service abstract class for Google Maps.
  *
