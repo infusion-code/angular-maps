@@ -11,6 +11,9 @@ Angular Maps (X-Map) is a set of components and services to provide map function
 > - [Map with spider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/edit/pOsmBVwQMzF69sz55U2F?p=preview)
 
 # Latest Updates
+0.5.3
+- clusetering support for Google.
+
 0.5
 - more modular event handling on the map component.
 - fuller support for Google Maps.
