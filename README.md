@@ -4,11 +4,11 @@
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.
 
 > Try it out on Plunker (more complex plunks coming soon):
-> - [Simple map with marker](https://plnkr.co/edit/KNOozNmAkxOtz30uCyug?p=preview)
-> - [Basic map with multiple databound markers.](https://plnkr.co/edit/EVQ14fufagHiiFlmXcV0?p=preview)
-> - [Layered map with multiple databound markers.](https://plnkr.co/edit/L542M1L9vblkYuRrPi49?p=preview)
-> - [Map with multiple databound markers in a cluster layer.](https://plnkr.co/edit/yOOCqNceJBy3mzrCuJGJ?p=preview)
-> - [Map with spider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/edit/pOsmBVwQMzF69sz55U2F?p=preview)
+> - [Simple map with marker](https://plnkr.co/1LdCQx)
+> - [Basic map with multiple databound markers.](https://plnkr.co/T76hHj)
+> - [Layered map with multiple databound markers.](https://plnkr.co/XAokXU)
+> - [Map with multiple databound markers in a cluster layer.](https://plnkr.co/o4r20z)
+> - [Map with spider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/GnHk3B)
 
 # Latest Updates
 0.5.3
