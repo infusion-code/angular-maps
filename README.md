@@ -3,41 +3,12 @@
 # Overview
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.
 
-> Try it out on Plunker (more complex plunks coming soon):
-> - [Simple map with marker](https://plnkr.co/1LdCQx)
-> - [Basic map with multiple databound markers.](https://plnkr.co/T76hHj)
-> - [Layered map with multiple databound markers.](https://plnkr.co/XAokXU)
-> - [Map with multiple databound markers in a cluster layer.](https://plnkr.co/o4r20z)
-> - [Map with spider cluster. Wicked. Special shoutout to @rbrundritt.](https://plnkr.co/GnHk3B)
+# Samples
+ You can find various basic and advanced samples in the [Wiki Sample Page](../../wiki/Samples)
 
 # Latest Updates
-0.5.3
-- clusetering support for Google.
 
-0.5
-- more modular event handling on the map component.
-- fuller support for Google Maps.
-
-0.4.4 
-- Support for Polylines in Bing (both directly and in layer).
-- Added a number of example plunks.
-
-0.4.2 
-- Support for Polygons in Bing (both directly on map and in layer).
-
-0.4.0
-- Support for Polygon/Polyline (Goolge only for now, Bing to come in the next few weeks)
-- Support for Google maps (markers, polygon, polyline, infobox, no layers or clustering yet, to come)
-- Added linting and refactored for code consistency. 
-- Note: 0.4.0 is a breaking change, however migration should be super easy, just update the selectors for the components to x-... (like x-map-marker)
-  and update any broken class imports with the new names (should be obvious). 
-
-0.3.11
-- Support for spider clusters. Super cool...
-
-0.3.10
-- Support for layers and clustring
-- Support for AOT and Angular 4 
+See the [Wiki Change Log](../../wiki/Change-Log) for key changes and addition in various releases. 
 
 # Install
 Install via npm:
