@@ -118,7 +118,7 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public RemoveEntity(entity: Marker|InfoWindow|any): void {
-        if (entity.NativePrimitve) {
+        if (entity.NativePRimitive) {
             this._layer.remove(entity.NativePrimitve);
         }
     }

@@ -271,7 +271,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     public ngAfterViewInit() {
         this._infoBoxService.AddInfoWindow(this);
         this._infoBoxAddedToManager = true;
-        this.HandleEvents();
     }
 
     /**
@@ -348,18 +347,5 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
             options.pixelOffset.y = this.yOffset;
         }
         this._infoBoxService.SetOptions(this, options);
-    }
-
-    /**
-     * Delegate handling the map click events.
-     *
-     * @private
-     *
-     * @memberof MapComponent
-     */
-    private HandleEvents(): void {
-        this._infoBoxService.SubscribeToInfoBoxEvent('closeclick', this).subscribe(e => {
-            this.Close();
-        });
     }
 }

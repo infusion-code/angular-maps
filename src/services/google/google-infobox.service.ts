@@ -1,6 +1,4 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
 import { InfoBoxComponent } from './../../components/infobox';
 import { GoogleInfoWindow } from './../../models/google/google-info-window';
 import { GoogleMarker } from './../../models/google/google-marker';
@@ -9,8 +7,6 @@ import { ILatLong } from './../../interfaces/ilatlong';
 import { InfoBoxService } from './../infobox.service';
 import { MarkerService } from './../marker.service';
 import { MapService } from './../map.service';
-import { InfoWindow } from '../../models/info-window';
-
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {
@@ -55,24 +51,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
             options.position = { latitude: info.Latitude, longitude: info.Longitude };
         }
         const infoWindowPromise = this._mapService.CreateInfoWindow(options);
-        this._boxes.set(info, <Promise<GoogleInfoWindow>>infoWindowPromise);
-    };
-
-    /**
-     * Creates a new instance of an info window
-     *
-     * @param {InfoBoxComponent} infoComponent
-     *
-     * @memberof GoogleInfoBoxService
-     */
-    public SubscribeToInfoBoxEvent<E>(event: string, infoComponent: InfoBoxComponent): Observable<E> {
-        return Observable.create((observer: Observer<E>) => {
-            this._boxes.get(infoComponent).then(w => {
-                w.NativePrimitve.addListener(event, (e: any) => {
-                    this._zone.run(() => observer.next(e));
-                });
-            });
-        });
+        this._boxes.set(info, infoWindowPromise);
     };
 
     /**

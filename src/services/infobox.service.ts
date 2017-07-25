@@ -1,9 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { InfoBoxComponent } from './../components/infobox';
 import { IInfoWindowOptions } from './../interfaces/iinfo-window-options';
 import { ILatLong } from './../interfaces/ilatlong';
-import { InfoWindow } from '../models/info-window';
 
 /**
  * This class defines the contract for an InfoBoxService. Each Map Architecture provider is expected the furnish a concrete implementation.
@@ -82,16 +80,5 @@ export abstract class InfoBoxService {
      * @memberof InfoBoxService
      */
     abstract SetPosition(info: InfoBoxComponent, latlng?: ILatLong): Promise<void>;
-
-    /**
-     * Subscribe to events on the infowindow.
-     *
-     * @abstract
-     * @param {InfoBoxComponent} infoBoxComponent - {@link InfoBoxComponent} infoBoxComponent .
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox position has been updated.
-     *
-     * @memberof InfoBoxService
-     */
-    abstract SubscribeToInfoBoxEvent<E>(event: string, infoBoxComponent: InfoBoxComponent): Observable<E>;
 
 }
