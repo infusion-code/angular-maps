@@ -15,5 +15,6 @@ export const GoogleMapEventsLookup: IMapEventLookup = {
     zoomchanged :   'zoom_changed',
     mouseover:      'mouseover',
     mouseout :      'mouseout',
-    mousemove :     'mousemove'
+    mousemove :     'mousemove',
+    closeclick :     'closeclick'
 };

@@ -1,4 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { InfoWindow } from './../../models/info-window';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { ILatLong } from './../../interfaces/ilatlong';
@@ -18,7 +19,6 @@ import { BingInfoWindow } from './../../models/bing/bing-info-window';
  */
 @Injectable()
 export class BingInfoBoxService implements InfoBoxService {
-
     ///
     /// Field declarations
     ///
@@ -175,6 +175,10 @@ export class BingInfoBoxService implements InfoBoxService {
             latitude: info.Latitude,
             longitude: info.Longitude
         }));
+    }
+
+    public SubscribeToInfoBoxEvent<E>(event: string, infoBoxComponent: InfoBoxComponent): Observable<E> {
+        throw new Error('Method not implemented.');
     }
 
 }
