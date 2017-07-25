@@ -28,6 +28,5 @@ export interface IMarkerIconInfo {
     strokeWidth?: number;
     url?: string;
     scaledSize?: ISize;
-    callback?: (c: string, i: IMarkerIconInfo) => void;
     scale?: number;
 }

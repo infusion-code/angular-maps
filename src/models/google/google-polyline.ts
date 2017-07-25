@@ -37,7 +37,7 @@ export class GooglePolyline implements Polyline {
      * @param {GoogleMapTypes.Polyline} _polyline - The {@link GoogleMApTypes.Polyline} underlying the model.
      *
      * @memberof GooglePolyline
-     */   
+     */
     constructor(private _polyline: GoogleMapTypes.Polyline) { }
 
     /**

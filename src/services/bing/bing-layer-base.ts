@@ -77,7 +77,7 @@ export abstract class BingLayerBase {
     public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
 
     /**
-     * Creates a marker in the later.
+     * Creates a marker in the layer.
      *
      * @param {number} layer - The Id of the layer in which to create the marker.
      * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker properties.
@@ -87,38 +87,40 @@ export abstract class BingLayerBase {
      */
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
         const p: Promise<Layer> = this.GetLayerById(layer);
-        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
             const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
-            const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
-            if (o.icon == null) {
-                const s = 48;
-                const iconInfo: IMarkerIconInfo = {
-                    markerType: MarkerTypeId.CanvasMarker,
-                    rotation: 45,
-                    drawingOffset: { x: 24, y: 0 },
-                    points: [
-                        { x: 10, y: 40 },
-                        { x: 24, y: 30 },
-                        { x: 38, y: 40 },
-                        { x: 24, y: 0 }
-                    ],
-                    color: '#f00',
-                    size: { width: s, height: s }
-                };
-                o.icon = Marker.CreateMarker(iconInfo);
-                o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
-                o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
-            }
-            const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
-            const marker: BingMarker = new BingMarker(pushpin);
-            marker.IsFirst = options.isFirst;
-            marker.IsLast = options.isLast;
-            if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
-            l.AddEntity(marker);
-            return marker;
+            return BingConversions.TranslateMarkerOptions(options).then(o => {
+                if (o.icon == null) {
+                    const s = 48;
+                    const iconInfo: IMarkerIconInfo = {
+                        markerType: MarkerTypeId.CanvasMarker,
+                        rotation: 45,
+                        drawingOffset: { x: 24, y: 0 },
+                        points: [
+                            { x: 10, y: 40 },
+                            { x: 24, y: 30 },
+                            { x: 38, y: 40 },
+                            { x: 24, y: 0 }
+                        ],
+                        color: '#f00',
+                        size: { width: s, height: s }
+                    };
+                    o.icon = <string>Marker.CreateMarker(iconInfo);
+                        // cast to string here because we know that canvas marker will always produce string
+                        // result, never promise...
+                    o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
+                    o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
+                }
+                const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+                const marker: BingMarker = new BingMarker(pushpin);
+                marker.IsFirst = options.isFirst;
+                marker.IsLast = options.isLast;
+                if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
+                l.AddEntity(marker);
+                return marker;
+            });
         });
-
     }
 
     ///

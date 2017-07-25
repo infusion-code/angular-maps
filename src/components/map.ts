@@ -1,5 +1,5 @@
 ﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
-    SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef } from '@angular/core';
+    SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef, HostBinding } from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
 import { MapService } from '../services/map.service';
 import { MarkerService } from '../services/marker.service';
@@ -61,7 +61,6 @@ import { MapMarkerDirective } from './map-marker';
             <ng-content></ng-content>
         </div>
     `,
-    host: { '[class.map-container]': 'true' },
     styles: [`
         .map-container-inner { width: inherit; height: inherit; }
         .map-content { display:none; }
@@ -79,7 +78,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     private _options: IMapOptions = {};
     private _box: IBox = null;
     private _mapPromise: Promise<void>;
-
+    @HostBinding('class.map-container') private _containerClass: boolean = true;
     @ViewChild('container') private _container: ElementRef;
     @ContentChildren(MapMarkerDirective) private _markers: Array<MapMarkerDirective>;
 

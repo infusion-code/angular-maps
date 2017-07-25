@@ -262,13 +262,14 @@ export class BingMarkerService implements MarkerService {
                     position: { latitude: marker.Latitude, longitude: marker.Longitude },
                     iconInfo: marker.IconInfo
                 }
-                const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(x);
-                m.SetIcon(o.icon);
-                marker.DynamicMarkerCreated.emit(x.iconInfo);
-            } else {
+                BingConversions.TranslateMarkerOptions(x).then(o => {
+                    m.SetIcon(o.icon);
+                    marker.DynamicMarkerCreated.emit(x.iconInfo);
+                });
+            }
+            else {
                 m.SetIcon(marker.IconUrl)
             }
-
         });
     }
 

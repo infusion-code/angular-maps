@@ -77,7 +77,9 @@ export class BingPolygon implements Polygon {
     public GetDraggable(): boolean {
         ///
         /// Bing polygons are not draggable by default.
-        /// See https://social.msdn.microsoft.com/Forums/en-US/7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8?forum=bingmaps
+        /// See https://social.msdn.microsoft.com/Forums/en-US/
+        ///     7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8?
+        ///     forum=bingmaps
         /// for a possible approach to be implemented in the model.
         ///
         return false;
@@ -147,7 +149,9 @@ export class BingPolygon implements Polygon {
     public SetDraggable(draggable: boolean): void {
         ///
         /// Bing polygons are not draggable by default.
-        /// See https://social.msdn.microsoft.com/Forums/en-US/7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8?forum=bingmaps
+        /// See https://social.msdn.microsoft.com/Forums/en-US/
+        ///     7aaae748-4d5f-4be5-a7bb-90498e08b41c/how-can-i-make-polygonpolyline-draggable-in-bing-maps-8
+        //      ?forum=bingmaps
         /// for a possible approach to be implemented in the model.
         ///
         throw(new Error('The bing maps implementation currently does not support draggable polygons.'));

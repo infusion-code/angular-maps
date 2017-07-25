@@ -104,7 +104,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
 
     /**
      * Adds a polygon to the layer.
-     * 
+     *
      * @abstract
      * @param {number} layer - The id of the layer to which to add the polygon.
      * @param {IPolygonOptions} options - Polygon options defining the polygon.
@@ -112,13 +112,13 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      *
      * @memberof BingClusterService
      */
-    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
-        throw ("Polygons are not supported in clustering layers. You can only use markers.")
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
+        throw (new Error('Polygons are not supported in clustering layers. You can only use markers.'));
     }
 
     /**
      * Adds a polyline to the layer.
-     * 
+     *
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
@@ -126,8 +126,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      *
      * @memberof BingClusterService
      */
-    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>{
-        throw ("Polylines are not supported in clustering layers. You can only use markers.")
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
+        throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
     }
 
     /**
@@ -230,15 +230,23 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         this._layers.get(layer).then((l: BingClusterLayer) => {
             if (layer.IconInfo) {
                 const o: Microsoft.Maps.IPushpinOptions = {};
-                o.icon = Marker.CreateMarker(layer.IconInfo);
-                if (o.icon !== '') {
-                    o.anchor = new Microsoft.Maps.Point(
-                        (layer.IconInfo.size && layer.IconInfo.markerOffsetRatio) ?
-                            (layer.IconInfo.size.width * layer.IconInfo.markerOffsetRatio.x) : 0,
-                        (layer.IconInfo.size && layer.IconInfo.markerOffsetRatio) ?
-                            (layer.IconInfo.size.height * layer.IconInfo.markerOffsetRatio.y) : 0
-                    );
-                    cluster.setOptions(o);
+                const payload: (s: string, i: IMarkerIconInfo) => void = (s, i) => {
+                        o.icon = s;
+
+                        o.anchor = new Microsoft.Maps.Point(
+                            (i.size && i.markerOffsetRatio) ? (i.size.width * i.markerOffsetRatio.x) : 0,
+                            (i.size && i.markerOffsetRatio) ? (i.size.height * i.markerOffsetRatio.y) : 0
+                        );
+                        cluster.setOptions(o);
+                };
+                const s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = Marker.CreateMarker(layer.IconInfo);
+                if (typeof(s) === 'string') {
+                    payload(s, layer.IconInfo);
+                }
+                else {
+                    s.then(x => {
+                        payload(x.icon, x.iconInfo);
+                    });
                 }
             }
             if (layer.ClusterClickAction === ClusterClickAction.ZoomIntoCluster) {

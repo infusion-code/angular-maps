@@ -66,7 +66,7 @@ export abstract class ClusterService {
 
     /**
      * Adds a polygon to the layer.
-     * 
+     *
      * @abstract
      * @param {number} layer - The id of the layer to which to add the polygon.
      * @param {IPolygonOptions} options - Polygon options defining the polygon.
@@ -78,7 +78,7 @@ export abstract class ClusterService {
 
     /**
      * Adds a polyline to the layer.
-     * 
+     *
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.

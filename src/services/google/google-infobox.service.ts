@@ -1,6 +1,7 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { InfoBoxComponent } from './../../components/infobox';
 import { GoogleInfoWindow } from './../../models/google/google-info-window';
+import { InfoWindow } from './../../models/info-window';
 import { GoogleMarker } from './../../models/google/google-marker';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { ILatLong } from './../../interfaces/ilatlong';
@@ -15,7 +16,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /// Field declarations
     ///
 
-    private _boxes: Map<InfoBoxComponent, Promise<GoogleInfoWindow>> = new Map<InfoBoxComponent, Promise<GoogleInfoWindow>>();
+    private _boxes: Map<InfoBoxComponent, Promise<InfoWindow>> = new Map<InfoBoxComponent, Promise<InfoWindow>>();
 
     ///
     /// Constructors
@@ -97,7 +98,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
                 box.then((w) => w.Close());
             });
         }
-        return this._boxes.get(info).then((w) => {
+        return this._boxes.get(info).then((w: GoogleInfoWindow) => {
             if (info.HostMarker != null) {
                 return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
                     return this._mapService.MapPromise.then((map) => w.Open(map, (<GoogleMarker>marker).NativePrimitve));

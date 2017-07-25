@@ -2,6 +2,7 @@
 import { IBox } from './../../interfaces/ibox';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
+import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
 import { IClusterOptions } from './../../interfaces/icluster-options';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { IInfoWindowAction } from './../../interfaces/iinfo-window-action';
@@ -346,26 +347,45 @@ export class BingConversions {
      *
      * @static
      * @param {IMarkerOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IPushpinOptions} - Mapped object.
+     * @returns {Promise<Microsoft.Maps.IPushpinOptions>} - Promise that when resolved contains the mapped object.
      *
      * @memberof BingConversions
      */
-    public static TranslateMarkerOptions(options: IMarkerOptions): Microsoft.Maps.IPushpinOptions {
-        const o: Microsoft.Maps.IPushpinOptions | any = {};
-        Object.keys(options)
-            .filter(k => BingConversions._markerOptionsAttributes.indexOf(k) !== -1)
-            .forEach((k) => {
-                if (k === 'iconInfo' && options.iconInfo) {
-                    o.icon = Marker.CreateMarker(options.iconInfo);
-                } else if (k === 'icon' && options.iconInfo == null) {
-                    o.icon = options.icon;
-                } else if (k === 'anchor') {
-                    o.anchor = BingConversions.TranslatePoint(options.anchor);
-                } else {
-                    o[k] = (<any>options)[k];
-                }
+    public static TranslateMarkerOptions(options: IMarkerOptions): Promise<Microsoft.Maps.IPushpinOptions> {
+        const o: Microsoft.Maps.IPushpinOptions|any = {};
+        let s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = null;
+        const p: Promise<Microsoft.Maps.IPushpinOptions> = new Promise<Microsoft.Maps.IPushpinOptions>((resolve, reject) => {
+            Object.keys(options)
+                .filter(k => BingConversions._markerOptionsAttributes.indexOf(k) !== -1)
+                .forEach((k) => {
+                    if (k === 'iconInfo') { return; }
+                    else if (k === 'icon') { return; }
+                    else if (k === 'anchor') {
+                        o.anchor = BingConversions.TranslatePoint(options.anchor);
+                    }
+                    else {
+                        o[k] = (<any>options)[k];
+                    }
             });
-        return o;
+            if (options.iconInfo != null) {
+                s = Marker.CreateMarker(options.iconInfo);
+                if (typeof(s) === 'string') {
+                    o.icon = s;
+                    resolve(o);
+                }
+                else {
+                    s.then(x => {
+                        o.icon = x.icon;
+                        resolve(o);
+                    });
+                }
+            }
+            else {
+                if (options.icon) {o.icon = options.icon; }
+                resolve(o);
+            }
+        });
+        return p;
     }
 
     /**
@@ -395,19 +415,19 @@ export class BingConversions {
 
     /**
      * Translates an array of locations or an array or arrays of location to and array of arrays of Bing Map Locations
-     * 
+     *
      * @static
-     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert. 
-     * @returns {Array<Array<Microsoft.Maps.Location>>} - converted locations. 
-     * 
+     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert.
+     * @returns {Array<Array<Microsoft.Maps.Location>>} - converted locations.
+     *
      * @memberof BingConversions
      */
-    public static TranslatePaths(paths:Array<ILatLong> | Array<Array<ILatLong>>): Array<Array<Microsoft.Maps.Location>> {
-        let p: Array<Array<Microsoft.Maps.Location>> = new Array<Array<Microsoft.Maps.Location>>();
-        if (paths == null || !Array.isArray(paths) || paths.length === 0) { 
+    public static TranslatePaths(paths: Array<ILatLong> | Array<Array<ILatLong>>): Array<Array<Microsoft.Maps.Location>> {
+        const p: Array<Array<Microsoft.Maps.Location>> = new Array<Array<Microsoft.Maps.Location>>();
+        if (paths == null || !Array.isArray(paths) || paths.length === 0) {
             p.push(new Array<Microsoft.Maps.Location>());
         }
-        else if (Array.isArray(paths[0])){
+        else if (Array.isArray(paths[0])) {
             // parameter is an array or arrays
              (<Array<Array<ILatLong>>>paths).forEach(path => {
                 const _p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
@@ -415,7 +435,7 @@ export class BingConversions {
                 p.push(_p);
             });
         }
-        else{
+        else {
             // parameter is a simple array....
             const y: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
             (<Array<ILatLong>>paths).forEach(x => y.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
@@ -449,47 +469,51 @@ export class BingConversions {
      */
     public static TranslatePolygonOptions(options: IPolygonOptions): Microsoft.Maps.IPolygonOptions {
         const o: Microsoft.Maps.IPolygonOptions | any = {};
-        const f: (s:string, a:number) => string = (s, a) => {
-            let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
+        const f: (s: string, a: number) => string = (s, a) => {
+            const m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
             if (m && m.length > 3) {
                 a = a > 1 ? (a / 100) : a;
-                return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
+                return 'rgba(' + [m[1], m[2], m[3], a].join(',') + ')';
             }
-            else if(s[0] === '#') {
-                let x: number = Math.floor(a * 255);
+            else if (s[0] === '#') {
+                const x: number = Math.floor(a * 255);
                 let y: string = x.toString(16);
                 let z: string = s.substr(0);
                 if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { y = y + '0'; } 
-                return z + y; 
-            }   
+                if (x < 16) { y = y + '0'; }
+                return z + y;
+            }
             else {
                 return s;
             }
-        }; 
+        };
 
         Object.keys(options)
             .filter(k => BingConversions._polygonOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
                 if (k === 'strokeWeight') {
                     o.strokeThickness = options.strokeWeight;
-                } else if (k === 'strokeColor') {
-                    if(options.strokeOpacity){
+                }
+                else if (k === 'strokeColor') {
+                    if (options.strokeOpacity) {
                         o.strokeColor = f(options.strokeColor, options.strokeOpacity);
                     }
-                    else{
+                    else {
                         o.strokeColor = options.strokeColor;
                     }
-                } else if (k === 'strokeOpacity') {    
-                } else if (k === 'fillColor') {
-                    if(options.fillOpacity){
-                        o.fillColor = f(options.fillColor, options.fillOpacity);;;
+                }
+                else if (k === 'strokeOpacity') {
+                }
+                else if (k === 'fillColor') {
+                    if (options.fillOpacity) {
+                        o.fillColor = f(options.fillColor, options.fillOpacity);
                     }
-                    else{
+                    else {
                         o.fillColor = options.fillColor;
                     }
-                } else if (k === 'fillOpacity') {
-                } else {
+                }
+                else if (k === 'fillOpacity') { }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
@@ -505,41 +529,42 @@ export class BingConversions {
      *
      * @memberof BingConversions
      */
-    public static TranslatePolylineOptions(options: IPolylineOptions): Microsoft.Maps.IPolylineOptions{
+    public static TranslatePolylineOptions(options: IPolylineOptions): Microsoft.Maps.IPolylineOptions {
         const o: Microsoft.Maps.IPolylineOptions | any = {};
-        const f: (s:string, a:number) => string = (s, a) => {
-            let m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
+        const f: (s: string, a: number) => string = (s, a) => {
+            const m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
             if (m && m.length > 3) {
                 a = a > 1 ? (a / 100) : a;
-                return 'rgba(' + [m[1],m[2],m[3],a].join(',') +')';
+                return 'rgba(' + [m[1], m[2], m[3], a].join(',') + ')';
             }
-            else if(s[0] === '#') {
-                let x: number = Math.floor(a * 255);
+            else if (s[0] === '#') {
+                const x: number = Math.floor(a * 255);
                 let y: string = x.toString(16);
                 let z: string = s.substr(0);
                 if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { y = y + '0'; } 
-                return z + y; 
-            }   
+                if (x < 16) { y = y + '0'; }
+                return z + y;
+            }
             else {
                 return s;
             }
-        }; 
-        
+        };
         Object.keys(options)
             .filter(k => BingConversions._polylineOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
                 if (k === 'strokeWeight') {
                     o.strokeThickness = options.strokeWeight;
                 } else if (k === 'strokeColor') {
-                    if(options.strokeOpacity){
+                    if (options.strokeOpacity) {
                         o.strokeColor = f(options.strokeColor, options.strokeOpacity);
                     }
-                    else{
+                    else {
                         o.strokeColor = options.strokeColor;
                     }
-                } else if (k === 'strokeOpacity') {    
-                } else {
+                }
+                else if (k === 'strokeOpacity') {
+                }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
