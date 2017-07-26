@@ -398,6 +398,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
             }
         }));
         const handlers = [
+            { name: 'click', handler: (ev: MouseEvent) => this.Click.emit(ev) },
             { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
             { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(ev) },
             { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(ev) },
