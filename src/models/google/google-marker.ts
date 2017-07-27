@@ -146,6 +146,9 @@ export class GoogleMarker implements Marker {
      */
     public SetAnchor(anchor: any): void {
         // not implemented
+        // TODO: we need to switch the model to complex icons for google to
+        // support anchors, sizes and origins.
+        // https://developers.google.com/maps/documentation/javascript/markers
     }
 
     /**

@@ -6,6 +6,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { Marker } from './../../models/marker';
 import { Layer } from './../../models/layer';
+import { MarkerTypeId } from './../../models/marker-type-id';
 import { ClusterLayerDirective } from './../../components/cluster-layer';
 import { ClusterService } from './../cluster.service';
 import { MapService } from './../map.service';
@@ -22,6 +23,69 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /// Field declarations
     ///
     protected _layers: Map<ClusterLayerDirective, Promise<Layer>> = new Map<ClusterLayerDirective, Promise<Layer>>();
+
+    ///
+    /// Static methods
+    ///
+
+    /**
+     * Creates the cluster icon from the styles
+     *
+     * @param {Array<IClusterIconInfo>} styles
+     * @returns {Promise<Array<IClusterIconInfo>>} - Promise that when resolved contains an Array of IClusterIconInfo objects
+     * containing the hydrated cluster icons.
+     * @memberof GoogleClusterService
+     */
+    public static CreateClusterIcons(styles: Array<IClusterIconInfo>): Promise<Array<IClusterIconInfo>> {
+        const i: Promise<Array<IClusterIconInfo>> = new Promise<Array<IClusterIconInfo>>((resolve, reject) => {
+            const pa = new Array<Promise<{icon: string, iconInfo: IMarkerIconInfo}>>();
+            styles.forEach((style, index) => {
+                if (style.iconInfo) {
+                    const s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = Marker.CreateMarker(style.iconInfo);
+                    if (typeof(s) === 'string') {
+                        style.url = s;
+                        if (style.width == null) {
+                            style.width = style.iconInfo.size.width;
+                            style.height = style.iconInfo.size.height;
+                        }
+                        if (style.iconInfo.markerOffsetRatio && style.iconInfo.size && style.anchor == null) {
+                            const o: IMarkerIconInfo = style.iconInfo
+                            style.anchor = [
+                                o.size.width * o.markerOffsetRatio.x,
+                                o.size.height * o.markerOffsetRatio.y
+                            ];
+                        }
+                        delete style.iconInfo;
+                    }
+                    else {
+                        s.then(x => {
+                            style.url = x.icon;
+                            if (style.width == null) {
+                                style.width = x.iconInfo.size.width;
+                                style.height = x.iconInfo.size.height;
+                            }
+                            if (x.iconInfo.markerOffsetRatio && x.iconInfo.size && style.anchor == null) {
+                                const o: IMarkerIconInfo = x.iconInfo
+                                style.anchor = [
+                                    o.size.width * o.markerOffsetRatio.x,
+                                    o.size.height * o.markerOffsetRatio.y
+                                ];
+                            }
+                            delete style.iconInfo;
+                        });
+                        pa.push(s);
+                    }
+                }
+            });
+            if (pa.length === 0) { resolve(styles); }
+            else {
+                Promise.all(pa).then(() => {
+                    resolve(styles);
+                });
+            };
+        });
+        return i;
+    }
 
     ///
     /// Constructors
@@ -50,7 +114,23 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
         };
         if (layer.GridSize) { options.gridSize = layer.GridSize; }
         if (layer.MinimumClusterSize) { options.minimumClusterSize = layer.MinimumClusterSize; }
-        if (layer.Styles) { options.styles = this.CreateClusterIcons(layer.Styles); }
+        if (layer.Styles) { options.styles = layer.Styles; }
+        else {
+            options.styles = [{
+                height: 30,
+                width: 35,
+                textColor: 'white',
+                textSize: 11,
+                backgroundPosition: 'center',
+                iconInfo: {
+                    markerType: MarkerTypeId.FontMarker,
+                    fontName: 'FontAwesome',
+                    fontSize: 30,
+                    color: 'green',
+                    text: '\uF111'
+                }
+            }];
+        }
 
         const layerPromise = this._mapService.CreateClusterLayer(options);
         this._layers.set(layer, layerPromise);
@@ -90,6 +170,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
         const p: Promise<Layer> = this.GetLayerById(layer);
         if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
+
         return p.then((l: Layer) => {
             return this._mapService.CreateMarker(options)
                 .then((marker: Marker) => {
@@ -150,30 +231,4 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
         throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
     }
-
-
-    /**
-     * Creates the cluster icon from the styles
-     *
-     * @param {Array<IClusterIconInfo>} styles
-     * @returns {Array<IClusterIconInfo>}  - Array of IClusterIconInfo objects containing the hydrated cluster icons.
-     * @memberof GoogleClusterService
-     */
-    private CreateClusterIcons(styles: Array<IClusterIconInfo>) {
-        styles.forEach(style => {
-            if (style.iconInfo) {
-                const s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = Marker.CreateMarker(style.iconInfo);
-                if (typeof(s) === 'string') {
-                    style.url = s;
-                }
-                else {
-                    s.then(x => {
-                        style.url = x.icon;
-                    })
-                }
-            }
-        });
-        return styles;
-    }
-
 }

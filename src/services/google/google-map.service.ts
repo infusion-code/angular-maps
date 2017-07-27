@@ -7,6 +7,7 @@ import * as GoogleMapTypes from './google-map-types';
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service'
+import { GoogleClusterService } from './google-cluster.service';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { IClusterOptions } from '../../interfaces/icluster-options';
 import { IMapOptions } from '../../interfaces/imap-options';
@@ -104,8 +105,18 @@ export class GoogleMapService implements MapService {
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-            return new GoogleMarkerClusterer(markerClusterer)
+            if (options.styles) {
+                const s  = GoogleClusterService.CreateClusterIcons(options.styles);
+                return s.then(x => {
+                    options.styles = x;
+                    const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
+                    return new GoogleMarkerClusterer(markerClusterer);
+                });
+            }
+            else {
+                const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
+                return new GoogleMarkerClusterer(markerClusterer);
+            }
         });
     }
 
@@ -170,10 +181,28 @@ export class GoogleMapService implements MapService {
      */
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const payload = (x: GoogleMapTypes.MarkerOptions): GoogleMarker => {
+                const marker = new google.maps.Marker(x);
+                marker.setMap(map);
+                return new GoogleMarker(marker);
+            };
             const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(options);
-            const marker = new google.maps.Marker(o);
-            marker.setMap(map);
-            return new GoogleMarker(marker);
+            if (options.iconInfo && options.iconInfo.markerType) {
+                const s = Marker.CreateMarker(options.iconInfo);
+                if (typeof(s) === 'string') {
+                    o.icon = s;
+                    return payload(o);
+                }
+                else {
+                    return s.then(x => {
+                        o.icon = x.icon;
+                        return payload(o);
+                    });
+                }
+            }
+            else {
+                return payload(o);
+            }
         });
     }
 

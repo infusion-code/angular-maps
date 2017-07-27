@@ -22,8 +22,10 @@ export abstract class GoogleLayerBase {
     public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
 
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
-        return Promise.resolve({});
-    }
+        return new Promise<Marker>((r, x) => {
+            // TODO: needs implementation.
+        });
+    };
 
     protected GetLayerById(id: number): Promise<Layer> {
         let p: Promise<Layer>;

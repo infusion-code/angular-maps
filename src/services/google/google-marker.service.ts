@@ -64,51 +64,38 @@ export class GoogleMarkerService implements MarkerService {
             anchor: marker.Anchor,
             position: { latitude: marker.Latitude, longitude: marker.Longitude },
             title: marker.Title,
+            label: marker.Label,
             draggable: marker.Draggable,
-            icon: marker.IconUrl || marker.IconInfo,
+            icon: marker.IconUrl,
+            iconInfo: marker.IconInfo,
             width: marker.Width,
             height: marker.Height
         }
-        const payload = (x: IMarkerOptions) => {
-            // create marker via promise.
-            let markerPromise: Promise<Marker> = null;
-            if (marker.InClusterLayer) {
-                markerPromise = this._clusterService.CreateMarker(marker.LayerId, x);
-            }
-            else {
-                markerPromise = this._mapService.CreateMarker(x);
-            }
 
-            this._markers.set(marker, markerPromise);
-            if (marker.IconInfo) {
-                markerPromise.then((m: Marker) => {
-                    // update iconInfo to provide hook to do post icon creation activities and
-                    // also re-anchor the marker
-                    marker.DynamicMarkerCreated.emit(x.iconInfo);
-                    const p: IPoint = {
-                       x: (x.iconInfo.size && x.iconInfo.markerOffsetRatio) ? (x.iconInfo.size.width * x.iconInfo.markerOffsetRatio.x) : 0,
-                       y: (x.iconInfo.size && x.iconInfo.markerOffsetRatio) ? (x.iconInfo.size.height * x.iconInfo.markerOffsetRatio.y) : 0,
-                    }
-                    m.SetAnchor(p);
-                });
-            }
-        };
-
-        if (marker.IconInfo && marker.IconInfo.markerType) {
-            const s = Marker.CreateMarker(marker.IconInfo);
-            if (typeof(s) === 'string') {
-                o.icon = s;
-                payload(o);
-            }
-            else {
-                s.then(x => {
-                    o.icon = x.icon;
-                    payload(o);
-                });
-            }
+        // create marker via promise.
+        let markerPromise: Promise<Marker> = null;
+        if (marker.InClusterLayer) {
+            markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
+        }
+        else if (marker.InCustomLayer) {
+            markerPromise = this._layerService.CreateMarker(marker.LayerId, o);
         }
         else {
-            payload(o);
+            markerPromise = this._mapService.CreateMarker(o);
+        }
+
+        this._markers.set(marker, markerPromise);
+        if (marker.IconInfo) {
+            markerPromise.then((m: Marker) => {
+                // update iconInfo to provide hook to do post icon creation activities and
+                // also re-anchor the marker
+                marker.DynamicMarkerCreated.emit(o.iconInfo);
+                const p: IPoint = {
+                    x: (o.iconInfo.size && o.iconInfo.markerOffsetRatio) ? (o.iconInfo.size.width * o.iconInfo.markerOffsetRatio.x) : 0,
+                    y: (o.iconInfo.size && o.iconInfo.markerOffsetRatio) ? (o.iconInfo.size.height * o.iconInfo.markerOffsetRatio.y) : 0,
+                }
+                m.SetAnchor(p);
+            });
         }
     };
 

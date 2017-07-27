@@ -80,9 +80,11 @@ export class BingMarkerService implements MarkerService {
         let markerPromise: Promise<Marker> = null;
         if (marker.InClusterLayer) {
             markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
-        } else if (marker.InCustomLayer) {
+        }
+        else if (marker.InCustomLayer) {
             markerPromise = this._layerService.CreateMarker(marker.LayerId, o);
-        } else {
+        }
+        else {
             markerPromise = this._mapService.CreateMarker(o);
         }
 

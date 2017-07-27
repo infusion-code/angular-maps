@@ -271,7 +271,6 @@ export abstract class Marker {
                 // Rotate the canvas to the specified angle in degrees.
                 ctx.rotate(rads);
                 // Draw the image, since the context is rotated, the image will be rotated also.
-                //ctx.drawImage(image, -image.width / 2, -image.height / 2);
                 ctx.drawImage(image, -image.width / 2, -image.height / 2, image.width, image.height);
                 iconInfo.size = { width: c.width, height: c.height };
 

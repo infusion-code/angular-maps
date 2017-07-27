@@ -8,4 +8,5 @@ export interface IClusterIconInfo {
     textColor?: string;
     textSize?: number;
     iconInfo?: IMarkerIconInfo;
+    backgroundPosition?: string;
 }

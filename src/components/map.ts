@@ -1,5 +1,18 @@
-﻿import { Component, EventEmitter, OnChanges, OnInit, OnDestroy,
-    SimpleChange, ViewChild, ContentChildren, Input, Output, ElementRef, HostBinding } from '@angular/core';
+﻿import {
+    Component,
+    EventEmitter,
+    OnChanges,
+    OnInit,
+    OnDestroy,
+    SimpleChange,
+    ViewChild,
+    ContentChildren,
+    Input,
+    Output,
+    ElementRef,
+    HostBinding,
+    ViewEncapsulation
+} from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
 import { MapService } from '../services/map.service';
 import { MarkerService } from '../services/marker.service';
@@ -63,8 +76,10 @@ import { MapMarkerDirective } from './map-marker';
     `,
     styles: [`
         .map-container-inner { width: inherit; height: inherit; }
+        .map-container-inner div { background-repeat: no-repeat; }
         .map-content { display:none; }
-    `]
+    `],
+    encapsulation: ViewEncapsulation.None
 })
 export class MapComponent implements OnChanges, OnInit, OnDestroy {
 

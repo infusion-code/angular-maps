@@ -24,15 +24,15 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     };
 
     public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return Promise.resolve({});
+        return new Promise<Layer>((r, x) => {
+            // TODO: needs implementation.
+        });
     };
 
     public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        return Promise.resolve();
-    };
-
-    public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
-        return Promise.resolve({});
+        return new Promise<void>((r, x) => {
+            // TODO: needs implementation.
+        });
     };
 
     /**
@@ -46,7 +46,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
-        return Promise.resolve({});
+        return new Promise<Polygon>((r, x) => {
+            // TODO: needs implementation.
+        });
     };
 
     /**
@@ -60,7 +62,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
-        return Promise.resolve({});
+        return new Promise<Polyline>((r, x) => {
+            // TODO: needs implementation.
+        });
     };
 
 }

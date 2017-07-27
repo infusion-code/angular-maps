@@ -238,7 +238,7 @@ export class GoogleMapAPILoader extends MapAPILoader {
      */
     private GetScriptSrc(hostAndPath: string, queryParams: { [key: string]: string | Array<string> }): string {
         const protocolType: ScriptProtocol =
-            (this._config && this._config.protocol) || ScriptProtocol.HTTPS;
+            <ScriptProtocol>((this._config && this._config.protocol) || ScriptProtocol.HTTPS);
         let protocol: string;
 
         switch (protocolType) {

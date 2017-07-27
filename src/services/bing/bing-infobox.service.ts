@@ -63,7 +63,8 @@ export class BingInfoBoxService implements InfoBoxService {
         }
         if (info.HtmlContent !== '') {
             options.htmlContent = info.HtmlContent;
-        } else {
+        }
+        else {
             options.title = info.Title;
             options.description = info.Description;
         }
