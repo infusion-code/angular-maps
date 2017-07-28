@@ -1,7 +1,9 @@
 ﻿import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { InfoBoxComponent } from './../components/infobox';
 import { IInfoWindowOptions } from './../interfaces/iinfo-window-options';
 import { ILatLong } from './../interfaces/ilatlong';
+import { InfoWindow } from '../models/info-window';
 
 /**
  * This class defines the contract for an InfoBoxService. Each Map Architecture provider is expected the furnish a concrete implementation.
@@ -33,6 +35,20 @@ export abstract class InfoBoxService {
      * @memberof InfoBoxService
      */
     abstract Close(info: InfoBoxComponent): Promise<void>;
+
+    /**
+     * Subscribe to events on the infowindow.
+     *
+     * @abstract
+     * @template T - Type of the event to emit.
+     * @param {string} eventName - The name of the event to register (e.g. 'click')
+     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     *
+     * @memberof InfoBoxService
+     */
+    abstract CreateEventObservable<T>(event: string, infoBoxComponent: InfoBoxComponent): Observable<T>;
+
 
     /**
      * Deletes an infobox.
