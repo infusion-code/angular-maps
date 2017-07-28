@@ -5,5 +5,6 @@
     DynmaicCircleMarker,
     RotatedImageMarker,
     RoundedImageMarker,
-    ScaledImageMarker
+    ScaledImageMarker,
+    Custom
 }

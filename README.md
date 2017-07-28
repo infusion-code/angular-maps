@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/angular-maps.svg)](https://www.npmjs.com/package/angular-maps) ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg) [![Code Climate](https://codeclimate.com/github/infusion-code/angular-maps/badges/gpa.svg)](https://codeclimate.com/github/infusion-code/angular-maps) [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![npm version](https://badge.fury.io/js/angular-maps.svg)](https://www.npmjs.com/package/angular-maps) ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg) [![Code Climate](https://codeclimate.com/github/infusion-code/angular-maps/badges/gpa.svg)](https://codeclimate.com/github/infusion-code/angular-maps) [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 
 # Overview
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.

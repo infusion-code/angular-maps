@@ -80,9 +80,11 @@ export class BingMarkerService implements MarkerService {
         let markerPromise: Promise<Marker> = null;
         if (marker.InClusterLayer) {
             markerPromise = this._clusterService.CreateMarker(marker.LayerId, o);
-        } else if (marker.InCustomLayer) {
+        }
+        else if (marker.InCustomLayer) {
             markerPromise = this._layerService.CreateMarker(marker.LayerId, o);
-        } else {
+        }
+        else {
             markerPromise = this._mapService.CreateMarker(o);
         }
 
@@ -262,13 +264,14 @@ export class BingMarkerService implements MarkerService {
                     position: { latitude: marker.Latitude, longitude: marker.Longitude },
                     iconInfo: marker.IconInfo
                 }
-                const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(x);
-                m.SetIcon(o.icon);
-                marker.DynamicMarkerCreated.emit(x.iconInfo);
-            } else {
+                BingConversions.TranslateMarkerOptions(x).then(o => {
+                    m.SetIcon(o.icon);
+                    marker.DynamicMarkerCreated.emit(x.iconInfo);
+                });
+            }
+            else {
                 m.SetIcon(marker.IconUrl)
             }
-
         });
     }
 

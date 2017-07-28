@@ -193,29 +193,32 @@ export class BingMapService implements MapService {
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
-            const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
-            if (o.icon == null) {
-                const s = 48;
-                const iconInfo: IMarkerIconInfo = {
-                    markerType: MarkerTypeId.CanvasMarker,
-                    rotation: 45,
-                    drawingOffset: { x: 24, y: 0 },
-                    points: [
-                        { x: 10, y: 40 },
-                        { x: 24, y: 30 },
-                        { x: 38, y: 40 },
-                        { x: 24, y: 0 }
-                    ],
-                    color: '#f00',
-                    size: { width: s, height: s }
-                };
-                o.icon = Marker.CreateMarker(iconInfo);
-                o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
-                o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
-            }
-            const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
-            map.entities.push(pushpin);
-            return new BingMarker(pushpin);
+            return BingConversions.TranslateMarkerOptions(options).then(o => {
+                if (o.icon == null) {
+                    const s = 48;
+                    const iconInfo: IMarkerIconInfo = {
+                        markerType: MarkerTypeId.CanvasMarker,
+                        rotation: 45,
+                        drawingOffset: { x: 24, y: 0 },
+                        points: [
+                            { x: 10, y: 40 },
+                            { x: 24, y: 30 },
+                            { x: 38, y: 40 },
+                            { x: 24, y: 0 }
+                        ],
+                        color: '#f00',
+                        size: { width: s, height: s }
+                    };
+                    o.icon = <string>Marker.CreateMarker(iconInfo);
+                        // cast to string here because we know that canvas marker will always produce string
+                        // result, never promise...
+                    o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
+                    o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
+                }
+                const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+                map.entities.push(pushpin);
+                return new BingMarker(pushpin);
+            });
         });
     }
 

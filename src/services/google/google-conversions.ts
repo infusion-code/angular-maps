@@ -288,6 +288,13 @@ export class GoogleConversions {
                     o[k] = (<any>options)[k]
                 };
             });
+        if (o.content == null || o.content === '') {
+            if (options.title !== '' && options.description !== '') {
+                o.content = `${options.title}: ${options.description}`;
+            }
+            else if (options.description !== '') { o.content = options.description; }
+            else { o.content = options.title; }
+        }
         return o;
     }
 

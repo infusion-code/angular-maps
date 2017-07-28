@@ -51,6 +51,18 @@ export class GoogleInfoBoxService extends InfoBoxService {
         if (info.HtmlContent !== '') {
             options.htmlContent = info.HtmlContent;
         }
+        else {
+            options.title = info.Title;
+            options.description = info.Description;
+        }
+        if (info.xOffset || info.yOffset) {
+            if (options.pixelOffset == null) { options.pixelOffset = { x: 0, y: 0 }; }
+            if (info.xOffset) { options.pixelOffset.x = info.xOffset; }
+            if (info.yOffset) { options.pixelOffset.y = info.yOffset; }
+        }
+        options.disableAutoPan = info.DisableAutoPan;
+        options.visible = info.Visible;
+
         if (typeof info.Latitude === 'number' && typeof info.Longitude === 'number') {
             options.position = { latitude: info.Latitude, longitude: info.Longitude };
         }
@@ -126,7 +138,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
                 }
             });
         }
-        return this._boxes.get(info).then((w) => {
+        return this._boxes.get(info).then((w: GoogleInfoWindow) => {
             if (info.HostMarker != null) {
                 return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
                     return this._mapService.MapPromise.then((map) => (<GoogleInfoWindow>w).Open((<GoogleMarker>marker).NativePrimitve));

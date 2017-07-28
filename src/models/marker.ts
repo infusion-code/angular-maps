@@ -59,11 +59,13 @@ export abstract class Marker {
      * @param {IMarkerIconInfo} iconInfo - icon information. Depending on the marker type, various properties
      * need to be present. For performance, it is recommended to use an id for markers that are common to facilitate
      * reuse.
-     * @returns {string} - a string containing a data url with the marker image.
-     *
+     * @param {(string, IMarkerIconInfo) => void} callback - a callback that is invoked on markers that require asyncronous
+     * processing during creation. For markers that do not require async processing, this parameter is ignored.
+     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * a data url with the marker image.
      * @memberof Marker
      */
-    public static CreateMarker(iconInfo: IMarkerIconInfo): string {
+    public static CreateMarker(iconInfo: IMarkerIconInfo): string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> {
         switch (iconInfo.markerType) {
             case MarkerTypeId.CanvasMarker: return Marker.CreateCanvasMarker(iconInfo);
             case MarkerTypeId.DynmaicCircleMarker: return Marker.CreateDynmaicCircleMarker(iconInfo);
@@ -71,6 +73,7 @@ export abstract class Marker {
             case MarkerTypeId.RotatedImageMarker: return Marker.CreateRotatedImageMarker(iconInfo);
             case MarkerTypeId.RoundedImageMarker: return Marker.CreateRoundedImageMarker(iconInfo);
             case MarkerTypeId.ScaledImageMarker: return Marker.CreateScaledImageMarker(iconInfo);
+            case MarkerTypeId.Custom: throw Error('Custom Marker Creators are not currently supported.');
         }
         throw Error('Unsupported marker type: ' + iconInfo.markerType);
     }
@@ -228,54 +231,55 @@ export abstract class Marker {
      * @protected
      * @static
      * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
+     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}} - a string or a promise for a string containing
+     * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
      */
-    protected static CreateRotatedImageMarker(iconInfo: IMarkerIconInfo): string {
+    protected static CreateRotatedImageMarker(iconInfo: IMarkerIconInfo): string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> {
         if (document == null) { throw Error('Document context (window.document) is required for rotated image markers'); }
-        if (iconInfo == null || iconInfo.rotation == null || iconInfo.url == null || iconInfo.callback == null) {
-            throw Error('IMarkerIconInfo.rotation, IMarkerIconInfo.url and IMarkerIConInfo.callback' +
-            ' are required for rotated image markers.');
+        if (iconInfo == null || iconInfo.rotation == null || iconInfo.url == null) {
+            throw Error('IMarkerIconInfo.rotation, IMarkerIconInfo.url are required for rotated image markers.');
         }
         if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
             const mi: IMarkerIconCacheEntry = Marker.MarkerCache.get(iconInfo.id);
             iconInfo.size = mi.markerSize;
-            iconInfo.callback(mi.markerIconString, iconInfo);
-            return '';
+            return mi.markerIconString;
         }
 
         const image: HTMLImageElement = new Image();
+        const promise: Promise<{icon: string, iconInfo: IMarkerIconInfo}> =
+            new Promise<{icon: string, iconInfo: IMarkerIconInfo}>((resolve, reject) => {
+            // Allow cross domain image editting.
+            image.crossOrigin = 'anonymous';
+            image.src = iconInfo.url;
+            if (iconInfo.size) {
+                image.width = iconInfo.size.width;
+                image.height = iconInfo.size.height;
+            }
+            image.onload = function () {
+                const c: HTMLCanvasElement = document.createElement('canvas');
+                const ctx: CanvasRenderingContext2D = c.getContext('2d');
+                const rads: number = iconInfo.rotation * Math.PI / 180;
 
-        // Allow cross domain image editting.
-        image.crossOrigin = 'anonymous';
-        image.src = iconInfo.url;
-        if (iconInfo.size) {
-            image.width = iconInfo.size.width;
-            image.height = iconInfo.size.height;
-        }
-        image.onload = function () {
-            const c: HTMLCanvasElement = document.createElement('canvas');
-            const ctx: CanvasRenderingContext2D = c.getContext('2d');
-            const rads: number = iconInfo.rotation * Math.PI / 180;
+                // Calculate rotated image size.
+                c.width = Math.abs(Math.ceil(image.width * Math.cos(rads) + image.height * Math.sin(rads)));
+                c.height = Math.abs(Math.ceil(image.width * Math.sin(rads) + image.height * Math.cos(rads)));
 
-            // Calculate rotated image size.
-            c.width = Math.abs(Math.ceil(image.width * Math.cos(rads) + image.height * Math.sin(rads)));
-            c.height = Math.abs(Math.ceil(image.width * Math.sin(rads) + image.height * Math.cos(rads)));
+                // Move to the center of the canvas.
+                ctx.translate(c.width / 2, c.height / 2);
+                // Rotate the canvas to the specified angle in degrees.
+                ctx.rotate(rads);
+                // Draw the image, since the context is rotated, the image will be rotated also.
+                ctx.drawImage(image, -image.width / 2, -image.height / 2, image.width, image.height);
+                iconInfo.size = { width: c.width, height: c.height };
 
-            // Move to the center of the canvas.
-            ctx.translate(c.width / 2, c.height / 2);
-            // Rotate the canvas to the specified angle in degrees.
-            ctx.rotate(rads);
-            // Draw the image, since the context is rotated, the image will be rotated also.
-            ctx.drawImage(image, -image.width / 2, -image.height / 2);
-            iconInfo.size = { width: c.width, height: c.height };
-
-            const s: string = c.toDataURL();
-            if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
-            iconInfo.callback(s, iconInfo);
-        };
-        return '';
+                const s: string = c.toDataURL();
+                if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
+                resolve({icon: s, iconInfo: iconInfo});
+            };
+        });
+        return promise;
     }
 
     /**
@@ -284,48 +288,53 @@ export abstract class Marker {
      * @protected
      * @static
      * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
+     * @param {(string, IMarkerIconInfo) => void} - Callback invoked once marker generation is complete. The callback
+     * parameters are the data uri and the IMarkerIconInfo.
+     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
      */
-    protected static CreateRoundedImageMarker(iconInfo: IMarkerIconInfo): string {
+    protected static CreateRoundedImageMarker(iconInfo: IMarkerIconInfo): string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> {
         if (document == null) { throw Error('Document context (window.document) is required for rounded image markers'); }
-        if (iconInfo == null || iconInfo.size == null || iconInfo.url == null || iconInfo.callback == null) {
-            throw Error('IMarkerIconInfo.size, IMarkerIconInfo.url and IMarkerIConInfo.callback are required for rounded image markers.');
+        if (iconInfo == null || iconInfo.size == null || iconInfo.url == null) {
+            throw Error('IMarkerIconInfo.size, IMarkerIconInfo.url are required for rounded image markers.');
         }
         if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
             const mi: IMarkerIconCacheEntry = Marker.MarkerCache.get(iconInfo.id);
             iconInfo.size = mi.markerSize;
-            iconInfo.callback(mi.markerIconString, iconInfo);
-            return '';
+            return mi.markerIconString;
         }
 
-        const radius: number = iconInfo.size.width / 2;
-        const image: HTMLImageElement = new Image();
-        const offset: IPoint = iconInfo.drawingOffset || { x: 0, y: 0 };
+        const promise: Promise<{icon: string, iconInfo: IMarkerIconInfo}> =
+            new Promise<{icon: string, iconInfo: IMarkerIconInfo}>((resolve, reject) => {
+            const radius: number = iconInfo.size.width / 2;
+            const image: HTMLImageElement = new Image();
+            const offset: IPoint = iconInfo.drawingOffset || { x: 0, y: 0 };
 
-        // Allow cross domain image editting.
-        image.crossOrigin = 'anonymous';
-        image.src = iconInfo.url;
-        image.onload = function () {
-            const c: HTMLCanvasElement = document.createElement('canvas');
-            const ctx: CanvasRenderingContext2D = c.getContext('2d');
-            c.width = iconInfo.size.width;
-            c.height = iconInfo.size.width;
+            // Allow cross domain image editting.
+            image.crossOrigin = 'anonymous';
+            image.src = iconInfo.url;
+            image.onload = function () {
+                const c: HTMLCanvasElement = document.createElement('canvas');
+                const ctx: CanvasRenderingContext2D = c.getContext('2d');
+                c.width = iconInfo.size.width;
+                c.height = iconInfo.size.width;
 
-            // Draw a circle which can be used to clip the image, then draw the image.
-            ctx.beginPath();
-            ctx.arc(radius, radius, radius, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.clip();
-            ctx.drawImage(image, offset.x, offset.y, iconInfo.size.width, iconInfo.size.width);
-            iconInfo.size = { width: c.width, height: c.height };
+                // Draw a circle which can be used to clip the image, then draw the image.
+                ctx.beginPath();
+                ctx.arc(radius, radius, radius, 0, 2 * Math.PI, false);
+                ctx.fill();
+                ctx.clip();
+                ctx.drawImage(image, offset.x, offset.y, iconInfo.size.width, iconInfo.size.width);
+                iconInfo.size = { width: c.width, height: c.height };
 
-            const s: string = c.toDataURL();
-            if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
-            iconInfo.callback(s, iconInfo);
-        };
-        return '';
+                const s: string = c.toDataURL();
+                if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
+                resolve({icon: s, iconInfo: iconInfo});
+            };
+        });
+        return promise;
     }
 
     /**
@@ -334,41 +343,46 @@ export abstract class Marker {
      * @protected
      * @static
      * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - Empty string. For this method, the marker is delivered via a callback supplied in the iconInfo parameter.
+     * @param {(string, IMarkerIconInfo) => void} - Callback invoked once marker generation is complete. The callback
+     * parameters are the data uri and the IMarkerIconInfo.
+     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
      */
-    protected static CreateScaledImageMarker(iconInfo: IMarkerIconInfo): string {
+    protected static CreateScaledImageMarker(iconInfo: IMarkerIconInfo): string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> {
         if (document == null) { throw Error('Document context (window.document) is required for scaled image markers'); }
-        if (iconInfo == null || iconInfo.scale == null || iconInfo.url == null || iconInfo.callback == null) {
-            throw Error('IMarkerIconInfo.scale, IMarkerIconInfo.url and IMarkerIConInfo.callback are required for scaled image markers.');
+        if (iconInfo == null || iconInfo.scale == null || iconInfo.url == null) {
+            throw Error('IMarkerIconInfo.scale, IMarkerIconInfo.url are required for scaled image markers.');
         }
         if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {
             const mi: IMarkerIconCacheEntry = Marker.MarkerCache.get(iconInfo.id);
             iconInfo.size = mi.markerSize;
-            iconInfo.callback(mi.markerIconString, iconInfo);
-            return '';
+            return mi.markerIconString;
         }
-        const image: HTMLImageElement = new Image();
+        const promise: Promise<{icon: string, iconInfo: IMarkerIconInfo}> =
+            new Promise<{icon: string, iconInfo: IMarkerIconInfo}>((resolve, reject) => {
+            const image: HTMLImageElement = new Image();
 
-        // Allow cross domain image editting.
-        image.crossOrigin = 'anonymous';
-        image.src = iconInfo.url;
-        image.onload = function () {
-            const c: HTMLCanvasElement = document.createElement('canvas');
-            const ctx: CanvasRenderingContext2D = c.getContext('2d');
-            c.width = image.width * iconInfo.scale;
-            c.height = image.height * iconInfo.scale;
+            // Allow cross domain image editting.
+            image.crossOrigin = 'anonymous';
+            image.src = iconInfo.url;
+            image.onload = function () {
+                const c: HTMLCanvasElement = document.createElement('canvas');
+                const ctx: CanvasRenderingContext2D = c.getContext('2d');
+                c.width = image.width * iconInfo.scale;
+                c.height = image.height * iconInfo.scale;
 
-            // Draw a circle which can be used to clip the image, then draw the image.
-            ctx.drawImage(image, 0, 0, c.width, c.height);
-            iconInfo.size = { width: c.width, height: c.height };
+                // Draw a circle which can be used to clip the image, then draw the image.
+                ctx.drawImage(image, 0, 0, c.width, c.height);
+                iconInfo.size = { width: c.width, height: c.height };
 
-            const s: string = c.toDataURL();
-            if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
-            iconInfo.callback(s, iconInfo);
-        };
-        return '';
+                const s: string = c.toDataURL();
+                if (iconInfo.id != null) { Marker.MarkerCache.set(iconInfo.id, { markerIconString: s, markerSize: iconInfo.size }); }
+                resolve({icon: s, iconInfo: iconInfo});
+            };
+        });
+        return promise;
     }
 
     ///

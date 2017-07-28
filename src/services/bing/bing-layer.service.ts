@@ -75,9 +75,9 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      *
      * @memberof LayerService
      */
-    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>{
+    public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
         const p: Promise<Layer> = this.GetLayerById(layer);
-        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
@@ -98,9 +98,9 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      *
      * @memberof LayerService
      */
-    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>{
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
         const p: Promise<Layer> = this.GetLayerById(layer);
-        if (p == null) { throw (`Layer with id ${layer} not found in Layer Map`); }
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
