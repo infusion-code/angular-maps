@@ -6,14 +6,15 @@ import { IMapEventLookup } from '../../interfaces/imap-event-lookup';
  * @implements {IMapEventLookup}
  */
 export const BingMapEventsLookup: IMapEventLookup = {
-    click :         'click',
-    dblclick :      'dblclick',
-    rightclick :    'rightclick',
-    resize :        'resize',
-    boundschanged : 'viewchangeend',
-    centerchanged : 'viewchangeend',
-    zoomchanged :   'viewchangeend',
-    mouseover:      'mouseover',
-    mouseout :      'mouseout',
-    mousemove :     'mousemove'
+    click :             'click',
+    dblclick :          'dblclick',
+    rightclick :        'rightclick',
+    resize :            'resize',
+    boundschanged :     'viewchangeend',
+    centerchanged :     'viewchangeend',
+    zoomchanged :       'viewchangeend',
+    mouseover:          'mouseover',
+    mouseout :          'mouseout',
+    mousemove :         'mousemove',
+    infowindowclose:    'infoboxChanged'
 };

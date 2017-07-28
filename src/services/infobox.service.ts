@@ -37,6 +37,20 @@ export abstract class InfoBoxService {
     abstract Close(info: InfoBoxComponent): Promise<void>;
 
     /**
+     * Subscribe to events on the infowindow.
+     *
+     * @abstract
+     * @template T - Type of the event to emit.
+     * @param {string} eventName - The name of the event to register (e.g. 'click')
+     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     *
+     * @memberof InfoBoxService
+     */
+    abstract CreateEventObservable<T>(event: string, infoBoxComponent: InfoBoxComponent): Observable<T>;
+
+
+    /**
      * Deletes an infobox.
      *
      * @abstract
@@ -82,16 +96,5 @@ export abstract class InfoBoxService {
      * @memberof InfoBoxService
      */
     abstract SetPosition(info: InfoBoxComponent, latlng?: ILatLong): Promise<void>;
-
-    /**
-     * Subscribe to events on the infowindow.
-     *
-     * @abstract
-     * @param {InfoBoxComponent} infoBoxComponent - {@link InfoBoxComponent} infoBoxComponent .
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox position has been updated.
-     *
-     * @memberof InfoBoxService
-     */
-    abstract SubscribeToInfoBoxEvent<E>(event: string, infoBoxComponent: InfoBoxComponent): Observable<E>;
 
 }

@@ -6,15 +6,15 @@ import { IMapEventLookup } from '../../interfaces/imap-event-lookup';
  * @implements {IMapEventLookup}
  */
 export const GoogleMapEventsLookup: IMapEventLookup = {
-    click :         'click',
-    dblclick :      'dblclick',
-    rightclick :    'rightclick',
-    resize :        'resize',
-    boundschanged : 'bounds_changed',
-    centerchanged : 'center_changed',
-    zoomchanged :   'zoom_changed',
-    mouseover:      'mouseover',
-    mouseout :      'mouseout',
-    mousemove :     'mousemove',
-    closeclick :     'closeclick'
+    click :             'click',
+    dblclick :          'dblclick',
+    rightclick :        'rightclick',
+    resize :            'resize',
+    boundschanged :     'bounds_changed',
+    centerchanged :     'center_changed',
+    zoomchanged :       'zoom_changed',
+    mouseover:          'mouseover',
+    mouseout :          'mouseout',
+    mousemove :         'mousemove',
+    infowindowclose:    'closeclick'
 };
