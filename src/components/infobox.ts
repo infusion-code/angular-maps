@@ -203,7 +203,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * @type {EventEmitter<void>}
      * @memberof InfoBoxComponent
      */
-    @Output() public InfoBoxClose: EventEmitter<void> = new EventEmitter<void>();
+    @Output() public InfoBoxClose: EventEmitter<string> = new EventEmitter<string>();
 
     ///
     /// Property declarations.
@@ -257,7 +257,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      */
     public Close(): Promise<void> {
         return this._infoBoxService.Close(this).then(() => {
-            this.InfoBoxClose.emit(void 0);
+            this.InfoBoxClose.emit(this._id);
         });
     }
 
@@ -271,6 +271,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     public ngAfterViewInit() {
         this._infoBoxService.AddInfoWindow(this);
         this._infoBoxAddedToManager = true;
+        this.HandleEvents();
     }
 
     /**
@@ -321,11 +322,24 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      *
      * @memberof InfoBoxComponent
      */
-    public ToString(): string { return 'InfoBoxComponent-' + this._id.toString(); }
+    public ToString(): string { return 'InfoBoxComponent-' + this._id; }
 
     ///
     /// Private methods
     ///
+
+    /**
+     * Delegate handling the map click events.
+     *
+     * @private
+     *
+     * @memberof MapComponent
+     */
+    private HandleEvents(): void {
+        this._infoBoxService.CreateEventObservable('infowindowclose', this).subscribe(e => {
+            this.InfoBoxClose.emit(this._id);
+        });
+    }
 
     /**
      * Sets the info window options

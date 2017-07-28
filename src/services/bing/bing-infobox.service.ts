@@ -1,4 +1,6 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 import { InfoWindow } from './../../models/info-window';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { ILatLong } from './../../interfaces/ilatlong';
@@ -8,6 +10,7 @@ import { MapService } from './../../services/map.service';
 import { InfoBoxComponent } from './../../components/infobox';
 import { BingMapService } from './bing-map.service';
 import { BingInfoWindow } from './../../models/bing/bing-info-window';
+import { BingMapEventsLookup } from './../../models/bing/bing-events-lookup';
 
 /**
  * Concrete implementation of the {@link InfoBoxService} contract for the Bing Maps V8 architecture.
@@ -18,7 +21,6 @@ import { BingInfoWindow } from './../../models/bing/bing-info-window';
  */
 @Injectable()
 export class BingInfoBoxService implements InfoBoxService {
-
     ///
     /// Field declarations
     ///
@@ -93,6 +95,25 @@ export class BingInfoBoxService implements InfoBoxService {
     }
 
     /**
+     * Registers an event delegate for an info window.
+     *
+     * @template T - Type of the event to emit.
+     * @param {string} eventName - The name of the event to register (e.g. 'click')
+     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     *
+     * @memberof GoogleInfoBoxService
+     */
+    public CreateEventObservable<T>(eventName: string, infoComponent: InfoBoxComponent): Observable<T> {
+        const eventNameTranslated = BingMapEventsLookup[eventName];
+        return Observable.create((observer: Observer<T>) => {
+            this._boxes.get(infoComponent).then((b: InfoWindow) => {
+                b.AddListener(eventNameTranslated, (e: T) => this._zone.run(() => observer.next(e)));
+            });
+        });
+    }
+
+    /**
      * Deletes an infobox.
      *
      * @abstract
@@ -124,15 +145,20 @@ export class BingInfoBoxService implements InfoBoxService {
      * @memberof InfoBoxService
      */
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
+        if (info.CloseInfoBoxesOnOpen || info.Modal) {
+            // close all open info boxes.
+            this._boxes.forEach((v: Promise<InfoWindow>, i: InfoBoxComponent) => {
+                if (info.Id !== i.Id) {
+                    v.then(w => {
+                        if (w.IsOpen) {
+                            w.Close();
+                            i.Close();
+                        }
+                    });
+                }
+            });
+        }
         return this._boxes.get(info).then((w) => {
-            if (info.Modal) {
-                this._boxes.forEach((v: Promise<InfoWindow>, i: InfoBoxComponent) => {
-                    if (info.Id !== i.Id) {
-                        v.then(w1 => w1.Close());
-                        i.Close();
-                    }
-                });
-            }
             if (info.Latitude && info.Longitude) {
                 w.SetPosition({ latitude: info.Latitude, longitude: info.Longitude });
             } else if (loc) {

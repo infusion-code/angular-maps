@@ -132,7 +132,7 @@ export class GoogleMapService implements MapService {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
             const o: GoogleMapTypes.InfoWindowOptions = GoogleConversions.TranslateInfoWindowOptions(options);
             const infoWindow: GoogleMapTypes.InfoWindow = new google.maps.InfoWindow(o);
-            return new GoogleInfoWindow(infoWindow);
+            return new GoogleInfoWindow(infoWindow, this);
         });
     }
 

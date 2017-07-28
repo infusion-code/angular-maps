@@ -1,13 +1,16 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 import { InfoBoxComponent } from './../../components/infobox';
-import { GoogleInfoWindow } from './../../models/google/google-info-window';
-import { InfoWindow } from './../../models/info-window';
-import { GoogleMarker } from './../../models/google/google-marker';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { InfoBoxService } from './../infobox.service';
 import { MarkerService } from './../marker.service';
 import { MapService } from './../map.service';
+import { InfoWindow } from '../../models/info-window';
+import { GoogleInfoWindow } from './../../models/google/google-info-window';
+import { GoogleMarker } from './../../models/google/google-marker';
+import { GoogleMapEventsLookup } from './../../models/google/google-events-lookup';
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {
@@ -16,7 +19,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /// Field declarations
     ///
 
-    private _boxes: Map<InfoBoxComponent, Promise<InfoWindow>> = new Map<InfoBoxComponent, Promise<InfoWindow>>();
+    private _boxes: Map<InfoBoxComponent, Promise<InfoWindow>> = new Map<InfoBoxComponent, Promise<GoogleInfoWindow>>();
 
     ///
     /// Constructors
@@ -71,16 +74,34 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * Closes the info window
      *
      * @param {InfoBoxComponent} info
-     * @returns {Promise<void>}
+     * @returns {Promise<void>} -  A promise that is resolved when the info box is closed.
      *
      * @memberof GoogleInfoBoxService
      */
     public Close(info: InfoBoxComponent): Promise<void> {
-        this._boxes.get(info).then(w => {
+        return this._boxes.get(info).then(w => {
             w.Close();
         });
-        return Promise.resolve();
     };
+
+    /**
+     * Registers an event delegate for an info window.
+     *
+     * @template T - Type of the event to emit.
+     * @param {string} eventName - The name of the event to register (e.g. 'click')
+     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     *
+     * @memberof GoogleInfoBoxService
+     */
+    public CreateEventObservable<T>(eventName: string, infoComponent: InfoBoxComponent): Observable<T> {
+        const googleEventName: string = GoogleMapEventsLookup[eventName];
+        return Observable.create((observer: Observer<T>) => {
+            this._boxes.get(infoComponent).then((b: InfoWindow) => {
+                b.AddListener(googleEventName, (e: T) => this._zone.run(() => observer.next(e)));
+            });
+        });
+    }
 
     /**
      * Deletes the info window
@@ -104,21 +125,28 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public Open(info: InfoBoxComponent, loc?: ILatLong): Promise<void> {
-        if (info.CloseInfoBoxesOnOpen) {
-            // close all info boxes
-            this._boxes.forEach((box: Promise<GoogleInfoWindow>) => {
-                box.then((w) => w.Close());
+        if (info.CloseInfoBoxesOnOpen || info.Modal) {
+            // close all open info boxes
+            this._boxes.forEach((box: Promise<InfoWindow>, i: InfoBoxComponent) => {
+                if (info.Id !== i.Id) {
+                    box.then((w) => {
+                        if (w.IsOpen) {
+                            w.Close();
+                            i.Close();
+                        }
+                    });
+                }
             });
         }
         return this._boxes.get(info).then((w: GoogleInfoWindow) => {
             if (info.HostMarker != null) {
                 return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
-                    return this._mapService.MapPromise.then((map) => w.Open(map, (<GoogleMarker>marker).NativePrimitve));
+                    return this._mapService.MapPromise.then((map) => (<GoogleInfoWindow>w).Open((<GoogleMarker>marker).NativePrimitve));
                 });
             }
             return this._mapService.MapPromise.then((map) => {
                 if (loc) { w.SetPosition(loc); }
-                w.Open(map);
+                w.Open();
             });
         });
     };
