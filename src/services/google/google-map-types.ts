@@ -58,6 +58,16 @@ export interface MarkerLabel {
   text: string;
 }
 
+export interface ClusterStyle {
+  url?: string;
+  height?: number;
+  width?: number;
+  anchor?: Array<number>;
+  textColor?: string;
+  textSize?: number;
+  backgroundPosition?: string;
+}
+
 export interface MarkerClusterer {
   isZoomOnClick(): boolean;
   isAverageCenter(): boolean;
@@ -77,6 +87,10 @@ export interface MarkerClusterer {
   getMinClusterSize(): number;
   setMinClusterSize(minClusterSize: number): void;
   clearMarkers(): void;
+  setStyles(styles: Array<ClusterStyle>): void;
+  getStyles(): Array<ClusterStyle>;
+  setCalculator(callback: (markers: Array<Marker>, numStyles: number) => { text: string, index: number}): void;
+  getCalculator(): (markers: Array<Marker>, numStyles: number) => { text: string, index: number};
 }
 
 export interface Circle extends MVCObject {

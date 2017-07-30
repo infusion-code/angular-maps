@@ -113,13 +113,13 @@ export class BingClusterLayer implements Layer {
             }
         }
         if (entity.NativePrimitve && entity.Location) {
-
             if (this._isClustering) {
                 const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
                 p.push(entity.NativePrimitve)
                 this._layer.setPushpins(p);
                 this._markers.push(entity);
-            } else {
+            }
+            else {
                 this._pendingMarkers.push(entity);
             }
         }

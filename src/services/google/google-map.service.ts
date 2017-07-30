@@ -3,7 +3,6 @@ import { GoogleInfoWindow } from './../../models/google/google-info-window';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
-import * as GoogleMapTypes from './google-map-types';
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service'
@@ -29,6 +28,7 @@ import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from './../../models/google/google-marker';
 import { IBox } from '../../interfaces/ibox';
 import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
+import * as GoogleMapTypes from './google-map-types';
 
 declare var google: any;
 declare var MarkerClusterer: any;
@@ -105,18 +105,8 @@ export class GoogleMapService implements MapService {
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            if (options.styles) {
-                const s  = GoogleClusterService.CreateClusterIcons(options.styles);
-                return s.then(x => {
-                    options.styles = x;
-                    const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-                    return new GoogleMarkerClusterer(markerClusterer);
-                });
-            }
-            else {
-                const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-                return new GoogleMarkerClusterer(markerClusterer);
-            }
+            const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
+            return new GoogleMarkerClusterer(markerClusterer);
         });
     }
 

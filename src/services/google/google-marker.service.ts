@@ -69,7 +69,9 @@ export class GoogleMarkerService implements MarkerService {
             icon: marker.IconUrl,
             iconInfo: marker.IconInfo,
             width: marker.Width,
-            height: marker.Height
+            height: marker.Height,
+            isFirst: marker.IsFirstInSet,
+            isLast: marker.IsLastInSet
         }
 
         // create marker via promise.

@@ -112,7 +112,7 @@ export class GoogleMarker implements Marker {
      * @memberof GoogleMarker
      */
     public DeleteMarker(): void {
-        this._marker.setVisible(false);
+        this._marker.setMap(null);
     }
 
     /**
