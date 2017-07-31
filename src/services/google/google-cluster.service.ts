@@ -15,6 +15,7 @@ import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
+import * as GoogleMapTypes from './google-map-types';
 
 @Injectable()
 export class GoogleClusterService extends GoogleLayerBase implements ClusterService {
@@ -23,6 +24,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /// Field declarations
     ///
     protected _layers: Map<ClusterLayerDirective, Promise<Layer>> = new Map<ClusterLayerDirective, Promise<Layer>>();
+    protected _layerStyles: Map<number, Array<GoogleMapTypes.ClusterStyle>> = new Map<number, Array<GoogleMapTypes.ClusterStyle>>();
 
     ///
     /// Static methods
@@ -115,6 +117,10 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
         if (layer.GridSize) { options.gridSize = layer.GridSize; }
         if (layer.MinimumClusterSize) { options.minimumClusterSize = layer.MinimumClusterSize; }
         if (layer.Styles) { options.styles = layer.Styles; }
+        if (layer.UseDynamicSizeMarkers) {
+            options.styles = null
+            // do not to attempt to setup styles here as the dynamic call back will generate them.
+        }
         else {
             options.styles = [{
                 height: 30,
@@ -131,9 +137,67 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                 }
             }];
         }
+        const dynamicClusterCallback = (markers: Array<GoogleMapTypes.Marker>, numStyles: number,
+            clusterer: GoogleMapTypes.MarkerClusterer) => {
+            // dynamically ensure that the necessary style for this cluster icon exists and
+            // the clusterer is already hooked up to the styles array via pointer, so we only
+            // need to update the style. Since the clusterer re-renders a cluster icon is the
+            // the marker count changes, we will only need to retain the current icon as opposed
+            // to all cluster icon.
+            const styles: Array<GoogleMapTypes.ClusterStyle> = this._layerStyles.get(layer.Id);
+            const iconInfo: IMarkerIconInfo = {
+                markerType: MarkerTypeId.None
+            }
+            const icon: string = layer.CustomMarkerCallback(<any>markers, iconInfo);
+            styles[0] = {
+                url: `\"data:image/svg+xml;utf8,${icon}\"`,
+                height: iconInfo.size.height,
+                width: iconInfo.size.width,
+                textColor: 'white',
+                textSize: 11,
+                backgroundPosition: 'center',
+            };
+            return {
+                text: markers.length.toString(),
+                index: 1
+            }
+        };
+        const resetStyles = (clusterer: GoogleMapTypes.MarkerClusterer) => {
+            if (this._layerStyles.has(layer.Id)) { this._layerStyles.get(layer.Id).splice(0); }
+            else {
+                const styles: Array<GoogleMapTypes.ClusterStyle> = new Array<GoogleMapTypes.ClusterStyle>();
+                styles.push({});
+                this._layerStyles.set(layer.Id, styles);
+                clusterer.setStyles(styles);
+                    // this is important for dynamic styles as the pointer to this array gets passed
+                    // around key objects in the clusterer. Therefore, it must be initialized here in order for
+                    // updates to the styles to be visible.
+                    // also, we need to add at least one style to prevent the default styles from being picked up.
+            }
+        };
 
         const layerPromise = this._mapService.CreateClusterLayer(options);
         this._layers.set(layer, layerPromise);
+        layerPromise.then(l => {
+            const clusterer: GoogleMapTypes.MarkerClusterer = <GoogleMapTypes.MarkerClusterer>l.NativePrimitve;
+            if (options.styles) {
+                const s  = GoogleClusterService.CreateClusterIcons(options.styles);
+                s.then(x => {
+                    clusterer.setStyles(<Array<GoogleMapTypes.ClusterStyle>>x);
+                });
+            }
+            else {
+                resetStyles(clusterer);
+                this._mapService.MapPromise.then((m: GoogleMapTypes.GoogleMap) => {
+                    m.addListener('zoom_changed', () => {
+                        resetStyles(clusterer);
+                    });
+                });
+                clusterer.setCalculator((m, n) => {
+                    return dynamicClusterCallback(m, n, clusterer);
+                });
+            }
+        });
     };
 
     /**

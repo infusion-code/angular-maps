@@ -3,7 +3,6 @@ import { GoogleInfoWindow } from './../../models/google/google-info-window';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
-import * as GoogleMapTypes from './google-map-types';
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service'
@@ -29,6 +28,7 @@ import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from './../../models/google/google-marker';
 import { IBox } from '../../interfaces/ibox';
 import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
+import * as GoogleMapTypes from './google-map-types';
 
 declare var google: any;
 declare var MarkerClusterer: any;
@@ -87,7 +87,9 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
-        this._map = new Promise<GoogleMapTypes.GoogleMap>((resolve: () => void) => { this._mapResolver = resolve; });
+        this._map = new Promise<GoogleMapTypes.GoogleMap>(
+                (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
+        );
         this._config = (<GoogleMapAPILoader>this._loader).Config;
     }
 
@@ -105,18 +107,8 @@ export class GoogleMapService implements MapService {
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            if (options.styles) {
-                const s  = GoogleClusterService.CreateClusterIcons(options.styles);
-                return s.then(x => {
-                    options.styles = x;
-                    const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-                    return new GoogleMarkerClusterer(markerClusterer);
-                });
-            }
-            else {
-                const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-                return new GoogleMarkerClusterer(markerClusterer);
-            }
+            const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
+            return new GoogleMarkerClusterer(markerClusterer);
         });
     }
 
@@ -165,8 +157,11 @@ export class GoogleMapService implements MapService {
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
-            const map = new google.maps.Map(el, o);
-            this._mapResolver(<GoogleMapTypes.GoogleMap>map);
+            const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
+            if (mapOptions.bounds) {
+                map.fitBounds(GoogleConversions.TranslateBounds(mapOptions.bounds));
+            }
+            this._mapResolver(map);
             return;
         });
     }
@@ -377,6 +372,9 @@ export class GoogleMapService implements MapService {
      */
     public SetViewOptions(options: IMapOptions) {
         this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            if (options.bounds) {
+                m.fitBounds(GoogleConversions.TranslateBounds(options.bounds));
+            }
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(options);
             m.setOptions(o);
         });
