@@ -16,14 +16,6 @@ import { ClusterPlacementMode } from '../models/cluster-placement-mode';
 export interface IClusterOptions extends ILayerOptions {
 
         /**
-         * The average center of the cluser
-         *
-         * @type {boolean}
-         * @memberof IClusterOptions
-         */
-        averageCenter?: boolean;
-
-        /**
          * A callback function that is fired after the clustering for a map view has completed.
          * This is useful if you want to generate a list of locations based on what is in the current view.
          *
@@ -141,8 +133,8 @@ export interface IClusterOptions extends ILayerOptions {
         /**
          * The z-index of the layer.
          *
-                * @type {number}
-                * @memberof IClusterOptions
+         * @type {number}
+         * @memberof IClusterOptions
          */
         zIndex?: number;
 

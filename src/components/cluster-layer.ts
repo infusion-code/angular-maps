@@ -238,7 +238,8 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
             this._useDynamicSizeMarker = val;
             if (val) {
                 this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
-                    return ClusterLayerDirective.CreateDynamicSizeMarker(m, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
+                    return ClusterLayerDirective.CreateDynamicSizeMarker(
+                        m.length, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
                 }
             }
         }
@@ -269,7 +270,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      *
      * @protected
      * @static
-     * @param {Array<Marker>} m - The array of markers for the cluster.
+     * @param {integer} size - The number of markers in the cluster.
      * @param {IMarkerIconInfo} info  - The icon info to be used. This will be hydrated with
      * the actualy dimensions of the created markers and is used by the underlying model/services
      * to correctly offset the marker for correct positioning.
@@ -281,11 +282,11 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      *
      * @memberof ClusterLayerDirective
      */
-    protected static CreateDynamicSizeMarker(m: Array<Marker>, info: IMarkerIconInfo,
+    protected static CreateDynamicSizeMarker(size: number, info: IMarkerIconInfo,
                                              baseMarkerSize: number, ranges: Map<number, string>): string {
         const mr: number = baseMarkerSize;
         const outline: number = mr * 0.35;
-        const total: number = m.length;
+        const total: number = size;
         const r: number = Math.log(total) / Math.log(10) * 5 + mr;
         const d: number = r * 2;
         let fillColor: string;

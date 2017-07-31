@@ -1,10 +1,10 @@
 import { GoogleMarker } from './google-marker';
 import { IClusterOptions } from '../../interfaces/icluster-options';
-import { ISpiderClusterOptions } from '../../interfaces/ispider-cluster-options';
 import { MapService } from '../../services/map.service';
 import { Layer } from '../layer';
 import { Marker } from '../marker';
 import { InfoWindow } from '../info-window';
+import { ClusterPlacementMode } from '../cluster-placement-mode';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 /**
@@ -22,8 +22,9 @@ export class GoogleMarkerClusterer implements Layer {
     private _isClustering = true;
     private _markers: Array<Marker> = new Array<Marker>();
     private _pendingMarkers: Array<Marker> = new Array<Marker>();
-    private _mapclicks = 0;
-    private _currentZoom = 0;
+    private _mapclicks: number = 0;
+    private _currentZoom: number = 0;
+    private _visible: boolean = true;
 
     ///
     /// Property definitions
@@ -36,7 +37,7 @@ export class GoogleMarkerClusterer implements Layer {
      *
      * @memberof GoogleMarkerClusterer
      */
-    public get NativePrimitve(): any {
+    public get NativePrimitve(): GoogleMapTypes.MarkerClusterer {
         return this._layer;
     }
 
@@ -69,7 +70,7 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public AddListener(eventType: string, fn: Function): void {
-        // this._layer.addListener(eventType, fn);
+        throw (new Error('Events are not supported on Google Cluster Layers. You can still add events to individual markers.'));
     }
 
     /**
@@ -91,7 +92,8 @@ export class GoogleMarkerClusterer implements Layer {
             if (this._isClustering) {
                 this._layer.addMarker(entity.NativePrimitve);
                 this._markers.push(entity);
-            } else {
+            }
+            else {
                 this._pendingMarkers.push(entity);
             }
         }
@@ -103,68 +105,31 @@ export class GoogleMarkerClusterer implements Layer {
     }
 
     /**
-     * Initializes spider behavior for the clusering layer (when a cluster maker is clicked, it explodes into a spider of the
-     * individual underlying pins.
-     *
-     * @param options ISpiderClusterOptions. Optional. Options governing the behavior of the spider.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    public InitializeSpiderClusterSupport(options?: ISpiderClusterOptions): void {
-        // if (this._useSpiderCluster) { return; }
-        // const m: Microsoft.Maps.Map = (<BingMapService>this._maps).MapInstance;
-        // this._useSpiderCluster = true;
-        // this._spiderLayer = new Microsoft.Maps.Layer();
-        // this._currentZoom = m.getZoom();
-        // this.SetSpiderOptions(options);
-        // m.layers.insert(this._spiderLayer);
-
-        // ///
-        // /// Add spider related events....
-        // ///
-        // this._events.push(Microsoft.Maps.Events.addHandler(m, 'click', e => this.OnMapClick(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangestart', e => this.OnMapViewChangeStart(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(m, 'viewchangeend', e => this.OnMapViewChangeEnd(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(this._layer, 'click', e => this.OnLayerClick(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'click', e => this.OnLayerClick(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseover', e => this.OnSpiderMouseOver(e)));
-        // this._events.push(Microsoft.Maps.Events.addHandler(this._spiderLayer, 'mouseout', e => this.OnSpiderMouseOut(e)));
-    }
-
-    /**
      * Deletes the clustering layer.
      *
      * @memberof GoogleMarkerClusterer
      */
     public Delete(): void {
-        // if (this._useSpiderCluster) {
-        //     this._spiderLayer.clear();
-        //     (<BingMapService>this._maps).MapPromise.then(m => {
-        //         m.layers.remove(this._spiderLayer);
-        //         this._spiderLayer = null;
-        //     });
-        //     this._events.forEach(e => Microsoft.Maps.Events.removeHandler(e));
-        //     this._events.splice(0);
-        //     this._useSpiderCluster = false;
-        // }
-        // this._markers.splice(0);
-        // this._spiderMarkers.splice(0);
-        // this._pendingMarkers.splice(0);
-        // this._maps.DeleteLayer(this);
+        this._layer.getMarkers().forEach(m => {
+            m.setMap(null);
+        });
+        this._layer.clearMarkers();
+        this._markers.splice(0);
+        this._pendingMarkers.splice(0);
     }
 
     /**
-     * Returns the abstract marker used to wrap the Bing Pushpin.
+     * Returns the abstract marker used to wrap the Google Marker.
      *
      * @returns Marker. The abstract marker object representing the pushpin.
      *
      * @memberof GoogleMarkerClusterer
      */
-    // public GetMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): Marker {
-    //     // const i: number = this._markers.findIndex(e => e.NativePrimitve === pin);
-    //     // if (i > -1) { return this._markers[i]; }
-    //     // return null;
-    // }
+    public GetMarkerFromGoogleMarker(pin: GoogleMapTypes.Marker): Marker {
+        const i: number = this._markers.findIndex(e => e.NativePrimitve === pin);
+        if (i > -1) { return this._markers[i]; }
+        return null;
+    }
 
     /**
      * Returns the options governing the behavior of the layer.
@@ -174,19 +139,18 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public GetOptions(): IClusterOptions {
-        return null;
-        // const o: Microsoft.Maps.IClusterLayerOptions = this._layer.getOptions();
-        // const options: IClusterOptions = {
-        //     id: 0,
-        //     gridSize: o.gridSize,
-        //     layerOffset: o.layerOffset,
-        //     clusteringEnabled: o.clusteringEnabled,
-        //     callback: o.callback,
-        //     clusteredPinCallback: o.clusteredPinCallback,
-        //     visible: o.visible,
-        //     zIndex: o.zIndex
-        // };
-        // return options;
+        const options: IClusterOptions = {
+            id: 0,
+            gridSize: this._layer.getGridSize(),
+            clusteringEnabled: this._layer.getGridSize() === 0,
+            maxZoom: this._layer.getMaxZoom(),
+            minimumClusterSize: this._layer.getMinClusterSize(),
+            placementMode: this._layer.isAverageCenter() ? ClusterPlacementMode.MeanValue : ClusterPlacementMode.FirstPin,
+            visible: this._visible,
+            zoomOnClick: this._layer.isZoomOnClick(),
+            styles: this._layer.getStyles()
+        };
+        return options;
     }
 
     /**
@@ -197,8 +161,7 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public GetVisible(): boolean {
-        return true;
-        // return this._layer.getOptions().visible;
+        return this._visible;
     }
 
     /**
@@ -209,20 +172,15 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public RemoveEntity(entity: Marker | InfoWindow | any): void {
-        // if (entity.NativePrimitve && entity.Location) {
-        //     const j: number = this._markers.findIndex(m => m === entity);
-        //     const k: number = this._pendingMarkers.findIndex(m => m === entity);
-        //     if (j > -1) { this._markers.splice(j, 1); }
-        //     if (k > -1) { this._pendingMarkers.splice(k, 1); }
-        //     if (this._isClustering) {
-        //         const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
-        //         const i: number = p.findIndex(x => x === entity.NativePrimitve);
-        //         if (i > -1) {
-        //             p.splice(i, 1);
-        //             this._layer.setPushpins(p);
-        //         }
-        //     }
-        // }
+        if (entity.NativePrimitve && entity.Location) {
+            const j: number = this._markers.findIndex(m => m === entity);
+            const k: number = this._pendingMarkers.findIndex(m => m === entity);
+            if (j > -1) { this._markers.splice(j, 1); }
+            if (k > -1) { this._pendingMarkers.splice(k, 1); }
+            if (this._isClustering) {
+                this._layer.removeMarker(entity.NativePrimitve);
+            }
+        }
     }
 
     /**
@@ -234,15 +192,21 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetEntities(entities: Array<Marker> | Array<InfoWindow> | Array<any>): void {
-        // const p: Array<Microsoft.Maps.Pushpin> = new Array<Microsoft.Maps.Pushpin>();
-        // this._markers.splice(0);
-        // (<Array<any>>entities).forEach((e: any) => {
-        //     if (e.NativePrimitve && e.Location) {
-        //         this._markers.push(e);
-        //         p.push(<Microsoft.Maps.Pushpin>e.NativePrimitve);
-        //     }
-        // });
-        // this._layer.setPushpins(p);
+        this._layer.getMarkers().forEach(m => {
+            m.setMap(null);
+        });
+        this._layer.clearMarkers();
+        this._markers.splice(0);
+        this._pendingMarkers.splice(0);
+
+        const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
+        (<Array<any>>entities).forEach((e: any) => {
+            if (e.NativePrimitve && e.Location) {
+                this._markers.push(e);
+                p.push(e.NativePrimitve);
+            }
+        });
+        this._layer.addMarkers(p);
     }
 
     /**
@@ -254,9 +218,21 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetOptions(options: IClusterOptions): void {
-        // const o: Microsoft.Maps.IClusterLayerOptions = BingConversions.TranslateClusterOptions(options);
-        // this._layer.setOptions(o);
-        // if (options.spiderClusterOptions) { this.SetSpiderOptions(options.spiderClusterOptions); }
+        if (options.placementMode != null) {
+            throw(new Error('GoogleMarkerClusterer: PlacementMode option cannot be set after initial creation.'));
+        };
+        if (options.zoomOnClick != null) {
+            throw(new Error('GoogleMarkerClusterer: ZoomOnClick option cannot be set after initial creation.'));
+        }
+        if (options.callback != null) {}
+        if (options.clusteringEnabled != null && !options.clusteringEnabled) { this._layer.setGridSize(0); }
+        if (options.gridSize != null && (options.clusteringEnabled == null || options.clusteringEnabled)) {
+            this._layer.setGridSize(options.gridSize);
+        }
+        if (options.maxZoom != null) { this._layer.setMaxZoom(options.maxZoom); }
+        if (options.minimumClusterSize != null) { this._layer.setMinClusterSize(options.minimumClusterSize); }
+        if (options.styles != null) { this._layer.setStyles(options.styles); }
+        if (options.visible != null) { this.SetVisible(options.visible); }
     }
 
     /**
@@ -267,9 +243,11 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetVisible(visible: boolean): void {
-        // const o: Microsoft.Maps.IClusterLayerOptions = this._layer.getOptions();
-        // o.visible = visible;
-        // this._layer.setOptions(o);
+        const map: GoogleMapTypes.GoogleMap = visible ? this._layer.getMap() : null;
+        this._layer.getMarkers().forEach(m => {
+            m.setMap(map);
+        });
+        this._visible = visible;
     }
 
     /**
@@ -315,300 +293,4 @@ export class GoogleMarkerClusterer implements Layer {
         if (!this._isClustering) { return; }
         this._isClustering = false;
     };
-
-
-    ///
-    /// Private methods
-    ///
-
-    /**
-     * Creates a copy of a pushpins basic options.
-     *
-     * @param pin Pushpin to copy options from.
-     * @returns A copy of a pushpins basic options.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private GetBasicPushpinOptions(pin: Microsoft.Maps.Pushpin): Microsoft.Maps.IPushpinOptions {
-    //     // return <Microsoft.Maps.IPushpinOptions>{
-    //     //     anchor: pin.getAnchor(),
-    //     //     color: pin.getColor(),
-    //     //     cursor: pin.getCursor(),
-    //     //     icon: pin.getIcon(),
-    //     //     roundClickableArea: pin.getRoundClickableArea(),
-    //     //     subTitle: pin.getSubTitle(),
-    //     //     text: pin.getText(),
-    //     //     textOffset: pin.getTextOffset(),
-    //     //     title: pin.getTitle()
-    //     // };
-    // }
-
-    /**
-     * Returns the abstract marker used to wrap the Bing Pushpin.
-     *
-     * @returns {@BingSpiderClusterMarker} . The abstract marker object representing the pushpin.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // public GetSpiderMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): BingSpiderClusterMarker {
-    //     // const i: number = this._spiderMarkers.findIndex(e => e.NativePrimitve === pin);
-    //     // if (i > -1) { return this._spiderMarkers[i]; }
-    //     // return null;
-    // }
-
-    /**
-     * Hides the spider cluster and resotres the original pin.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    private HideSpiderCluster(): void {
-        // this._mapclicks = 0;
-        // if (this._currentCluster) {
-        //     this._spiderLayer.clear();
-        //     this._currentCluster = null;
-        //     this._mapclicks = -1;
-        //     if (this._spiderOptions.markerUnSelected) { this._spiderOptions.markerUnSelected(); }
-        // }
-    }
-
-    /**
-     * Click event handler for when a shape in the cluster layer is clicked.
-     *
-     * @param e The mouse event argurment from the click event.
-     * @returns {void}
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private OnLayerClick(e: Microsoft.Maps.IMouseEventArgs): void {
-    //     if (e.primitive instanceof Microsoft.Maps.ClusterPushpin) {
-    //         const cp: Microsoft.Maps.ClusterPushpin = <Microsoft.Maps.ClusterPushpin>e.primitive;
-    //         const showNewCluster: boolean = cp !== this._currentCluster;
-    //         this.HideSpiderCluster();
-    //         if (showNewCluster) {
-    //             this.ShowSpiderCluster(<Microsoft.Maps.ClusterPushpin>e.primitive);
-    //         }
-    //     } else {
-    //         const pin: Microsoft.Maps.Pushpin = <Microsoft.Maps.Pushpin>e.primitive;
-    //         if (pin.metadata && pin.metadata.isClusterMarker) {
-    //             const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
-    //             const p: BingMarker = m.ParentMarker;
-    //             const ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
-    //             if (this._spiderOptions.markerSelected) {
-    //                 this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster));
-    //             }
-    //             if (Microsoft.Maps.Events.hasHandler(ppin, 'click')) {
-    //                 Microsoft.Maps.Events.invoke(ppin, 'click', e);
-    //             }
-    //             this._mapclicks = 0;
-    //         } else {
-    //             if (this._spiderOptions.markerSelected) {
-    //                 this._spiderOptions.markerSelected(this.GetMarkerFromBingMarker(pin), null);
-    //             }
-    //             if (Microsoft.Maps.Events.hasHandler(pin, 'click')) { Microsoft.Maps.Events.invoke(pin, 'click', e); }
-    //         }
-    //     }
-    // }
-
-    /**
-     * Delegate handling the click event on the map (outside a spider cluster). Depending on the
-     * spider options, closes the cluster or increments the click counter.
-     *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event
-     * @returns {void}
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private OnMapClick(e: Microsoft.Maps.IMouseEventArgs | Microsoft.Maps.IMapTypeChangeEventArgs): void {
-    //     // if (this._mapclicks === -1) {
-    //     //     return;
-    //     // } else if (++this._mapclicks >= this._spiderOptions.collapseClusterOnNthClick) {
-    //     //     this.HideSpiderCluster();
-    //     // } else {
-    //     //     // do nothing as this._mapclicks has already been incremented above
-    //     // }
-    // }
-
-    /**
-     * Delegate handling the map view changed end event. Hides the spider cluster if the zoom level has changed.
-     *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private OnMapViewChangeEnd(e: Microsoft.Maps.IMouseEventArgs | Microsoft.Maps.IMapTypeChangeEventArgs): void {
-    //     // const z: number = (<Microsoft.Maps.Map>e.target).getZoom();
-    //     // const hasZoomChanged: boolean = (z !== this._currentZoom);
-    //     // this._currentZoom = z;
-    //     // if (hasZoomChanged) {
-    //     //     this.HideSpiderCluster();
-    //     // }
-    // }
-
-    /**
-     * Delegate handling the map view change start event. Depending on the spider options, hides the
-     * the exploded spider or does nothing.
-     *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private OnMapViewChangeStart(e: Microsoft.Maps.IMouseEventArgs | Microsoft.Maps.IMapTypeChangeEventArgs): void {
-    //     // if (this._spiderOptions.collapseClusterOnMapChange) {
-    //     //     this.HideSpiderCluster();
-    //     // }
-    // }
-
-    /**
-     * Delegate invoked on mouse out on an exploded spider marker. Resets the hover style on the stick.
-     *
-     * @param e - Mouse event.
-     */
-    // private OnSpiderMouseOut(e: Microsoft.Maps.IMouseEventArgs): void {
-    //     // const pin: Microsoft.Maps.Pushpin = <Microsoft.Maps.Pushpin>e.primitive;
-    //     // if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
-    //     //     const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
-    //     //     m.Stick.setOptions(this._spiderOptions.stickStyle);
-    //     // }
-    // }
-
-    /**
-     * Invoked on mouse over on an exploded spider marker. Sets the hover style on the stick. Also invokes the click event
-     * on the underlying original marker dependent on the spider options.
-     *
-     * @param e - Mouse event.
-     */
-    // private OnSpiderMouseOver(e: Microsoft.Maps.IMouseEventArgs): void {
-    //     // const pin: Microsoft.Maps.Pushpin = <Microsoft.Maps.Pushpin>e.primitive;
-    //     // if (pin instanceof Microsoft.Maps.Pushpin && pin.metadata && pin.metadata.isClusterMarker) {
-    //     //     const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
-    //     //     m.Stick.setOptions(this._spiderOptions.stickHoverStyle);
-    //     //     if (this._spiderOptions.invokeClickOnHover) {
-    //     //         const p: BingMarker = m.ParentMarker;
-    //     //         const ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
-    //     //         if (Microsoft.Maps.Events.hasHandler(ppin, 'click')) { Microsoft.Maps.Events.invoke(ppin, 'click', e); }
-    //     //     }
-    //     // }
-    // }
-
-    /**
-     * Sets the options for spider behavior.
-     *
-     * @param options ISpiderClusterOptions containing the options enumeration controlling the spider cluster behavior. The supplied options
-     * are merged with the default/existing options.
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    private SetSpiderOptions(options: ISpiderClusterOptions): void {
-        // if (options) {
-        //     if (typeof options.circleSpiralSwitchover === 'number') {
-        //         this._spiderOptions.circleSpiralSwitchover = options.circleSpiralSwitchover;
-        //     }
-        //     if (typeof options.collapseClusterOnMapChange === 'boolean') {
-        //         this._spiderOptions.collapseClusterOnMapChange = options.collapseClusterOnMapChange;
-        //     }
-        //     if (typeof options.collapseClusterOnNthClick === 'number') {
-        //         this._spiderOptions.collapseClusterOnNthClick = options.collapseClusterOnNthClick;
-        //     }
-        //     if (typeof options.invokeClickOnHover === 'boolean') {
-        //         this._spiderOptions.invokeClickOnHover = options.invokeClickOnHover;
-        //     }
-        //     if (typeof options.minSpiralAngleSeperation === 'number') {
-        //         this._spiderOptions.minSpiralAngleSeperation = options.minSpiralAngleSeperation;
-        //     }
-        //     if (typeof options.spiralDistanceFactor === 'number') {
-        //         this._spiderOptions.spiralDistanceFactor = options.spiralDistanceFactor;
-        //     }
-        //     if (typeof options.minCircleLength === 'number') {
-        //         this._spiderOptions.minCircleLength = options.minCircleLength;
-        //     }
-        //     if (options.stickHoverStyle) {
-        //         this._spiderOptions.stickHoverStyle = options.stickHoverStyle;
-        //     }
-        //     if (options.stickStyle) {
-        //         this._spiderOptions.stickStyle = options.stickStyle;
-        //     }
-        //     if (options.markerSelected) {
-        //         this._spiderOptions.markerSelected = options.markerSelected;
-        //     }
-        //     if (options.markerUnSelected) {
-        //         this._spiderOptions.markerUnSelected = options.markerUnSelected;
-        //     }
-        //     if (typeof options.visible === 'boolean') {
-        //         this._spiderOptions.visible = options.visible;
-        //     }
-        //     this.SetOptions(<IClusterOptions>options);
-        // }
-    }
-
-    /**
-     * Expands a cluster into it's open spider layout.
-     *
-     * @param cluster The cluster to show in it's open spider layout..
-     *
-     * @memberof GoogleMarkerClusterer
-     */
-    // private ShowSpiderCluster(cluster: Microsoft.Maps.ClusterPushpin): void {
-    //     // this.HideSpiderCluster();
-    //     // this._currentCluster = cluster;
-
-    //     // if (cluster && cluster.containedPushpins) {
-    //     //     // Create spider data.
-    //     //     const m: Microsoft.Maps.Map = (<BingMapService>this._maps).MapInstance;
-    //     //     const pins: Array<Microsoft.Maps.Pushpin> = cluster.containedPushpins;
-    //     //     const center: Microsoft.Maps.Location = cluster.getLocation();
-    //     //     const centerPoint: Microsoft.Maps.Point =
-    //     //         <Microsoft.Maps.Point>m.tryLocationToPixel(center, Microsoft.Maps.PixelReference.control);
-    //     //     let stick: Microsoft.Maps.Polyline;
-    //     //     let angle = 0;
-    //     //     const makeSpiral: boolean = pins.length > this._spiderOptions.circleSpiralSwitchover;
-    //     //     let legPixelLength: number;
-    //     //     let stepAngle: number;
-    //     //     let stepLength: number;
-
-    //     //     if (makeSpiral) {
-    //     //         legPixelLength = this._spiderOptions.minCircleLength / Math.PI;
-    //     //         stepLength = 2 * Math.PI * this._spiderOptions.spiralDistanceFactor;
-    //     //     } else {
-    //     //         stepAngle = 2 * Math.PI / pins.length;
-    //     //         legPixelLength = (this._spiderOptions.spiralDistanceFactor / stepAngle / Math.PI / 2) * pins.length;
-    //     //         if (legPixelLength < this._spiderOptions.minCircleLength) { legPixelLength = this._spiderOptions.minCircleLength; }
-    //     //     }
-
-    //     //     for (let i = 0, len = pins.length; i < len; i++) {
-    //     //         // Calculate spider pin location.
-    //     //         if (!makeSpiral) {
-    //     //             angle = stepAngle * i;
-    //     //         } else {
-    //     //             angle += this._spiderOptions.minSpiralAngleSeperation / legPixelLength + i * 0.0005;
-    //     //             legPixelLength += stepLength / angle;
-    //     //         }
-    //     //         const point: Microsoft.Maps.Point =
-    //     //             new Microsoft.Maps.Point(centerPoint.x + legPixelLength * Math.cos(angle),
-    //     //                 centerPoint.y + legPixelLength * Math.sin(angle));
-    //     //         const loc: Microsoft.Maps.Location =
-    //     //             <Microsoft.Maps.Location>m.tryPixelToLocation(point, Microsoft.Maps.PixelReference.control);
-
-    //     //         // Create stick to pin.
-    //     //         stick = new Microsoft.Maps.Polyline([center, loc], this._spiderOptions.stickStyle);
-    //     //         this._spiderLayer.add(stick);
-
-    //     //         // Create pin in spiral that contains same metadata as parent pin.
-    //     //         const pin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc);
-    //     //         pin.metadata = pins[i].metadata || {};
-    //     //         pin.metadata.isClusterMarker = true;
-    //     //         pin.setOptions(this.GetBasicPushpinOptions(pins[i]));
-    //     //         this._spiderLayer.add(pin);
-
-    //     //         const spiderMarker: BingSpiderClusterMarker = new BingSpiderClusterMarker(pin);
-    //     //         spiderMarker.Stick = stick;
-    //     //         spiderMarker.ParentMarker = <BingMarker>this.GetMarkerFromBingMarker(pins[i]);
-    //     //         this._spiderMarkers.push(spiderMarker);
-    //     //     }
-    //     //     this._mapclicks = 0;
-    //     // }
-    // }
-
 }
