@@ -87,7 +87,9 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
-        this._map = new Promise<GoogleMapTypes.GoogleMap>((resolve: () => void) => { this._mapResolver = resolve; });
+        this._map = new Promise<GoogleMapTypes.GoogleMap>(
+                (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
+        );
         this._config = (<GoogleMapAPILoader>this._loader).Config;
     }
 
@@ -155,8 +157,11 @@ export class GoogleMapService implements MapService {
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
-            const map = new google.maps.Map(el, o);
-            this._mapResolver(<GoogleMapTypes.GoogleMap>map);
+            const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
+            if (mapOptions.bounds) {
+                map.fitBounds(GoogleConversions.TranslateBounds(mapOptions.bounds));
+            }
+            this._mapResolver(map);
             return;
         });
     }
@@ -367,6 +372,9 @@ export class GoogleMapService implements MapService {
      */
     public SetViewOptions(options: IMapOptions) {
         this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            if (options.bounds) {
+                m.fitBounds(GoogleConversions.TranslateBounds(options.bounds));
+            }
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(options);
             m.setOptions(o);
         });

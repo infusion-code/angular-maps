@@ -524,7 +524,7 @@ export class BingConversions {
      *  Maps an IPolylineOptions object to a Microsoft.Maps.IPolylineOptions.
      *
      * @static
-     * @param {IPolygonOptions} options - Object to be mapped.
+     * @param {IPolylineOptions} options - Object to be mapped.
      * @returns {Microsoft.Maps.IPolylineOptions} - Mapped object.
      *
      * @memberof BingConversions
