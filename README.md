@@ -183,12 +183,6 @@ as long as the underlying capabilities are there. In order to do that you need t
 
 Happy coding! 
 
-# Some Credits
-
-I want to give credit to [@youjustgo](https://www.npmjs.com/~youjustgo) who started [ng2-bingmaps](https://www.npmjs.com/package/ng2-bingmaps). Even though this effort is no abandoned, I was able to pick up some great stuff and 
-leverage it for this module. Thanks also to [@adessoag](https://github.com/adessoag) and the [Angular Google Maps Team](https://github.com/SebastianM/angular-google-maps). I structurally modelled much of the interfaces and abstracts for this project 
-after their work to make it easy to inject their services for a provider independent map implementation. 
-
 # Advanced
 
 Check out the [Wiki](../../wiki) for detailed documentation on components, models and providers. 
