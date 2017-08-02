@@ -7,19 +7,56 @@ import { Polygon } from '../polygon';
  * Concrete implementation for a polygon model for Bing Maps V8.
  *
  * @export
+ * @extends Polygon
  * @implements Polygon
  * @class BingPolygon
  */
-export class BingPolygon implements Polygon {
+export class BingPolygon extends Polygon implements Polygon {
 
     ///
     /// Field declarations
     ///
     private _isEditable: boolean = true;
+    private _title: string = '';
+    private _maxZoom: number = -1;
+    private _minZoom: number = -1;
+    private _showLabel: boolean = false;
+    private _showTooltip: boolean = false;
+    private _label: Microsoft.Maps.Infobox = null;
+    private _tooltip: Microsoft.Maps.Infobox = null;
 
     ///
     /// Property declarations
     ///
+
+    /**
+     * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
+     *
+     * @type {number}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get LabelMaxZoom(): number { return this._maxZoom; }
+    public set LabelMaxZoom(val: number) {
+        this._maxZoom = val;
+        // this.ManageLabel();
+    }
+
+    /**
+     * Gets or sets the minimum zoom at which the label is displayed. Ignored or ShowLabel is false.
+     *
+     * @type {number}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get LabelMinZoom(): number { return this._minZoom; }
+    public set LabelMinZoom(val: number) {
+        this._minZoom = val;
+        // this.ManageLabel();
+    }
+
 
     /**
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Polygon}
@@ -29,6 +66,52 @@ export class BingPolygon implements Polygon {
      * @memberof BingPolygon
      */
     public get NativePrimitve(): any { return this._polygon; }
+
+    /**
+     * Gets or sets whether to show the label
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof BingPolygon
+     * @property
+     * @public
+     */
+    public get ShowLabel(): boolean { return this._showLabel; }
+    public set ShowLabel(val: boolean) {
+        this._showLabel = val;
+        // this.ManageLabel();
+    }
+
+    /**
+     * Gets or sets whether to show the tooltip
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof BingPolygon
+     * @property
+     * @public
+     */
+    public get ShowTooltip(): boolean { return this._showTooltip; }
+    public set ShowTooltip(val: boolean) {
+        this._showTooltip = val;
+        // this.ManageTooltip();
+    }
+
+    /**
+     * Gets or sets the title off the polygon
+     *
+     * @abstract
+     * @type {string}
+     * @memberof BingPolygon
+     * @property
+     * @public
+     */
+    public get Title(): string { return this._title; }
+    public set Title(val: string) {
+        this._title = val;
+        // this.ManageLabel();
+        // this.ManageTooltip();
+    }
 
     ///
     /// constructor
@@ -40,7 +123,9 @@ export class BingPolygon implements Polygon {
      *
      * @memberof BingPolygon
      */
-    constructor(private _polygon: Microsoft.Maps.Polygon) { }
+    constructor(private _polygon: Microsoft.Maps.Polygon) {
+        super();
+    }
 
     /**
      * Adds a delegate for an event.

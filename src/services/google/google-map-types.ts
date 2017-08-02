@@ -335,6 +335,7 @@ export interface PolygonOptions {
 }
 
 export interface Polygon extends MVCObject {
+  zIndex: number;
   getDraggable(): boolean;
   getEditable(): boolean;
   getMap(): GoogleMap;
@@ -576,4 +577,13 @@ export interface FullscreenControlOptions {
    * The default position is RIGHT_TOP.
    */
   position?: ControlPosition;
+}
+
+export declare class OverlayView {
+    public set(key: string, value: any): void;
+    public get(key: string): any;
+    public setValues(options: any): void;
+    public getPanes(): any;
+    public getProjection(): any;
+    public getMap(): GoogleMap;
 }

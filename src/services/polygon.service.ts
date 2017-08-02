@@ -72,7 +72,7 @@ export abstract class PolygonService {
    *
    * @memberof PolygonService
    */
-  public abstract GetNativeMarker(polygon: MapPolygonDirective): Promise<Polygon>;
+  public abstract GetNativePolygon(polygon: MapPolygonDirective): Promise<Polygon>;
 
   /**
    * Set the polygon options.

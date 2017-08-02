@@ -20,6 +20,7 @@ import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
+import { ExtendMapLabelWithOverlayView } from '../../models/google/google-label';
 import { Layer } from '../../models/layer';
 import { InfoWindow } from '../../models/info-window';
 import { GooglePolygon } from '../../models/google/google-polygon';
@@ -156,6 +157,7 @@ export class GoogleMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
+            ExtendMapLabelWithOverlayView();
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
             const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
             if (mapOptions.bounds) {
@@ -215,7 +217,14 @@ export class GoogleMapService implements MapService {
             const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
             const polygon: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
             polygon.setMap(map);
-            return new GooglePolygon(polygon);
+
+            const p: GooglePolygon = new GooglePolygon(polygon);
+            if (options.title && options.title !== '') { p.Title = options.title; }
+            if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
+            if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
+            if (options.labelMaxZoom != null) { p.LabelMaxZoom = options.labelMaxZoom; }
+            if (options.labelMinZoom != null) { p.LabelMinZoom = options.labelMinZoom; }
+            return p;
         });
     }
 

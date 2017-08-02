@@ -159,7 +159,7 @@ export class BingPolylineService implements PolylineService {
      *
      * @memberof BingPolylineService
      */
-    public GetNativeMarker(polyline: MapPolylineDirective): Promise<Polyline> {
+    public GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline> {
         return this._polylines.get(polyline);
     }
 

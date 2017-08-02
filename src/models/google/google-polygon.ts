@@ -1,8 +1,9 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { GoogleConversions } from '../../services/google/google-conversions';
-import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { Polygon } from '../polygon';
+import { MapLabel } from './google-label';
+import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 declare var google: any;
 
@@ -11,13 +12,66 @@ declare var google: any;
  *
  * @export
  * @implements Polygon
+ * @extends Polygon
  * @class GooglePolygon
  */
-export class GooglePolygon implements Polygon {
+export class GooglePolygon extends Polygon implements Polygon {
+
+    private _title: string = '';
+    private _showLabel: boolean = false;
+    private _showTooltip: boolean = false;
+    private _maxZoom: number = -1;
+    private _minZoom: number = -1;
+    private _label: MapLabel = null;
+    private _tooltip: MapLabel = null;
+    private _tooltipVisible: boolean = false;
+    private _hasToolTipReceiver: boolean = false;
+    private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
+    private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
+    private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
 
     ///
     /// Property declarations
     ///
+
+    /**
+     * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
+     *
+     * @type {number}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get LabelMaxZoom(): number { return this._maxZoom; }
+    public set LabelMaxZoom(val: number) {
+        this._maxZoom = val;
+        this.ManageLabel();
+    }
+
+    /**
+     * Gets or sets the minimum zoom at which the label is displayed. Ignored or ShowLabel is false.
+     *
+     * @type {number}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get LabelMinZoom(): number { return this._minZoom; }
+    public set LabelMinZoom(val: number) {
+        this._minZoom = val;
+        this.ManageLabel();
+    }
+
+    /**
+     * Gets the polygon's centroid.
+     * @readonly
+     * @private
+     * @type {GoogleMapTypes.LatLngLiteral}
+     * @memberof GooglePolygon
+     */
+    private get Centroid(): GoogleMapTypes.LatLngLiteral {
+        return GoogleConversions.TranslateLocation(this.GetPolygonCentroid());
+    }
 
     /**
      * Gets the native primitve implementing the marker, in this case {@link GoogleMapTypes.Polygon}
@@ -27,6 +81,52 @@ export class GooglePolygon implements Polygon {
      * @memberof GooglePolygon
      */
     public get NativePrimitve(): GoogleMapTypes.Polygon { return this._polygon; }
+
+    /**
+     * Gets or sets whether to show the label
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get ShowLabel(): boolean { return this._showLabel; }
+    public set ShowLabel(val: boolean) {
+        this._showLabel = val;
+        this.ManageLabel();
+    }
+
+    /**
+     * Gets or sets whether to show the tooltip
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get ShowTooltip(): boolean { return this._showTooltip; }
+    public set ShowTooltip(val: boolean) {
+        this._showTooltip = val;
+        this.ManageTooltip();
+    }
+
+    /**
+     * Gets or sets the title off the polygon
+     *
+     * @abstract
+     * @type {string}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get Title(): string { return this._title; }
+    public set Title(val: string) {
+        this._title = val;
+        this.ManageLabel();
+        this.ManageTooltip();
+    }
 
     ///
     /// constructor
@@ -38,7 +138,9 @@ export class GooglePolygon implements Polygon {
      *
      * @memberof GooglePolygon
      */
-    constructor(private _polygon: GoogleMapTypes.Polygon) { }
+    constructor(private _polygon: GoogleMapTypes.Polygon) {
+        super();
+    }
 
     /**
      * Adds a delegate for an event.
@@ -213,6 +315,96 @@ export class GooglePolygon implements Polygon {
      */
     public SetVisible(visible: boolean): void {
         this._polygon.setVisible(visible);
+    }
+
+    ///
+    /// Private methods
+    ///
+
+    /**
+     * Configures the label for the polygon
+     * @memberof Polygon
+     * @private
+     */
+    private ManageLabel(): void {
+        if (this._showLabel && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                position: this.Centroid
+            };
+            if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
+            if (this._maxZoom !== -1) { o.maxZoom = this._maxZoom; }
+            if (this._label == null) {
+                o.map = this.NativePrimitve.getMap();
+                o.zIndex = this.NativePrimitve.zIndex ? this.NativePrimitve.zIndex + 1 : 100;
+                this._label = new MapLabel(o);
+            }
+            else {
+                this._label.SetValues(o);
+            }
+        }
+        else {
+            if (this._label) {
+                this._label.SetMap(null);
+                this._label = null;
+            }
+        }
+    }
+
+    /**
+     * Configures the tooltip for the polygon
+     * @memberof Polygon
+     * @private
+     */
+    private ManageTooltip(): void {
+        if (this._showTooltip && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                align: 'left',
+                offset: new google.maps.Point(0, 25),
+                backgroundColor: 'bisque',
+                hidden: true
+            };
+            if (this._tooltip == null) {
+                o.map = this.NativePrimitve.getMap();
+                o.zIndex = 100000;
+                this._tooltip = new MapLabel(o);
+            }
+            else {
+                this._tooltip.SetValues(o);
+            }
+            if (!this._hasToolTipReceiver) {
+                this._mouseOverListener = this.NativePrimitve.addListener('mouseover', (e: GoogleMapTypes.MouseEvent) => {
+                    this._tooltip.Set('position', e.latLng);
+                    if (!this._tooltipVisible) {
+                        this._tooltip.Set('hidden', false);
+                        this._tooltipVisible = true;
+                    }
+                });
+                this._mouseMoveListener = this.NativePrimitve.addListener('mousemove', (e: GoogleMapTypes.MouseEvent) => {
+                    if (this._tooltipVisible) { this._tooltip.Set('position', e.latLng); }
+                });
+                this._mouseOutListener = this.NativePrimitve.addListener('mouseout', (e: GoogleMapTypes.MouseEvent) => {
+                    if (this._tooltipVisible) {
+                        this._tooltip.Set('hidden', true);
+                        this._tooltipVisible = false;
+                    }
+                });
+                this._hasToolTipReceiver = true;
+            }
+        }
+        if ((!this._showTooltip || this._title === '' || this._title == null)) {
+            if (this._hasToolTipReceiver) {
+                if (this._mouseOutListener) { google.maps.event.removeListener(this._mouseOutListener); }
+                if (this._mouseOverListener) { google.maps.event.removeListener(this._mouseOverListener); }
+                if (this._mouseMoveListener) { google.maps.event.removeListener(this._mouseMoveListener); }
+                this._hasToolTipReceiver = false;
+            }
+            if (this._tooltip) {
+                this._tooltip.SetMap(null);
+                this._tooltip = null;
+            }
+        }
     }
 
 }
