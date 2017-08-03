@@ -281,6 +281,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public SetOptions(options: IPolygonOptions): void {
         const o: Microsoft.Maps.IPolygonOptions = BingConversions.TranslatePolygonOptions(options);
         this._polygon.setOptions(o);
+        if (options.visible != null && this._showLabel && this._label) { this._label.Set('hidden', !options.visible); }
     }
 
     /**
@@ -341,6 +342,7 @@ export class BingPolygon extends Polygon implements Polygon {
      */
     public SetVisible(visible: boolean): void {
         this._polygon.setOptions(<Microsoft.Maps.IPolygonOptions>{ visible: visible });
+        if (this._showLabel && this._label) { this._label.Set('hidden', !visible); }
     }
 
     ///

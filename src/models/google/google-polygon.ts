@@ -261,6 +261,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     public SetOptions(options: IPolygonOptions): void {
         const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
         this._polygon.setOptions(o);
+        if (options.visible != null && this._showLabel && this._label) { this._label.Set('hidden', !options.visible); }
     }
 
     /**
@@ -315,6 +316,7 @@ export class GooglePolygon extends Polygon implements Polygon {
      */
     public SetVisible(visible: boolean): void {
         this._polygon.setVisible(visible);
+        if (this._showLabel && this._label) { this._label.Set('hidden', !visible); }
     }
 
     ///
