@@ -2,6 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { BingConversions } from '../../services/bing/bing-conversions';
 import { Polygon } from '../polygon';
+import { MapLabel } from './bing-label';
 
 /**
  * Concrete implementation for a polygon model for Bing Maps V8.
@@ -22,12 +23,28 @@ export class BingPolygon extends Polygon implements Polygon {
     private _minZoom: number = -1;
     private _showLabel: boolean = false;
     private _showTooltip: boolean = false;
-    private _label: Microsoft.Maps.Infobox = null;
-    private _tooltip: Microsoft.Maps.Infobox = null;
+    private _label: MapLabel = null;
+    private _tooltip: MapLabel = null;
+    private _hasToolTipReceiver: boolean = false;
+    private _tooltipVisible: boolean = false;
+    private _mouseOverListener: Microsoft.Maps.IHandlerId;
+    private _mouseMoveListener: Microsoft.Maps.IHandlerId;
+    private _mouseOutListener: Microsoft.Maps.IHandlerId;
 
     ///
     /// Property declarations
     ///
+
+    /**
+     * Gets the polygon's centroid.
+     * @readonly
+     * @private
+     * @type {Microsoft.Maps.Location}
+     * @memberof BingPolygon
+     */
+    private get Centroid(): Microsoft.Maps.Location {
+        return BingConversions.TranslateLocation(this.GetPolygonCentroid());
+    }
 
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
@@ -40,7 +57,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public get LabelMaxZoom(): number { return this._maxZoom; }
     public set LabelMaxZoom(val: number) {
         this._maxZoom = val;
-        // this.ManageLabel();
+        this.ManageLabel();
     }
 
     /**
@@ -54,7 +71,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public get LabelMinZoom(): number { return this._minZoom; }
     public set LabelMinZoom(val: number) {
         this._minZoom = val;
-        // this.ManageLabel();
+        this.ManageLabel();
     }
 
 
@@ -65,7 +82,7 @@ export class BingPolygon extends Polygon implements Polygon {
      * @type {*}
      * @memberof BingPolygon
      */
-    public get NativePrimitve(): any { return this._polygon; }
+    public get NativePrimitve(): Microsoft.Maps.Polygon { return this._polygon; }
 
     /**
      * Gets or sets whether to show the label
@@ -79,7 +96,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public get ShowLabel(): boolean { return this._showLabel; }
     public set ShowLabel(val: boolean) {
         this._showLabel = val;
-        // this.ManageLabel();
+        this.ManageLabel();
     }
 
     /**
@@ -94,7 +111,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public get ShowTooltip(): boolean { return this._showTooltip; }
     public set ShowTooltip(val: boolean) {
         this._showTooltip = val;
-        // this.ManageTooltip();
+        this.ManageTooltip();
     }
 
     /**
@@ -109,8 +126,8 @@ export class BingPolygon extends Polygon implements Polygon {
     public get Title(): string { return this._title; }
     public set Title(val: string) {
         this._title = val;
-        // this.ManageLabel();
-        // this.ManageTooltip();
+        this.ManageLabel();
+        this.ManageTooltip();
     }
 
     ///
@@ -123,7 +140,7 @@ export class BingPolygon extends Polygon implements Polygon {
      *
      * @memberof BingPolygon
      */
-    constructor(private _polygon: Microsoft.Maps.Polygon) {
+    constructor(private _polygon: Microsoft.Maps.Polygon, protected _map: Microsoft.Maps.Map) {
         super();
     }
 
@@ -324,6 +341,99 @@ export class BingPolygon extends Polygon implements Polygon {
      */
     public SetVisible(visible: boolean): void {
         this._polygon.setOptions(<Microsoft.Maps.IPolygonOptions>{ visible: visible });
+    }
+
+    ///
+    /// Private methods
+    ///
+
+    /**
+     * Configures the label for the polygon
+     * @memberof Polygon
+     * @private
+     */
+    private ManageLabel(): void {
+        if (this._showLabel && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                position: this.Centroid
+            };
+            if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
+            if (this._maxZoom !== -1) { o.maxZoom = this._maxZoom; }
+            if (this._label == null) {
+                this._label = new MapLabel(o);
+                this._label.SetMap(this._map);
+            }
+            else {
+                this._label.SetValues(o);
+            }
+        }
+        else {
+            if (this._label) {
+                this._label.SetMap(null);
+                this._label = null;
+            }
+        }
+    }
+
+    /**
+     * Configures the tooltip for the polygon
+     * @memberof Polygon
+     * @private
+     */
+    private ManageTooltip(): void {
+        if (this._showTooltip && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                align: 'left',
+                offset: new Microsoft.Maps.Point(0, 25),
+                backgroundColor: 'bisque',
+                hidden: true
+            };
+            if (this._tooltip == null) {
+                this._tooltip = new MapLabel(o);
+                this._tooltip.SetMap(this._map);
+            }
+            else {
+                this._tooltip.SetValues(o);
+            }
+            if (!this._hasToolTipReceiver) {
+                this._mouseOverListener = Microsoft.Maps.Events.addHandler(
+                        this._polygon, 'mouseover', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    this._tooltip.Set('position', e.location);
+                    if (!this._tooltipVisible) {
+                        this._tooltip.Set('hidden', false);
+                        this._tooltipVisible = true;
+                    }
+                });
+                this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
+                            this._map, 'mousemove', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    if (this._tooltipVisible && e.location && e.primitive === this._polygon) {
+                        this._tooltip.Set('position', e.location);
+                    }
+                });
+                this._mouseOutListener = Microsoft.Maps.Events.addHandler(
+                            this._polygon, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    if (this._tooltipVisible) {
+                        this._tooltip.Set('hidden', true);
+                        this._tooltipVisible = false;
+                    }
+                });
+                this._hasToolTipReceiver = true;
+            }
+        }
+        if ((!this._showTooltip || this._title === '' || this._title == null)) {
+            if (this._hasToolTipReceiver) {
+                if (this._mouseOutListener) { Microsoft.Maps.Events.removeHandler(this._mouseOutListener) ; }
+                if (this._mouseOverListener) { Microsoft.Maps.Events.removeHandler(this._mouseOverListener); }
+                if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
+                this._hasToolTipReceiver = false;
+            }
+            if (this._tooltip) {
+                this._tooltip.SetMap(null);
+                this._tooltip = null;
+            }
+        }
     }
 
 }

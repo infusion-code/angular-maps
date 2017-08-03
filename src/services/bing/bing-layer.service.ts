@@ -82,8 +82,15 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
-            const polygon: Polygon = new BingPolygon(poly);
+            const polygon: Polygon = new BingPolygon(poly, this._mapService.MapInstance);
+
+            if (options.title && options.title !== '') {polygon.Title = options.title; }
+            if (options.showLabel != null) { polygon.ShowLabel = options.showLabel; }
+            if (options.showTooltip != null) { polygon.ShowTooltip = options.showTooltip; }
+            if (options.labelMaxZoom != null) { polygon.LabelMaxZoom = options.labelMaxZoom; }
+            if (options.labelMinZoom != null) { polygon.LabelMinZoom = options.labelMinZoom; }
             l.AddEntity(polygon);
+
             return polygon;
         });
     }

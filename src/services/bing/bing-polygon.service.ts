@@ -60,6 +60,8 @@ export class BingPolygonService implements PolygonService {
             fillColor: polygon.FillColor,
             fillOpacity: polygon.FillOpacity,
             geodesic: polygon.Geodesic,
+            labelMaxZoom: polygon.LabelMaxZoom,
+            labelMinZoom: polygon.LabelMinZoom,
             paths: polygon.Paths,
             showLabel: polygon.ShowLabel,
             showTooltip: polygon.ShowTooltip,
