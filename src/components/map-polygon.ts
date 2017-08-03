@@ -114,6 +114,20 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     @Input() public Geodesic = false;
 
     /**
+     * Set the maximum zoom at which the polygon lable is visible. Ignored if ShowLabel is false.
+     * @type {number}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public LabelMaxZoom: number;
+
+    /**
+     * Set the minimum zoom at which the polygon lable is visible. Ignored if ShowLabel is false.
+     * @type {number}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public LabelMinZoom: number;
+
+    /**
      * The ordered sequence of coordinates that designates a closed loop.
      * Unlike polylines, a polygon may consist of one or more paths.
      *  As a result, the paths property may specify one or more arrays of
@@ -128,6 +142,22 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     @Input() public Paths: Array<ILatLong> | Array<Array<ILatLong>> = [];
+
+    /**
+     * Whether to show the title as the label on the polygon.
+     *
+     * @type {boolean}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public ShowLabel: boolean;
+
+    /**
+     * Whether to show the title of the polygon as the tooltip on the polygon.
+     *
+     * @type {boolean}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public ShowTooltip: boolean = true;
 
     /**
      * The stroke color.
@@ -152,6 +182,14 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     @Input() public StrokeWeight: number;
+
+    /**
+     * The title of the polygon.
+     *
+     * @type {string}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public Title: string;
 
     /**
      * Whether this polygon is visible on the map. Defaults to true.
@@ -435,9 +473,15 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
         if (changes['FillOpacity']) { options.fillOpacity = this.FillOpacity; }
         if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
         if (changes['Paths']) { options.paths = this.Paths; }
+        if (changes['LabelMaxZoom']) { options.labelMaxZoom = this.LabelMaxZoom; }
+        if (changes['LabelMinZoom']) { options.labelMinZoom = this.LabelMinZoom; }
+        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; }
+        if (changes['ShowLabel']) { options.showLabel = this.ShowLabel; }
+        if (changes['Paths']) { options.paths = this.Paths; }
         if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
         if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
         if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }
+        if (changes['Title']) { options.title = this.Title; }
         if (changes['Visible']) { options.visible = this.Visible; }
         if (changes['zIndex']) { options.zIndex = this.zIndex; }
         return options;

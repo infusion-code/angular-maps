@@ -72,7 +72,7 @@ export abstract class PolylineService {
    *
    * @memberof PolylineService
    */
-  public abstract GetNativeMarker(polyline: MapPolylineDirective): Promise<Polyline>;
+  public abstract GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline>;
 
   /**
    * Set the polyline options.

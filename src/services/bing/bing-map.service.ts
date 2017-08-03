@@ -18,6 +18,7 @@ import { BingClusterLayer } from './../../models/bing/bing-cluster-layer';
 import { BingInfoWindow } from './../../models/bing/bing-info-window';
 import { BingPolygon } from './../../models/bing/bing-polygon';
 import { BingPolyline } from './../../models/bing/bing-polyline';
+import { ExtendMapLabelWithOverlayView } from './../../models/bing/bing-label';
 
 import { ILayerOptions } from './../../interfaces/ilayer-options';
 import { IClusterOptions } from './../../interfaces/icluster-options';
@@ -168,6 +169,7 @@ export class BingMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
+            ExtendMapLabelWithOverlayView();
             if (this._mapInstance != null) {
                 this.DisposeMap();
             }
@@ -237,7 +239,14 @@ export class BingMapService implements MapService {
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             map.entities.push(poly);
-            return new BingPolygon(poly);
+
+            const p = new BingPolygon(poly, map);
+            if (options.title && options.title !== '') { p.Title = options.title; }
+            if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
+            if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
+            if (options.labelMaxZoom != null) { p.LabelMaxZoom = options.labelMaxZoom; }
+            if (options.labelMinZoom != null) { p.LabelMinZoom = options.labelMinZoom; }
+            return p;
         });
     }
 

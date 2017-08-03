@@ -60,17 +60,23 @@ export class BingPolygonService implements PolygonService {
             fillColor: polygon.FillColor,
             fillOpacity: polygon.FillOpacity,
             geodesic: polygon.Geodesic,
+            labelMaxZoom: polygon.LabelMaxZoom,
+            labelMinZoom: polygon.LabelMinZoom,
             paths: polygon.Paths,
+            showLabel: polygon.ShowLabel,
+            showTooltip: polygon.ShowTooltip,
             strokeColor: polygon.StrokeColor,
             strokeOpacity: polygon.StrokeOpacity,
             strokeWeight: polygon.StrokeWeight,
+            title: polygon.Title,
             visible: polygon.Visible,
             zIndex: polygon.zIndex,
         }
         let polygonPromise: Promise<Polygon>;
         if (polygon.InCustomLayer) {
             polygonPromise = this._layerService.CreatePolygon(polygon.LayerId, o);
-        } else {
+        }
+        else {
             polygonPromise = this._mapService.CreatePolygon(o);
         }
         this._polygons.set(polygon, polygonPromise);
@@ -149,7 +155,7 @@ export class BingPolygonService implements PolygonService {
      *
      * @memberof BingPolygonService
      */
-    public GetNativeMarker(polygon: MapPolygonDirective): Promise<Polygon> {
+    public GetNativePolygon(polygon: MapPolygonDirective): Promise<Polygon> {
         return this._polygons.get(polygon);
     }
 

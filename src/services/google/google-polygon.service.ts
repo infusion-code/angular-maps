@@ -62,10 +62,15 @@ export class GooglePolygonService implements PolygonService {
             fillColor: polygon.FillColor,
             fillOpacity: polygon.FillOpacity,
             geodesic: polygon.Geodesic,
+            labelMaxZoom: polygon.LabelMaxZoom,
+            labelMinZoom: polygon.LabelMinZoom,
             paths: polygon.Paths,
+            showLabel: polygon.ShowLabel,
+            showTooltip: polygon.ShowTooltip,
             strokeColor: polygon.StrokeColor,
             strokeOpacity: polygon.StrokeOpacity,
             strokeWeight: polygon.StrokeWeight,
+            title: polygon.Title,
             visible: polygon.Visible,
             zIndex: polygon.zIndex,
         }
@@ -134,7 +139,7 @@ export class GooglePolygonService implements PolygonService {
      *
      * @memberof GooglePolygonService
      */
-    public GetNativeMarker(polygon: MapPolygonDirective): Promise<Polygon> {
+    public GetNativePolygon(polygon: MapPolygonDirective): Promise<Polygon> {
         return this._polygons.get(polygon);
     }
 

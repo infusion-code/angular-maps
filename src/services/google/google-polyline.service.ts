@@ -8,6 +8,7 @@ import { MapPolylineDirective } from './../../components/map-polyline';
 import { PolylineService } from '../polyline.service';
 import { MapService } from '../map.service';
 import { LayerService } from '../layer.service';
+
 /**
  * Concrete implementation of the Polyline Service abstract class for Google Maps.
  *
@@ -142,7 +143,7 @@ export class GooglePolylineService implements PolylineService {
      *
      * @memberof GooglePolylineService
      */
-    public GetNativeMarker(polyline: MapPolylineDirective): Promise<Polyline> {
+    public GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline> {
         return this._polylines.get(polyline);
     }
 
