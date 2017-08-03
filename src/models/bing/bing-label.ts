@@ -67,8 +67,10 @@ export class BingMapLabel extends MapLabel {
      * @method
      */
     public Set(key: string, val: any): void {
-        (<any>this)[key] = val;
-        this.Changed(key);
+        if (this.Get(key) !== val) {
+            (<any>this)[key] = val;
+            this.Changed(key);
+        }
     }
 
     /**
@@ -99,12 +101,12 @@ export class BingMapLabel extends MapLabel {
     public SetValues(options: { [key: string]: any }): void {
         const p: Array<string> = new Array<string>();
         for (const key in options) {
-            if (options[key]) {
+            if (this.Get(key) !== options[key]) {
                 (<any>this)[key] = options[key];
                 p.push(key);
             }
         }
-        this.Changed(p);
+        if (p.length > 0) { this.Changed(p); }
     }
 
     ///

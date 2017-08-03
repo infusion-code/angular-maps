@@ -67,7 +67,9 @@ export class GoogleMapLabel extends MapLabel {
      * @method
      */
     public Set(key: string, val: any): void {
-        (<any>this).set(key, val);
+        if (this.Get(key) !== val) {
+            (<any>this).set(key, val);
+        }
     }
 
     /**
@@ -91,6 +93,9 @@ export class GoogleMapLabel extends MapLabel {
      * @method
      */
     public SetValues(options: { [key: string]: any }): void {
+        for (const key in options) {
+            if (this.Get(key) === options[key]) { delete options[key]; }
+        }
         (<any>this).setValues(options);
     }
 

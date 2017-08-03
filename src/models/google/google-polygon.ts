@@ -344,6 +344,7 @@ export class GooglePolygon extends Polygon implements Polygon {
             else {
                 this._label.SetValues(o);
             }
+            this._label.Set('hidden', !this.GetVisible());
         }
         else {
             if (this._label) {
