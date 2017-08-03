@@ -90,7 +90,6 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             if (options.labelMaxZoom != null) { polygon.LabelMaxZoom = options.labelMaxZoom; }
             if (options.labelMinZoom != null) { polygon.LabelMinZoom = options.labelMinZoom; }
             l.AddEntity(polygon);
-
             return polygon;
         });
     }

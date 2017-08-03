@@ -2,7 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { BingConversions } from '../../services/bing/bing-conversions';
 import { Polygon } from '../polygon';
-import { MapLabel } from './bing-label';
+import { BingMapLabel } from './bing-label';
 
 /**
  * Concrete implementation for a polygon model for Bing Maps V8.
@@ -23,8 +23,8 @@ export class BingPolygon extends Polygon implements Polygon {
     private _minZoom: number = -1;
     private _showLabel: boolean = false;
     private _showTooltip: boolean = false;
-    private _label: MapLabel = null;
-    private _tooltip: MapLabel = null;
+    private _label: BingMapLabel = null;
+    private _tooltip: BingMapLabel = null;
     private _hasToolTipReceiver: boolean = false;
     private _tooltipVisible: boolean = false;
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
@@ -361,7 +361,7 @@ export class BingPolygon extends Polygon implements Polygon {
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
             if (this._maxZoom !== -1) { o.maxZoom = this._maxZoom; }
             if (this._label == null) {
-                this._label = new MapLabel(o);
+                this._label = new BingMapLabel(o);
                 this._label.SetMap(this._map);
             }
             else {
@@ -391,7 +391,7 @@ export class BingPolygon extends Polygon implements Polygon {
                 hidden: true
             };
             if (this._tooltip == null) {
-                this._tooltip = new MapLabel(o);
+                this._tooltip = new BingMapLabel(o);
                 this._tooltip.SetMap(this._map);
             }
             else {

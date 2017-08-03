@@ -2,7 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import { Polygon } from '../polygon';
-import { MapLabel } from './google-label';
+import { GoogleMapLabel } from './google-label';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 declare var google: any;
@@ -22,8 +22,8 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _showTooltip: boolean = false;
     private _maxZoom: number = -1;
     private _minZoom: number = -1;
-    private _label: MapLabel = null;
-    private _tooltip: MapLabel = null;
+    private _label: GoogleMapLabel = null;
+    private _tooltip: GoogleMapLabel = null;
     private _tooltipVisible: boolean = false;
     private _hasToolTipReceiver: boolean = false;
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
@@ -337,7 +337,7 @@ export class GooglePolygon extends Polygon implements Polygon {
             if (this._label == null) {
                 o.map = this.NativePrimitve.getMap();
                 o.zIndex = this.NativePrimitve.zIndex ? this.NativePrimitve.zIndex + 1 : 100;
-                this._label = new MapLabel(o);
+                this._label = new GoogleMapLabel(o);
             }
             else {
                 this._label.SetValues(o);
@@ -368,7 +368,7 @@ export class GooglePolygon extends Polygon implements Polygon {
             if (this._tooltip == null) {
                 o.map = this.NativePrimitve.getMap();
                 o.zIndex = 100000;
-                this._tooltip = new MapLabel(o);
+                this._tooltip = new GoogleMapLabel(o);
             }
             else {
                 this._tooltip.SetValues(o);
