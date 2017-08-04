@@ -141,6 +141,9 @@ export class GooglePolyline implements Polyline {
     public SetOptions(options: IPolylineOptions): void {
         const o: GoogleMapTypes.PolylineOptions = GoogleConversions.TranslatePolylineOptions(options);
         this._polyline.setOptions(o);
+        if (options.path) {
+            this.SetPath(<Array<ILatLong>>options.path);
+        }
     }
 
     /**

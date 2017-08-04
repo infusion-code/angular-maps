@@ -173,7 +173,6 @@ export class GoogleConversions {
         'draggable',
         'editable',
         'geodesic',
-        'path',
         'strokeColor',
         'strokeOpacity',
         'strokeWeight',
@@ -368,6 +367,33 @@ export class GoogleConversions {
     }
 
     /**
+     * Translates an array of locations or an array or arrays of location to and array of arrays of Bing Map Locations
+     *
+     * @static
+     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert.
+     * @returns {Array<Array<GoogleMapTypes.LatLng>>} - converted locations.
+     *
+     * @memberof GoogleConversions
+     */
+    public static TranslatePaths(paths: Array<ILatLong> | Array<Array<ILatLong>>): Array<Array<GoogleMapTypes.LatLng>> {
+        const p: Array<Array<GoogleMapTypes.LatLng>> = new Array<Array<GoogleMapTypes.LatLng>>();
+        if (paths == null || !Array.isArray(paths) || paths.length === 0) {
+            p.push(new Array<GoogleMapTypes.LatLng>());
+        }
+        else if (Array.isArray(paths[0])) {
+            // parameter is an array or arrays
+             (<Array<Array<ILatLong>>>paths).forEach(path => {
+                p.push(GoogleConversions.TranslateLocationObjectArray(path));
+            });
+        }
+        else {
+            // parameter is a simple array....
+            p.push(GoogleConversions.TranslateLocationObjectArray(<Array<ILatLong>>paths));
+        }
+        return p;
+    }
+
+    /**
      *  Maps an IPolygonOptions object to a GoogleMapTypes.PolygonOptions.
      *
      * @static
@@ -414,21 +440,7 @@ export class GoogleConversions {
         Object.keys(options)
             .filter(k => GoogleConversions._polylineOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
-                if (k === 'path') {
-                    if (!Array.isArray(options.path)) { return; }
-                    if (options.path.length === 0) {
-                        o.path = new Array<GoogleMapTypes.LatLng>();
-                    } else if (Array.isArray(options.path[0])) {
-                        o.path = new Array<Array<GoogleMapTypes.LatLng>>();
-                        (<Array<Array<ILatLong>>>options.path).forEach(path => {
-                            o.path.push(GoogleConversions.TranslateLocationObjectArray(path));
-                        });
-                    } else {
-                        o.path = GoogleConversions.TranslateLocationObjectArray(<Array<ILatLong>>options.path);
-                    }
-                } else {
-                    o[k] = (<any>options)[k]
-                };
+                o[k] = (<any>options)[k]
             });
         return o;
     }

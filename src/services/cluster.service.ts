@@ -82,11 +82,12 @@ export abstract class ClusterService {
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array of polyline for
+     * complex paths) model.
      *
      * @memberof ClusterService
      */
-    public abstract CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline>;
+    public abstract CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>>;
 
     /**
      * Start to actually cluster the entities in a cluster layer. This method should be called after the initial set of entities

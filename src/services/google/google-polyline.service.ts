@@ -22,7 +22,8 @@ export class GooglePolylineService implements PolylineService {
     ///
     /// Field declarations
     ///
-    private _polylines: Map<MapPolylineDirective, Promise<Polyline>> = new Map<MapPolylineDirective, Promise<Polyline>>();
+    private _polylines: Map<MapPolylineDirective, Promise<Polyline|Array<Polyline>>> =
+        new Map<MapPolylineDirective, Promise<Polyline|Array<Polyline>>>();
 
     ///
     /// Constructor
@@ -39,8 +40,7 @@ export class GooglePolylineService implements PolylineService {
      */
     constructor(private _mapService: MapService,
         private _layerService: LayerService,
-        private _zone: NgZone) {
-    }
+        private _zone: NgZone) { }
 
     ///
     /// Public members and MarkerService implementation
@@ -68,7 +68,7 @@ export class GooglePolylineService implements PolylineService {
             visible: polyline.Visible,
             zIndex: polyline.zIndex,
         }
-        const polylinePromise: Promise<Polyline> = this._mapService.CreatePolyline(o);
+        const polylinePromise: Promise<Polyline|Array<Polyline>> = this._mapService.CreatePolyline(o);
         this._polylines.set(polyline, polylinePromise);
     }
 
@@ -84,8 +84,9 @@ export class GooglePolylineService implements PolylineService {
       */
     public CreateEventObservable<T>(eventName: string, polyline: MapPolylineDirective): Observable<T> {
         return Observable.create((observer: Observer<T>) => {
-            this._polylines.get(polyline).then((p: Polyline) => {
-                p.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
+            this._polylines.get(polyline).then(p => {
+                const x: Array<Polyline> = Array.isArray(p) ? p : [p];
+                x.forEach(line => line.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e))));
             });
         });
     }
@@ -103,9 +104,10 @@ export class GooglePolylineService implements PolylineService {
         if (m == null) {
             return Promise.resolve();
         }
-        return m.then((l: Polyline) => {
+        return m.then(l => {
             return this._zone.run(() => {
-                l.Delete();
+                const x: Array<Polyline> = Array.isArray(l) ? l : [l];
+                x.forEach(line =>  line.Delete());
                 this._polylines.delete(polyline);
             });
         });
@@ -139,11 +141,11 @@ export class GooglePolylineService implements PolylineService {
      *
      * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
      * @returns {Promise<Polyline>} - A promise that when fullfilled contains the {@link Polyline}
-     * implementation of the underlying platform.
+     * implementation of the underlying platform. For complex paths, returns an array of polylines.
      *
      * @memberof GooglePolylineService
      */
-    public GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline> {
+    public GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline|Array<Polyline>> {
         return this._polylines.get(polyline);
     }
 
@@ -158,7 +160,10 @@ export class GooglePolylineService implements PolylineService {
      * @memberof GooglePolylineService
      */
     public SetOptions(polyline: MapPolylineDirective, options: IPolylineOptions): Promise<void> {
-        return this._polylines.get(polyline).then((l: Polyline) => { l.SetOptions(options); });
+        return this._polylines.get(polyline).then(l => {
+            const x: Array<Polyline> = Array.isArray(l) ? l : [l];
+            x.forEach(line => line.SetOptions(options));
+        });
     }
 
     /**
@@ -174,7 +179,17 @@ export class GooglePolylineService implements PolylineService {
         if (m == null) {
             return Promise.resolve();
         }
-        return m.then((l: Polyline) => this._zone.run(() => { l.SetPath(polyline.Path); }));
+        return m.then(l => this._zone.run(() => {
+            const x: Array<Polyline> = Array.isArray(l) ? l : [l];
+            const p: Array<Array<ILatLong>> =
+                polyline.Path.length > 0 && Array.isArray(polyline.Path[0]) ? <Array<Array<ILatLong>>>polyline.Path :
+                <Array<Array<ILatLong>>>[polyline.Path];
+            x.forEach((line, index) => {
+                if (p.length > index) { line.SetPath(p[index]); }
+            });
+            if (Array.isArray(l) && l.length > p.length) {
+                l.splice(p.length - 1).forEach(line => line.Delete());
+            }
+        }));
     }
-
 }

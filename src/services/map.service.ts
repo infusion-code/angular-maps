@@ -99,11 +99,12 @@ export abstract class MapService {
      *
      * @abstract
      * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object (or an array thereof for complex paths),
+     * which models the underlying native polyline.
      *
      * @memberof MapService
      */
-    abstract CreatePolyline(options: IPolylineOptions): Promise<Polyline>;
+    abstract CreatePolyline(options: IPolylineOptions): Promise<Polyline|Array<Polyline>>;
 
     /**
      * Deletes a layer from the map.

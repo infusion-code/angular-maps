@@ -82,7 +82,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
-            const polygon: Polygon = new BingPolygon(poly, this._mapService.MapInstance);
+            const polygon: Polygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
 
             if (options.title && options.title !== '') {polygon.Title = options.title; }
             if (options.showLabel != null) { polygon.ShowLabel = options.showLabel; }
@@ -100,20 +100,35 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * of polygons for complex paths) model.
      *
      * @memberof LayerService
      */
-    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
         const p: Promise<Layer> = this.GetLayerById(layer);
+        let polyline: Microsoft.Maps.Polyline;
+        let line: Polyline;
         if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
-            const poly: Microsoft.Maps.Polyline = new Microsoft.Maps.Polyline(locs[0], o);
-            const polyline: Polyline = new BingPolyline(poly);
-            l.AddEntity(polyline);
-            return polyline;
+            if (options.path && options.path.length > 0 && !Array.isArray(options.path[0])) {
+                polyline = new Microsoft.Maps.Polyline(locs[0], o);
+                line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
+                l.AddEntity(line);
+                return line;
+            }
+            else {
+                const lines: Array<Polyline> = new Array<Polyline>();
+                locs.forEach(x => {
+                    polyline = new Microsoft.Maps.Polyline(x, o);
+                    line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
+                    l.AddEntity(line);
+                    lines.push(line);
+                    return lines;
+                });
+            }
         });
     }
 

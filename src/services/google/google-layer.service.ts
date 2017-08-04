@@ -57,11 +57,12 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @abstract
      * @param {number} layer - The id of the layer to which to add the polyline.
      * @param {IPolylineOptions} options - Polyline options defining the polyline.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * of polygons for complex paths) model.
      *
      * @memberof GoogleLayerService
      */
-    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
         return new Promise<Polyline>((r, x) => {
             // TODO: needs implementation.
         });

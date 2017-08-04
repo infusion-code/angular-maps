@@ -100,14 +100,12 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The ordered sequence of coordinates that designates a polyline.
      * Simple polylines may be defined using a single array of LatLngs. More
-     * complex polylines may specify an array of arrays. Any simple arrays are
-     * converted into Arrays. Inserting or removing LatLngs from the Array will
-     * automatically update the polyline on the map.
+     * complex polylines may specify an array of arrays.
      *
      * @type {(Array<ILatLong>}
      * @memberof MapPolylineDirective
      */
-    @Input() public Path: Array<ILatLong> = [];
+    @Input() public Path: Array<ILatLong> | Array<Array<ILatLong>> = [];
 
     /**
      * The stroke color.
@@ -343,6 +341,10 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
 
         const o: IPolylineOptions = this.GeneratePolylineChangeSet(changes);
         this._polylineService.SetOptions(this, o);
+
+        if (changes['Path'] && !changes['Path'].isFirstChange()) {
+            this._polylineService.UpdatePolyline(this);
+        }
     }
 
     /**
@@ -411,7 +413,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
         if (changes['Draggable']) { options.draggable = this.Draggable; }
         if (changes['Editable']) { options.editable = this.Editable; }
         if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
-        if (changes['Path']) { options.path = this.Path; }
         if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
         if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
         if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }

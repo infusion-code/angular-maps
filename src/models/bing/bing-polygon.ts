@@ -137,10 +137,11 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Creates an instance of BingPolygon.
      * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
-     *
+     * @param {Microsoft.Maps.Map} _map - The context map.
+     * @param {Microsoft.Maps.Layer} _layer - The context layer.
      * @memberof BingPolygon
      */
-    constructor(private _polygon: Microsoft.Maps.Polygon, protected _map: Microsoft.Maps.Map) {
+    constructor(private _polygon: Microsoft.Maps.Polygon, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) {
         super();
     }
 
@@ -164,9 +165,10 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public Delete(): void {
-        const o: Microsoft.Maps.IPolygonOptions = {};
-        o.visible = false;
-        this._polygon.setOptions(o);
+        if (this._layer) { this._layer.remove(this.NativePrimitve); }
+        else {
+            this._map.entities.remove(this.NativePrimitve);
+        }
     }
 
     /**
@@ -291,9 +293,6 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetPath(path: Array<ILatLong>): void {
-        if (!this._isEditable) {
-            throw(new Error('Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.'));
-        }
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
         this._polygon.setLocations(p);
