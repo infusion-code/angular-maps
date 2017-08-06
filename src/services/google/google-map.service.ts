@@ -233,16 +233,32 @@ export class GoogleMapService implements MapService {
      *
      * @abstract
      * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polyline.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object (or an array therefore for complex paths)
+     * which models the underlying native polyline.
      *
      * @memberof MapService
      */
-    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
+        let polyline: GoogleMapTypes.Polyline;
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
             const o: GoogleMapTypes.PolylineOptions = GoogleConversions.TranslatePolylineOptions(options);
-            const polyline: GoogleMapTypes.Polyline = new google.maps.Polyline(o);
-            polyline.setMap(map);
-            return new GooglePolyline(polyline);
+            if (options.path && options.path.length > 0 && !Array.isArray(options.path[0])) {
+                o.path = GoogleConversions.TranslatePaths(options.path)[0];
+                polyline = new google.maps.Polyline(o);
+                polyline.setMap(map);
+                return new GooglePolyline(polyline);
+            }
+            else {
+                const paths: Array<Array<GoogleMapTypes.LatLng>> = GoogleConversions.TranslatePaths(options.path);
+                const lines: Array<Polyline> = new Array<Polyline>();
+                paths.forEach(p => {
+                    o.path = p;
+                    polyline = new google.maps.Polyline(o);
+                    polyline.setMap(map);
+                    lines.push(new GooglePolyline(polyline));
+                });
+                return lines;
+            }
         });
     }
 

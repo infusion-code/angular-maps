@@ -68,11 +68,12 @@ export abstract class PolylineService {
    *
    * @abstract
    * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
-   * @returns {Promise<Polyline>} - A promise that when fullfilled contains the {@link Polyline} implementation of the underlying platform.
+   * @returns {Promise<Polyline|Array<Polyline>>} - A promise that when fullfilled contains the {@link Polyline} implementation (or an
+   * array of polylines) for complex paths of the underlying platform.
    *
    * @memberof PolylineService
    */
-  public abstract GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline>;
+  public abstract GetNativePolyline(polyline: MapPolylineDirective): Promise<Polyline|Array<Polyline>>;
 
   /**
    * Set the polyline options.

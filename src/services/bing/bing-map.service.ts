@@ -240,7 +240,7 @@ export class BingMapService implements MapService {
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             map.entities.push(poly);
 
-            const p = new BingPolygon(poly, map);
+            const p = new BingPolygon(poly, map, null);
             if (options.title && options.title !== '') { p.Title = options.title; }
             if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
@@ -255,17 +255,30 @@ export class BingMapService implements MapService {
      *
      * @abstract
      * @param {IPolylinenOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object, which models the underlying native polygon.
+     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object (or an array thereof for complex paths),
+     * which models the underlying native polygon.
      *
      * @memberof MapService
      */
-    public CreatePolyline(options: IPolylineOptions): Promise<Polyline> {
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
+        let polyline: Microsoft.Maps.Polyline;
         return this._map.then((map: Microsoft.Maps.Map) => {
-            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
-            const poly: Microsoft.Maps.Polyline = new Microsoft.Maps.Polyline(locs[0], o);
-            map.entities.push(poly);
-            return new BingPolyline(poly);
+            const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.path);
+            if (options.path && options.path.length > 0 && !Array.isArray(options.path[0])) {
+                polyline = new Microsoft.Maps.Polyline(locs[0], o);
+                map.entities.push(polyline);
+                return new BingPolyline(polyline, map, null);
+            }
+            else {
+                const lines: Array<Polyline> = new Array<Polyline>();
+                locs.forEach(p => {
+                    polyline = new Microsoft.Maps.Polyline(p, o);
+                    map.entities.push(polyline);
+                    lines.push(new BingPolyline(polyline, map, null));
+                });
+                return lines;
+            }
         });
     }
 

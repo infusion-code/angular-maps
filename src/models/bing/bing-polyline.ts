@@ -37,10 +37,11 @@ export class BingPolyline implements Polyline {
     /**
      * Creates an instance of BingPolygon.
      * @param {Microsoft.Maps.Polyline} _polyline - The {@link Microsoft.Maps.Polyline} underlying the model.
-     *
+     * @param {Microsoft.Maps.Map} _map - The context map.
+     * @param {Microsoft.Maps.Layer} _layer - The context layer.
      * @memberof BingPolyline
      */
-    constructor(private _polyline: Microsoft.Maps.Polyline) { }
+    constructor(private _polyline: Microsoft.Maps.Polyline, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) { }
 
     /**
      * Adds a delegate for an event.
@@ -61,9 +62,10 @@ export class BingPolyline implements Polyline {
      * @memberof BingPolyline
      */
     public Delete(): void {
-        const o: Microsoft.Maps.IPolygonOptions = {};
-        o.visible = false;
-        this._polyline.setOptions(o);
+        if (this._layer) { this._layer.remove(this.NativePrimitve); }
+        else {
+            this._map.entities.remove(this.NativePrimitve);
+        }
     }
 
     /**
@@ -160,6 +162,9 @@ export class BingPolyline implements Polyline {
     public SetOptions(options: IPolylineOptions): void {
         const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
         this._polyline.setOptions(o);
+        if (options.path) {
+            this.SetPath(<Array<ILatLong>>options.path);
+        }
     }
 
     /**
@@ -170,9 +175,6 @@ export class BingPolyline implements Polyline {
      * @memberof BingPolyline
      */
     public SetPath(path: Array<ILatLong>): void {
-        if (!this._isEditable) {
-            throw(new Error('Polyline is not editable. Use Polyline.SetEditable() to make the polygon editable.'));
-        }
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
         this._polyline.setLocations(p);

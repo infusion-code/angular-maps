@@ -288,11 +288,12 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an
+     * array of polygons for complex paths) model.
      *
      * @memberof GoogleClusterService
      */
-    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline> {
+    public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
         throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
     }
 }

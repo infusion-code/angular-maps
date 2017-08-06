@@ -59,11 +59,12 @@ export abstract class LayerService {
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the marker.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline model.
+     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array of
+     * polylines for complex paths) model.
      *
      * @memberof LayerService
      */
-    public abstract CreatePolyline(layer: number, options: IPolygonOptions): Promise<Polyline>;
+    public abstract CreatePolyline(layer: number, options: IPolygonOptions): Promise<Polyline|Array<Polyline>>;
 
     /**
      * Deletes the layer

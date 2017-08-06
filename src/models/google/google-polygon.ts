@@ -161,6 +161,7 @@ export class GooglePolygon extends Polygon implements Polygon {
      */
     public Delete(): void {
         this._polygon.setMap(null);
+        if (this._label) { this._label.Delete(); }
     }
 
     /**
