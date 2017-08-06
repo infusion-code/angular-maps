@@ -12,6 +12,9 @@
     /** A grayscale version of the road maps. */
     grayscale,
 
+    /** The aerial map type including lables */
+    hybrid,
+
     /** Displays a blank canvas that uses the mercator map project. It basically removed the base maps layer. */
     mercator,
 

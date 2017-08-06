@@ -313,6 +313,8 @@ export class GoogleConversions {
         switch (mapTypeId) {
             case MapTypeId.road: return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.roadmap];
             case MapTypeId.grayscale: return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.terrain];
+            case MapTypeId.hybrid: return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.hybrid];
+            case MapTypeId.ordnanceSurvey: return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.terrain];
             default: return GoogleMapTypes.MapTypeId[GoogleMapTypes.MapTypeId.satellite];
         }
     }

@@ -318,7 +318,17 @@ export class BingConversions {
                 if (k === 'center') {
                     o.center = BingConversions.TranslateLocation(options.center);
                 } else if (k === 'mapTypeId') {
-                    o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]];
+                    if(options.mapTypeId === MapTypeId.hybrid) {
+                        o.mapTypeId = Microsoft.Maps.MapTypeId.aerial;
+                        o.labelOverlay = Microsoft.Maps.LabelOverlay.visible;
+                    }
+                    else if (options.mapTypeId === MapTypeId.aerial) {
+                        o.mapTypeId = Microsoft.Maps.MapTypeId.aerial;
+                        o.labelOverlay = Microsoft.Maps.LabelOverlay.hidden;
+                    }
+                    else {
+                        o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]];
+                    }
                 } else if (k === 'bounds') {
                     o.bounds = BingConversions.TranslateBounds(options.bounds);
                 } else {

@@ -17,6 +17,7 @@ import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { MapTypeId } from '../../models/map-type-id';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
@@ -158,6 +159,8 @@ export class GoogleMapService implements MapService {
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
             ExtendMapLabelWithOverlayView();
+            if (!mapOptions.mapTypeId) { mapOptions.mapTypeId = MapTypeId.hybrid; }
+            
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
             const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
             if (mapOptions.bounds) {
