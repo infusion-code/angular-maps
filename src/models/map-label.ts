@@ -38,6 +38,17 @@ export abstract class MapLabel {
     ///
 
     /**
+     * Deletes the label from the map. This method does not atually delete the label itself, so
+     * it can be readded to map later.
+     * @memberof MapLabel
+     * @method
+     * @public
+     */
+    public Delete(): void {
+        this.SetMap(null);
+    }
+
+    /**
      * Delegate called when underlying properties change.
      *
      * @param {string | Array<string>} prop - The property or properties that have changed.

@@ -85,7 +85,7 @@ export class BingMapLabel extends MapLabel {
         if (m) {
             m.layers.remove(this);
         }
-        map.layers.insert(this);
+        if (map != null) { map.layers.insert(this); }
     }
 
     /**
