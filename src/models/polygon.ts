@@ -39,6 +39,15 @@ export abstract class Polygon {
     public abstract set LabelMinZoom(val: number);
 
     /**
+     * Gets the native primitve implementing the polygon.
+     *
+     * @readonly
+     * @type {*}
+     * @memberof Polygon
+     */
+    public abstract get NativePrimitve(): any;
+
+    /**
      * Gets or sets whether to show the label
      *
      * @abstract
@@ -221,7 +230,7 @@ export abstract class Polygon {
      * @method
      * @protected
      */
-    protected GetBoundingCetner(): ILatLong {
+    protected GetBoundingCenter(): ILatLong {
         const c: ILatLong = {latitude: 0, longitude: 0};
         let x1: number = 90, x2: number = -90, y1: number = 180, y2: number = -180;
         const path: Array<ILatLong> = this.GetPath();

@@ -249,7 +249,11 @@ export class GoogleMapService implements MapService {
                 o.path = GoogleConversions.TranslatePaths(options.path)[0];
                 polyline = new google.maps.Polyline(o);
                 polyline.setMap(map);
-                return new GooglePolyline(polyline);
+
+                const pl = new GooglePolyline(polyline);
+                if (options.title && options.title !== '') { pl.Title = options.title; }
+                if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
+                return pl;
             }
             else {
                 const paths: Array<Array<GoogleMapTypes.LatLng>> = GoogleConversions.TranslatePaths(options.path);
@@ -258,7 +262,11 @@ export class GoogleMapService implements MapService {
                     o.path = p;
                     polyline = new google.maps.Polyline(o);
                     polyline.setMap(map);
-                    lines.push(new GooglePolyline(polyline));
+
+                    const pl = new GooglePolyline(polyline);
+                    if (options.title && options.title !== '') { pl.Title = options.title; }
+                    if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
+                    lines.push(pl);
                 });
                 return lines;
             }

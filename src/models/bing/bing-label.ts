@@ -26,6 +26,7 @@ export class BingMapLabel extends MapLabel {
      */
     constructor(options: { [key: string]: any }) {
         super(options);
+        (<any>this)._options.beneathLabels = false;
     }
 
     ///

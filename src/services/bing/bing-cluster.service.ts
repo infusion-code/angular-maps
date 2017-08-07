@@ -122,7 +122,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * @returns {Promise<Polyline|ArraY<Polyline>>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
      * of polygons for complex paths) model.
      *
      * @memberof BingClusterService

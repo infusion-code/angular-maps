@@ -10,6 +10,47 @@ import { IPolylineOptions } from '../interfaces/ipolyline-options';
  */
 export abstract class Polyline {
 
+    ///
+    /// Property definitions
+    ///
+
+    /**
+     * Gets the native primitve implementing the polyline.
+     *
+     * @readonly
+     * @type {*}
+     * @memberof Polyline
+     */
+    public abstract get NativePrimitve(): any;
+
+    /**
+     * Gets or sets whether to show the tooltip
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof Polyline
+     * @property
+     * @public
+     */
+    public abstract get ShowTooltip(): boolean;
+    public abstract set ShowTooltip(val: boolean);
+
+    /**
+     * Gets or sets the title off the polyline
+     *
+     * @abstract
+     * @type {string}
+     * @memberof Polyline
+     * @property
+     * @public
+     */
+    public abstract get Title(): string;
+    public abstract set Title(val: string);
+
+    ///
+    /// Public methods
+    ///
+
     /**
      * Adds a delegate for an event.
      *
