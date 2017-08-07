@@ -318,7 +318,7 @@ export class BingConversions {
                 if (k === 'center') {
                     o.center = BingConversions.TranslateLocation(options.center);
                 } else if (k === 'mapTypeId') {
-                    if(options.mapTypeId === MapTypeId.hybrid) {
+                    if (options.mapTypeId === MapTypeId.hybrid) {
                         o.mapTypeId = Microsoft.Maps.MapTypeId.aerial;
                         o.labelOverlay = Microsoft.Maps.LabelOverlay.visible;
                     }
