@@ -268,14 +268,22 @@ export class BingMapService implements MapService {
             if (options.path && options.path.length > 0 && !Array.isArray(options.path[0])) {
                 polyline = new Microsoft.Maps.Polyline(locs[0], o);
                 map.entities.push(polyline);
-                return new BingPolyline(polyline, map, null);
+
+                const pl = new BingPolyline(polyline, map, null);
+                if (options.title && options.title !== '') { pl.Title = options.title; }
+                if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
+                return pl;
             }
             else {
                 const lines: Array<Polyline> = new Array<Polyline>();
                 locs.forEach(p => {
                     polyline = new Microsoft.Maps.Polyline(p, o);
                     map.entities.push(polyline);
-                    lines.push(new BingPolyline(polyline, map, null));
+
+                    const pl = new BingPolyline(polyline, map, null);
+                    if (options.title && options.title !== '') { pl.Title = options.title; }
+                    if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
+                    lines.push(pl);
                 });
                 return lines;
             }

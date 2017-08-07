@@ -64,9 +64,11 @@ export class BingPolylineService implements PolylineService {
             editable: polyline.Editable,
             geodesic: polyline.Geodesic,
             path: polyline.Path,
+            showTooltip: polyline.ShowTooltip,
             strokeColor: polyline.StrokeColor,
             strokeOpacity: polyline.StrokeOpacity,
             strokeWeight: polyline.StrokeWeight,
+            title: polyline.Title,
             visible: polyline.Visible,
             zIndex: polyline.zIndex,
         }

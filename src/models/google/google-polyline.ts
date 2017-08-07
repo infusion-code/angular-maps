@@ -2,6 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { GoogleMapLabel } from './google-label';
 import { Polyline } from '../polyline';
 
 declare var google: any;
@@ -16,6 +17,18 @@ declare var google: any;
 export class GooglePolyline implements Polyline {
 
     ///
+    /// Field declarations
+    ///
+    private _title: string = '';
+    private _showTooltip: boolean = false;
+    private _tooltip: GoogleMapLabel = null;
+    private _tooltipVisible: boolean = false;
+    private _hasToolTipReceiver: boolean = false;
+    private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
+    private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
+    private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
+
+    ///
     /// Property declarations
     ///
 
@@ -27,6 +40,36 @@ export class GooglePolyline implements Polyline {
      * @memberof GooglePolygon
      */
     public get NativePrimitve(): GoogleMapTypes.Polyline { return this._polyline; }
+
+    /**
+     * Gets or sets whether to show the tooltip
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get ShowTooltip(): boolean { return this._showTooltip; }
+    public set ShowTooltip(val: boolean) {
+        this._showTooltip = val;
+        this.ManageTooltip();
+    }
+
+    /**
+     * Gets or sets the title off the polygon
+     *
+     * @abstract
+     * @type {string}
+     * @memberof GooglePolygon
+     * @property
+     * @public
+     */
+    public get Title(): string { return this._title; }
+    public set Title(val: string) {
+        this._title = val;
+        this.ManageTooltip();
+    }
 
     ///
     /// constructor
@@ -59,6 +102,7 @@ export class GooglePolyline implements Polyline {
      */
     public Delete(): void {
         this._polyline.setMap(null);
+        if (this._tooltip) { this._tooltip.Delete(); }
     }
 
     /**
@@ -168,6 +212,65 @@ export class GooglePolyline implements Polyline {
      */
     public SetVisible(visible: boolean): void {
         this._polyline.setVisible(visible);
+    }
+
+    ///
+    /// Private methods
+    ///
+    /**
+     * Configures the tooltip for the polyline
+     * @memberof GooglePolyline
+     * @private
+     */
+    private ManageTooltip(): void {
+        if (this._showTooltip && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                align: 'left',
+                offset: new google.maps.Point(0, 25),
+                backgroundColor: 'bisque',
+                hidden: true
+            };
+            if (this._tooltip == null) {
+                o.map = this.NativePrimitve.getMap();
+                o.zIndex = 100000;
+                this._tooltip = new GoogleMapLabel(o);
+            }
+            else {
+                this._tooltip.SetValues(o);
+            }
+            if (!this._hasToolTipReceiver) {
+                this._mouseOverListener = this.NativePrimitve.addListener('mouseover', (e: GoogleMapTypes.MouseEvent) => {
+                    this._tooltip.Set('position', e.latLng);
+                    if (!this._tooltipVisible) {
+                        this._tooltip.Set('hidden', false);
+                        this._tooltipVisible = true;
+                    }
+                });
+                this._mouseMoveListener = this.NativePrimitve.addListener('mousemove', (e: GoogleMapTypes.MouseEvent) => {
+                    if (this._tooltipVisible) { this._tooltip.Set('position', e.latLng); }
+                });
+                this._mouseOutListener = this.NativePrimitve.addListener('mouseout', (e: GoogleMapTypes.MouseEvent) => {
+                    if (this._tooltipVisible) {
+                        this._tooltip.Set('hidden', true);
+                        this._tooltipVisible = false;
+                    }
+                });
+                this._hasToolTipReceiver = true;
+            }
+        }
+        if ((!this._showTooltip || this._title === '' || this._title == null)) {
+            if (this._hasToolTipReceiver) {
+                if (this._mouseOutListener) { google.maps.event.removeListener(this._mouseOutListener); }
+                if (this._mouseOverListener) { google.maps.event.removeListener(this._mouseOverListener); }
+                if (this._mouseMoveListener) { google.maps.event.removeListener(this._mouseMoveListener); }
+                this._hasToolTipReceiver = false;
+            }
+            if (this._tooltip) {
+                this._tooltip.SetMap(null);
+                this._tooltip = null;
+            }
+        }
     }
 
 }

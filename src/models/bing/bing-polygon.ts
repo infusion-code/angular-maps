@@ -170,6 +170,7 @@ export class BingPolygon extends Polygon implements Polygon {
             this._map.entities.remove(this.NativePrimitve);
         }
         if (this._label) { this._label.Delete(); }
+        if (this._tooltip) { this._tooltip.Delete(); }
     }
 
     /**

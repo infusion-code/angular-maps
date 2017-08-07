@@ -108,6 +108,14 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     @Input() public Path: Array<ILatLong> | Array<Array<ILatLong>> = [];
 
     /**
+     * Whether to show the title of the polyline as the tooltip on the polygon.
+     *
+     * @type {boolean}
+     * @memberof MapPolylineDirective
+     */
+    @Input() public ShowTooltip: boolean = true;
+
+    /**
      * The stroke color.
      *
      * @type {string}
@@ -130,6 +138,14 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * @memberof MapPolylineDirective
      */
     @Input() public StrokeWeight: number;
+
+    /**
+     * The title of the polygon.
+     *
+     * @type {string}
+     * @memberof MapPolylineDirective
+     */
+    @Input() public Title: string;
 
     /**
      * Whether this polyline is visible on the map. Defaults to true.
@@ -413,9 +429,11 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
         if (changes['Draggable']) { options.draggable = this.Draggable; }
         if (changes['Editable']) { options.editable = this.Editable; }
         if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
+        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; }
         if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
         if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
         if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }
+        if (changes['Title']) { options.title = this.Title; }
         if (changes['Visible']) { options.visible = this.Visible; }
         if (changes['zIndex']) { options.zIndex = this.zIndex; }
         return options;
