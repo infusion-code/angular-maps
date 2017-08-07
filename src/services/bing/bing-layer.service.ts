@@ -117,6 +117,9 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                 polyline = new Microsoft.Maps.Polyline(locs[0], o);
                 line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
                 l.AddEntity(line);
+
+                if (options.title && options.title !== '') {line.Title = options.title; }
+                if (options.showTooltip != null) { line.ShowTooltip = options.showTooltip; }
                 return line;
             }
             else {
@@ -125,9 +128,12 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                     polyline = new Microsoft.Maps.Polyline(x, o);
                     line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
                     l.AddEntity(line);
+
+                    if (options.title && options.title !== '') {line.Title = options.title; }
+                    if (options.showTooltip != null) { line.ShowTooltip = options.showTooltip; }
                     lines.push(line);
-                    return lines;
                 });
+                return lines;
             }
         });
     }

@@ -2,6 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { BingConversions } from '../../services/bing/bing-conversions';
 import { Polyline } from '../polyline';
+import { BingMapLabel } from './bing-label';
 
 /**
  * Concrete implementation for a polyline model for Bing Maps V8.
@@ -20,6 +21,14 @@ export class BingPolyline implements Polyline {
     ///
     /// Property declarations
     ///
+    private _title: string = '';
+    private _showTooltip: boolean = false;
+    private _tooltip: BingMapLabel = null;
+    private _hasToolTipReceiver: boolean = false;
+    private _tooltipVisible: boolean = false;
+    private _mouseOverListener: Microsoft.Maps.IHandlerId;
+    private _mouseMoveListener: Microsoft.Maps.IHandlerId;
+    private _mouseOutListener: Microsoft.Maps.IHandlerId;
 
     /**
      * Gets the Navitve Polyline underlying the model
@@ -29,6 +38,36 @@ export class BingPolyline implements Polyline {
      * @memberof BingPolyline
      */
     public get NativePrimitve(): Microsoft.Maps.Polyline { return this._polyline; }
+
+    /**
+     * Gets or sets whether to show the tooltip
+     *
+     * @abstract
+     * @type {boolean}
+     * @memberof BingPolyline
+     * @property
+     * @public
+     */
+    public get ShowTooltip(): boolean { return this._showTooltip; }
+    public set ShowTooltip(val: boolean) {
+        this._showTooltip = val;
+        this.ManageTooltip();
+    }
+
+    /**
+     * Gets or sets the title off the polyline
+     *
+     * @abstract
+     * @type {string}
+     * @memberof BingPolyline
+     * @property
+     * @public
+     */
+    public get Title(): string { return this._title; }
+    public set Title(val: string) {
+        this._title = val;
+        this.ManageTooltip();
+    }
 
     ///
     /// constructor
@@ -66,6 +105,7 @@ export class BingPolyline implements Polyline {
         else {
             this._map.entities.remove(this.NativePrimitve);
         }
+        if (this._tooltip) { this._tooltip.Delete(); }
     }
 
     /**
@@ -191,4 +231,67 @@ export class BingPolyline implements Polyline {
         this._polyline.setOptions(<Microsoft.Maps.IPolylineOptions>{ visible: visible });
     }
 
+    ///
+    /// Private methods
+    ///
+
+    /**
+     * Configures the tooltip for the polygon
+     * @memberof Polygon
+     * @private
+     */
+    private ManageTooltip(): void {
+        if (this._showTooltip && this._title != null && this._title !== '') {
+            const o: { [key: string]: any } = {
+                text: this._title,
+                align: 'left',
+                offset: new Microsoft.Maps.Point(0, 25),
+                backgroundColor: 'bisque',
+                hidden: true
+            };
+            if (this._tooltip == null) {
+                this._tooltip = new BingMapLabel(o);
+                this._tooltip.SetMap(this._map);
+            }
+            else {
+                this._tooltip.SetValues(o);
+            }
+            if (!this._hasToolTipReceiver) {
+                this._mouseOverListener = Microsoft.Maps.Events.addHandler(
+                        this._polyline, 'mouseover', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    this._tooltip.Set('position', e.location);
+                    if (!this._tooltipVisible) {
+                        this._tooltip.Set('hidden', false);
+                        this._tooltipVisible = true;
+                    }
+                });
+                this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
+                            this._map, 'mousemove', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    if (this._tooltipVisible && e.location && e.primitive === this._polyline) {
+                        this._tooltip.Set('position', e.location);
+                    }
+                });
+                this._mouseOutListener = Microsoft.Maps.Events.addHandler(
+                            this._polyline, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
+                    if (this._tooltipVisible) {
+                        this._tooltip.Set('hidden', true);
+                        this._tooltipVisible = false;
+                    }
+                });
+                this._hasToolTipReceiver = true;
+            }
+        }
+        if ((!this._showTooltip || this._title === '' || this._title == null)) {
+            if (this._hasToolTipReceiver) {
+                if (this._mouseOutListener) { Microsoft.Maps.Events.removeHandler(this._mouseOutListener) ; }
+                if (this._mouseOverListener) { Microsoft.Maps.Events.removeHandler(this._mouseOverListener); }
+                if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
+                this._hasToolTipReceiver = false;
+            }
+            if (this._tooltip) {
+                this._tooltip.SetMap(null);
+                this._tooltip = null;
+            }
+        }
+    }
 }

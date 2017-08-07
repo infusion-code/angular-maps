@@ -74,7 +74,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     }
 
     /**
-     * Gets the native primitve implementing the marker, in this case {@link GoogleMapTypes.Polygon}
+     * Gets the native primitve implementing the polygon, in this case {@link GoogleMapTypes.Polygon}
      *
      * @readonly
      * @type {GoogleMapTypes.Polygon}
@@ -162,6 +162,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     public Delete(): void {
         this._polygon.setMap(null);
         if (this._label) { this._label.Delete(); }
+        if (this._tooltip) { this._tooltip.Delete(); }
     }
 
     /**
@@ -326,7 +327,7 @@ export class GooglePolygon extends Polygon implements Polygon {
 
     /**
      * Configures the label for the polygon
-     * @memberof Polygon
+     * @memberof GooglePolygon
      * @private
      */
     private ManageLabel(): void {
@@ -357,7 +358,7 @@ export class GooglePolygon extends Polygon implements Polygon {
 
     /**
      * Configures the tooltip for the polygon
-     * @memberof Polygon
+     * @memberof GooglePolygon
      * @private
      */
     private ManageTooltip(): void {
