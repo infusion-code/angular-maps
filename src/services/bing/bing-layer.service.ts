@@ -57,7 +57,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * Generally, MapLayerDirective will be injected with an instance of the
      * LayerService and then self register on initialization.
      *
-     * @memberof LayerService
+     * @memberof BingLayerService
      */
     public AddLayer(layer: MapLayerDirective): void {
         const layerPromise = this._mapService.CreateLayer({ id: layer.Id });
@@ -73,7 +73,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @param {IPolygonOptions} options - Polygon options defining the polygon.
      * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
      *
-     * @memberof LayerService
+     * @memberof BingLayerService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
         const p: Promise<Layer> = this.GetLayerById(layer);
@@ -100,10 +100,10 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * @returns {Promise<Polyline|Array<Polyline>>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
      * of polygons for complex paths) model.
      *
-     * @memberof LayerService
+     * @memberof BingLayerService
      */
     public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
         const p: Promise<Layer> = this.GetLayerById(layer);
@@ -139,7 +139,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
      * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
      *
-     * @memberof LayerService
+     * @memberof BingLayerService
      */
     public DeleteLayer(layer: MapLayerDirective): Promise<void> {
         const l = this._layers.get(layer);
@@ -161,7 +161,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
      * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
      *
-     * @memberof LayerService
+     * @memberof BingLayerService
      */
     public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
         return this._layers.get(layer);

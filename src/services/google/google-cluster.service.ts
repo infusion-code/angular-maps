@@ -288,7 +288,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @abstract
      * @param {number} layer - The id of the layer to which to add the line.
      * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an
+     * @returns {Promise<Polyline|Array<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an
      * array of polygons for complex paths) model.
      *
      * @memberof GoogleClusterService
