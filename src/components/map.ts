@@ -451,7 +451,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     private InitMapInstance(el: HTMLElement) {
         if (this._options.center == null) { this._options.center = { latitude: this._latitude, longitude: this._longitude }; }
         if (this._options.zoom == null) { this._options.zoom = this._zoom; }
-        if (this._options.mapTypeId == null) { this._options.mapTypeId = MapTypeId.aerial; }
+        if (this._options.mapTypeId == null) { this._options.mapTypeId = MapTypeId.hybrid; }
         if (this._box != null) { this._options.bounds = this._box; }
         this._mapPromise = this._mapService.CreateMap(el, this._options);
         this.HandleMapCenterChange();

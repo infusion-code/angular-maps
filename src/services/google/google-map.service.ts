@@ -159,8 +159,8 @@ export class GoogleMapService implements MapService {
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
             ExtendMapLabelWithOverlayView();
-            if (!mapOptions.mapTypeId) { mapOptions.mapTypeId = MapTypeId.hybrid; }
-            
+            if (!mapOptions.mapTypeId == null) { mapOptions.mapTypeId = MapTypeId.hybrid; }
+
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
             const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
             if (mapOptions.bounds) {
