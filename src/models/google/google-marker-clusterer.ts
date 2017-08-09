@@ -244,9 +244,22 @@ export class GoogleMarkerClusterer implements Layer {
      */
     public SetVisible(visible: boolean): void {
         const map: GoogleMapTypes.GoogleMap = visible ? this._layer.getMap() : null;
-        this._layer.getMarkers().forEach(m => {
-            m.setMap(map);
-        });
+        if (!visible) { this._layer.clearMarkers(); }
+        else {
+            const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
+            this._markers.forEach(e => {
+                if (e.NativePrimitve && e.Location) {
+                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
+                }
+            });
+            this._pendingMarkers.forEach(e => {
+                if (e.NativePrimitve && e.Location) {
+                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
+                }
+            });
+            this._layer.addMarkers(p);
+            this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+        }
         this._visible = visible;
     }
 
@@ -270,7 +283,7 @@ export class GoogleMarkerClusterer implements Layer {
             }
         });
         this._pendingMarkers.forEach(e => {
-            if (e.NativePrimitve && e.Location && p.findIndex(x => x === e.NativePrimitve) === -1) {
+            if (e.NativePrimitve && e.Location) {
                 p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
             }
         });

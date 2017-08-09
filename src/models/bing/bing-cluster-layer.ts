@@ -318,7 +318,7 @@ export class BingClusterLayer implements Layer {
             }
         });
         this._pendingMarkers.forEach(e => {
-            if (e.NativePrimitve && e.Location && p.findIndex(x => x === e.NativePrimitve) === -1) {
+            if (e.NativePrimitve && e.Location) {
                 p.push(<Microsoft.Maps.Pushpin>e.NativePrimitve);
             }
         });

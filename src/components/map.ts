@@ -11,7 +11,8 @@
     Output,
     ElementRef,
     HostBinding,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
 import { MapService } from '../services/map.service';
@@ -79,7 +80,8 @@ import { MapMarkerDirective } from './map-marker';
         .map-container-inner div { background-repeat: no-repeat; }
         .map-content { display:none; }
     `],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements OnChanges, OnInit, OnDestroy {
 
