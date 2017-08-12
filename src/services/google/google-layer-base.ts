@@ -137,8 +137,8 @@ export abstract class GoogleLayerBase {
      */
     public CreateMarkers(options: Array<IMarkerOptions>, markerIcon?: IMarkerIconInfo): Promise<Array<Marker>> {
         const payload = (icon: string): Array<GoogleMarker> => {
-            const markers: Array<GoogleMarker> = new Array<GoogleMarker>();
-            options.forEach(mo => {
+            const t0 = performance.now();
+            const markers: Array<GoogleMarker> = options.map(mo => {
                 const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(mo);
                 if (icon && icon !== '') { o.icon = icon; }
                 const pushpin = new google.maps.Marker(o);
@@ -146,8 +146,10 @@ export abstract class GoogleLayerBase {
                 marker.IsFirst = mo.isFirst;
                 marker.IsLast = mo.isLast;
                 if (mo.metadata) { mo.metadata.forEach((val: any, key: string) => marker.Metadata.set(key, val)); }
-                markers.push(marker);
+                return marker;
             });
+            const t1 = performance.now();
+            console.log(`${t1 - t0}`);
             return markers;
         };
         const p: Promise<Array<Marker>> = new Promise<Array<Marker>>((resolve, reject) => {

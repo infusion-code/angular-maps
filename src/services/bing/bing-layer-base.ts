@@ -128,17 +128,24 @@ export abstract class BingLayerBase {
      */
     public CreateMarkers(options: Array<IMarkerOptions>, markerIcon?: IMarkerIconInfo): Promise<Array<Marker>> {
         const payload = (icon: string, op: Array<IMarkerOptions>): Array<BingMarker> => {
-            const markers: Array<BingMarker> = new Array<BingMarker>();
-            op.forEach(mo => {
+            const markers: Array<BingMarker> = op.map(mo => {
+                let s: string;
                 const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(mo);
-                if (icon && icon !== '') { o.icon = icon; }
+                if (icon && icon !== '' ) { s = icon; }
+                else if (o.icon) {
+                    s = o.icon;
+                }
+                if (o.icon) { delete o.icon };
                 const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(mo.position);
                 const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+                const img = Marker.GetImageForMarker(s);
+                if (img != null) { (<any>pushpin).image = img; }
+
                 const marker: BingMarker = new BingMarker(pushpin);
                 marker.IsFirst = mo.isFirst;
                 marker.IsLast = mo.isLast;
                 if (mo.metadata) { mo.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
-                markers.push(marker);
+                return marker;
             });
             return markers;
         };

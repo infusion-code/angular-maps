@@ -117,7 +117,8 @@ export class BingMarkerService implements MarkerService {
     public CreateEventObservable<T>(eventName: string, marker: MapMarkerDirective): Observable<T> {
         return Observable.create((observer: Observer<T>) => {
             this._markers.get(marker).then((m: Marker) => {
-                m.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
+                m.AddListener(eventName, (e: T) => this._zone.run(() =>
+                    observer.next(e)));
             });
         });
     }
