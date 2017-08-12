@@ -32,7 +32,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
     ///
     /// Field Declarations.
     ///
-    protected _layers: Map<MapLayerDirective, Promise<Layer>> = new Map<MapLayerDirective, Promise<Layer>>();
+    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
 
     ///
     /// Constructor
@@ -61,7 +61,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      */
     public AddLayer(layer: MapLayerDirective): void {
         const layerPromise = this._mapService.CreateLayer({ id: layer.Id });
-        this._layers.set(layer, layerPromise);
+        this._layers.set(layer.Id, layerPromise);
     }
 
 
@@ -148,14 +148,14 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @memberof BingLayerService
      */
     public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        const l = this._layers.get(layer);
+        const l = this._layers.get(layer.Id);
         if (l == null) {
             return Promise.resolve();
         }
         return l.then((l1: Layer) => {
             return this._zone.run(() => {
                 l1.Delete();
-                this._layers.delete(layer);
+                this._layers.delete(layer.Id);
             });
         });
     }
@@ -170,7 +170,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @memberof BingLayerService
      */
     public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return this._layers.get(layer);
+        return this._layers.get(layer.Id);
     }
 
 }

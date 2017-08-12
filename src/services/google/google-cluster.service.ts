@@ -7,6 +7,7 @@ import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { Marker } from './../../models/marker';
 import { Layer } from './../../models/layer';
 import { MarkerTypeId } from './../../models/marker-type-id';
+import { ClusterClickAction } from './../../models/cluster-click-action';
 import { ClusterLayerDirective } from './../../components/cluster-layer';
 import { ClusterService } from './../cluster.service';
 import { MapService } from './../map.service';
@@ -23,7 +24,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     ///
     /// Field declarations
     ///
-    protected _layers: Map<ClusterLayerDirective, Promise<Layer>> = new Map<ClusterLayerDirective, Promise<Layer>>();
+    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
     protected _layerStyles: Map<number, Array<GoogleMapTypes.ClusterStyle>> = new Map<number, Array<GoogleMapTypes.ClusterStyle>>();
 
     ///
@@ -112,7 +113,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public AddLayer(layer: ClusterLayerDirective): void {
         const options: IClusterOptions = {
             id: layer.Id,
-            zoomOnClick: layer.ZoomOnClick
+            zoomOnClick: layer.ClusterClickAction === ClusterClickAction.ZoomIntoCluster
         };
         if (layer.GridSize) { options.gridSize = layer.GridSize; }
         if (layer.MinimumClusterSize) { options.minimumClusterSize = layer.MinimumClusterSize; }
@@ -177,7 +178,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
         };
 
         const layerPromise = this._mapService.CreateClusterLayer(options);
-        this._layers.set(layer, layerPromise);
+        this._layers.set(layer.Id, layerPromise);
         layerPromise.then(l => {
             const clusterer: GoogleMapTypes.MarkerClusterer = <GoogleMapTypes.MarkerClusterer>l.NativePrimitve;
             if (options.styles) {
@@ -208,7 +209,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @memberof GoogleClusterService
      */
     public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
-        return this._layers.get(layer);
+        return this._layers.get(layer.Id);
     };
 
     /**
@@ -219,7 +220,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @memberof GoogleClusterService
      */
     public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
-        this._layers.delete(layer);
+        this._layers.delete(layer.Id);
         return Promise.resolve();
     };
 

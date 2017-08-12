@@ -160,12 +160,15 @@ export class GoogleMapService implements MapService {
         return this._loader.Load().then(() => {
             ExtendMapLabelWithOverlayView();
             if (!mapOptions.mapTypeId == null) { mapOptions.mapTypeId = MapTypeId.hybrid; }
-
+            if (this._mapInstance != null) {
+                this.DisposeMap();
+            }
             const o: GoogleMapTypes.MapOptions = GoogleConversions.TranslateOptions(mapOptions);
             const map: GoogleMapTypes.GoogleMap = new google.maps.Map(el, o);
             if (mapOptions.bounds) {
                 map.fitBounds(GoogleConversions.TranslateBounds(mapOptions.bounds));
             }
+            this._mapInstance = map;
             this._mapResolver(map);
             return;
         });
@@ -180,28 +183,32 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
+        const payload = (x: GoogleMapTypes.MarkerOptions, map: GoogleMapTypes.GoogleMap): GoogleMarker => {
+            const marker = new google.maps.Marker(x);
+            const m = new GoogleMarker(marker);
+            m.IsFirst = options.isFirst;
+            m.IsLast = options.isLast;
+            if (options.metadata) { options.metadata.forEach((val: any, key: string) => m.Metadata.set(key, val)); }
+            marker.setMap(map);
+            return m;
+        };
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-            const payload = (x: GoogleMapTypes.MarkerOptions): GoogleMarker => {
-                const marker = new google.maps.Marker(x);
-                marker.setMap(map);
-                return new GoogleMarker(marker);
-            };
             const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(options);
             if (options.iconInfo && options.iconInfo.markerType) {
                 const s = Marker.CreateMarker(options.iconInfo);
                 if (typeof(s) === 'string') {
                     o.icon = s;
-                    return payload(o);
+                    return payload(o, map);
                 }
                 else {
                     return s.then(x => {
                         o.icon = x.icon;
-                        return payload(o);
+                        return payload(o, map);
                     });
                 }
             }
             else {
-                return payload(o);
+                return payload(o, map);
             }
         });
     }

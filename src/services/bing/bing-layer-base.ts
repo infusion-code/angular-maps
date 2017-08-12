@@ -24,7 +24,7 @@ export abstract class BingLayerBase {
     ///
     /// Field declarations
     ///
-    protected abstract _layers: Map<MapLayerDirective, Promise<Layer>>;
+    protected abstract _layers: Map<number, Promise<Layer>>;
 
     ///
     /// Constructor
@@ -86,20 +86,77 @@ export abstract class BingLayerBase {
      * @memberof BingLayerBase
      */
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
+        const payload = (icon: string, l: Layer): BingMarker => {
+            const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
+            const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
+            if (icon && icon !== '') { o.icon = icon; }
+            const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+            const marker: BingMarker = new BingMarker(pushpin);
+            marker.IsFirst = options.isFirst;
+            marker.IsLast = options.isLast;
+            if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
+            l.AddEntity(marker);
+            return marker;
+        }
         const p: Promise<Layer> = this.GetLayerById(layer);
         if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
-            const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
-            return BingConversions.TranslateMarkerOptions(options).then(o => {
+            if (options.iconInfo && options.iconInfo.markerType) {
+                const s = Marker.CreateMarker(options.iconInfo);
+                if (typeof(s) === 'string') { return(payload(s, l)); }
+                else {
+                    return s.then(x => {
+                        return(payload(x.icon, l));
+                    });
+                }
+            }
+            else {
+                return (payload(null, l));
+            }
+        });
+    }
+
+    /**
+     * Creates an array of unbound markers. Use this method to create arrays of markers to be used in bulk
+     * operations.
+     *
+     * @param {Array<IMarkerOptions>} options - Marker options defining the markers.
+     * @param {IMarkerIconInfo} markerIcon - Optional information to generate custom markers. This will be applied to all markers.
+     * @returns {Promise<Array<Marker>>} - A promise that when fullfilled contains the an arrays of the Marker models.
+     *
+     * @memberof BingLayerBase
+     */
+    public CreateMarkers(options: Array<IMarkerOptions>, markerIcon?: IMarkerIconInfo): Promise<Array<Marker>> {
+        const payload = (icon: string, op: Array<IMarkerOptions>): Array<BingMarker> => {
+            const markers: Array<BingMarker> = new Array<BingMarker>();
+            op.forEach(mo => {
+                const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(mo);
+                if (icon && icon !== '') { o.icon = icon; }
+                const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(mo.position);
                 const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
                 const marker: BingMarker = new BingMarker(pushpin);
-                marker.IsFirst = options.isFirst;
-                marker.IsLast = options.isLast;
-                if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
-                l.AddEntity(marker);
-                return marker;
+                marker.IsFirst = mo.isFirst;
+                marker.IsLast = mo.isLast;
+                if (mo.metadata) { mo.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
+                markers.push(marker);
             });
+            return markers;
+        };
+        const p: Promise<Array<Marker>> = new Promise<Array<Marker>>((resolve, reject) => {
+            if (markerIcon && markerIcon.markerType) {
+                const s = Marker.CreateMarker(markerIcon);
+                if (typeof(s) === 'string') { resolve(payload(s, options)); }
+                else {
+                    return s.then(x => {
+                        resolve(payload(x.icon, options));
+                    });
+                }
+            }
+            else {
+                resolve(payload(null, options));
+            }
         });
+        return p;
     }
 
     ///
@@ -117,7 +174,7 @@ export abstract class BingLayerBase {
      */
     protected GetLayerById(id: number): Promise<Layer> {
         let p: Promise<Layer>;
-        this._layers.forEach((l: Promise<Layer>, k: MapLayerDirective) => { if (k.Id === id) { p = l; } });
+        this._layers.forEach((l: Promise<Layer>, k: number) => { if (k === id) { p = l; } });
         return p;
     }
 

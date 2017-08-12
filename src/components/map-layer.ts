@@ -49,7 +49,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
     ///
     protected _visible = true;
     protected _addedToManager = false;
-    protected _id: number = layerId++;
+    protected _id: number;
 
     @ContentChildren(MapMarkerDirective) protected _markers: Array<MapMarkerDirective>;
 

@@ -59,7 +59,7 @@ export class GoogleMarker implements Marker {
      * @type {*}
      * @memberof BingMarker
      */
-    public get NativePrimitve(): any { return this._marker; }
+    public get NativePrimitve(): GoogleMapTypes.Marker { return this._marker; }
 
     /**
      * Gets the Location of the marker

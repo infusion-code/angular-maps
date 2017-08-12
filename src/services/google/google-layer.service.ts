@@ -6,6 +6,9 @@ import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
 import { Layer } from '../../models/layer';
+import { GoogleLayer } from '../../models/google/google-layer';
+import { GooglePolygon } from '../../models/google/google-polygon';
+
 import { MapLayerDirective } from '../../components/map-layer'
 import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
@@ -25,7 +28,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     ///
     /// Field Declarations.
     ///
-    protected _layers: Map<MapLayerDirective, Promise<Layer>> = new Map<MapLayerDirective, Promise<Layer>>();
+    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
 
     ///
     /// Constructor
@@ -53,6 +56,12 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public AddLayer(layer: MapLayerDirective): void {
+        const p: Promise<Layer> = new Promise<Layer>((resolve, reject) => {
+            this._mapService.MapPromise.then(m => {
+                resolve(new GoogleLayer(m, this._mapService))
+            });
+        });
+        this._layers.set(layer.Id, p);
     };
 
     /**
@@ -65,9 +74,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return new Promise<Layer>((r, x) => {
-            // TODO: needs implementation.
-        });
+        return this._layers.get(layer.Id);
     };
 
     /**
@@ -80,8 +87,15 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        return new Promise<void>((r, x) => {
-            // TODO: needs implementation.
+        const l = this._layers.get(layer.Id);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l1: Layer) => {
+            return this._zone.run(() => {
+                l1.Delete();
+                this._layers.delete(layer.Id);
+            });
         });
     };
 
@@ -96,9 +110,10 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon> {
-        return new Promise<Polygon>((r, x) => {
-            // TODO: needs implementation.
-        });
+        const p: Promise<Polygon> = this._mapService.CreatePolygon(options);
+        const l: Promise<Layer> = this._layers.get(layer);
+        Promise.all([p, l]).then(x => x[1].AddEntity(x[0]));
+        return p;
     };
 
     /**
@@ -113,9 +128,13 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
-        return new Promise<Polyline>((r, x) => {
-            // TODO: needs implementation.
+        const p: Promise<Polyline|Array<Polyline>> = this._mapService.CreatePolyline(options);
+        const l: Promise<Layer> = this._layers.get(layer);
+        Promise.all([p, l]).then(x => {
+            const p1: Array<Polyline> =  Array.isArray(x[0]) ? <Array<Polyline>>x[0] : [<Polyline>x[0]];
+            for (const p2 of p1) {x[1].AddEntity(p2); }
         });
+        return p;
     };
 
 }

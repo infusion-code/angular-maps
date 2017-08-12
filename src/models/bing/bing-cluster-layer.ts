@@ -23,8 +23,11 @@ export class BingClusterLayer implements Layer {
     ///
     private _isClustering = true;
     private _markers: Array<Marker> = new Array<Marker>();
+    private _markerLookup: Map<Microsoft.Maps.Pushpin, Marker> = new Map<Microsoft.Maps.Pushpin, Marker>();
     private _pendingMarkers: Array<Marker> = new Array<Marker>();
     private _spiderMarkers: Array<BingSpiderClusterMarker> = new Array<BingSpiderClusterMarker>();
+    private _spiderMarkerLookup: Map<Microsoft.Maps.Pushpin, BingSpiderClusterMarker> =
+                     new Map<Microsoft.Maps.Pushpin, BingSpiderClusterMarker>();
     private _useSpiderCluster = false;
     private _mapclicks = 0;
     private _spiderLayer: Microsoft.Maps.Layer;
@@ -102,13 +105,13 @@ export class BingClusterLayer implements Layer {
      * trigger a recaluation of the clusters (and associated markers if approprite) for
      * each invocation. If you use this method to add many markers to the cluster, use
      *
-     * @param entity Marker|InfoWindow|any. Entity to add to the layer.
+     * @param entity Marker. Entity to add to the layer.
      *
      * @memberof BingClusterLayer
      */
-    public AddEntity(entity: Marker | InfoWindow | any): void {
+    public AddEntity(entity: Marker): void {
         if (entity instanceof Marker || entity instanceof BingMarker) {
-            if ((<Marker>entity).IsFirst) {
+            if (entity.IsFirst) {
                 this.StopClustering();
             }
         }
@@ -122,9 +125,10 @@ export class BingClusterLayer implements Layer {
             else {
                 this._pendingMarkers.push(entity);
             }
+            this._markerLookup.set(entity.NativePrimitve, entity);
         }
         if (entity instanceof Marker || entity instanceof BingMarker) {
-            if ((<Marker>entity).IsLast) {
+            if (entity.IsLast) {
                 this.StartClustering();
             }
         }
@@ -178,6 +182,7 @@ export class BingClusterLayer implements Layer {
         this._markers.splice(0);
         this._spiderMarkers.splice(0);
         this._pendingMarkers.splice(0);
+        this._markerLookup.clear();
         this._maps.DeleteLayer(this);
     }
 
@@ -189,9 +194,8 @@ export class BingClusterLayer implements Layer {
      * @memberof BingClusterLayer
      */
     public GetMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): Marker {
-        const i: number = this._markers.findIndex(e => e.NativePrimitve === pin);
-        if (i > -1) { return this._markers[i]; }
-        return null;
+        const m: Marker = this._markerLookup.get(pin);
+        return m;
     }
 
     /**
@@ -230,41 +234,44 @@ export class BingClusterLayer implements Layer {
     /**
      * Removes an entity from the cluster layer.
      *
-     * @param entity Marker|InfoWindow|any Entity to be removed from the layer.
+     * @param entity Marker - Entity to be removed from the layer.
      *
      * @memberof BingClusterLayer
      */
-    public RemoveEntity(entity: Marker | InfoWindow | any): void {
+    public RemoveEntity(entity: Marker): void {
         if (entity.NativePrimitve && entity.Location) {
-            const j: number = this._markers.findIndex(m => m === entity);
-            const k: number = this._pendingMarkers.findIndex(m => m === entity);
+            const j: number = this._markers.indexOf(entity);
+            const k: number = this._pendingMarkers.indexOf(entity);
             if (j > -1) { this._markers.splice(j, 1); }
             if (k > -1) { this._pendingMarkers.splice(k, 1); }
             if (this._isClustering) {
                 const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
-                const i: number = p.findIndex(x => x === entity.NativePrimitve);
+                const i: number = p.indexOf(entity.NativePrimitve);
                 if (i > -1) {
                     p.splice(i, 1);
                     this._layer.setPushpins(p);
                 }
             }
+            this._markerLookup.delete(entity.NativePrimitve);
         }
     }
 
     /**
      * Sets the entities for the cluster layer.
      *
-     * @param entities Array<Marker>|Array<InfoWindow>|Array<any> containing
+     * @param entities Array<Marker> containing
      * the entities to add to the cluster. This replaces any existing entities.
      *
      * @memberof BingClusterLayer
      */
-    public SetEntities(entities: Array<Marker> | Array<InfoWindow> | Array<any>): void {
+    public SetEntities(entities: Array<Marker>): void {
         const p: Array<Microsoft.Maps.Pushpin> = new Array<Microsoft.Maps.Pushpin>();
         this._markers.splice(0);
-        (<Array<any>>entities).forEach((e: any) => {
+        this._markerLookup.clear();
+        entities.forEach((e: any) => {
             if (e.NativePrimitve && e.Location) {
                 this._markers.push(e);
+                this._markerLookup.set(e.NativePrimitve, e);
                 p.push(<Microsoft.Maps.Pushpin>e.NativePrimitve);
             }
         });
@@ -377,9 +384,8 @@ export class BingClusterLayer implements Layer {
      * @memberof BingClusterLayer
      */
     public GetSpiderMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): BingSpiderClusterMarker {
-        const i: number = this._spiderMarkers.findIndex(e => e.NativePrimitve === pin);
-        if (i > -1) { return this._spiderMarkers[i]; }
-        return null;
+        const m: BingSpiderClusterMarker = this._spiderMarkerLookup.get(pin);
+        return m;
     }
 
     /**
@@ -391,6 +397,8 @@ export class BingClusterLayer implements Layer {
         this._mapclicks = 0;
         if (this._currentCluster) {
             this._spiderLayer.clear();
+            this._spiderMarkers.splice(0);
+            this._spiderMarkerLookup.clear();
             this._currentCluster = null;
             this._mapclicks = -1;
             if (this._spiderOptions.markerUnSelected) { this._spiderOptions.markerUnSelected(); }
@@ -591,7 +599,8 @@ export class BingClusterLayer implements Layer {
             if (makeSpiral) {
                 legPixelLength = this._spiderOptions.minCircleLength / Math.PI;
                 stepLength = 2 * Math.PI * this._spiderOptions.spiralDistanceFactor;
-            } else {
+            }
+            else {
                 stepAngle = 2 * Math.PI / pins.length;
                 legPixelLength = (this._spiderOptions.spiralDistanceFactor / stepAngle / Math.PI / 2) * pins.length;
                 if (legPixelLength < this._spiderOptions.minCircleLength) { legPixelLength = this._spiderOptions.minCircleLength; }
@@ -601,7 +610,8 @@ export class BingClusterLayer implements Layer {
                 // Calculate spider pin location.
                 if (!makeSpiral) {
                     angle = stepAngle * i;
-                } else {
+                }
+                else {
                     angle += this._spiderOptions.minSpiralAngleSeperation / legPixelLength + i * 0.0005;
                     legPixelLength += stepLength / angle;
                 }
@@ -626,6 +636,8 @@ export class BingClusterLayer implements Layer {
                 spiderMarker.Stick = stick;
                 spiderMarker.ParentMarker = <BingMarker>this.GetMarkerFromBingMarker(pins[i]);
                 this._spiderMarkers.push(spiderMarker);
+                this._spiderMarkerLookup.set(pin, spiderMarker);
+
             }
             this._mapclicks = 0;
         }

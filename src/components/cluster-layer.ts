@@ -54,7 +54,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Field declarations
     ///
-    private _averageCenter = false;
     private _clusteringEnabled = true;
     private _clusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
     private _clusterClickAction: ClusterClickAction = ClusterClickAction.ZoomIntoCluster;
@@ -68,9 +67,9 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     private _useDynamicSizeMarker = false;
     private _dynamicMarkerBaseSize = 18;
     private _dynamicMarkerRanges: Map<number, string> = new Map<number, string>([
-        [10, 'rgba(255, 40, 40, 0.5)'],
-        [100, 'rgba(20, 180, 20, 0.5)'],
-        [Number.MAX_SAFE_INTEGER , 'rgba(255, 210, 40, 0.5)']
+        [10, 'rgba(20, 180, 20, 0.5)'],
+        [100, 'rgba(255, 210, 40, 0.5)'],
+        [Number.MAX_SAFE_INTEGER , 'rgba(255, 40, 40, 0.5)']
     ]);
     private _zoomOnClick = true;
     private _iconCreationCallback: (m: Array<Marker>, i: IMarkerIconInfo) => string;
@@ -78,16 +77,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     ///
     /// Property defintions
     ///
-
-    /**
-     * Gets or sets the average center of the cluster
-     *
-     * @type {AverageCenter}
-     * @memberof ClusterLayerDirective
-     */
-    @Input()
-        public get AverageCenter(): boolean  { return this._averageCenter; }
-        public set AverageCenter(val: boolean) { this._averageCenter = val; }
 
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
@@ -268,7 +257,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Creates the dynamic size marker to be used for cluster markers if UseDynamicSizeMarkers is set to true.
      *
-     * @protected
+     * @public
      * @static
      * @param {integer} size - The number of markers in the cluster.
      * @param {IMarkerIconInfo} info  - The icon info to be used. This will be hydrated with
@@ -282,7 +271,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      *
      * @memberof ClusterLayerDirective
      */
-    protected static CreateDynamicSizeMarker(size: number, info: IMarkerIconInfo,
+    public static CreateDynamicSizeMarker(size: number, info: IMarkerIconInfo,
                                              baseMarkerSize: number, ranges: Map<number, string>): string {
         const mr: number = baseMarkerSize;
         const outline: number = mr * 0.35;

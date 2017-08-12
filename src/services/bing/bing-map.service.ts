@@ -193,34 +193,29 @@ export class BingMapService implements MapService {
      * @memberof BingMapService
      */
     public CreateMarker(options: IMarkerOptions = <IMarkerOptions>{}): Promise<Marker> {
-        return this._map.then((map: Microsoft.Maps.Map) => {
+        const payload = (icon: string, map: Microsoft.Maps.Map): BingMarker => {
             const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(options.position);
-            return BingConversions.TranslateMarkerOptions(options).then(o => {
-                if (o.icon == null) {
-                    const s = 48;
-                    const iconInfo: IMarkerIconInfo = {
-                        markerType: MarkerTypeId.CanvasMarker,
-                        rotation: 45,
-                        drawingOffset: { x: 24, y: 0 },
-                        points: [
-                            { x: 10, y: 40 },
-                            { x: 24, y: 30 },
-                            { x: 38, y: 40 },
-                            { x: 24, y: 0 }
-                        ],
-                        color: '#f00',
-                        size: { width: s, height: s }
-                    };
-                    o.icon = <string>Marker.CreateMarker(iconInfo);
-                        // cast to string here because we know that canvas marker will always produce string
-                        // result, never promise...
-                    o.anchor = new Microsoft.Maps.Point(iconInfo.size.width * 0.75, iconInfo.size.height * 0.25);
-                    o.textOffset = new Microsoft.Maps.Point(0, iconInfo.size.height * 0.66);
+            const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
+            if (icon && icon !== '') { o.icon = icon; }
+            const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
+            const marker: BingMarker = new BingMarker(pushpin);
+            if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
+            map.entities.push(pushpin);
+            return marker;
+        }
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            if (options.iconInfo && options.iconInfo.markerType) {
+                const s = Marker.CreateMarker(options.iconInfo);
+                if (typeof(s) === 'string') { return(payload(s, map)); }
+                else {
+                    return s.then(x => {
+                        return(payload(x.icon, map));
+                    });
                 }
-                const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
-                map.entities.push(pushpin);
-                return new BingMarker(pushpin);
-            });
+            }
+            else {
+                return (payload(null, map));
+            }
         });
     }
 

@@ -8,7 +8,7 @@ import { ClusterPlacementMode } from '../cluster-placement-mode';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 /**
- * Concrete implementation of a clustering layer for the Bing Map Provider.
+ * Concrete implementation of a clustering layer for the Google Map Provider.
  *
  * @export
  * @class GoogleMarkerClusterer
@@ -20,6 +20,7 @@ export class GoogleMarkerClusterer implements Layer {
     /// Field declarations
     ///
     private _isClustering = true;
+    private _markerLookup: Map<GoogleMapTypes.Marker, Marker> = new Map<GoogleMapTypes.Marker, Marker>();
     private _markers: Array<Marker> = new Array<Marker>();
     private _pendingMarkers: Array<Marker> = new Array<Marker>();
     private _mapclicks: number = 0;
@@ -78,13 +79,13 @@ export class GoogleMarkerClusterer implements Layer {
      * trigger a recaluation of the clusters (and associated markers if approprite) for
      * each invocation. If you use this method to add many markers to the cluster, use
      *
-     * @param entity Marker|InfoWindow|any. Entity to add to the layer.
+     * @param entity Marker. Entity to add to the layer.
      *
      * @memberof GoogleMarkerClusterer
      */
-    public AddEntity(entity: Marker | InfoWindow | any): void {
+    public AddEntity(entity: Marker): void {
         if (entity instanceof Marker || entity instanceof GoogleMarker) {
-            if ((<Marker>entity).IsFirst) {
+            if (entity.IsFirst) {
                 this.StopClustering();
             }
         }
@@ -96,9 +97,10 @@ export class GoogleMarkerClusterer implements Layer {
             else {
                 this._pendingMarkers.push(entity);
             }
+            this._markerLookup.set(entity.NativePrimitve, entity);
         }
         if (entity instanceof Marker || entity instanceof GoogleMarker) {
-            if ((<Marker>entity).IsLast) {
+            if (entity.IsLast) {
                 this.StartClustering();
             }
         }
@@ -126,9 +128,8 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public GetMarkerFromGoogleMarker(pin: GoogleMapTypes.Marker): Marker {
-        const i: number = this._markers.findIndex(e => e.NativePrimitve === pin);
-        if (i > -1) { return this._markers[i]; }
-        return null;
+        const m: Marker = this._markerLookup.get(pin);
+        return m;
     }
 
     /**
@@ -167,42 +168,45 @@ export class GoogleMarkerClusterer implements Layer {
     /**
      * Removes an entity from the cluster layer.
      *
-     * @param entity Marker|InfoWindow|any Entity to be removed from the layer.
+     * @param entity Marker Entity to be removed from the layer.
      *
      * @memberof GoogleMarkerClusterer
      */
-    public RemoveEntity(entity: Marker | InfoWindow | any): void {
+    public RemoveEntity(entity: Marker): void {
         if (entity.NativePrimitve && entity.Location) {
-            const j: number = this._markers.findIndex(m => m === entity);
-            const k: number = this._pendingMarkers.findIndex(m => m === entity);
+            const j: number = this._markers.indexOf(entity);
+            const k: number = this._pendingMarkers.indexOf(entity);
             if (j > -1) { this._markers.splice(j, 1); }
             if (k > -1) { this._pendingMarkers.splice(k, 1); }
             if (this._isClustering) {
                 this._layer.removeMarker(entity.NativePrimitve);
             }
+            this._markerLookup.delete(entity.NativePrimitve);
         }
     }
 
     /**
      * Sets the entities for the cluster layer.
      *
-     * @param entities Array<Marker>|Array<InfoWindow>|Array<any> containing
+     * @param entities Array<Marker> containing
      * the entities to add to the cluster. This replaces any existing entities.
      *
      * @memberof GoogleMarkerClusterer
      */
-    public SetEntities(entities: Array<Marker> | Array<InfoWindow> | Array<any>): void {
+    public SetEntities(entities: Array<Marker>): void {
         this._layer.getMarkers().forEach(m => {
             m.setMap(null);
         });
         this._layer.clearMarkers();
         this._markers.splice(0);
         this._pendingMarkers.splice(0);
+        this._markerLookup.clear();
 
         const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
-        (<Array<any>>entities).forEach((e: any) => {
+        entities.forEach((e: any) => {
             if (e.NativePrimitve && e.Location) {
                 this._markers.push(e);
+                this._markerLookup.set(e.NativePrimitve, e)
                 p.push(e.NativePrimitve);
             }
         });
@@ -225,9 +229,15 @@ export class GoogleMarkerClusterer implements Layer {
             throw(new Error('GoogleMarkerClusterer: ZoomOnClick option cannot be set after initial creation.'));
         }
         if (options.callback != null) {}
-        if (options.clusteringEnabled != null && !options.clusteringEnabled) { this._layer.setGridSize(0); }
+        if (options.clusteringEnabled != null) {
+            this._layer.setMinClusterSize(options.clusteringEnabled ? 1 : 10000000);
+            this._layer.resetViewport();
+            this._layer.redraw();
+        }
         if (options.gridSize != null && (options.clusteringEnabled == null || options.clusteringEnabled)) {
             this._layer.setGridSize(options.gridSize);
+            this._layer.resetViewport();
+            this._layer.redraw();
         }
         if (options.maxZoom != null) { this._layer.setMaxZoom(options.maxZoom); }
         if (options.minimumClusterSize != null) { this._layer.setMinClusterSize(options.minimumClusterSize); }
@@ -244,21 +254,23 @@ export class GoogleMarkerClusterer implements Layer {
      */
     public SetVisible(visible: boolean): void {
         const map: GoogleMapTypes.GoogleMap = visible ? this._layer.getMap() : null;
-        if (!visible) { this._layer.clearMarkers(); }
+        if (!visible) {
+            this._layer.resetViewport(true);
+        }
         else {
             const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
-            this._markers.forEach(e => {
-                if (e.NativePrimitve && e.Location) {
-                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
-                }
-            });
-            this._pendingMarkers.forEach(e => {
-                if (e.NativePrimitve && e.Location) {
-                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
-                }
-            });
-            this._layer.addMarkers(p);
-            this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+            if (this._pendingMarkers.length > 0) {
+                this._pendingMarkers.forEach(e => {
+                    if (e.NativePrimitve && e.Location) {
+                        p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
+                    }
+                });
+                this._layer.addMarkers(p);
+                this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+            }
+            else {
+                this._layer.redraw();
+            }
         }
         this._visible = visible;
     }

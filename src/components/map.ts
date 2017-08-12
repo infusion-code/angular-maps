@@ -12,7 +12,8 @@
     ElementRef,
     HostBinding,
     ViewEncapsulation,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    NgZone
 } from '@angular/core';
 import { MapServiceFactory } from '../services/mapservicefactory';
 import { MapService } from '../services/map.service';
@@ -263,7 +264,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      *                                   Generally provided via injections.
      * @memberof MapComponent
      */
-    constructor(private _mapService: MapService) { }
+    constructor(private _mapService: MapService, private _zone: NgZone) { }
 
     ///
     /// Public methods
@@ -451,15 +452,17 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof MapComponent
      */
     private InitMapInstance(el: HTMLElement) {
-        if (this._options.center == null) { this._options.center = { latitude: this._latitude, longitude: this._longitude }; }
-        if (this._options.zoom == null) { this._options.zoom = this._zoom; }
-        if (this._options.mapTypeId == null) { this._options.mapTypeId = MapTypeId.hybrid; }
-        if (this._box != null) { this._options.bounds = this._box; }
-        this._mapPromise = this._mapService.CreateMap(el, this._options);
-        this.HandleMapCenterChange();
-        this.HandleMapBoundsChange();
-        this.HandleMapZoomChange();
-        this.HandleMapClickEvents();
+        this._zone.runOutsideAngular(() => {
+            if (this._options.center == null) { this._options.center = { latitude: this._latitude, longitude: this._longitude }; }
+            if (this._options.zoom == null) { this._options.zoom = this._zoom; }
+            if (this._options.mapTypeId == null) { this._options.mapTypeId = MapTypeId.hybrid; }
+            if (this._box != null) { this._options.bounds = this._box; }
+            this._mapPromise = this._mapService.CreateMap(el, this._options);
+            this.HandleMapCenterChange();
+            this.HandleMapBoundsChange();
+            this.HandleMapZoomChange();
+            this.HandleMapClickEvents();
+        });
     }
 
     /**

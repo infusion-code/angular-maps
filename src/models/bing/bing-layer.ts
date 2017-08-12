@@ -1,6 +1,8 @@
 import { ILayerOptions } from './../../interfaces/ilayer-options';
 import { Layer } from './../layer';
 import { Marker } from './../marker';
+import { Polygon } from './../polygon';
+import { Polyline } from './../polyline';
 import { InfoWindow } from './../info-window';
 import { BingMapService } from './../../services/bing/bing-map.service';
 import { MapService} from './../../services/map.service';
@@ -65,11 +67,11 @@ export class BingLayer implements Layer {
     /**
      * Adds an entity to the layer.
      *
-     * @param entity Marker|InfoWindow|any. Entity to add to the layer.
+     * @param entity Marker|InfoWindow|Polygon|Polyline. Entity to add to the layer.
      *
      * @memberof BingLayer
      */
-    public AddEntity(entity: Marker|InfoWindow|any): void {
+    public AddEntity(entity: Marker|InfoWindow|Polygon|Polyline): void {
         if (entity.NativePrimitve) {
             this._layer.add(entity.NativePrimitve);
         }
@@ -113,11 +115,11 @@ export class BingLayer implements Layer {
     /**
      * Removes an entity from the cluster layer.
      *
-     * @param entity Marker|InfoWindow|any Entity to be removed from the layer.
+     * @param entity Marker|InfoWindow|Polygon|Polyline to be removed from the layer.
      *
      * @memberof BingLayer
      */
-    public RemoveEntity(entity: Marker|InfoWindow|any): void {
+    public RemoveEntity(entity: Marker|InfoWindow|Polygon|Polyline): void {
         if (entity.NativePrimitve) {
             this._layer.remove(entity.NativePrimitve);
         }
@@ -126,12 +128,12 @@ export class BingLayer implements Layer {
     /**
      * Sets the entities for the cluster layer.
      *
-     * @param entities Array<Marker>|Array<InfoWindow>|Array<any> containing the entities to add to the cluster.
+     * @param entities Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline> containing the entities to add to the cluster.
      * This replaces any existing entities.
      *
      * @memberof BingLayer
      */
-    public SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<any>): void {
+    public SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline>): void {
         const p: Array<Microsoft.Maps.IPrimitive> = new Array<Microsoft.Maps.IPrimitive>();
         (<Array<any>>entities).forEach((e: any) => {
             if (e.NativePrimitve) { p.push(<Microsoft.Maps.IPrimitive>e.NativePrimitve); }
