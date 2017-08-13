@@ -11,7 +11,7 @@ export interface IMarkerOptions {
     draggable?: boolean;
     isFirst?: boolean;
     isLast?: boolean;
-    icon?: string | IMarkerIconInfo;
+    icon?: string;
     width?: number;
     height?: number;
     iconInfo?: IMarkerIconInfo;

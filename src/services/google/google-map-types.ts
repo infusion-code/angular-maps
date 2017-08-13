@@ -44,6 +44,7 @@ export interface MarkerOptions {
   map?: GoogleMap;
   label?: string|MarkerLabel;
   draggable?: boolean;
+  clickable?: boolean;
   icon?: string;
   opacity?: number;
   visible?: boolean;
@@ -91,6 +92,8 @@ export interface MarkerClusterer {
   getStyles(): Array<ClusterStyle>;
   setCalculator(callback: (markers: Array<Marker>, numStyles: number) => { text: string, index: number}): void;
   getCalculator(): (markers: Array<Marker>, numStyles: number) => { text: string, index: number};
+  resetViewport(hide?: boolean): void;
+  redraw(): void;
 }
 
 export interface Circle extends MVCObject {

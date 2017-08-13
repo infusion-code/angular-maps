@@ -1,6 +1,7 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../interfaces/imarker-options';
 import { IPolygonOptions } from './../interfaces/ipolygon-options';
+import { IMarkerIconInfo } from './../interfaces/imarker-icon-info';
 import { Marker } from './../models/marker';
 import { Polygon } from './../models/polygon';
 import { Polyline } from './../models/polyline';
@@ -40,6 +41,19 @@ export abstract class LayerService {
      * @memberof LayerService
      */
     public abstract CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker>;
+
+    /**
+     * Creates an array of unbound markers. Use this method to create arrays of markers to be used in bulk
+     * operations.
+     *
+     * @abstract
+     * @param {Array<IMarkerOptions>} options - Marker options defining the markers.
+     * @param {IMarkerIconInfo} markerIcon - Optional information to generate custom markers. This will be applied to all markers.
+     * @returns {Promise<Array<Marker>>} - A promise that when fullfilled contains the an arrays of the Marker models.
+     *
+     * @memberof LayerService
+     */
+    public abstract CreateMarkers(options: Array<IMarkerOptions>, markerIcon?: IMarkerIconInfo): Promise<Array<Marker>>;
 
     /**
      * Adds a polygon to the layer.

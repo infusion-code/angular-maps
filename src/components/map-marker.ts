@@ -187,7 +187,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     ///
 
     /**
-     * This event emitter gets emitted when the user clicks on the marker.
+     * This event emitter gets emitted when a marker icon is being created.
      *
      * @type {EventEmitter<IMarkerIconInfo>}
      * @memberof MapMarkerDirective
@@ -267,7 +267,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Creates an instance of MapMarkerDirective.
      * @param {MarkerService} _markerService - Concreate implementation of a {@link MarkerService}.
-     * Expects a {@link BingMarkerService} instance.
      * @param {ViewContainerRef} _containerRef - View container hosting the marker.
      * Used to determine parent layer through markup.
      *
@@ -297,7 +296,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Called after Component content initialization. Part of ng Component life cycle.
      * @returns {void}
      *
-     * @memberof MapLayer
+     * @memberof MapMarkerDirective
      */
     public ngAfterContentInit() {
         if (this._infoBox != null) { this._infoBox.HostMarker = this; }
@@ -321,7 +320,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
      *
-     * @memberof MapLayer
+     * @memberof MapMarkerDirective
      */
     public ngOnDestroy() {
         this._markerService.DeleteMarker(this);
@@ -366,6 +365,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Obtains a string representation of the Marker Id.
      * @return {string} - string representation of the marker id.
+     * @memberof MapMarkerDirective
      */
     public toString(): string { return 'MapMarker-' + this._id.toString(); }
 

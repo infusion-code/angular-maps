@@ -1,5 +1,7 @@
 import { ILayerOptions } from '../interfaces/ilayer-options';
 import { Marker } from './marker';
+import { Polygon } from './polygon';
+import { Polyline } from './polyline';
 import { InfoWindow } from './info-window';
 
 /**
@@ -46,11 +48,11 @@ export abstract class Layer {
      * as marker, infowindow, polyline, polygon, etc..) Implementations of this method should not expect native implementation of
      * thise concepts, instead, the appropriate abstract model classes should be implemented for each provider
      *
-     * @param entity Marker|InfoWindow|any. Entity to add to the layer.
+     * @param entity Marker|InfoWindow|Polygon|Polyline. Entity to add to the layer.
      *
      * @memberof Layer
      */
-    public abstract AddEntity(entity: Marker|InfoWindow|any): void;
+    public abstract AddEntity(entity: Marker|InfoWindow|Polygon|Polyline): void;
 
     /**
      * Deletes the layer.
@@ -82,23 +84,23 @@ export abstract class Layer {
      * as marker, infowindow, polyline, polygon, etc..) Implementations of this method should not expect native implementation of
      * thise concepts, instead, the appropriate abstract model classes should be implemented for each provider
      *
-     * @param entity Marker|InfoWindow|any Entity to be removed from the layer.
+     * @param entity Marker|InfoWindow|Polygon|Polyline Entity to be removed from the layer.
      *
      * @memberof Layer
      */
-    public abstract RemoveEntity(entity: Marker|InfoWindow|any): void;
+    public abstract RemoveEntity(entity: Marker|InfoWindow|Polygon|Polyline): void;
 
      /**
      * Sets the entities for the cluster layer. Entities in this context should be model abstractions of concered map functionality (such
      * as marker, infowindow, polyline, polygon, etc..) Implementations of this method should not expect native implementation of
      * thise concepts, instead, the appropriate abstract model classes should be implemented for each provider
      *
-     * @param entities Array<Marker>|Array<InfoWindow>|Array<any> containing the entities to add to the cluster.
+     * @param entities Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline> containing the entities to add to the cluster.
      * This replaces any existing entities.
      *
      * @memberof Layer
      */
-    public abstract SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<any>): void;
+    public abstract SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline>): void;
 
     /**
      * Sets the options for the cluster layer.

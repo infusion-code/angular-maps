@@ -33,7 +33,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
     ///
     /// Field declarations
     ///
-    protected _layers: Map<ClusterLayerDirective, Promise<Layer>> = new Map<ClusterLayerDirective, Promise<Layer>>();
+    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
 
     ///
     /// Constructor
@@ -99,7 +99,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                 }
             })
         });
-        this._layers.set(layer, layerPromise);
+        this._layers.set(layer.Id, layerPromise);
     }
 
     /**
@@ -141,7 +141,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
-        return this._layers.get(layer);
+        return this._layers.get(layer.Id);
     }
 
     /**
@@ -154,14 +154,14 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
-        const l = this._layers.get(layer);
+        const l = this._layers.get(layer.Id);
         if (l == null) {
             return Promise.resolve();
         }
         return l.then((l1: Layer) => {
             return this._zone.run(() => {
                 l1.Delete();
-                this._layers.delete(layer);
+                this._layers.delete(layer.Id);
             });
         });
     }
@@ -178,7 +178,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     public StartClustering(layer: ClusterLayerDirective): Promise<void> {
-        const l = this._layers.get(layer);
+        const l = this._layers.get(layer.Id);
         if (l == null) {
             return Promise.resolve();
         }
@@ -201,7 +201,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     public StopClustering(layer: ClusterLayerDirective): Promise<void> {
-        const l = this._layers.get(layer);
+        const l = this._layers.get(layer.Id);
         if (l == null) {
             return Promise.resolve();
         }
@@ -228,12 +228,11 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     private CreateClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer: ClusterLayerDirective): void {
-        this._layers.get(layer).then((l: BingClusterLayer) => {
+        this._layers.get(layer.Id).then((l: BingClusterLayer) => {
             if (layer.IconInfo) {
                 const o: Microsoft.Maps.IPushpinOptions = {};
                 const payload: (s: string, i: IMarkerIconInfo) => void = (s, i) => {
                         o.icon = s;
-
                         o.anchor = new Microsoft.Maps.Point(
                             (i.size && i.markerOffsetRatio) ? (i.size.width * i.markerOffsetRatio.x) : 0,
                             (i.size && i.markerOffsetRatio) ? (i.size.height * i.markerOffsetRatio.y) : 0
@@ -273,7 +272,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * @memberof BingClusterService
      */
     private CreateCustomClusterPushPin(cluster: Microsoft.Maps.ClusterPushpin, layer: ClusterLayerDirective): void {
-        this._layers.get(layer).then((l: BingClusterLayer) => {
+        this._layers.get(layer.Id).then((l: BingClusterLayer) => {
             // assemble markers for callback
             const m: Array<Marker> = new Array<Marker>();
             cluster.containedPushpins.forEach(p => {

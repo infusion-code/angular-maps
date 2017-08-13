@@ -60,6 +60,7 @@ import { MapLayerDirective } from './src/components/map-layer';
 import { ClusterLayerDirective } from './src/components/cluster-layer';
 import { MapPolygonDirective } from './src/components/map-polygon';
 import { MapPolylineDirective } from './src/components/map-polyline';
+import { MapMarkerLayerDirective } from './src/components/map-marker-layer';
 
 ///
 /// import module services
@@ -103,8 +104,8 @@ export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
     IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions,
     MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
-    MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
-    ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory, MarkerService,
+    MapMarkerLayerDirective, MapLayerDirective, ClusterLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
+    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory, MarkerService,
     InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
@@ -124,10 +125,10 @@ export {
 ///
 @NgModule({
     declarations: [MapLayerDirective, MapComponent, MapMarkerDirective, InfoBoxComponent,
-        InfoBoxActionDirective, MapPolygonDirective, MapPolylineDirective, ClusterLayerDirective],
+        InfoBoxActionDirective, MapPolygonDirective, MapPolylineDirective, ClusterLayerDirective, MapMarkerLayerDirective],
     imports: [CommonModule],
     exports: [CommonModule, MapComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective,
-        InfoBoxComponent, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective]
+        InfoBoxComponent, InfoBoxActionDirective, MapLayerDirective, ClusterLayerDirective, MapMarkerLayerDirective]
 })
 export class MapModule {
 

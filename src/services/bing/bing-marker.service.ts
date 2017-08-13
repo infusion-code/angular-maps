@@ -3,6 +3,7 @@ import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
+import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
 import { IPoint } from './../../interfaces/ipoint';
 import { MapMarkerDirective } from './../../components/map-marker';
 import { MarkerService } from './../../services/marker.service';
@@ -116,7 +117,8 @@ export class BingMarkerService implements MarkerService {
     public CreateEventObservable<T>(eventName: string, marker: MapMarkerDirective): Observable<T> {
         return Observable.create((observer: Observer<T>) => {
             this._markers.get(marker).then((m: Marker) => {
-                m.AddListener(eventName, (e: T) => this._zone.run(() => observer.next(e)));
+                m.AddListener(eventName, (e: T) => this._zone.run(() =>
+                    observer.next(e)));
             });
         });
     }
@@ -258,19 +260,24 @@ export class BingMarkerService implements MarkerService {
      * @memberof BingMarkerService
      */
     public UpdateIcon(marker: MapMarkerDirective): Promise<void> {
+        const payload = (m: Marker, icon: string, iconInfo: IMarkerIconInfo) => {
+            if (icon && icon !== '') {
+                m.SetIcon(icon);
+                marker.DynamicMarkerCreated.emit(iconInfo);
+            }
+        };
         return this._markers.get(marker).then((m: Marker) => {
             if (marker.IconInfo) {
-                const x: IMarkerOptions = {
-                    position: { latitude: marker.Latitude, longitude: marker.Longitude },
-                    iconInfo: marker.IconInfo
+                const s = Marker.CreateMarker(marker.IconInfo);
+                if (typeof(s) === 'string') { return(payload(m, s, marker.IconInfo)); }
+                else {
+                    return s.then(x => {
+                        return(payload(m, x.icon, x.iconInfo));
+                    });
                 }
-                BingConversions.TranslateMarkerOptions(x).then(o => {
-                    m.SetIcon(o.icon);
-                    marker.DynamicMarkerCreated.emit(x.iconInfo);
-                });
             }
             else {
-                m.SetIcon(marker.IconUrl)
+                return(m.SetIcon(marker.IconUrl));
             }
         });
     }

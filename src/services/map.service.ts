@@ -82,7 +82,6 @@ export abstract class MapService {
      */
     abstract CreateMarker(options: IMarkerOptions): Promise<Marker>;
 
-
     /**
      * Creates a polygon within the map context
      *

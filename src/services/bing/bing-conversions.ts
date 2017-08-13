@@ -127,7 +127,6 @@ export class BingConversions {
         'height',
         'htmlContent',
         'icon',
-        'iconInfo',
         'infobox',
         'state',
         'title',
@@ -361,7 +360,7 @@ export class BingConversions {
      *
      * @memberof BingConversions
      */
-    public static TranslateMarkerOptions(options: IMarkerOptions): Promise<Microsoft.Maps.IPushpinOptions> {
+    public static TranslateMarkerOptions1(options: IMarkerOptions): Promise<Microsoft.Maps.IPushpinOptions> {
         const o: Microsoft.Maps.IPushpinOptions|any = {};
         let s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = null;
         const p: Promise<Microsoft.Maps.IPushpinOptions> = new Promise<Microsoft.Maps.IPushpinOptions>((resolve, reject) => {
@@ -396,6 +395,30 @@ export class BingConversions {
             }
         });
         return p;
+    }
+
+    /**
+     * Maps an IMarkerOptions object to a Microsoft.Maps.IPushpinOptions object.
+     *
+     * @static
+     * @param {IMarkerOptions} options - Object to be mapped.
+     * @returns {Microsoft.Maps.IPushpinOptions} - The mapped object.
+     *
+     * @memberof BingConversions
+     */
+    public static TranslateMarkerOptions(options: IMarkerOptions): Microsoft.Maps.IPushpinOptions {
+        const o: Microsoft.Maps.IPushpinOptions = {};
+        Object.keys(options)
+            .filter(k => BingConversions._markerOptionsAttributes.indexOf(k) !== -1)
+            .forEach((k) => {
+                if (k === 'anchor') {
+                    o.anchor = BingConversions.TranslatePoint(options.anchor);
+                }
+                else {
+                    (<any>o)[k] = (<any>options)[k];
+                }
+            });
+        return o;
     }
 
     /**

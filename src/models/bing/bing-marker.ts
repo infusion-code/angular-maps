@@ -235,9 +235,8 @@ export class BingMarker implements Marker {
      * @memberof Marker
      */
     public SetOptions(options: IMarkerOptions): void {
-        BingConversions.TranslateMarkerOptions(options).then(o => {
-            this._pushpin.setOptions(o);
-        });
+        const o: Microsoft.Maps.IPushpinOptions =  BingConversions.TranslateMarkerOptions(options);
+        this._pushpin.setOptions(o);
     }
 
     /**
