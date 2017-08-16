@@ -30,6 +30,7 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
+    private _centroid: Microsoft.Maps.Location = null;
 
     ///
     /// Property declarations
@@ -43,7 +44,10 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     private get Centroid(): Microsoft.Maps.Location {
-        return BingConversions.TranslateLocation(this.GetPolygonCentroid());
+        if (this._centroid == null) {
+            this._centroid = BingConversions.TranslateLocation(this.GetPolygonCentroid());
+        }
+        return this._centroid;
     }
 
     /**
@@ -299,6 +303,10 @@ export class BingPolygon extends Polygon implements Polygon {
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
         this._polygon.setLocations(p);
+        if (this._label) {
+            this._centroid = null;
+            this.ManageLabel();
+        }
     }
 
     /**
@@ -317,6 +325,10 @@ export class BingPolygon extends Polygon implements Polygon {
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {
             this._polygon.setRings(new Array<Microsoft.Maps.Location>());
+            if (this._label) {
+                this._label.Delete();
+                this._label = null;
+            }
             return;
         }
         if (Array.isArray(paths[0])) {
@@ -328,7 +340,12 @@ export class BingPolygon extends Polygon implements Polygon {
                 p.push(_p);
             });
             this._polygon.setRings(p);
-        } else {
+            if (this._label) {
+                this._centroid = null;
+                this.ManageLabel();
+            }
+        }
+        else {
             // parameter is a simple array....
             this.SetPath(<Array<ILatLong>>paths);
         }

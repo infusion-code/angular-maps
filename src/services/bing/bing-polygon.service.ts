@@ -183,10 +183,17 @@ export class BingPolygonService implements PolygonService {
      */
     public UpdatePolygon(polygon: MapPolygonDirective): Promise<void> {
         const m = this._polygons.get(polygon);
-        if (m == null) {
+        if (m == null || polygon.Paths == null || !Array.isArray(polygon.Paths) || polygon.Paths.length === 0) {
             return Promise.resolve();
         }
-        return m.then((l: Polygon) => this._zone.run(() => { l.SetPaths(polygon.Paths); }));
+        return m.then((l: Polygon) =>  {
+            if (Array.isArray(polygon.Paths[0])) {
+                l.SetPaths(polygon.Paths)
+            }
+            else {
+                l.SetPath(<Array<ILatLong>>polygon.Paths);
+            }
+        });
     }
 
 }

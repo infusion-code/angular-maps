@@ -356,8 +356,9 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
         if (!this._addedToService) { return; }
 
         const o: IPolylineOptions = this.GeneratePolylineChangeSet(changes);
-        this._polylineService.SetOptions(this, o);
-
+        if (o != null) {
+            this._polylineService.SetOptions(this, o);
+        }
         if (changes['Path'] && !changes['Path'].isFirstChange()) {
             this._polylineService.UpdatePolyline(this);
         }
@@ -425,18 +426,19 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      */
     private GeneratePolylineChangeSet(changes: SimpleChanges): IPolylineOptions {
         const options: IPolylineOptions = { id: this._id };
-        if (changes['Clickable']) { options.clickable = this.Clickable; }
-        if (changes['Draggable']) { options.draggable = this.Draggable; }
-        if (changes['Editable']) { options.editable = this.Editable; }
-        if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
-        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; }
-        if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
-        if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
-        if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }
-        if (changes['Title']) { options.title = this.Title; }
-        if (changes['Visible']) { options.visible = this.Visible; }
-        if (changes['zIndex']) { options.zIndex = this.zIndex; }
-        return options;
+        let hasOptions: boolean = false;
+        if (changes['Clickable']) { options.clickable = this.Clickable; hasOptions = true; }
+        if (changes['Draggable']) { options.draggable = this.Draggable; hasOptions = true; }
+        if (changes['Editable']) { options.editable = this.Editable; hasOptions = true; }
+        if (changes['Geodesic']) { options.geodesic = this.Geodesic; hasOptions = true; }
+        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; hasOptions = true; }
+        if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; hasOptions = true; }
+        if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; hasOptions = true; }
+        if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; hasOptions = true; }
+        if (changes['Title']) { options.title = this.Title; hasOptions = true; }
+        if (changes['Visible']) { options.visible = this.Visible; hasOptions = true; }
+        if (changes['zIndex']) { options.zIndex = this.zIndex; hasOptions = true; }
+        return hasOptions ? options : null;
     }
 
 }

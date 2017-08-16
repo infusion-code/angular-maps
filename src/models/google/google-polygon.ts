@@ -29,6 +29,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
+    private _centroid: GoogleMapTypes.LatLngLiteral = null;
 
     ///
     /// Property declarations
@@ -70,7 +71,10 @@ export class GooglePolygon extends Polygon implements Polygon {
      * @memberof GooglePolygon
      */
     private get Centroid(): GoogleMapTypes.LatLngLiteral {
-        return GoogleConversions.TranslateLocation(this.GetPolygonCentroid());
+        if (this._centroid == null) {
+            this._centroid = GoogleConversions.TranslateLocation(this.GetPolygonCentroid());
+        }
+        return this._centroid;
     }
 
     /**
@@ -277,6 +281,10 @@ export class GooglePolygon extends Polygon implements Polygon {
         const p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
         path.forEach(x => p.push(new google.maps.LatLng(x.latitude, x.longitude)));
         this._polygon.setPath(p);
+        if (this._label) {
+            this._centroid = null;
+            this.ManageLabel();
+        }
     }
 
     /**
@@ -292,6 +300,10 @@ export class GooglePolygon extends Polygon implements Polygon {
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {
             this._polygon.setPaths(new Array<GoogleMapTypes.LatLng>());
+            if (this._label) {
+                this._label.Delete();
+                this._label = null;
+            }
             return;
         }
         if (Array.isArray(paths[0])) {
@@ -303,6 +315,10 @@ export class GooglePolygon extends Polygon implements Polygon {
                 p.push(_p);
             });
             this._polygon.setPaths(p);
+            if (this._label) {
+                this._centroid = null;
+                this.ManageLabel();
+            }
         } else {
             // parameter is a simple array....
             this.SetPath(<Array<ILatLong>>paths);

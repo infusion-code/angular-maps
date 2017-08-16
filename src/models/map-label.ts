@@ -209,6 +209,7 @@ export abstract class MapLabel {
 
         style.marginLeft = this.GetMarginLeft(textWidth) + 'px';
         style.marginTop = '-0.4em';
+        style.pointerEvents = 'none';
             // Bring actual text top in line with desired latitude.
             // Cheaper than calculating height of text.
     }
