@@ -130,15 +130,15 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The ordered sequence of coordinates that designates a closed loop.
      * Unlike polylines, a polygon may consist of one or more paths.
-     *  As a result, the paths property may specify one or more arrays of
+     * As a result, the paths property may specify one or more arrays of
      * LatLng coordinates. Paths are closed automatically; do not repeat the
      * first vertex of the path as the last vertex. Simple polygons may be
      * defined using a single array of LatLngs. More complex polygons may
-     * specify an array of arrays. Any simple arrays are converted into Arrays.
+     * specify an array of arrays (for inner loops ). Any simple arrays are converted into Arrays.
      * Inserting or removing LatLngs from the Array will automatically update
      * the polygon on the map.
      *
-     * @type {(Array<ILatLong> | Array<Array<ILatLong>>)}
+     * @type {(Array<ILatLong> | Array<Array<ILatLong>>|Array<Array<Array<ILatLong)}
      * @memberof MapPolygonDirective
      */
     @Input() public Paths: Array<ILatLong> | Array<Array<ILatLong>> = [];
@@ -400,7 +400,11 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
         if (!this._addedToService) { return; }
 
         const o: IPolygonOptions = this.GeneratePolygonChangeSet(changes);
-        this._polygonService.SetOptions(this, o);
+        if (o != null) { this._polygonService.SetOptions(this, o); }
+        if (changes['Paths'] && !changes['Paths'].isFirstChange()) {
+            this._polygonService.UpdatePolygon(this);
+        }
+
     }
 
     /**
@@ -466,25 +470,24 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      */
     private GeneratePolygonChangeSet(changes: SimpleChanges): IPolygonOptions {
         const options: IPolygonOptions = { id: this._id };
-        if (changes['Clickable']) { options.clickable = this.Clickable; }
-        if (changes['Draggable']) { options.draggable = this.Draggable; }
-        if (changes['Editable']) { options.editable = this.Editable; }
-        if (changes['FillColor']) { options.fillColor = this.FillColor; }
-        if (changes['FillOpacity']) { options.fillOpacity = this.FillOpacity; }
-        if (changes['Geodesic']) { options.geodesic = this.Geodesic; }
-        if (changes['Paths']) { options.paths = this.Paths; }
-        if (changes['LabelMaxZoom']) { options.labelMaxZoom = this.LabelMaxZoom; }
-        if (changes['LabelMinZoom']) { options.labelMinZoom = this.LabelMinZoom; }
-        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; }
-        if (changes['ShowLabel']) { options.showLabel = this.ShowLabel; }
-        if (changes['Paths']) { options.paths = this.Paths; }
-        if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; }
-        if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; }
-        if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; }
-        if (changes['Title']) { options.title = this.Title; }
-        if (changes['Visible']) { options.visible = this.Visible; }
-        if (changes['zIndex']) { options.zIndex = this.zIndex; }
-        return options;
+        let hasOptions: boolean = false;
+        if (changes['Clickable']) { options.clickable = this.Clickable; hasOptions = true; }
+        if (changes['Draggable']) { options.draggable = this.Draggable; hasOptions = true; }
+        if (changes['Editable']) { options.editable = this.Editable; hasOptions = true; }
+        if (changes['FillColor']) { options.fillColor = this.FillColor; hasOptions = true; }
+        if (changes['FillOpacity']) { options.fillOpacity = this.FillOpacity; hasOptions = true; }
+        if (changes['Geodesic']) { options.geodesic = this.Geodesic; hasOptions = true; }
+        if (changes['LabelMaxZoom']) { options.labelMaxZoom = this.LabelMaxZoom; hasOptions = true; }
+        if (changes['LabelMinZoom']) { options.labelMinZoom = this.LabelMinZoom; hasOptions = true; }
+        if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; hasOptions = true; }
+        if (changes['ShowLabel']) { options.showLabel = this.ShowLabel; hasOptions = true; }
+        if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; hasOptions = true; }
+        if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; hasOptions = true; }
+        if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; hasOptions = true; }
+        if (changes['Title']) { options.title = this.Title; hasOptions = true; }
+        if (changes['Visible']) { options.visible = this.Visible; hasOptions = true; }
+        if (changes['zIndex']) { options.zIndex = this.zIndex; hasOptions = true; }
+        return hasOptions ? options : null;
     }
 
 }
