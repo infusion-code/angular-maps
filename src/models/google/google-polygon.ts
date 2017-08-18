@@ -155,7 +155,21 @@ export class GooglePolygon extends Polygon implements Polygon {
      * @memberof GooglePolygon
      */
     public AddListener(eventType: string, fn: Function): void {
-        this._polygon.addListener(eventType, fn)
+        const supportedEvents = [
+            'click',
+            'dblclick',
+            'drag', 'dragend',
+            'dragstart',
+            'mousedown',
+            'mousemove',
+            'mouseout',
+            'mouseover',
+            'mouseup',
+            'rightclick'
+        ];
+        if (supportedEvents.indexOf(eventType) !== -1) {
+            this._polygon.addListener(eventType, fn);
+        }
     }
 
     /**
@@ -347,11 +361,13 @@ export class GooglePolygon extends Polygon implements Polygon {
      * @private
      */
     private ManageLabel(): void {
+        if (this.GetPath == null || this.GetPath().length === 0) { return; }
         if (this._showLabel && this._title != null && this._title !== '') {
             const o: { [key: string]: any } = {
                 text: this._title,
                 position: this.Centroid
             };
+            if (o.position == null) { return; }
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
             if (this._maxZoom !== -1) { o.maxZoom = this._maxZoom; }
             if (this._label == null) {

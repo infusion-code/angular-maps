@@ -231,7 +231,7 @@ export abstract class Polygon {
      * @protected
      */
     protected GetBoundingCenter(): ILatLong {
-        const c: ILatLong = {latitude: 0, longitude: 0};
+        let c: ILatLong = {latitude: 0, longitude: 0};
         let x1: number = 90, x2: number = -90, y1: number = 180, y2: number = -180;
         const path: Array<Array<ILatLong>> = this.GetPaths();
         if (path) {
@@ -243,6 +243,9 @@ export abstract class Polygon {
             }));
             c.latitude = x1 + (x2 - x1) / 2;
             c.longitude = y1 + (y2 - y1) / 2;
+        }
+        else {
+            c = null;
         }
         return c;
     }
@@ -256,28 +259,39 @@ export abstract class Polygon {
      * @protected
      */
     protected GetPolygonCentroid(): ILatLong {
-        const c: ILatLong = {latitude: 0, longitude: 0};
+        let c: ILatLong = {latitude: 0, longitude: 0};
         const path: Array<Array<ILatLong>> = this.GetPaths();
         const off = path[0][0];
-        let twicearea: number = 0;
-        let x: number = 0;
-        let y: number = 0;
-        let p1: ILatLong, p2: ILatLong;
-        let f: number;
-        for (let k = 0; k < path.length; k++) {
-            for (let i = 0, j = path[k].length - 1; i < path[k].length; j = i++) {
-                p1 = path[k][i];
-                p2 = path[k][j];
-                f = (p1.latitude - off.latitude) * (p2.longitude - off.longitude) -
-                    (p2.latitude - off.latitude) * (p1.longitude - off.longitude);
-                twicearea += f;
-                x += (p1.latitude + p2.latitude - 2 * off.latitude) * f;
-                y += (p1.longitude + p2.longitude - 2 * off.longitude) * f;
+        if (off != null) {
+            let twicearea: number = 0;
+            let x: number = 0;
+            let y: number = 0;
+            let p1: ILatLong, p2: ILatLong;
+            let f: number;
+            for (let k = 0; k < path.length; k++) {
+                for (let i = 0, j = path[k].length - 1; i < path[k].length; j = i++) {
+                    p1 = path[k][i];
+                    p2 = path[k][j];
+                    f = (p1.latitude - off.latitude) * (p2.longitude - off.longitude) -
+                        (p2.latitude - off.latitude) * (p1.longitude - off.longitude);
+                    twicearea += f;
+                    x += (p1.latitude + p2.latitude - 2 * off.latitude) * f;
+                    y += (p1.longitude + p2.longitude - 2 * off.longitude) * f;
+                }
+            }
+            if (twicearea !== 0) {
+                f = twicearea * 3;
+                c.latitude = x / f + off.latitude;
+                c.longitude = y / f + off.longitude;
+            }
+            else {
+                c.latitude = off.latitude;
+                c.longitude = off.longitude;
             }
         }
-        f = twicearea * 3;
-        c.latitude = x / f + off.latitude;
-        c.longitude = y / f + off.longitude
+        else {
+            c = null;
+        }
         return c;
     }
 }

@@ -13,6 +13,10 @@ import { MapLayerDirective } from '../../components/map-layer'
 import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
 import { MapService } from '../map.service';
+import { GoogleConversions } from './google-conversions';
+import * as GoogleMapTypes from './google-map-types';
+
+declare var google: any;
 
 /**
  * Implements the {@link LayerService} contract for a Google Maps specific implementation.
@@ -115,6 +119,33 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
         Promise.all([p, l]).then(x => x[1].AddEntity(x[0]));
         return p;
     };
+
+    /**
+     * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
+     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     *
+     * @memberof GoogleLayerService
+     */
+    public CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>> {
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
+        return p.then((l: Layer) => {
+            const polygons: Promise<Array<Polygon>> = new Promise<Array<Polygon>>((resolve, reject) => {
+                const polys: Array<GooglePolygon> = options.map(o => {
+                    const op: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(o);
+                    const poly: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
+                    const polygon: GooglePolygon = new GooglePolygon(poly);
+                    return polygon;
+                });
+                resolve(polys);
+            });
+            return polygons;
+        });
+    }
 
     /**
      * Adds a polyline to the layer.
