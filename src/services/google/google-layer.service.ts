@@ -62,7 +62,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     public AddLayer(layer: MapLayerDirective): void {
         const p: Promise<Layer> = new Promise<Layer>((resolve, reject) => {
             this._mapService.MapPromise.then(m => {
-                resolve(new GoogleLayer(m, this._mapService))
+                resolve(new GoogleLayer(m, this._mapService, layer.Id))
             });
         });
         this._layers.set(layer.Id, p);
@@ -137,7 +137,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
             const polygons: Promise<Array<Polygon>> = new Promise<Array<Polygon>>((resolve, reject) => {
                 const polys: Array<GooglePolygon> = options.map(o => {
                     const op: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(o);
-                    const poly: GoogleMapTypes.Polygon = new google.maps.Polygon(o);
+                    const poly: GoogleMapTypes.Polygon = new google.maps.Polygon(op);
                     const polygon: GooglePolygon = new GooglePolygon(poly);
                     return polygon;
                 });
