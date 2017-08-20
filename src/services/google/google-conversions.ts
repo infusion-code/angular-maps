@@ -295,8 +295,11 @@ export class GoogleConversions {
      * @memberof GoogleConversions
      */
     public static TranslateLocationObjectArray(latlongArray: Array<ILatLong>): Array<GoogleMapTypes.LatLng> {
+        // use for loop for performance in case we deal with large numbers of points and paths...
         const p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
-        latlongArray.forEach(x => p.push(GoogleConversions.TranslateLocationObject(x)));
+        for (let i = 0; i < latlongArray.length; i++) {
+            p.push(GoogleConversions.TranslateLocationObject(latlongArray[i]));
+        }
         return p;
     }
 
@@ -336,7 +339,8 @@ export class GoogleConversions {
                 if (k === 'position') {
                     const latlng = GoogleConversions.TranslateLocationObject(options[k]);
                     o.position = latlng;
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k]
                 };
             });
@@ -359,9 +363,11 @@ export class GoogleConversions {
             .forEach((k) => {
                 if (k === 'center') {
                     o.center = GoogleConversions.TranslateLocation(options.center);
-                } else if (k === 'mapTypeId') {
+                }
+                else if (k === 'mapTypeId') {
                     o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k]
                 };
             });
@@ -384,9 +390,11 @@ export class GoogleConversions {
         }
         else if (Array.isArray(paths[0])) {
             // parameter is an array or arrays
-             (<Array<Array<ILatLong>>>paths).forEach(path => {
-                p.push(GoogleConversions.TranslateLocationObjectArray(path));
-            });
+            // use for loop for performance in case we deal with large numbers of points and paths...
+            const p1 = <Array<Array<ILatLong>>>paths;
+            for (let i = 0; i < p1.length; i++) {
+                p.push(GoogleConversions.TranslateLocationObjectArray(p1[i]));
+            }
         }
         else {
             // parameter is a simple array....
@@ -413,15 +421,21 @@ export class GoogleConversions {
                     if (!Array.isArray(options.paths)) { return; }
                     if (options.paths.length === 0) {
                         o.paths = new Array<GoogleMapTypes.LatLng>();
-                    } else if (Array.isArray(options.paths[0])) {
+                    }
+                    else if (Array.isArray(options.paths[0])) {
                         o.paths = new Array<Array<GoogleMapTypes.LatLng>>();
-                        (<Array<Array<ILatLong>>>options.paths).forEach(path => {
-                            o.paths.push(GoogleConversions.TranslateLocationObjectArray(path));
-                        });
-                    } else {
+
+                        // use for loop for performance in case we deal with large numbers of points and paths...
+                        const p1 = <Array<Array<ILatLong>>>options.paths;
+                        for (let i = 0; i < p1.length; i++) {
+                            o.paths.push(GoogleConversions.TranslateLocationObjectArray(p1[i]));
+                        }
+                    }
+                    else {
                         o.paths = GoogleConversions.TranslateLocationObjectArray(<Array<ILatLong>>options.paths);
                     }
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k]
                 };
             });

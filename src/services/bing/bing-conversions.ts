@@ -262,10 +262,12 @@ export class BingConversions {
                 if (k === 'placementMode') {
                     if (options.placementMode === ClusterPlacementMode.FirstPin) {
                         o.placementMode = Microsoft.Maps.ClusterPlacementType.FirstLocation;
-                    } else {
+                    }
+                    else {
                         o.placementMode = Microsoft.Maps.ClusterPlacementType.MeanAverage;
                     }
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
@@ -288,11 +290,14 @@ export class BingConversions {
             .forEach((k) => {
                 if (k === 'pixelOffset') {
                     o.offset = BingConversions.TranslatePoint(options.pixelOffset);
-                } else if (k === 'position') {
+                }
+                else if (k === 'position') {
                     o.location = BingConversions.TranslateLocation(options.position);
-                } else if (k === 'actions') {
+                }
+                else if (k === 'actions') {
                     o.actions = BingConversions.TranslateActions(options.actions);
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
@@ -317,8 +322,9 @@ export class BingConversions {
             .forEach((k) => {
                 if (k === 'center') {
                     o.center = BingConversions.TranslateLocation(options.center);
-                } else if (k === 'mapTypeId') {
-                    if(options.mapTypeId === MapTypeId.hybrid) {
+                }
+                else if (k === 'mapTypeId') {
+                    if (options.mapTypeId === MapTypeId.hybrid) {
                         o.mapTypeId = Microsoft.Maps.MapTypeId.aerial;
                         o.labelOverlay = Microsoft.Maps.LabelOverlay.visible;
                     }
@@ -329,9 +335,11 @@ export class BingConversions {
                     else {
                         o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]];
                     }
-                } else if (k === 'bounds') {
+                }
+                else if (k === 'bounds') {
                     o.bounds = BingConversions.TranslateBounds(options.bounds);
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
@@ -414,9 +422,11 @@ export class BingConversions {
             .forEach((k) => {
                 if (k === 'center') {
                     o.center = BingConversions.TranslateLocation(options.center);
-                } else if (k === 'mapTypeId') {
+                }
+                else if (k === 'mapTypeId') {
                     o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]]
-                } else {
+                }
+                else {
                     o[k] = (<any>options)[k];
                 }
             });
@@ -439,16 +449,23 @@ export class BingConversions {
         }
         else if (Array.isArray(paths[0])) {
             // parameter is an array or arrays
-             (<Array<Array<ILatLong>>>paths).forEach(path => {
+            // us for loop for performance
+            const p1 = <Array<Array<ILatLong>>>paths;
+            for (let i = 0; i < p1.length; i++) {
                 const _p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
-                path.forEach(x => _p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+                for (let j = 0; j < p1[i].length; j++) {
+                    _p.push(new Microsoft.Maps.Location(p1[i][j].latitude, p1[i][j].longitude));
+                }
                 p.push(_p);
-            });
+            }
         }
         else {
             // parameter is a simple array....
             const y: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
-            (<Array<ILatLong>>paths).forEach(x => y.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+            const p1 = <Array<ILatLong>>paths;
+            for (let i = 0; i < p1.length; i++) {
+                y.push(new Microsoft.Maps.Location(p1[i].latitude, p1[i].longitude));
+            }
             p.push(y);
         }
         return p;
