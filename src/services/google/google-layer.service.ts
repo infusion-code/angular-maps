@@ -131,6 +131,14 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * @memberof GoogleLayerService
      */
     public CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>> {
+        //
+        // Note: we attempted using data.Polygons in an attempt to improve performance, but either data.Polygon
+        // or data.MultiPolygon actually operate significantly slower than generating the polygons this way.
+        // the slowness in google as opposed to bing probably comes from the point reduction algorithm uses.
+        // Signigicant performance improvements might be possible in google when using a pixel based reduction algorithm
+        // prior to setting the polygon path. This will lower to processing overhead of the google algorithm (with is Douglas-Peucker
+        // and rather compute intensive)
+        //
         const p: Promise<Layer> = this.GetLayerById(layer);
         if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
