@@ -68,6 +68,18 @@ export abstract class LayerService {
     public abstract CreatePolygon(layer: number, options: IPolygonOptions): Promise<Polygon>;
 
     /**
+     * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
+     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     *
+     * @memberof LayerService
+     */
+    public abstract CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>>;
+
+    /**
      * Adds a polyline to the layer.
      *
      * @abstract

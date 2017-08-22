@@ -117,6 +117,20 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
     }
 
     /**
+     * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
+     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     *
+     * @memberof BingClusterService
+     */
+    public CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>> {
+        throw (new Error('Polygons are not supported in clustering layers. You can only use markers.'));
+    }
+
+    /**
      * Adds a polyline to the layer.
      *
      * @abstract

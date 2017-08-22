@@ -158,9 +158,12 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public AddListener(eventType: string, fn: Function): void {
-        Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
-            fn(e);
-        });
+        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup' ]
+        if (supportedEvents.indexOf(eventType) !== -1) {
+            Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
+                fn(e);
+            });
+        }
     }
 
     /**
@@ -373,11 +376,13 @@ export class BingPolygon extends Polygon implements Polygon {
      * @private
      */
     private ManageLabel(): void {
+        if (this.GetPath == null || this.GetPath().length === 0) { return; }
         if (this._showLabel && this._title != null && this._title !== '') {
             const o: { [key: string]: any } = {
                 text: this._title,
                 position: this.Centroid
             };
+            if (o.position == null) { return; }
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
             if (this._maxZoom !== -1) { o.maxZoom = this._maxZoom; }
             if (this._label == null) {

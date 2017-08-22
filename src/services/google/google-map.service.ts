@@ -28,6 +28,7 @@ import { GooglePolygon } from '../../models/google/google-polygon';
 import { GooglePolyline } from '../../models/google/google-polyline';
 import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from './../../models/google/google-marker';
+import { GoogleLayer } from './../../models/google/google-layer';
 import { IBox } from '../../interfaces/ibox';
 import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
 import * as GoogleMapTypes from './google-map-types';
@@ -139,12 +140,9 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public CreateLayer(options: ILayerOptions): Promise<Layer> {
-        return Promise.resolve(<any>{});
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-        //     let layer: Microsoft.Maps.Layer = new Microsoft.Maps.Layer(options.id.toString());
-        //     map.layers.insert(layer);
-        //     return new GoogleLayer(layer, this);
-        // });
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+             return new GoogleLayer(map, this, options.id);
+        });
     }
 
     /**

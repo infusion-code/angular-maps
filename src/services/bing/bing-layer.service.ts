@@ -95,6 +95,35 @@ export class BingLayerService extends BingLayerBase implements LayerService {
     }
 
     /**
+     * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
+     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     *
+     * @memberof BingLayerService
+     */
+    public CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>> {
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
+        return p.then((l: Layer) => {
+            const polygons: Promise<Array<Polygon>> = new Promise<Array<Polygon>>((resolve, reject) => {
+                const polys: Array<BingPolygon> = options.map(o => {
+                    const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(o.paths);
+                    const op: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(o);
+                    const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, op);
+                    const polygon: BingPolygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
+                    return polygon;
+                });
+                resolve(polys);
+            });
+            return polygons;
+        });
+    }
+
+
+    /**
      * Adds a polyline to the layer.
      *
      * @abstract

@@ -23,7 +23,6 @@ export class GoogleLayer implements Layer {
     ///
     private _entities: Array<Marker|InfoWindow|Polygon|Polyline> = new Array<Marker|InfoWindow|Polygon|Polyline>();
     private _visible: boolean = true;
-    private _id: number = -1;
 
     ///
     /// Property definitions
@@ -53,7 +52,7 @@ export class GoogleLayer implements Layer {
      *
      * @memberof GoogleLayer
      */
-    constructor(private _layer: GoogleMapTypes.GoogleMap, private _maps: MapService) { }
+    constructor(private _layer: GoogleMapTypes.GoogleMap, private _maps: MapService, private _id: number) { }
 
 
     ///

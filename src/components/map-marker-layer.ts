@@ -25,10 +25,10 @@ import { ClusterLayerDirective } from './cluster-layer';
 /**
  * internal counter to use as ids for marker.
  */
-let layerId = 10000;
+let layerId = 1000000;
 
 /**
- * MapMarkerLayerDirective performantly renders a a large set of map marker inside a {@link MapComponent}.
+ * MapMarkerLayerDirective performantly renders a large set of map marker inside a {@link MapComponent}.
  *
  * ### Example
  * ```typescript
@@ -44,7 +44,7 @@ let layerId = 10000;
  * `],
  * template: `
  *   <x-map [Latitude]="lat" [Longitude]="lng" [Zoom]="zoom">
- *      <x-map-marker-layer [MarkerOptions]="_markers"></x-map-marker>
+ *      <x-map-marker-layer [MarkerOptions]="_markers"></x-map-marker-layer>
  *   </x-map>
  * `
  * })
@@ -292,10 +292,15 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Creates an instance of MapMarkerLayerDirective.
      * @param {MarkerService} _markerService - Concreate implementation of a {@link MarkerService}.
      * @param {LayerService} _layerService - Concreate implementation of a {@link LayerService}.
+     * @param {ClusterService} _clusterService - Concreate implementation of a {@link ClusterService}.
+     * @param {MapService} _mapService - Concreate implementation of a {@link MapService}.
+     * @param {NgZone} _zone - Concreate implementation of a {@link NgZone} service.
      *
      * @memberof MapMarkerLayerDirective
      */
-    constructor(private _markerService: MarkerService, private _layerService: LayerService,
+    constructor(
+        private _markerService: MarkerService,
+        private _layerService: LayerService,
         private _clusterService: ClusterService,
         private _mapService: MapService,
         private _zone: NgZone) {
@@ -375,7 +380,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      *
      * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
      *
-     * @memberof MapMarkerDirective
+     * @memberof MapMarkerLayerDirective
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
         let shouldSetOptions: boolean = false;
@@ -431,6 +436,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Obtains a string representation of the Marker Id.
      * @return {string} - string representation of the marker id.
+     * @memberof MapMarkerLayerDirective
      */
     public toString(): string { return 'MapMarkerLayer-' + this._id.toString(); }
 
@@ -441,25 +447,34 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Adds various event listeners for the marker.
      *
+     * @param {Marker} m - the marker for which to add the event.
      * @private
      *
-     * @memberof MapMarkerDirective
+     * @memberof MapMarkerLayerDirective
      */
     private AddEventListeners(m: Marker): void {
         m.AddListener('click', (e: MouseEvent) => this.MarkerClick.emit({
                 Marker: m,
                 Click: e,
                 Location: this._markerService.GetCoordinatesFromClick(e),
-                Pixels: this._markerService.GetPixelsFromClick(e),
+                Pixels: this._markerService.GetPixelsFromClick(e)
             }));
         m.AddListener('dragend', (e: MouseEvent) => this.DragEnd.emit({
                 Marker: m,
                 Click: e,
                 Location: this._markerService.GetCoordinatesFromClick(e),
-                Pixels: this._markerService.GetPixelsFromClick(e),
+                Pixels: this._markerService.GetPixelsFromClick(e)
             }));
     }
 
+    /**
+     * Sets or updates the markers based on the marker options. This will place the markers on the map
+     * and register the associated events.
+     *
+     * @memberof MapMarkerLayerDirective
+     * @method
+     * @private
+     */
     private UpdateMarkers(): void {
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {

@@ -13,6 +13,10 @@ import { MapLayerDirective } from '../../components/map-layer'
 import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
 import { MapService } from '../map.service';
+import { GoogleConversions } from './google-conversions';
+import * as GoogleMapTypes from './google-map-types';
+
+declare var google: any;
 
 /**
  * Implements the {@link LayerService} contract for a Google Maps specific implementation.
@@ -58,7 +62,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     public AddLayer(layer: MapLayerDirective): void {
         const p: Promise<Layer> = new Promise<Layer>((resolve, reject) => {
             this._mapService.MapPromise.then(m => {
-                resolve(new GoogleLayer(m, this._mapService))
+                resolve(new GoogleLayer(m, this._mapService, layer.Id))
             });
         });
         this._layers.set(layer.Id, p);
@@ -115,6 +119,41 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
         Promise.all([p, l]).then(x => x[1].AddEntity(x[0]));
         return p;
     };
+
+    /**
+     * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polygon.
+     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
+     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     *
+     * @memberof GoogleLayerService
+     */
+    public CreatePolygons(layer: number, options: Array<IPolygonOptions>): Promise<Array<Polygon>> {
+        //
+        // Note: we attempted using data.Polygons in an attempt to improve performance, but either data.Polygon
+        // or data.MultiPolygon actually operate significantly slower than generating the polygons this way.
+        // the slowness in google as opposed to bing probably comes from the point reduction algorithm uses.
+        // Signigicant performance improvements might be possible in google when using a pixel based reduction algorithm
+        // prior to setting the polygon path. This will lower to processing overhead of the google algorithm (with is Douglas-Peucker
+        // and rather compute intensive)
+        //
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
+        return p.then((l: Layer) => {
+            const polygons: Promise<Array<Polygon>> = new Promise<Array<Polygon>>((resolve, reject) => {
+                const polys: Array<GooglePolygon> = options.map(o => {
+                    const op: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(o);
+                    const poly: GoogleMapTypes.Polygon = new google.maps.Polygon(op);
+                    const polygon: GooglePolygon = new GooglePolygon(poly);
+                    return polygon;
+                });
+                resolve(polys);
+            });
+            return polygons;
+        });
+    }
 
     /**
      * Adds a polyline to the layer.
