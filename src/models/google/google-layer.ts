@@ -89,6 +89,21 @@ export class GoogleLayer implements Layer {
     }
 
     /**
+     * Adds a number of entities to the layer. Entities in this context should be model abstractions of concered map functionality (such
+     * as marker, infowindow, polyline, polygon, etc..)
+     *
+     * @param entities Array<Marker|InfoWindow|Polygon|Polyline>. Entities to add to the layer.
+     *
+     * @memberof GoogleLAyer
+     */
+    public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
+        if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
+            this._entities.push(...entities);
+            entities.forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
+        }
+    };
+
+    /**
      * Deletes the layer anbd the markers in it.
      *
      * @memberof GoogleLayer
@@ -150,7 +165,7 @@ export class GoogleLayer implements Layer {
      */
     public SetEntities(entities: Array<Marker> | Array<InfoWindow> | Array<Polygon> | Array<Polyline>): void {
         this._entities.splice(0).forEach(m => {m.NativePrimitve.setMap(null)});
-        this._entities = entities.slice(0);
+        this._entities.push(...entities);
         this._entities.forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
     }
 

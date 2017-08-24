@@ -107,6 +107,29 @@ export class GoogleMarkerClusterer implements Layer {
     }
 
     /**
+     * Adds a number of markers to the layer.
+     *
+     * @param entities Array<Marker>. Entities to add to the layer.
+     *
+     * @memberof GoogleMarkerClusterer
+     */
+    public AddEntities(entities: Array<Marker>): void {
+        if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
+            const e: Array<GoogleMapTypes.Marker> = entities.map(p => {
+                this._markerLookup.set(p.NativePrimitve, p);
+                return p.NativePrimitve;
+            });
+            if (this._isClustering) {
+                this._layer.addMarkers(e);
+                this._markers.push(...entities);
+            }
+            else {
+                this._pendingMarkers.push(...entities);
+            }
+        }
+    };
+
+    /**
      * Deletes the clustering layer.
      *
      * @memberof GoogleMarkerClusterer
