@@ -72,10 +72,25 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public AddEntity(entity: Marker|InfoWindow|Polygon|Polyline): void {
-        if (entity.NativePrimitve) {
+        if (entity && entity.NativePrimitve) {
             this._layer.add(entity.NativePrimitve);
         }
     }
+
+    /**
+     * Adds a number of entities to the layer. Entities in this context should be model abstractions of concered map functionality (such
+     * as marker, infowindow, polyline, polygon, etc..)
+     *
+     * @param entities Array<Marker|InfoWindow|Polygon|Polyline>. Entities to add to the layer.
+     *
+     * @memberof BingLayer
+     */
+    public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
+        if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
+            const e: Array<Microsoft.Maps.IPrimitive> = entities.map(p => p.NativePrimitve);
+            this._layer.add(e);
+        }
+    };
 
     /**
      * Deletes the layer.
@@ -134,10 +149,7 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline>): void {
-        const p: Array<Microsoft.Maps.IPrimitive> = new Array<Microsoft.Maps.IPrimitive>();
-        (<Array<any>>entities).forEach((e: any) => {
-            if (e.NativePrimitve) { p.push(<Microsoft.Maps.IPrimitive>e.NativePrimitve); }
-        });
+        const p: Array<Microsoft.Maps.IPrimitive> = (<Array<any>>entities).map((e: Marker|InfoWindow|Polygon|Polyline) => e.NativePrimitve);
         this._layer.setPrimitives(p);
     }
 

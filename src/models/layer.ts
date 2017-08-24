@@ -25,6 +25,7 @@ export abstract class Layer {
      * Microsoft.Maps.Layer).
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract get NativePrimitve(): any;
 
@@ -40,24 +41,39 @@ export abstract class Layer {
      * @param fn function. Handler to call when the event occurs.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract AddListener(eventType: string, fn: Function): void;
 
     /**
      * Adds an entity to the layer. Entities in this context should be model abstractions of concered map functionality (such
      * as marker, infowindow, polyline, polygon, etc..) Implementations of this method should not expect native implementation of
-     * thise concepts, instead, the appropriate abstract model classes should be implemented for each provider
+     * these concepts, instead, the appropriate abstract model classes should be implemented for each provider
      *
      * @param entity Marker|InfoWindow|Polygon|Polyline. Entity to add to the layer.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract AddEntity(entity: Marker|InfoWindow|Polygon|Polyline): void;
+
+    /**
+     * Adds a number of entities to the layer. Entities in this context should be model abstractions of concered map functionality (such
+     * as marker, infowindow, polyline, polygon, etc..) Implementations of this method should not expect native implementation of
+     * thise concepts, instead, the appropriate abstract model classes should be implemented for each provider
+     *
+     * @param entities Array<Marker|InfoWindow|Polygon|Polyline>. Entities to add to the layer.
+     *
+     * @memberof Layer
+     * @abstract
+     */
+    public abstract AddEntities(entity: Array<Marker|InfoWindow|Polygon|Polyline>): void;
 
     /**
      * Deletes the layer.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract Delete(): void;
 
@@ -67,6 +83,7 @@ export abstract class Layer {
      * @returns IClusterOptions. The layer options.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract GetOptions(): ILayerOptions;
 
@@ -76,6 +93,7 @@ export abstract class Layer {
      * @returns Boolean. True is the layer is visible, false otherwise.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract GetVisible(): boolean
 
@@ -87,6 +105,7 @@ export abstract class Layer {
      * @param entity Marker|InfoWindow|Polygon|Polyline Entity to be removed from the layer.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract RemoveEntity(entity: Marker|InfoWindow|Polygon|Polyline): void;
 
@@ -99,6 +118,7 @@ export abstract class Layer {
      * This replaces any existing entities.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline>): void;
 
@@ -109,6 +129,7 @@ export abstract class Layer {
      * are merged with the default/existing options.
      *
      * @memberof Layer
+     * @abstract
      */
     public abstract SetOptions(options: ILayerOptions): void;
 
@@ -118,6 +139,7 @@ export abstract class Layer {
      * @param visible Boolean true to make the layer visible, false to hide the layer.
      *
      * @memberof BingClusterLayer
+     * @abstract
      */
     public abstract SetVisible(visible: boolean): void;
 

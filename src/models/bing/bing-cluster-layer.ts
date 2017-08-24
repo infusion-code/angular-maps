@@ -135,6 +135,31 @@ export class BingClusterLayer implements Layer {
     }
 
     /**
+     * Adds a number of markers to the layer.
+     *
+     * @param entities Array<Marker>. Entities to add to the layer.
+     *
+     * @memberof BingClusterLayer
+     */
+    public AddEntities(entities: Array<Marker>): void {
+        if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
+            const e: Array<Microsoft.Maps.Pushpin> = entities.map(p => {
+                this._markerLookup.set(p.NativePrimitve, p);
+                return p.NativePrimitve;
+            });
+            if (this._isClustering) {
+                const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
+                p.push(...e);
+                this._layer.setPushpins(p);
+                this._markers.push(...entities);
+            }
+            else {
+                this._pendingMarkers.push(...entities);
+            }
+        }
+    };
+
+    /**
      * Initializes spider behavior for the clusering layer (when a cluster maker is clicked, it explodes into a spider of the
      * individual underlying pins.
      *

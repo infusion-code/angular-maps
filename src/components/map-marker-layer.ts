@@ -76,6 +76,9 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         [Number.MAX_SAFE_INTEGER , 'rgba(255, 40, 40, 0.5)']
     ]);
     private _iconCreationCallback: (m: Array<Marker>, i: IMarkerIconInfo) => string;
+    private _streaming: boolean = false;
+    private _markers: Array<IMarkerOptions> = new Array<IMarkerOptions>();
+    private _markersLast: Array<IMarkerOptions> = new Array<IMarkerOptions>();
 
 
     /**
@@ -184,25 +187,45 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * @type {Array<IMarkerOptions>}
      * @memberof MapMarkerLayerDirective
      */
-    @Input() public MarkerOptions: Array<IMarkerOptions> = new Array<IMarkerOptions>();
+    @Input()
+        public get MarkerOptions(): Array<IMarkerOptions> { return this._markers };
+        public set MarkerOptions(val: Array<IMarkerOptions>) {
+            if (this._streaming) {
+                this._markersLast = val.slice(0);
+                this._markers.push(...val);
+            }
+            else {
+                this._markers = val.slice(0);
+            }
+        };
 
     /**
      * Gets or sets the cluster styles
      *
-     * @readonly
      * @type {Array<IClusterIconInfo>)}
-     * @memberof ClusterLayerDirective
+     * @memberof MapMarkerLayerDirective
      */
     @Input()
         public get Styles(): Array<IClusterIconInfo> { return this._styles; }
         public set Styles(val: Array<IClusterIconInfo>) { this._styles = val; }
 
     /**
+     * Sets whether to treat changes in the MarkerOptions as streams of new markers. In thsi mode, changing the
+     * Array supplied in MarkerOptions will be incrementally drawn on the map as opposed to replace the markers on the map.
+     *
+     * @type {boolean}
+     * @memberof MapMarkerLayerDirective
+     */
+    @Input()
+        public get TreatNewMarkerOptionsAsStream(): boolean { return this._streaming; }
+        public set TreatNewMarkerOptionsAsStream(val: boolean) { this._streaming = val; }
+
+    /**
      * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
      * pins in the cluster. If set to true, this will take precendence over any custom marker creation.
      *
      * @type {boolean}
-     * @memberof ClusterLayerDirective
+     * @memberof MapMarkerLayerDirective
      */
     @Input()
         public get UseDynamicSizeMarkers(): boolean { return this._useDynamicSizeMarker; }
@@ -478,17 +501,18 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     private UpdateMarkers(): void {
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
-            if (this.Visible === false) { this.MarkerOptions.forEach(o => o.visible = false); }
+            const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast : this._markers;
+            if (this.Visible === false) { markers.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
-            const mp: Promise<Array<Marker>> = this._service.CreateMarkers(this.MarkerOptions, this.IconInfo);
+            const mp: Promise<Array<Marker>> = this._service.CreateMarkers(markers, this.IconInfo);
 
             // set markers once promises are fullfilled.
             mp.then(m => {
                 m.forEach(marker => {
                      this.AddEventListeners(marker);
                 });
-                l.SetEntities(m);
+                this._streaming ? l.AddEntities(m) : l.SetEntities(m);
             });
         });
     }
