@@ -18,8 +18,10 @@ import { BingClusterLayer } from './../../models/bing/bing-cluster-layer';
 import { BingInfoWindow } from './../../models/bing/bing-info-window';
 import { BingPolygon } from './../../models/bing/bing-polygon';
 import { BingPolyline } from './../../models/bing/bing-polyline';
-import { ExtendMapLabelWithOverlayView } from './../../models/bing/bing-label';
-
+import { MixinMapLabelWithOverlayView } from './../../models/bing/bing-label';
+import { MixinCanvasOverlay } from './../../models/bing/bing-canvas-overlay';
+import { BingCanvasOverlay } from './../../models/bing/bing-canvas-overlay';
+import { CanvasOverlay } from './../../models/canvas-overlay';
 import { ILayerOptions } from './../../interfaces/ilayer-options';
 import { IClusterOptions } from './../../interfaces/icluster-options';
 import { IMapOptions } from './../../interfaces/imap-options';
@@ -96,6 +98,22 @@ export class BingMapService implements MapService {
     ///
 
     /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof BingMapService
+     */
+    public CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            const overlay: BingCanvasOverlay = new BingCanvasOverlay(drawCallback);
+            map.layers.insert(overlay);
+            return overlay;
+        });
+    }
+
+    /**
      * Creates a Bing map cluster layer within the map context
      *
      * @param {IClusterOptions} options - Options for the layer. See {@link IClusterOptions}.
@@ -169,7 +187,11 @@ export class BingMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
-            ExtendMapLabelWithOverlayView();
+            // apply mixins
+            MixinMapLabelWithOverlayView();
+            MixinCanvasOverlay();
+
+            // map startup...
             if (this._mapInstance != null) {
                 this.DisposeMap();
             }

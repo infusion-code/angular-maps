@@ -5,6 +5,7 @@ import { IMapOptions } from '../interfaces/imap-options';
 import { ILayerOptions } from '../interfaces/ilayer-options';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPoint } from '../interfaces/ipoint';
+import { IBox } from '../interfaces/ibox';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../interfaces/ipolyline-options';
 import { IMarkerOptions } from '../interfaces/imarker-options';
@@ -14,7 +15,7 @@ import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
 import { Polyline } from '../models/polyline';
 import { InfoWindow } from '../models/info-window';
-import { IBox } from '../interfaces/ibox';
+import { CanvasOverlay } from '../models/canvas-overlay';
 
 /**
  * Abstract class to implement map api. A concrete implementation should be created for each
@@ -30,6 +31,17 @@ export abstract class MapService {
     ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof MapService
+     * @abstract
+     */
+    public abstract CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay>;
 
     /**
      * Creates a map cluster layer within the map context

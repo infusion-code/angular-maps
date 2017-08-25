@@ -21,7 +21,10 @@ import { MapTypeId } from '../../models/map-type-id';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
-import { ExtendMapLabelWithOverlayView } from '../../models/google/google-label';
+import { MixinMapLabelWithOverlayView } from '../../models/google/google-label';
+import { MixinCanvasOverlay } from '../../models/google/google-canvas-overlay';
+import { GoogleCanvasOverlay } from './../../models/google/google-canvas-overlay';
+import { CanvasOverlay } from './../../models/canvas-overlay';
 import { Layer } from '../../models/layer';
 import { InfoWindow } from '../../models/info-window';
 import { GooglePolygon } from '../../models/google/google-polygon';
@@ -91,7 +94,7 @@ export class GoogleMapService implements MapService {
      */
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
         this._map = new Promise<GoogleMapTypes.GoogleMap>(
-                (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
+            (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
         );
         this._config = (<GoogleMapAPILoader>this._loader).Config;
     }
@@ -99,6 +102,22 @@ export class GoogleMapService implements MapService {
     ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof GoogleMapService
+     */
+    public CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const overlay: GoogleCanvasOverlay = new GoogleCanvasOverlay(drawCallback);
+            overlay.SetMap(map);
+            return overlay;
+        });
+    }
 
     /*
      * Creates a Google map cluster layer within the map context
@@ -156,7 +175,11 @@ export class GoogleMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
-            ExtendMapLabelWithOverlayView();
+            // apply mixins
+            MixinMapLabelWithOverlayView();
+            MixinCanvasOverlay();
+
+            // execute map startup
             if (!mapOptions.mapTypeId == null) { mapOptions.mapTypeId = MapTypeId.hybrid; }
             if (this._mapInstance != null) {
                 this.DisposeMap();
@@ -287,10 +310,8 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public DeleteLayer(layer: Layer): Promise<void> {
+        // return resolved promise as there is no conept of a custom layer in Google.
         return Promise.resolve();
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-        //     map.layers.remove(layer.NativePrimitve);
-        // });
     }
 
     /**
@@ -368,10 +389,18 @@ export class GoogleMapService implements MapService {
      */
     public LocationToPoint(loc: ILatLong): Promise<IPoint> {
         return this._map.then((m: GoogleMapTypes.GoogleMap) => {
-            // let l: Microsoft.Maps.Location = GoogleConversions.TranslateLocation(loc);
-            // let p: Microsoft.Maps.Point = <Microsoft.Maps.Point>m.tryLocationToPixel(l, Microsoft.Maps.PixelReference.control);
-            // if (p != null) return { x: p.x, y: p.y };
-            return null;
+            const l: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(loc);
+            const projection = m.getProjection();
+            const scale: number = Math.pow(2, m.getZoom());
+            const bounds: GoogleMapTypes.LatLngBounds = m.getBounds();
+            const topRight: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getNorthEast());
+            const bottomLeft: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getSouthWest());
+            const point: GoogleMapTypes.Point = projection.fromLatLngToPoint(l);
+
+            return {
+                x: Math.floor((point.x - bottomLeft.x) * scale),
+                y: Math.floor((point.y - topRight.y) * scale)
+            };
         })
     }
 

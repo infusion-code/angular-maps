@@ -14,6 +14,7 @@ import { LayerService } from '../services/layer.service';
 import { MapService } from '../services/map.service';
 import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
+import { CanvasOverlay } from '../models/canvas-overlay';
 
 /**
  * internal counter to use as ids for polygons.
@@ -60,6 +61,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private _id: number;
     private _layerPromise: Promise<Layer>;
     private _service: LayerService;
+    private _canvasLayerPromise: Promise<CanvasOverlay>;
 
     /**
      * Set the maximum zoom at which the polygon labels are visible. Ignored if ShowLabel is false.
@@ -223,6 +225,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             }
             this._layerService.AddLayer(fakeLayerDirective);
             this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
+            this._canvasLayerPromise = this._mapService.CreateCanvasOverlay(el => this.DrawCanvas(el));
             this._service = this._layerService;
 
             if (this.PolygonOptions) {
@@ -240,6 +243,9 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     public ngOnDestroy() {
         this._layerPromise.then(l => {
             l.Delete();
+        });
+        this._canvasLayerPromise.then(c => {
+            c.Delete();
         });
     }
 
@@ -303,6 +309,41 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             { name: 'mouseover', handler: (ev: MouseEvent) => this.PolygonMouseOver.emit({Polygon: p, Click: ev}) }
         ];
         handlers.forEach((obj) => p.AddListener(obj.name, obj.handler));
+    }
+
+    private DrawCanvas(el: HTMLCanvasElement): void {
+        const map: Microsoft.Maps.Map = this._mapService.MapInstance;
+        const locations = Microsoft.Maps.TestDataGenerator.getLocations(15000, map.getBounds());
+        const points: Array<Microsoft.Maps.Point> =
+                <Array<Microsoft.Maps.Point>>map.tryLocationToPixel(locations, Microsoft.Maps.PixelReference.control);
+
+        // Create a pushpin icon on an off screen canvas.
+        const offScreenCanvas = document.createElement('canvas');
+        offScreenCanvas.width = 14;
+        offScreenCanvas.height = 14;
+
+        // Draw a circle on the off screen canvas.
+        const offCtx = offScreenCanvas.getContext('2d');
+        offCtx.fillStyle = 'red';
+        offCtx.lineWidth = 2;
+        offCtx.strokeStyle = 'black';
+        offCtx.beginPath();
+        offCtx.arc(7, 7, 5, 0, 2 * Math.PI);
+        offCtx.closePath();
+        offCtx.fill();
+        offCtx.stroke();
+
+        const ctx: CanvasRenderingContext2D = el.getContext('2d');
+
+        const mapWidth: number = map.getWidth() + 7;
+        const mapHeight: number = map.getHeight() + 7;
+
+        for (let i = 0, len = points.length; i < len; i++) {
+            // Don't draw the point if it is not in view. This greatly improves performance when zoomed in.
+            if (points[i].x >= -7 && points[i].y >= -7 && points[i].x <= mapWidth && points[i].y <= mapHeight) {
+                    ctx.drawImage(offScreenCanvas, points[i].x - 7, points[i].y - 7, 10, 10);
+                }
+            }
     }
 
     /**

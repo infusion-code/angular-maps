@@ -175,7 +175,7 @@ export class GoogleMapLabel extends MapLabel {
  * @export
  * @method
  */
-export function ExtendMapLabelWithOverlayView() {
+export function MixinMapLabelWithOverlayView() {
     const x = GoogleMapLabel.prototype;
     GoogleMapLabel.prototype = new google.maps.OverlayView;
     for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleMapLabel.prototype)[y] = (<any>x)[y]; }}

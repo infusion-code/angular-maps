@@ -190,7 +190,7 @@ export class BingMapLabel extends MapLabel {
  * @export
  * @method
  */
-export function ExtendMapLabelWithOverlayView() {
+export function MixinMapLabelWithOverlayView() {
     const x = BingMapLabel.prototype;
     BingMapLabel.prototype = <any> new Microsoft.Maps.CustomOverlay();
     for (const y in x) { if ((<any>x)[y] != null) { (<any>BingMapLabel.prototype)[y] = (<any>x)[y]; }}
