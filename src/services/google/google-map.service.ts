@@ -12,6 +12,7 @@ import { IClusterOptions } from '../../interfaces/icluster-options';
 import { IMapOptions } from '../../interfaces/imap-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPoint } from '../../interfaces/ipoint';
+import { ISize } from '../../interfaces/isize';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
@@ -80,6 +81,23 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public get MapPromise(): Promise<GoogleMapTypes.GoogleMap> { return this._map; }
+
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof BingMapService
+     */
+    public get MapSize(): ISize {
+        if (this.MapInstance) {
+            const el: HTMLDivElement = this.MapInstance.getDiv();
+            const s: ISize = { width: el.offsetWidth, height: el.offsetHeight };
+            return s;
+        }
+        return null;
+    }
 
     ///
     /// Constructor
@@ -401,6 +419,33 @@ export class GoogleMapService implements MapService {
                 x: Math.floor((point.x - bottomLeft.x) * scale),
                 y: Math.floor((point.y - topRight.y) * scale)
             };
+        })
+    }
+
+    /**
+     * Provides a conversion of geo coordinates to pixels on the map control.
+     *
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
+     * @memberof BingMapService
+     */
+    public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
+        return this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            const projection = m.getProjection();
+            const scale: number = Math.pow(2, m.getZoom());
+            const bounds: GoogleMapTypes.LatLngBounds = m.getBounds();
+            const topRight: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getNorthEast());
+            const bottomLeft: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getSouthWest());
+            const l = locs.map(p => {
+                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(p)
+                const point: GoogleMapTypes.Point = projection.fromLatLngToPoint(l1);
+                return {
+                    x: Math.floor((point.x - bottomLeft.x) * scale),
+                    y: Math.floor((point.y - topRight.y) * scale)
+                };
+            });
+            return l;
         })
     }
 

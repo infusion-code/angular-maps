@@ -6,6 +6,7 @@
 import { Subscription } from 'rxjs/subscription';
 import { Observable } from 'rxjs/Rx';
 import { IPoint } from '../interfaces/ipoint';
+import { ISize } from '../interfaces/isize';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPolygonEvent } from '../interfaces/ipolygon-event';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
@@ -312,11 +313,6 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     }
 
     private DrawCanvas(el: HTMLCanvasElement): void {
-        const map: Microsoft.Maps.Map = this._mapService.MapInstance;
-        const locations = Microsoft.Maps.TestDataGenerator.getLocations(15000, map.getBounds());
-        const points: Array<Microsoft.Maps.Point> =
-                <Array<Microsoft.Maps.Point>>map.tryLocationToPixel(locations, Microsoft.Maps.PixelReference.control);
-
         // Create a pushpin icon on an off screen canvas.
         const offScreenCanvas = document.createElement('canvas');
         offScreenCanvas.width = 14;
@@ -325,25 +321,27 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         // Draw a circle on the off screen canvas.
         const offCtx = offScreenCanvas.getContext('2d');
         offCtx.fillStyle = 'red';
-        offCtx.lineWidth = 2;
+        offCtx.lineWidth = 0;
         offCtx.strokeStyle = 'black';
         offCtx.beginPath();
-        offCtx.arc(7, 7, 5, 0, 2 * Math.PI);
+        offCtx.arc(7, 7, 2, 0, 2 * Math.PI);
         offCtx.closePath();
         offCtx.fill();
         offCtx.stroke();
 
         const ctx: CanvasRenderingContext2D = el.getContext('2d');
-
-        const mapWidth: number = map.getWidth() + 7;
-        const mapHeight: number = map.getHeight() + 7;
-
-        for (let i = 0, len = points.length; i < len; i++) {
-            // Don't draw the point if it is not in view. This greatly improves performance when zoomed in.
-            if (points[i].x >= -7 && points[i].y >= -7 && points[i].x <= mapWidth && points[i].y <= mapHeight) {
-                    ctx.drawImage(offScreenCanvas, points[i].x - 7, points[i].y - 7, 10, 10);
+        this._mapService.GetBounds().then(bounds => {
+            const locations = MapService.GetRandonLocations(1000000, bounds);
+            this._mapService.LocationsToPoints(locations).then(locs => {
+                const size: ISize = this._mapService.MapSize;
+                for (let i = 0, len = locs.length; i < len; i++) {
+                    // Don't draw the point if it is not in view. This greatly improves performance when zoomed in.
+                    if (locs[i].x >= -7 && locs[i].y >= -7 && locs[i].x <= (size.width + 7) && locs[i].y <= (size.height + 7)) {
+                        ctx.drawImage(offScreenCanvas, locs[i].x - 7, locs[i].y - 7, 10, 10);
+                    }
                 }
-            }
+            });
+        });
     }
 
     /**

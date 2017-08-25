@@ -27,6 +27,7 @@ import { IClusterOptions } from './../../interfaces/icluster-options';
 import { IMapOptions } from './../../interfaces/imap-options';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { IPoint } from './../../interfaces/ipoint';
+import { ISize } from './../../interfaces/isize';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
@@ -76,6 +77,22 @@ export class BingMapService implements MapService {
      * @memberof BingMapService
      */
     public get MapPromise(): Promise<Microsoft.Maps.Map> { return this._map; }
+
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof BingMapService
+     */
+    public get MapSize(): ISize {
+        if (this.MapInstance) {
+            const s: ISize = { width: this.MapInstance.getWidth(), height: this.MapInstance.getHeight() };
+            return s;
+        }
+        return null;
+    }
 
     ///
     /// Constructor
@@ -366,17 +383,17 @@ export class BingMapService implements MapService {
     public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
-            const halfWidth = (box.width / 2);
-            const halfHeight = (box.height / 2);
-            return <IBox>{
-                maxLatitude: box.center.latitude + halfWidth > 180 ?
-                    box.center.latitude - halfWidth : box.center.latitude + halfWidth,
-                maxLongitude: box.center.longitude + halfHeight > 90 ?
-                    box.center.longitude - halfHeight : box.center.longitude + halfHeight,
-                minLatitude: box.center.latitude - halfWidth < -180 ?
-                    box.center.latitude + halfWidth : box.center.latitude - halfWidth,
-                minLongitude: box.center.longitude - halfHeight < -90 ?
-                    box.center.longitude + halfHeight : box.center.longitude - halfHeight,
+            const hw = (box.width / 2);
+            const hh = (box.height / 2);
+            const maxlat = box.center.latitude + hh > 90 ? box.center.latitude - hh : box.center.latitude + hh;
+            const minlat = box.center.latitude - hh < -90 ? box.center.latitude + hh : box.center.latitude - hh;
+            const maxlng = box.center.longitude + hw > 180 ? box.center.longitude - hw : box.center.longitude + hw;
+            const minlng = box.center.longitude - hw < -180 ? box.center.longitude + hw : box.center.longitude - hw;
+            return <IBox> {
+                maxLatitude: maxlat,
+                maxLongitude: maxlng,
+                minLatitude: minlat,
+                minLongitude: minlng,
                 center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
@@ -411,6 +428,23 @@ export class BingMapService implements MapService {
                 return { x: p.x, y: p.y };
             }
             return null;
+        })
+    }
+
+    /**
+     * Provides a conversion of geo coordinates to pixels on the map control.
+     *
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
+     * @memberof BingMapService
+     */
+    public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
+        return this._map.then((m: Microsoft.Maps.Map) => {
+            const l = locs.map(p => BingConversions.TranslateLocation(p));
+            const p: Array<Microsoft.Maps.Point> = <Array<Microsoft.Maps.Point>>m.tryLocationToPixel(l,
+                Microsoft.Maps.PixelReference.control);
+            return p;
         })
     }
 

@@ -5,6 +5,7 @@ import { IMapOptions } from '../interfaces/imap-options';
 import { ILayerOptions } from '../interfaces/ilayer-options';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPoint } from '../interfaces/ipoint';
+import { ISize } from '../interfaces/isize';
 import { IBox } from '../interfaces/ibox';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../interfaces/ipolyline-options';
@@ -29,8 +30,72 @@ import { CanvasOverlay } from '../models/canvas-overlay';
 export abstract class MapService {
 
     ///
+    /// Public properties
+    ///
+
+    /**
+     * Gets the Map control instance underlying the implementation
+     *
+     * @readonly
+     * @type {any}
+     * @memberof MapService
+     */
+    abstract get MapInstance(): any;
+
+    /**
+     * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
+     * are not sure if and when the instance will be created.
+     * @readonly
+     * @type {Promise<any>}
+     * @memberof MapService
+     */
+    abstract get MapPromise(): Promise<any>;
+
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof MapService
+     */
+    abstract get MapSize(): ISize;
+
+
+    ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Gets a random geo locations filling the bounding box.
+     *
+     * @static
+     * @param {number} count - number of locations to return
+     * @param {IBox} bounds  - bounding box.
+     * @returns {Array<ILatLong>} - Array of geo locations.
+     * @memberof MapService
+     */
+    public static GetRandonLocations(count: number, bounds: IBox): Array<ILatLong> {
+        const a: Array<ILatLong> = [];
+        const _getRandomLocation = (b: IBox) => {
+            const lat: number = Math.random() * (b.maxLatitude - b.minLatitude) + b.minLatitude;
+            const lng: number = Math.random() * (b.maxLongitude - b.minLongitude) + b.minLongitude;
+            const p: ILatLong = { latitude: lat, longitude: lng };
+            return p;
+        };
+
+        if (bounds == null) { bounds = <IBox>{
+            maxLatitude: 360,
+            minLatitude: 0,
+            maxLongitude: 170,
+            minLongitude: 0
+        }}
+        if (!count || count <= 0) {
+            return [_getRandomLocation(bounds)];
+        }
+        for (let r = 0; r < count; r++) { a.push(_getRandomLocation(bounds)); }
+        return a;
+    }
 
     /**
      * Creates a canvas overlay layer to perform custom drawing over the map with out
@@ -175,22 +240,14 @@ export abstract class MapService {
     abstract LocationToPoint(loc: ILatLong): Promise<IPoint>;
 
     /**
-     * Gets the Map control instance underlying the implementation
+     * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @readonly
-     * @type {any}
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
      * @memberof MapService
      */
-    abstract get MapInstance(): any;
-
-    /**
-     * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
-     * are not sure if and when the instance will be created.
-     * @readonly
-     * @type {Promise<any>}
-     * @memberof MapService
-     */
-    abstract get MapPromise(): Promise<any>;
+    abstract LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>>;
 
     /**
      * Centers the map on a geo location.
