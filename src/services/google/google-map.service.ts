@@ -407,17 +407,21 @@ export class GoogleMapService implements MapService {
      */
     public LocationToPoint(loc: ILatLong): Promise<IPoint> {
         return this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            let crossesDateLine: boolean = false;
             const l: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(loc);
-            const projection = m.getProjection();
-            const scale: number = Math.pow(2, m.getZoom());
-            const bounds: GoogleMapTypes.LatLngBounds = m.getBounds();
-            const topRight: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getNorthEast());
-            const bottomLeft: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getSouthWest());
-            const point: GoogleMapTypes.Point = projection.fromLatLngToPoint(l);
+            const p = m.getProjection();
+            const s: number = Math.pow(2, m.getZoom());
+            const b: GoogleMapTypes.LatLngBounds = m.getBounds();
+            if (b.getCenter().lng() < b.getSouthWest().lng()  ||
+                b.getCenter().lng() > b.getNorthEast().lng()) { crossesDateLine = true; }
 
+
+            const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
+            const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
+            const point: GoogleMapTypes.Point = p.fromLatLngToPoint(l);
             return {
-                x: Math.floor((point.x - bottomLeft.x) * scale),
-                y: Math.floor((point.y - topRight.y) * scale)
+                x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
+                y: Math.floor((point.y - offsetY) * s)
             };
         })
     }
@@ -432,17 +436,21 @@ export class GoogleMapService implements MapService {
      */
     public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
         return this._map.then((m: GoogleMapTypes.GoogleMap) => {
-            const projection = m.getProjection();
-            const scale: number = Math.pow(2, m.getZoom());
-            const bounds: GoogleMapTypes.LatLngBounds = m.getBounds();
-            const topRight: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getNorthEast());
-            const bottomLeft: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getSouthWest());
-            const l = locs.map(p => {
-                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(p)
-                const point: GoogleMapTypes.Point = projection.fromLatLngToPoint(l1);
+            let crossesDateLine: boolean = false;
+            const p = m.getProjection();
+            const s: number = Math.pow(2, m.getZoom());
+            const b: GoogleMapTypes.LatLngBounds = m.getBounds();
+            if (b.getCenter().lng() < b.getSouthWest().lng()  ||
+                b.getCenter().lng() > b.getNorthEast().lng()) { crossesDateLine = true; }
+
+            const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
+            const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
+            const l = locs.map(ll => {
+                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(ll)
+                const point: GoogleMapTypes.Point = p.fromLatLngToPoint(l1);
                 return {
-                    x: Math.floor((point.x - bottomLeft.x) * scale),
-                    y: Math.floor((point.y - topRight.y) * scale)
+                    x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
+                    y: Math.floor((point.y - offsetY) * s)
                 };
             });
             return l;

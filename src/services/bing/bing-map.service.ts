@@ -438,7 +438,7 @@ export class BingMapService implements MapService {
             const l = locs.map(loc => BingConversions.TranslateLocation(loc));
             const p: Array<Microsoft.Maps.Point> = <Array<Microsoft.Maps.Point>>m.tryLocationToPixel(l,
                 Microsoft.Maps.PixelReference.control);
-            return p;
+            return p ? p : new Array<IPoint>();
         })
     }
 

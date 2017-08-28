@@ -30,25 +30,10 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
-    private _centroid: Microsoft.Maps.Location = null;
 
     ///
     /// Property declarations
     ///
-
-    /**
-     * Gets the polygon's centroid.
-     * @readonly
-     * @private
-     * @type {Microsoft.Maps.Location}
-     * @memberof BingPolygon
-     */
-    private get Centroid(): Microsoft.Maps.Location {
-        if (this._centroid == null) {
-            this._centroid = BingConversions.TranslateLocation(this.GetPolygonCentroid());
-        }
-        return this._centroid;
-    }
 
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
@@ -380,7 +365,7 @@ export class BingPolygon extends Polygon implements Polygon {
         if (this._showLabel && this._title != null && this._title !== '') {
             const o: { [key: string]: any } = {
                 text: this._title,
-                position: this.Centroid
+                position: BingConversions.TranslateLocation(this.Centroid)
             };
             if (o.position == null) { return; }
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }

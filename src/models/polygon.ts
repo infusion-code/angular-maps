@@ -10,6 +10,8 @@ import { IPolygonOptions } from '../interfaces/ipolygon-options';
  */
 export abstract class Polygon {
 
+    protected _centroid: ILatLong;
+
     ///
     /// Property definitions
     ///
@@ -105,6 +107,20 @@ export abstract class Polygon {
      * @memberof Polygon
      */
     public abstract Delete(): void;
+
+    /**
+     * Gets the polygon's centroid.
+     * @readonly
+     * @public
+     * @type {GoogleMapTypes.LatLngLiteral}
+     * @memberof GooglePolygon
+     */
+    public get Centroid(): ILatLong {
+        if (this._centroid == null) {
+            this._centroid = this.GetPolygonCentroid();
+        }
+        return this._centroid;
+    }
 
     /**
      * Gets whether the polygon is draggable.

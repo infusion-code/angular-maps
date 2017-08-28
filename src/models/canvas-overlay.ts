@@ -100,6 +100,24 @@ export abstract class CanvasOverlay {
     }
 
     /**
+     * Redraws the canvas for the current map view.
+     * @memberof CanvasOverlay
+     * @method
+     * @public
+     */
+    public Redraw(): void {
+        if (this._canvas == null) { return; }
+
+        // Clear canvas by updating dimensions. This also ensures canvas stays the same size as the map.
+        this.Resize();
+
+        // Call the drawing callback function if specified.
+        if (this._drawCallback) {
+            this._drawCallback(this._canvas);
+        }
+    }
+
+    /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
      * @param {*} map - A native map object for the underlying implementation. Implementing derivatives should return the
@@ -121,22 +139,6 @@ export abstract class CanvasOverlay {
      * @public
      */
     protected abstract SetCanvasElement(el: HTMLCanvasElement): void;
-
-    /**
-     * Redraws the canvas for the current map view.
-     * @memberof CanvasOverlay
-     * @method
-     * @protected
-     */
-    protected Redraw(): void {
-        // Clear canvas by updating dimensions. This also ensures canvas stays the same size as the map.
-        this.Resize();
-
-        // Call the drawing callback function if specified.
-        if (this._drawCallback) {
-            this._drawCallback(this._canvas);
-        }
-    }
 
     /**
      * Remove the map event handlers.
