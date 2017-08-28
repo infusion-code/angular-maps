@@ -15,10 +15,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     ///
     /// field declarations
     ///
-    private _viewChangeEvent: GoogleMapTypes.MapsEventListener;
     private _viewChangeEndEvent: GoogleMapTypes.MapsEventListener;
     private _mapResizeEvent: GoogleMapTypes.MapsEventListener;
-
 
     /**
      * Creates a new instance of the GoogleCanvasOverlay class.
@@ -48,6 +46,56 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     }
 
     /**
+     * Called when the custom overlay is added to the map. Triggers Onload....
+     * @memberof GoogleCanvasOverlay
+     */
+    public OnAdd() {
+        super.OnAdd();
+        this.OnLoad();
+    }
+
+    /**
+     * Called whenever the canvas needs to be redrawn. This method does not do the actual
+     * update, it simply scales the canvas. The actual redraw happens once the map is idle.
+     * @memberof GoogleCanvasOverly
+     * @method
+     * @public
+     */
+    public OnDraw() {
+        console.log("OnDraw");
+        const isStreetView: boolean = false;
+        const map: GoogleMapTypes.GoogleMap = this.GetMap();
+
+        if (isStreetView) {
+            // Don't show the canvas if the map is in Streetside mode.
+            this._canvas.style.display = 'none';
+        }
+        else {
+            // Re-drawing the canvas as it moves would be too slow. Instead, scale and translate canvas element.
+            // Upon idle or drag end, we can then redraw the canvas....
+            const zoomCurrent: number = map.getZoom();
+            const centerCurrent: GoogleMapTypes.LatLng = map.getCenter();
+
+            // Calculate map scale based on zoom level difference.
+            const scale: number = Math.pow(2, zoomCurrent - this._zoomStart);
+
+            // Calculate the scaled dimensions of the canvas.
+            const el: HTMLDivElement = map.getDiv();
+            const w: number = el.offsetWidth;
+            const h: number = el.offsetHeight;
+            const newWidth: number = w * scale;
+            const newHeight: number = h * scale;
+
+            // Calculate offset of canvas based on zoom and center offsets.
+            const projection = (<any>this).getProjection();
+            const cc = projection.fromLatLngToDivPixel(centerCurrent);
+
+            // Update the canvas CSS position and dimensions.
+            this.UpdatePosition(cc.x - newWidth / 2, cc.y - newHeight / 2, newWidth, newHeight);
+        }
+    }
+
+    /**
      * CanvasOverlay loaded, attach map events for updating canvas.
      * @method
      * @public
@@ -64,55 +112,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
             latitude: c.lat(),
             longitude: c.lng()
         }
-
-        // Redraw the canvas.
-        this.Redraw();
-
-        // When the map moves, move the canvas accordingly.
-        this._viewChangeEvent = google.maps.event.addListener(map, 'bounds_changed', (e: any) => {
-            const translateToPoint = function(latlng: GoogleMapTypes.LatLng): GoogleMapTypes.Point {
-                const projection = map.getProjection();
-                const scale: number = Math.pow(2, map.getZoom());
-                const bounds: GoogleMapTypes.LatLngBounds = map.getBounds();
-                const topRight: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getNorthEast());
-                const bottomLeft: GoogleMapTypes.Point = projection.fromLatLngToPoint(bounds.getSouthWest());
-                const point: GoogleMapTypes.Point = projection.fromLatLngToPoint(latlng);
-                return new google.maps.Point(Math.floor((point.x - bottomLeft.x) * scale), Math.floor((point.y - topRight.y) * scale));
-            }
-
-            if (isStreetView) {
-                // Don't show the canvas if the map is in Streetside mode.
-                this._canvas.style.display = 'none';
-            }
-            else {
-                // Re-drawing the canvas as it moves would be too slow. Instead, scale and translate canvas element.
-                const zoomCurrent: number = map.getZoom();
-                const centerCurrent: GoogleMapTypes.LatLng = map.getCenter();
-
-                // Calculate map scale based on zoom level difference.
-                const scale: number = Math.pow(2, zoomCurrent - this._zoomStart);
-
-                // Calculate the scaled dimensions of the canvas.
-                const el: HTMLDivElement = map.getDiv();
-                const w: number = el.offsetWidth;
-                const h: number = el.offsetHeight;
-                const newWidth: number = w * scale;
-                const newHeight: number = h * scale;
-
-                // Calculate offset of canvas based on zoom and center offsets.
-                const pixelPoints: Array<GoogleMapTypes.Point> = [
-                    translateToPoint(GoogleConversions.TranslateLocationObject(this._centerStart)),
-                    translateToPoint(centerCurrent)
-                ]
-                const centerOffsetX: number = pixelPoints[1].x - pixelPoints[0].x;
-                const centerOffsetY: number = pixelPoints[1].y - pixelPoints[0].y;
-                const x: number = (-(newWidth - w) / 2) - centerOffsetX;
-                const y: number = (-(newHeight - h) / 2) - centerOffsetY;
-
-                // Update the canvas CSS position and dimensions.
-                this.UpdatePosition(x, y, newWidth, newHeight);
-            }
-        });
 
         // When the map stops moving, render new data on the canvas.
         this._viewChangeEndEvent = google.maps.event.addListener(map, 'idle', (e: any) => {
@@ -148,12 +147,17 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     protected SetCanvasElement(el: HTMLCanvasElement): void {
         const panes = (<any>this).getPanes();
         if (panes) {
-            panes.overlayLayer.appendChild(el);
+            if (el != null) {
+                panes.overlayLayer.appendChild(el);
                 // 4: floatPane (infowindow)
                 // 3: overlayMouseTarget (mouse events)
                 // 2: markerLayer (marker images)
                 // 1: overlayLayer (polygons, polylines, ground overlays, tile layer overlays)
                 // 0: mapPane (lowest pane above the map tiles)
+            }
+            else {
+                panes.overlayLayer.removeChild(this._canvas);
+            }
         }
     }
 
@@ -165,9 +169,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      */
     protected RemoveEventHandlers(): void {
         // Remove all event handlers from the map.
-        google.maps.event.removeListener(this._viewChangeEvent);
-        google.maps.event.removeListener(this._viewChangeEndEvent);
-        google.maps.event.removeListener(this._mapResizeEvent);
+        if (this._viewChangeEndEvent) { google.maps.event.removeListener(this._viewChangeEndEvent); }
+        if (this._mapResizeEvent) { google.maps.event.removeListener(this._mapResizeEvent); }
     }
 
     /**
@@ -202,7 +205,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
             const el: HTMLDivElement = map.getDiv();
             const w: number = el.offsetWidth;
             const h: number = el.offsetHeight;
-            this.UpdatePosition(0, 0, w, h);
+            const centerPoint = (<any>this).getProjection().fromLatLngToDivPixel(map.getCenter());
+            this.UpdatePosition((centerPoint.x - w / 2), (centerPoint.y - h / 2), w, h);
 
             // Redraw the canvas.
             this.Redraw();
@@ -229,6 +233,6 @@ export function MixinCanvasOverlay() {
     GoogleCanvasOverlay.prototype = <any> new google.maps.OverlayView();
     for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleCanvasOverlay.prototype)[y] = (<any>x)[y]; }}
     (<any>GoogleCanvasOverlay.prototype)['onAdd'] = x['OnAdd'];
-    (<any>GoogleCanvasOverlay.prototype)['draw'] = x['OnLoad'];
+    (<any>GoogleCanvasOverlay.prototype)['draw'] = x['OnDraw'];
     (<any>GoogleCanvasOverlay.prototype)['onRemove'] = x['OnRemove'];
 }

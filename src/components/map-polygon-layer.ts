@@ -324,20 +324,23 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         offCtx.lineWidth = 0;
         offCtx.strokeStyle = 'black';
         offCtx.beginPath();
-        offCtx.arc(7, 7, 2, 0, 2 * Math.PI);
+        offCtx.arc(7, 7, 5, 0, 2 * Math.PI);
         offCtx.closePath();
         offCtx.fill();
         offCtx.stroke();
 
         const ctx: CanvasRenderingContext2D = el.getContext('2d');
         this._mapService.GetBounds().then(bounds => {
-            const locations = MapService.GetRandonLocations(1000000, bounds);
+            const locations = MapService.GetRandonLocations(1000, bounds);
             this._mapService.LocationsToPoints(locations).then(locs => {
                 const size: ISize = this._mapService.MapSize;
                 for (let i = 0, len = locs.length; i < len; i++) {
                     // Don't draw the point if it is not in view. This greatly improves performance when zoomed in.
                     if (locs[i].x >= -7 && locs[i].y >= -7 && locs[i].x <= (size.width + 7) && locs[i].y <= (size.height + 7)) {
                         ctx.drawImage(offScreenCanvas, locs[i].x - 7, locs[i].y - 7, 10, 10);
+                    }
+                    else {
+                        console.log(`out of bounds: i:${i}, x:${locs[i].x}, y:${locs[i].y}`)
                     }
                 }
             });

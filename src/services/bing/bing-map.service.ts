@@ -383,17 +383,11 @@ export class BingMapService implements MapService {
     public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
-            const hw = (box.width / 2);
-            const hh = (box.height / 2);
-            const maxlat = box.center.latitude + hh > 90 ? box.center.latitude - hh : box.center.latitude + hh;
-            const minlat = box.center.latitude - hh < -90 ? box.center.latitude + hh : box.center.latitude - hh;
-            const maxlng = box.center.longitude + hw > 180 ? box.center.longitude - hw : box.center.longitude + hw;
-            const minlng = box.center.longitude - hw < -180 ? box.center.longitude + hw : box.center.longitude - hw;
             return <IBox> {
-                maxLatitude: maxlat,
-                maxLongitude: maxlng,
-                minLatitude: minlat,
-                minLongitude: minlng,
+                maxLatitude: box.getNorth(),
+                maxLongitude: box.crossesInternationalDateLine() ? box.getWest() : box.getEast(),
+                minLatitude: box.getSouth(),
+                minLongitude: box.crossesInternationalDateLine() ?  box.getEast() : box.getWest(),
                 center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
@@ -441,7 +435,7 @@ export class BingMapService implements MapService {
      */
     public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
         return this._map.then((m: Microsoft.Maps.Map) => {
-            const l = locs.map(p => BingConversions.TranslateLocation(p));
+            const l = locs.map(loc => BingConversions.TranslateLocation(loc));
             const p: Array<Microsoft.Maps.Point> = <Array<Microsoft.Maps.Point>>m.tryLocationToPixel(l,
                 Microsoft.Maps.PixelReference.control);
             return p;

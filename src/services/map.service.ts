@@ -79,10 +79,18 @@ export abstract class MapService {
         const a: Array<ILatLong> = [];
         const _getRandomLocation = (b: IBox) => {
             const lat: number = Math.random() * (b.maxLatitude - b.minLatitude) + b.minLatitude;
-            const lng: number = Math.random() * (b.maxLongitude - b.minLongitude) + b.minLongitude;
+            let lng: number = 0;
+            if (crossesDateLine) {
+                lng = Math.random() * (b.minLongitude + 360 - b.maxLongitude) + b.maxLongitude;
+                if (lng > 180) { lng = lng - 360; }
+            }
+            else {
+                lng = Math.random() * (b.maxLongitude - b.minLongitude) + b.minLongitude;
+            }
             const p: ILatLong = { latitude: lat, longitude: lng };
             return p;
         };
+        let crossesDateLine: boolean = false;
 
         if (bounds == null) { bounds = <IBox>{
             maxLatitude: 360,
@@ -90,6 +98,7 @@ export abstract class MapService {
             maxLongitude: 170,
             minLongitude: 0
         }}
+        if (bounds.center.longitude < bounds.minLongitude  || bounds.center.longitude > bounds.maxLongitude) { crossesDateLine = true; }
         if (!count || count <= 0) {
             return [_getRandomLocation(bounds)];
         }

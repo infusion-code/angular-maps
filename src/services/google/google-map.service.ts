@@ -375,9 +375,9 @@ export class GoogleMapService implements MapService {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
             const box = map.getBounds();
             return <IBox>{
-                maxLatitude: Math.max(box.getNorthEast().lat(), box.getSouthWest().lat()),
+                maxLatitude: box.getNorthEast().lat(),
                 maxLongitude: Math.max(box.getNorthEast().lng(), box.getSouthWest().lng()),
-                minLatitude: Math.min(box.getNorthEast().lat(), box.getSouthWest().lat()),
+                minLatitude: box.getSouthWest().lat(),
                 minLongitude: Math.min(box.getNorthEast().lng(), box.getSouthWest().lng()),
                 center: { latitude: box.getCenter().lat(), longitude: box.getCenter().lng() },
                 padding: 0
