@@ -52,6 +52,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     public OnAdd() {
         super.OnAdd();
         this.OnLoad();
+        this._canvas.style.zIndex = '100';
+            // move the canvas above primitives such as polygons.
     }
 
     /**
@@ -62,7 +64,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * @public
      */
     public OnDraw() {
-        console.log("OnDraw");
         const isStreetView: boolean = false;
         const map: GoogleMapTypes.GoogleMap = this.GetMap();
 
