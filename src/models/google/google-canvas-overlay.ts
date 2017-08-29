@@ -1,6 +1,8 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { GoogleConversions } from './../../services/google/google-conversions';
 import { CanvasOverlay } from '../canvas-overlay';
+import { MapLabel } from '../map-label';
+import { GoogleMapLabel } from './google-label';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 declare var google: any;
 
@@ -34,10 +36,24 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     ///
 
     /**
+     * Obtains geo coordinates for the click location
+     *
+     * @param {GoogleMapTypes.MouseEvent} e - The mouse event.
+     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @memberof GoogleCanvasOverlay
+     */
+    public GetCoordinatesFromClick(e: GoogleMapTypes.MouseEvent): ILatLong {
+        if (!e) { return null; }
+        if (!e.latLng) { return null; }
+        if (!e.latLng.lat || !e.latLng.lng) { return null; }
+        return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
+    };
+
+    /**
      * Gets the map associted with the label.
      *
      * @returns {GoogleMapTypes.GoogleMap}
-     * @memberof GoogleMapLabel
+     * @memberof GoogleCanvasOverlay
      * @method
      * @public
      */
@@ -46,14 +62,43 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     }
 
     /**
+     * Returns a MapLabel instance for the current platform that can be used as a tooltip.
+     * This method only generates the map label. Content and placement is the responsibility
+     * of the caller.
+     *
+     * @returns {MapLabel} - The label to be used for the tooltip.
+     * @memberof GoogleCanvasOverlay
+     * @method
+     * @public
+     */
+    public GetToolTipOverlay(): MapLabel {
+        const o: { [key: string]: any } = {
+            align: 'left',
+            offset: new google.maps.Point(0, 25),
+            backgroundColor: 'bisque',
+            hidden: true,
+            fontSize: 12,
+            fontColor: '#000000',
+            strokeWeight: 0
+        };
+        o.zIndex = 100000;
+        const label: MapLabel = new GoogleMapLabel(o);
+        label.SetMap(this.GetMap());
+        return label;
+    }
+
+    /**
      * Called when the custom overlay is added to the map. Triggers Onload....
      * @memberof GoogleCanvasOverlay
      */
-    public OnAdd() {
+    public OnAdd(): void {
         super.OnAdd();
         this.OnLoad();
         this._canvas.style.zIndex = '100';
             // move the canvas above primitives such as polygons.
+
+        // set the overlay to ready state
+        this._readyResolver(true);
     }
 
     /**
@@ -63,7 +108,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * @method
      * @public
      */
-    public OnDraw() {
+    public OnDraw(): void {
         const isStreetView: boolean = false;
         const map: GoogleMapTypes.GoogleMap = this.GetMap();
 
@@ -102,7 +147,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * @public
      * @memberof GoogleCanvasOverlay
      */
-    public OnLoad() {
+    public OnLoad(): void {
         const isStreetView: boolean = false;
         const map: GoogleMapTypes.GoogleMap = (<any>this).getMap();
 

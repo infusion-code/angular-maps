@@ -16,6 +16,7 @@ import { LayerService } from '../services/layer.service';
 import { MapService } from '../services/map.service';
 import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
+import { MapLabel } from '../models/map-label';
 import { CanvasOverlay } from '../models/canvas-overlay';
 
 /**
@@ -63,8 +64,18 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private _id: number;
     private _layerPromise: Promise<Layer>;
     private _service: LayerService;
-    private _canvasLayerPromise: Promise<CanvasOverlay>;
+    private _canvas: CanvasOverlay;
     private _labels: Array<{loc: ILatLong, title: string}> = new Array<{loc: ILatLong, title: string}>();
+    private _tooltip: MapLabel;
+    private _tooltipSubscriptions: Array<Subscription> = new Array<Subscription>();
+    private _tooltipVisible: boolean = false;
+    private _defaultOptions: ILabelOptions = {
+        fontSize: 11,
+        fontFamily: 'sans-serif',
+        strokeWeight: 2,
+        strokeColor: '#000000',
+        fontColor: '#ffffff'
+    };
 
     /**
      * Set the maximum zoom at which the polygon labels are visible. Ignored if ShowLabel is false.
@@ -211,13 +222,6 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         private _mapService: MapService,
         private _zone: NgZone) {
         this._id = layerId++;
-        this.LabelOptions = {
-            fontSize: '11px',
-            fontFamily: 'sans-serif',
-            strokeWidth: 4,
-            strokeColor: '#ffffff',
-            fillColor: '#000000'
-        }
     }
 
     ///
@@ -243,35 +247,37 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             }
             this._layerService.AddLayer(fakeLayerDirective);
             this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
-            this._canvasLayerPromise = this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el));
+            this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el)).then(c => {
+                this._canvas = c;
+                c._canvasReady.then(b => {
+                    this._tooltip = c.GetToolTipOverlay();
+                    this.ManageTooltip(this.ShowTooltips);
+                });
+                if (this.PolygonOptions) {
+                    this._zone.runOutsideAngular(() => this.UpdatePolygons());
+                }
+            });
             this._service = this._layerService;
-
-            if (this.PolygonOptions) {
-                this._zone.runOutsideAngular(() => this.UpdatePolygons());
-            }
         });
     }
 
     /**
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
-     *
      * @memberof MapPolygonLayerDirective
      */
     public ngOnDestroy() {
+        this._tooltipSubscriptions.forEach(s => s.unsubscribe());
         this._layerPromise.then(l => {
             l.Delete();
         });
-        this._canvasLayerPromise.then(c => {
-            c.Delete();
-        });
+        if (this._canvas) { this._canvas.Delete(); }
     }
 
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
      * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
-     *
      * @memberof MapPolygonLayerDirective
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
@@ -292,7 +298,10 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             (changes['LabelMinZoom'] && !changes['LabelMinZoom'].firstChange) ||
             (changes['LabelMaxZoom'] && !changes['LabelMaxZoom'].firstChange)
         ) {
-            this._canvasLayerPromise.then(c => c.Redraw());
+           if (this._canvas) { this._canvas.Redraw(); }
+        }
+        if (changes['ShowTooltips'] && this._tooltip) {
+            this.ManageTooltip(changes['ShowTooltips'].currentValue)
         }
     }
 
@@ -360,16 +369,63 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
      * @param {string} text - Text to draw.
      */
     private DrawText(ctx: CanvasRenderingContext2D, loc: IPoint, text: string) {
-        ctx.strokeStyle = this.LabelOptions.strokeColor;
-        ctx.font = `${this.LabelOptions.fontSize} ${this.LabelOptions.fontFamily}`;
+        let lo: ILabelOptions = this.LabelOptions;
+        if (lo == null && this._tooltip) { lo = this._tooltip.DefaultLabelStyle; }
+        if (lo == null) { lo = this._defaultOptions; }
+
+        ctx.strokeStyle = lo.strokeColor;
+        ctx.font = `${lo.fontSize}px ${lo.fontFamily}`;
         ctx.textAlign = 'center';
-        const strokeWeight: number = this.LabelOptions.strokeWidth
+        const strokeWeight: number = lo.strokeWeight
         if (text && strokeWeight && strokeWeight > 0) {
                 ctx.lineWidth = strokeWeight;
                 ctx.strokeText(text, loc.x, loc.y);
         }
-        ctx.fillStyle = this.LabelOptions.fillColor;
+        ctx.fillStyle = lo.fontColor;
         ctx.fillText(text, loc.x, loc.y);
+    }
+
+    /**
+     * Manages the tooltip and the attachment of the associated events.
+     *
+     * @private
+     * @param {boolean} show - True to enable the tooltip, false to disable.
+     * @memberof MapPolygonLayerDirective
+     */
+    private ManageTooltip(show: boolean): void {
+        if (show && this._canvas) {
+            // add tooltip subscriptions
+            this._tooltip.Set('hidden', false);
+            this._tooltipVisible = false;
+            this._tooltipSubscriptions.push(this.PolygonMouseMove.asObservable().subscribe(e => {
+                if (this._tooltipVisible) {
+                    const loc: ILatLong = this._canvas.GetCoordinatesFromClick(e.Click);
+                    this._tooltip.Set('position', loc);
+                }
+            }));
+            this._tooltipSubscriptions.push(this.PolygonMouseOver.asObservable().subscribe(e => {
+                const loc: ILatLong = this._canvas.GetCoordinatesFromClick(e.Click);
+                this._tooltip.Set('text', e.Polygon.Title);
+                this._tooltip.Set('position', loc);
+                if (!this._tooltipVisible) {
+                    this._tooltip.Set('hidden', false);
+                    this._tooltipVisible = true;
+                }
+            }));
+            this._tooltipSubscriptions.push(this.PolygonMouseOut.asObservable().subscribe(e => {
+                if (this._tooltipVisible) {
+                    this._tooltip.Set('hidden', true);
+                    this._tooltipVisible = false;
+                }
+            }));
+        }
+        else {
+            // remove tooltip subscriptions
+            this._tooltipSubscriptions.forEach(s => s.unsubscribe());
+            this._tooltipSubscriptions.splice(0);
+            this._tooltip.Set('hidden', false);
+            this._tooltipVisible = false;
+        }
     }
 
     /**
@@ -396,7 +452,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                     this.AddEventListeners(poly);
                 });
                 l.SetEntities(p);
-                this._canvasLayerPromise.then(c => c.Redraw());
+                if (this._canvas) { this._canvas.Redraw(); }
             });
         });
     }

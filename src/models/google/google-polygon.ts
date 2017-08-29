@@ -385,7 +385,10 @@ export class GooglePolygon extends Polygon implements Polygon {
                 align: 'left',
                 offset: new google.maps.Point(0, 25),
                 backgroundColor: 'bisque',
-                hidden: true
+                hidden: true,
+                fontSize: 12,
+                fontColor: '#000000',
+                strokeWeight: 0
             };
             if (this._tooltip == null) {
                 o.map = this.NativePrimitve.getMap();

@@ -1,7 +1,7 @@
 export interface ILabelOptions {
-    fontSize: string;
+    fontSize: number;
     fontFamily: string;
     strokeColor: string;
-    strokeWidth: number;
-    fillColor: string;
+    strokeWeight: number;
+    fontColor: string;
 }

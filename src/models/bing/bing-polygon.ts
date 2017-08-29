@@ -149,6 +149,15 @@ export class BingPolygon extends Polygon implements Polygon {
                 fn(e);
             });
         }
+        if (eventType === 'mousemove') {
+            let handlerId: Microsoft.Maps.IHandlerId;
+            Microsoft.Maps.Events.addHandler(this._polygon, 'mouseover', e => {
+                handlerId = Microsoft.Maps.Events.addHandler(this._map, 'mousemove', m => fn(m));
+            });
+            Microsoft.Maps.Events.addHandler(this._polygon, 'mouseout', e => {
+                if (handlerId) { Microsoft.Maps.Events.removeHandler(handlerId); }
+            });
+        }
     }
 
     /**
@@ -399,7 +408,10 @@ export class BingPolygon extends Polygon implements Polygon {
                 align: 'left',
                 offset: new Microsoft.Maps.Point(0, 25),
                 backgroundColor: 'bisque',
-                hidden: true
+                hidden: true,
+                fontSize: 12,
+                fontColor: '#000000',
+                strokeWeight: 0
             };
             if (this._tooltip == null) {
                 this._tooltip = new BingMapLabel(o);
@@ -416,12 +428,12 @@ export class BingPolygon extends Polygon implements Polygon {
                         this._tooltip.Set('hidden', false);
                         this._tooltipVisible = true;
                     }
-                });
-                this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
-                            this._map, 'mousemove', (e: Microsoft.Maps.IMouseEventArgs) => {
-                    if (this._tooltipVisible && e.location && e.primitive === this._polygon) {
-                        this._tooltip.Set('position', e.location);
-                    }
+                    this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
+                        this._map, 'mousemove', (m: Microsoft.Maps.IMouseEventArgs) => {
+                        if (this._tooltipVisible && m.location && m.primitive === this._polygon) {
+                            this._tooltip.Set('position', m.location);
+                        }
+                    });
                 });
                 this._mouseOutListener = Microsoft.Maps.Events.addHandler(
                             this._polygon, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
@@ -429,6 +441,7 @@ export class BingPolygon extends Polygon implements Polygon {
                         this._tooltip.Set('hidden', true);
                         this._tooltipVisible = false;
                     }
+                    if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
                 });
                 this._hasToolTipReceiver = true;
             }

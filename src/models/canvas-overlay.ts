@@ -1,4 +1,7 @@
 import { ILatLong } from '../interfaces/ilatlong';
+import { MapLabel } from './map-label';
+
+let id: number = 0;
 
 /**
  * Abstract base implementing a canvas overlay to be placed on the map.
@@ -12,9 +15,20 @@ export abstract class CanvasOverlay {
     ///
     /// field declarations
     ///
+    protected _readyResolver: (val: boolean) => void;
     protected _canvas: HTMLCanvasElement;
     protected _zoomStart: number;
     protected _centerStart: ILatLong;
+    public _canvasReady: Promise<boolean> = new Promise<boolean>((resolve, reject) => { this._readyResolver = resolve; });
+
+    /**
+     * Returns a promise that gets resolved when the canvas overlay is ready for interaction.
+     *
+     * @readonly
+     * @type {Promise<boolean>}
+     * @memberof CanvasOverlay
+     */
+    public get CanvasReady(): Promise<boolean> { return this._canvasReady; }
 
     /**
     * A callback function that is triggered when the canvas is ready to be rendered for the current map view.
@@ -34,6 +48,7 @@ export abstract class CanvasOverlay {
      */
     constructor(drawCallback: (canvas: HTMLCanvasElement) => void) {
         this._drawCallback = drawCallback;
+        id++;
     }
 
     ///
@@ -50,6 +65,17 @@ export abstract class CanvasOverlay {
     }
 
     /**
+     * Obtains geo coordinates for the click location
+     *
+     * @abstract
+     * @param {*} e - The mouse event. The actual type will depend on the implementation.
+     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @memberof CanvasOverlay
+     */
+    public abstract GetCoordinatesFromClick(e: any): ILatLong;
+
+
+    /**
      * Gets the map associted with the label.
      *
      * @returns {*} - A native map object for the underlying implementation. Implementing derivatives should return the
@@ -60,6 +86,17 @@ export abstract class CanvasOverlay {
      * @public
      */
     public abstract GetMap(): any;
+
+    /**
+     * Returns a MapLabel instance for the current platform that can be used as a tooltip.
+     * This method only generates the map label. Content and placement is the responsibility
+     * of the caller.
+     *
+     * @abstract
+     * @returns {MapLabel} - The label to be used for the tooltip.
+     * @memberof CanvasOverlay
+     */
+    public abstract GetToolTipOverlay(): MapLabel;
 
     /**
      * CanvasOverlay added to map, load canvas.
@@ -73,6 +110,7 @@ export abstract class CanvasOverlay {
         this._canvas.style.position = 'absolute';
         this._canvas.style.left = '0px';
         this._canvas.style.top = '0px';
+        this._canvas.id = `xMapOverlay${id}`;
 
         // Add the canvas to the overlay.
         this.SetCanvasElement(this._canvas);

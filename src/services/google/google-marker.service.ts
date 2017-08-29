@@ -54,10 +54,8 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Adds a marker. Depending on the marker context, the marker will either by added to the map or a correcsponding layer.
      *
-     * @abstract
      * @param {MapMarkerDirective} marker - The {@link MapMarkerDirective} to be added.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public AddMarker(marker: MapMarkerDirective): void {
         const o: IMarkerOptions = {
@@ -104,13 +102,11 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Registers an event delegate for a marker.
      *
-     * @abstract
      * @template T - Type of the event to emit.
      * @param {string} eventName - The name of the event to register (e.g. 'click')
      * @param {MapMarkerDirective} marker - The {@link MapMarkerDirective} for which to register the event.
      * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public CreateEventObservable<T>(eventName: string, marker: MapMarkerDirective): Observable<T> {
         return Observable.create((observer: Observer<T>) => {
@@ -123,11 +119,9 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Deletes a marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} marker - {@link MapMarkerDirective} to be deleted.
      * @returns {Promise<void>} - A promise fullfilled once the marker has been deleted.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public DeleteMarker(marker: MapMarkerDirective): Promise<void> {
         const m = this._markers.get(marker);
@@ -145,11 +139,9 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Obtains geo coordinates for the marker on the click location
      *
-     * @abstract
      * @param {(MouseEvent| any)} e - The mouse event.
      * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
         if (!e) {
@@ -163,14 +155,13 @@ export class GoogleMarkerService implements MarkerService {
         }
         return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
     };
+
     /**
      * Obtains the marker model for the marker allowing access to native implementation functionatiliy.
      *
-     * @abstract
      * @param {MapMarkerDirective} marker - The {@link MapMarkerDirective} for which to obtain the marker model.
      * @returns {Promise<Marker>} - A promise that when fullfilled contains the {@link Marker} implementation of the underlying platform.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public GetNativeMarker(marker: MapMarkerDirective): Promise<Marker> {
         return this._markers.get(marker);
@@ -179,11 +170,9 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Obtains the marker pixel location for the marker on the click location
      *
-     * @abstract
      * @param {(MouseEvent| any)} e - The mouse event.
      * @returns {IPoint} - {@link ILatLong} containing the pixels of the marker on the map canvas.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public GetPixelsFromClick(e: MouseEvent | any): IPoint {
         return { x: 0, y: 0 };
@@ -192,13 +181,11 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Converts a geo location to a pixel location relative to the map canvas.
      *
-     * @abstract
      * @param {(MapMarkerDirective | ILatLong)} target - Either a {@link MapMarkerDirective}
      * or a {@link ILatLong} for the basis of translation.
      * @returns {Promise<IPoint>} - A promise that when fullfilled contains a {@link IPoint}
      * with the pixel coordinates of the MapMarker or ILatLong relative to the map canvas.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public LocationToPoint(target: MapMarkerDirective | ILatLong): Promise<IPoint> {
         if (target == null) {
@@ -217,12 +204,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the anchor position for the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the anchor.
      * Anchor information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the anchor position has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateAnchor(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => {
@@ -233,12 +218,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates whether the marker is draggable.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate dragability.
      * Dragability information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the marker has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateDraggable(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => m.SetDraggable(marker.Draggable));
@@ -247,12 +230,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the Icon on the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the icon. Icon information is present
      * in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the icon information has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateIcon(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => {
@@ -274,12 +255,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the label on the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the label.
      * Label information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the label has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateLabel(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => { m.SetLabel(marker.Label); });
@@ -288,12 +267,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the geo coordinates for the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the coordinates.
      * Coordinate information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the position has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateMarkerPosition(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then(
@@ -306,12 +283,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the title on the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the title.
      * Title information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the title has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateTitle(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => m.SetTitle(marker.Title));
@@ -320,12 +295,10 @@ export class GoogleMarkerService implements MarkerService {
     /**
      * Updates the visibility on the marker.
      *
-     * @abstract
      * @param {MapMarkerDirective} - The {@link MapMarkerDirective} object for which to upate the title.
      * Title information is present in the underlying {@link Marker} model object.
      * @returns {Promise<void>} - A promise that is fullfilled when the title has been updated.
-     *
-     * @memberof MarkerService
+     * @memberof GoogleMarkerService
      */
     public UpdateVisible(marker: MapMarkerDirective): Promise<void> {
         return this._markers.get(marker).then((m: Marker) => m.SetVisible(marker.Visible));

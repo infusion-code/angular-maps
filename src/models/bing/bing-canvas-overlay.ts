@@ -1,7 +1,8 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { BingConversions } from './../../services/bing/bing-conversions';
 import { CanvasOverlay } from '../canvas-overlay';
-
+import { MapLabel } from '../map-label';
+import { BingMapLabel } from './bing-label';
 
 /**
  * Concrete implementing a canvas overlay to be placed on the map for Bing Maps.
@@ -35,6 +36,18 @@ export class BingCanvasOverlay extends CanvasOverlay {
     ///
 
     /**
+     * Obtains geo coordinates for the click location
+     *
+     * @abstract
+     * @param {Microsoft.Maps.IMouseEventArgs} e - The mouse event. Expected to implement {@link Microsoft.Maps.IMouseEventArgs}.
+     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @memberof BingCanvasOverlay
+     */
+    public GetCoordinatesFromClick(e: Microsoft.Maps.IMouseEventArgs): ILatLong {
+        return { latitude: e.location.latitude, longitude: e.location.longitude };
+    };
+
+    /**
      * Gets the map associted with the label.
      *
      * @returns {Microsoft.Maps.Map}
@@ -44,6 +57,31 @@ export class BingCanvasOverlay extends CanvasOverlay {
      */
     public GetMap(): Microsoft.Maps.Map {
         return (<any>this).getMap();
+    }
+
+    /**
+     * Returns a MapLabel instance for the current platform that can be used as a tooltip.
+     * This method only generates the map label. Content and placement is the responsibility
+     * of the caller. Note that this method returns null until OnLoad has been called.
+     *
+     * @returns {MapLabel} - The label to be used for the tooltip.
+     * @memberof BingCanvasOverlay
+     * @method
+     * @public
+     */
+    public GetToolTipOverlay(): MapLabel {
+        const o: { [key: string]: any } = {
+            align: 'left',
+            offset: new Microsoft.Maps.Point(0, 25),
+            backgroundColor: 'bisque',
+            hidden: true,
+            fontSize: 12,
+            fontColor: '#000000',
+            strokeWeight: 0
+        };
+        const label: MapLabel = new BingMapLabel(o);
+        label.SetMap(this.GetMap());
+        return label;
     }
 
     /**
@@ -105,6 +143,9 @@ export class BingCanvasOverlay extends CanvasOverlay {
         this._mapResizeEvent = Microsoft.Maps.Events.addHandler(map, 'mapresize', (e) => {
             this.UpdateCanvas();
         });
+
+        // set the overlay to ready state
+        this._readyResolver(true);
     }
 
     /**
@@ -121,7 +162,9 @@ export class BingCanvasOverlay extends CanvasOverlay {
         if (m) {
             m.layers.remove(this);
         }
-        if (map != null) { map.layers.insert(this); }
+        if (map != null) {
+            map.layers.insert(this);
+        }
     }
 
     ///
