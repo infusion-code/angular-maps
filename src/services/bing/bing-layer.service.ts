@@ -114,6 +114,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                     const op: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(o);
                     const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, op);
                     const polygon: BingPolygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
+                    if (o.title && o.title !== '') { polygon.Title = o.title; }
                     return polygon;
                 });
                 resolve(polys);

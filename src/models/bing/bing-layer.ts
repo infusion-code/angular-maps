@@ -162,7 +162,7 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public SetOptions(options: ILayerOptions) {
-        this._layer.id = options.id.toString();
+        this._layer.metadata.id = options.id.toString();
     }
 
     /**

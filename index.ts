@@ -22,6 +22,7 @@ import { IPolygonOptions } from './src/interfaces/ipolygon-options';
 import { IPolylineOptions } from './src/interfaces/ipolyline-options';
 import { IPolygonEvent } from './src/interfaces/ipolygon-event';
 import { IMapEventLookup } from './src/interfaces/imap-event-lookup';
+import { ILabelOptions } from './src/interfaces/ilabel-options';
 
 ///
 /// import module models
@@ -36,6 +37,7 @@ import { Polyline } from './src/models/polyline';
 import { SpiderClusterMarker } from './src/models/spider-cluster-marker';
 import { ClusterPlacementMode } from './src/models/cluster-placement-mode';
 import { ClusterClickAction } from './src/models/cluster-click-action';
+import { CanvasOverlay} from './src/models/canvas-overlay';
 import { BingLayer } from './src/models/bing/bing-layer';
 import { BingClusterLayer } from './src/models/bing/bing-cluster-layer';
 import { BingSpiderClusterMarker } from './src/models/bing/bing-spider-cluster-marker';
@@ -44,11 +46,13 @@ import { BingMarker } from './src/models/bing/bing-marker';
 import { BingPolygon } from './src/models/bing/bing-polygon';
 import { BingPolyline } from './src/models/bing/bing-polyline';
 import { BingMapEventsLookup } from './src/models/bing/bing-events-lookup';
+import { BingCanvasOverlay } from './src/models/bing/bing-canvas-overlay';
 import { GoogleInfoWindow } from './src/models/google/google-info-window';
 import { GoogleMarker } from './src/models/google/google-marker';
 import { GooglePolygon } from './src/models/google/google-polygon';
 import { GooglePolyline } from './src/models/google/google-polyline';
 import { GoogleMapEventsLookup } from './src/models/google/google-events-lookup';
+import { GoogleCanvasOverlay } from './src/models/google/google-canvas-overlay';
 
 ///
 /// import module components
@@ -104,23 +108,24 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 ///
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
-    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions,
+    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions, ILabelOptions,
     MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
     MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective, ClusterLayerDirective,
     MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
-    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, MapService, MapServiceFactory, MarkerService,
+    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService,
+    MapServiceFactory, MarkerService,
     InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService,
     BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader,
     BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingPolygon,
-    BingInfoWindow, BingSpiderClusterMarker
+    BingInfoWindow, BingSpiderClusterMarker, BingCanvasOverlay
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
     GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService,
-    GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline
+    GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline, GoogleCanvasOverlay
 }
 
 ///

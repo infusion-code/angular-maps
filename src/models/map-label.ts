@@ -1,3 +1,5 @@
+import { ILabelOptions } from '../interfaces/ilabel-options';
+
 /**
  * Abstract base implementing a label to be placed on the map.
  *
@@ -11,6 +13,16 @@ export abstract class MapLabel {
     /// Field declarations
     ///
     protected _canvas: HTMLCanvasElement;
+
+    /**
+     * Returns the default label style for the platform
+     *
+     * @readonly
+     * @abstract
+     * @type {ILabelOptions}
+     * @memberof MapLabel
+     */
+    public abstract get DefaultLabelStyle(): ILabelOptions;
 
     ///
     /// Constructor
@@ -26,9 +38,9 @@ export abstract class MapLabel {
     constructor(options: { [key: string]: any }) {
         this.Set('fontFamily', 'sans-serif');
         this.Set('fontSize', 12);
-        this.Set('fontColor', '#000000');
+        this.Set('fontColor', '#ffffff');
         this.Set('strokeWeight', 4);
-        this.Set('strokeColor', '#ffffff');
+        this.Set('strokeColor', '#000000');
         this.Set('align', 'center');
         this.SetValues(options);
     }
@@ -195,17 +207,17 @@ export abstract class MapLabel {
         const strokeWeight: number = Number(this.Get('strokeWeight'));
         const text: string = this.Get('text');
         const textMeasure: TextMetrics = ctx.measureText(text);
-        const textWidth: number = textMeasure.width + strokeWeight;
+        const textWidth: number = textMeasure.width;
         if (text && strokeWeight && strokeWeight > 0) {
                 ctx.lineWidth = strokeWeight;
-                ctx.strokeText(text, strokeWeight, strokeWeight);
+                ctx.strokeText(text, 4, 4);
         }
         if (backgroundColor && backgroundColor !== '') {
             ctx.fillStyle = backgroundColor;
-            ctx.fillRect(0, 0, textWidth + 5, (parseInt(ctx.font, 10) * 2) - 2);
+            ctx.fillRect(0, 0, textWidth + 8, (parseInt(ctx.font, 10) * 2) - 2);
         }
         ctx.fillStyle = this.Get('fontColor');
-        ctx.fillText(text, strokeWeight, strokeWeight);
+        ctx.fillText(text, 4, 4);
 
         style.marginLeft = this.GetMarginLeft(textWidth) + 'px';
         style.marginTop = '-0.4em';

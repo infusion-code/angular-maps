@@ -1,6 +1,9 @@
 import { BingMapService } from './../../services/bing/bing-map.service';
 import { BingConversions } from './../../services/bing/bing-conversions';
+import { ILabelOptions } from '../../interfaces/ilabel-options';
 import { MapLabel } from '../map-label';
+
+let id: number = 0;
 
 /**
  * Implements map a labled to be placed on the map.
@@ -11,6 +14,24 @@ import { MapLabel } from '../map-label';
  * @class BingMapLabel
  */
 export class BingMapLabel extends MapLabel {
+
+    /**
+     * Returns the default label style for the platform
+     *
+     * @readonly
+     * @abstract
+     * @type {*}
+     * @memberof BingMapLabel
+     */
+    public get DefaultLabelStyle(): ILabelOptions {
+        return {
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fontColor: '#ffffff',
+            strokeWeight: 2,
+            strokeColor: '#000000'
+        }
+    }
 
     ///
     /// Constructor
@@ -25,6 +46,10 @@ export class BingMapLabel extends MapLabel {
      * @public
      */
     constructor(options: { [key: string]: any }) {
+        options.fontSize = options.fontSize || 12;
+        options.fontColor = options.fontColor || '#ffffff';
+        options.strokeWeight = options.strokeWeight || 2;
+        options.strokeColor = options.strokeColor || '#000000';
         super(options);
         (<any>this)._options.beneathLabels = false;
     }
@@ -68,6 +93,9 @@ export class BingMapLabel extends MapLabel {
      * @method
      */
     public Set(key: string, val: any): void {
+        if (key === 'position' && !val.hasOwnProperty('altitude') && val.hasOwnProperty('latitude') && val.hasOwnProperty('longitude')) {
+            val = new Microsoft.Maps.Location(val.latitude, val.longitude);
+        }
         if (this.Get(key) !== val) {
             (<any>this)[key] = val;
             this.Changed(key);
@@ -88,7 +116,9 @@ export class BingMapLabel extends MapLabel {
         if (m) {
             m.layers.remove(this);
         }
-        if (map != null) { map.layers.insert(this); }
+        if (map != null) {
+            map.layers.insert(this);
+        }
     }
 
     /**
@@ -102,9 +132,15 @@ export class BingMapLabel extends MapLabel {
     public SetValues(options: { [key: string]: any }): void {
         const p: Array<string> = new Array<string>();
         for (const key in options) {
-            if (this.Get(key) !== options[key]) {
-                (<any>this)[key] = options[key];
-                p.push(key);
+            if (key !== '') {
+                if (key === 'position' && !options[key].hasOwnProperty('altitude') &&
+                    options[key].hasOwnProperty('latitude') && options[key].hasOwnProperty('longitude')) {
+                    options[key] = new Microsoft.Maps.Location(options[key].latitude, options[key].longitude);
+                }
+                if (this.Get(key) !== options[key]) {
+                    (<any>this)[key] = options[key];
+                    p.push(key);
+                }
             }
         }
         if (p.length > 0) { this.Changed(p); }
@@ -155,6 +191,7 @@ export class BingMapLabel extends MapLabel {
      */
     protected OnAdd() {
         this._canvas = document.createElement('canvas');
+        this._canvas.id = `xMapLabel${id++}`;
         const style: CSSStyleDeclaration = this._canvas.style;
         style.position = 'absolute';
 
@@ -190,7 +227,7 @@ export class BingMapLabel extends MapLabel {
  * @export
  * @method
  */
-export function ExtendMapLabelWithOverlayView() {
+export function MixinMapLabelWithOverlayView() {
     const x = BingMapLabel.prototype;
     BingMapLabel.prototype = <any> new Microsoft.Maps.CustomOverlay();
     for (const y in x) { if ((<any>x)[y] != null) { (<any>BingMapLabel.prototype)[y] = (<any>x)[y]; }}

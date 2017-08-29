@@ -29,7 +29,6 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
-    private _centroid: GoogleMapTypes.LatLngLiteral = null;
 
     ///
     /// Property declarations
@@ -61,20 +60,6 @@ export class GooglePolygon extends Polygon implements Polygon {
     public set LabelMinZoom(val: number) {
         this._minZoom = val;
         this.ManageLabel();
-    }
-
-    /**
-     * Gets the polygon's centroid.
-     * @readonly
-     * @private
-     * @type {GoogleMapTypes.LatLngLiteral}
-     * @memberof GooglePolygon
-     */
-    private get Centroid(): GoogleMapTypes.LatLngLiteral {
-        if (this._centroid == null) {
-            this._centroid = GoogleConversions.TranslateLocation(this.GetPolygonCentroid());
-        }
-        return this._centroid;
     }
 
     /**
@@ -365,7 +350,7 @@ export class GooglePolygon extends Polygon implements Polygon {
         if (this._showLabel && this._title != null && this._title !== '') {
             const o: { [key: string]: any } = {
                 text: this._title,
-                position: this.Centroid
+                position: GoogleConversions.TranslateLocationObject(this.Centroid)
             };
             if (o.position == null) { return; }
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
@@ -400,7 +385,10 @@ export class GooglePolygon extends Polygon implements Polygon {
                 align: 'left',
                 offset: new google.maps.Point(0, 25),
                 backgroundColor: 'bisque',
-                hidden: true
+                hidden: true,
+                fontSize: 12,
+                fontColor: '#000000',
+                strokeWeight: 0
             };
             if (this._tooltip == null) {
                 o.map = this.NativePrimitve.getMap();

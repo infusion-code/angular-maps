@@ -18,13 +18,16 @@ import { BingClusterLayer } from './../../models/bing/bing-cluster-layer';
 import { BingInfoWindow } from './../../models/bing/bing-info-window';
 import { BingPolygon } from './../../models/bing/bing-polygon';
 import { BingPolyline } from './../../models/bing/bing-polyline';
-import { ExtendMapLabelWithOverlayView } from './../../models/bing/bing-label';
-
+import { MixinMapLabelWithOverlayView } from './../../models/bing/bing-label';
+import { MixinCanvasOverlay } from './../../models/bing/bing-canvas-overlay';
+import { BingCanvasOverlay } from './../../models/bing/bing-canvas-overlay';
+import { CanvasOverlay } from './../../models/canvas-overlay';
 import { ILayerOptions } from './../../interfaces/ilayer-options';
 import { IClusterOptions } from './../../interfaces/icluster-options';
 import { IMapOptions } from './../../interfaces/imap-options';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { IPoint } from './../../interfaces/ipoint';
+import { ISize } from './../../interfaces/isize';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
 import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
@@ -75,6 +78,22 @@ export class BingMapService implements MapService {
      */
     public get MapPromise(): Promise<Microsoft.Maps.Map> { return this._map; }
 
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof BingMapService
+     */
+    public get MapSize(): ISize {
+        if (this.MapInstance) {
+            const s: ISize = { width: this.MapInstance.getWidth(), height: this.MapInstance.getHeight() };
+            return s;
+        }
+        return null;
+    }
+
     ///
     /// Constructor
     ///
@@ -94,6 +113,22 @@ export class BingMapService implements MapService {
     ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof BingMapService
+     */
+    public CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay> {
+        return this._map.then((map: Microsoft.Maps.Map) => {
+            const overlay: BingCanvasOverlay = new BingCanvasOverlay(drawCallback);
+            map.layers.insert(overlay);
+            return overlay;
+        });
+    }
 
     /**
      * Creates a Bing map cluster layer within the map context
@@ -169,7 +204,11 @@ export class BingMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
-            ExtendMapLabelWithOverlayView();
+            // apply mixins
+            MixinMapLabelWithOverlayView();
+            MixinCanvasOverlay();
+
+            // map startup...
             if (this._mapInstance != null) {
                 this.DisposeMap();
             }
@@ -344,17 +383,11 @@ export class BingMapService implements MapService {
     public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
-            const halfWidth = (box.width / 2);
-            const halfHeight = (box.height / 2);
-            return <IBox>{
-                maxLatitude: box.center.latitude + halfWidth > 180 ?
-                    box.center.latitude - halfWidth : box.center.latitude + halfWidth,
-                maxLongitude: box.center.longitude + halfHeight > 90 ?
-                    box.center.longitude - halfHeight : box.center.longitude + halfHeight,
-                minLatitude: box.center.latitude - halfWidth < -180 ?
-                    box.center.latitude + halfWidth : box.center.latitude - halfWidth,
-                minLongitude: box.center.longitude - halfHeight < -90 ?
-                    box.center.longitude + halfHeight : box.center.longitude - halfHeight,
+            return <IBox> {
+                maxLatitude: box.getNorth(),
+                maxLongitude: box.crossesInternationalDateLine() ? box.getWest() : box.getEast(),
+                minLatitude: box.getSouth(),
+                minLongitude: box.crossesInternationalDateLine() ?  box.getEast() : box.getWest(),
                 center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
@@ -389,6 +422,23 @@ export class BingMapService implements MapService {
                 return { x: p.x, y: p.y };
             }
             return null;
+        })
+    }
+
+    /**
+     * Provides a conversion of geo coordinates to pixels on the map control.
+     *
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
+     * @memberof BingMapService
+     */
+    public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
+        return this._map.then((m: Microsoft.Maps.Map) => {
+            const l = locs.map(loc => BingConversions.TranslateLocation(loc));
+            const p: Array<Microsoft.Maps.Point> = <Array<Microsoft.Maps.Point>>m.tryLocationToPixel(l,
+                Microsoft.Maps.PixelReference.control);
+            return p ? p : new Array<IPoint>();
         })
     }
 
