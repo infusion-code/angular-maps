@@ -30,25 +30,10 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
-    private _centroid: Microsoft.Maps.Location = null;
 
     ///
     /// Property declarations
     ///
-
-    /**
-     * Gets the polygon's centroid.
-     * @readonly
-     * @private
-     * @type {Microsoft.Maps.Location}
-     * @memberof BingPolygon
-     */
-    private get Centroid(): Microsoft.Maps.Location {
-        if (this._centroid == null) {
-            this._centroid = BingConversions.TranslateLocation(this.GetPolygonCentroid());
-        }
-        return this._centroid;
-    }
 
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
@@ -162,6 +147,15 @@ export class BingPolygon extends Polygon implements Polygon {
         if (supportedEvents.indexOf(eventType) !== -1) {
             Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
                 fn(e);
+            });
+        }
+        if (eventType === 'mousemove') {
+            let handlerId: Microsoft.Maps.IHandlerId;
+            Microsoft.Maps.Events.addHandler(this._polygon, 'mouseover', e => {
+                handlerId = Microsoft.Maps.Events.addHandler(this._map, 'mousemove', m => fn(m));
+            });
+            Microsoft.Maps.Events.addHandler(this._polygon, 'mouseout', e => {
+                if (handlerId) { Microsoft.Maps.Events.removeHandler(handlerId); }
             });
         }
     }
@@ -380,7 +374,7 @@ export class BingPolygon extends Polygon implements Polygon {
         if (this._showLabel && this._title != null && this._title !== '') {
             const o: { [key: string]: any } = {
                 text: this._title,
-                position: this.Centroid
+                position: BingConversions.TranslateLocation(this.Centroid)
             };
             if (o.position == null) { return; }
             if (this._minZoom !== -1) { o.minZoom = this._minZoom; }
@@ -414,7 +408,10 @@ export class BingPolygon extends Polygon implements Polygon {
                 align: 'left',
                 offset: new Microsoft.Maps.Point(0, 25),
                 backgroundColor: 'bisque',
-                hidden: true
+                hidden: true,
+                fontSize: 12,
+                fontColor: '#000000',
+                strokeWeight: 0
             };
             if (this._tooltip == null) {
                 this._tooltip = new BingMapLabel(o);
@@ -431,12 +428,12 @@ export class BingPolygon extends Polygon implements Polygon {
                         this._tooltip.Set('hidden', false);
                         this._tooltipVisible = true;
                     }
-                });
-                this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
-                            this._map, 'mousemove', (e: Microsoft.Maps.IMouseEventArgs) => {
-                    if (this._tooltipVisible && e.location && e.primitive === this._polygon) {
-                        this._tooltip.Set('position', e.location);
-                    }
+                    this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
+                        this._map, 'mousemove', (m: Microsoft.Maps.IMouseEventArgs) => {
+                        if (this._tooltipVisible && m.location && m.primitive === this._polygon) {
+                            this._tooltip.Set('position', m.location);
+                        }
+                    });
                 });
                 this._mouseOutListener = Microsoft.Maps.Events.addHandler(
                             this._polygon, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
@@ -444,6 +441,7 @@ export class BingPolygon extends Polygon implements Polygon {
                         this._tooltip.Set('hidden', true);
                         this._tooltipVisible = false;
                     }
+                    if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
                 });
                 this._hasToolTipReceiver = true;
             }

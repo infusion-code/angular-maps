@@ -5,6 +5,8 @@ import { IMapOptions } from '../interfaces/imap-options';
 import { ILayerOptions } from '../interfaces/ilayer-options';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPoint } from '../interfaces/ipoint';
+import { ISize } from '../interfaces/isize';
+import { IBox } from '../interfaces/ibox';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../interfaces/ipolyline-options';
 import { IMarkerOptions } from '../interfaces/imarker-options';
@@ -14,7 +16,7 @@ import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
 import { Polyline } from '../models/polyline';
 import { InfoWindow } from '../models/info-window';
-import { IBox } from '../interfaces/ibox';
+import { CanvasOverlay } from '../models/canvas-overlay';
 
 /**
  * Abstract class to implement map api. A concrete implementation should be created for each
@@ -28,8 +30,92 @@ import { IBox } from '../interfaces/ibox';
 export abstract class MapService {
 
     ///
+    /// Public properties
+    ///
+
+    /**
+     * Gets the Map control instance underlying the implementation
+     *
+     * @readonly
+     * @type {any}
+     * @memberof MapService
+     */
+    abstract get MapInstance(): any;
+
+    /**
+     * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
+     * are not sure if and when the instance will be created.
+     * @readonly
+     * @type {Promise<any>}
+     * @memberof MapService
+     */
+    abstract get MapPromise(): Promise<any>;
+
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof MapService
+     */
+    abstract get MapSize(): ISize;
+
+
+    ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Gets a random geo locations filling the bounding box.
+     *
+     * @static
+     * @param {number} count - number of locations to return
+     * @param {IBox} bounds  - bounding box.
+     * @returns {Array<ILatLong>} - Array of geo locations.
+     * @memberof MapService
+     */
+    public static GetRandonLocations(count: number, bounds: IBox): Array<ILatLong> {
+        const a: Array<ILatLong> = [];
+        const _getRandomLocation = (b: IBox) => {
+            const lat: number = Math.random() * (b.maxLatitude - b.minLatitude) + b.minLatitude;
+            let lng: number = 0;
+            if (crossesDateLine) {
+                lng = Math.random() * (b.minLongitude + 360 - b.maxLongitude) + b.maxLongitude;
+                if (lng > 180) { lng = lng - 360; }
+            }
+            else {
+                lng = Math.random() * (b.maxLongitude - b.minLongitude) + b.minLongitude;
+            }
+            const p: ILatLong = { latitude: lat, longitude: lng };
+            return p;
+        };
+        let crossesDateLine: boolean = false;
+
+        if (bounds == null) { bounds = <IBox>{
+            maxLatitude: 360,
+            minLatitude: 0,
+            maxLongitude: 170,
+            minLongitude: 0
+        }}
+        if (bounds.center.longitude < bounds.minLongitude  || bounds.center.longitude > bounds.maxLongitude) { crossesDateLine = true; }
+        if (!count || count <= 0) {
+            return [_getRandomLocation(bounds)];
+        }
+        for (let r = 0; r < count; r++) { a.push(_getRandomLocation(bounds)); }
+        return a;
+    }
+
+    /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof MapService
+     * @abstract
+     */
+    public abstract CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay>;
 
     /**
      * Creates a map cluster layer within the map context
@@ -163,22 +249,14 @@ export abstract class MapService {
     abstract LocationToPoint(loc: ILatLong): Promise<IPoint>;
 
     /**
-     * Gets the Map control instance underlying the implementation
+     * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @readonly
-     * @type {any}
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
      * @memberof MapService
      */
-    abstract get MapInstance(): any;
-
-    /**
-     * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
-     * are not sure if and when the instance will be created.
-     * @readonly
-     * @type {Promise<any>}
-     * @memberof MapService
-     */
-    abstract get MapPromise(): Promise<any>;
+    abstract LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>>;
 
     /**
      * Centers the map on a geo location.

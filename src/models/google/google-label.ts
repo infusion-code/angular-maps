@@ -1,5 +1,6 @@
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { MapLabel } from '../map-label';
+import { ILabelOptions } from '../../interfaces/ilabel-options';
 declare var google: any;
 
 /**
@@ -11,6 +12,24 @@ declare var google: any;
  * @class GoogleMapLabel
  */
 export class GoogleMapLabel extends MapLabel {
+
+    /**
+     * Returns the default label style for the platform
+     *
+     * @readonly
+     * @abstract
+     * @type {*}
+     * @memberof GoogleMapLabel
+     */
+    public get DefaultLabelStyle(): ILabelOptions {
+        return {
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fontColor: '#ffffff',
+            strokeWeight: 3,
+            strokeColor: '#000000'
+        }
+    }
 
     ///
     /// Constructor
@@ -25,6 +44,10 @@ export class GoogleMapLabel extends MapLabel {
      * @public
      */
     constructor(options: { [key: string]: any }) {
+        options.fontSize = options.fontSize || 12;
+        options.fontColor = options.fontColor || '#ffffff';
+        options.strokeWeight = options.strokeWeight || 3;
+        options.strokeColor = options.strokeColor || '#000000';
         super(options);
     }
 
@@ -67,6 +90,9 @@ export class GoogleMapLabel extends MapLabel {
      * @method
      */
     public Set(key: string, val: any): void {
+        if (key === 'position' && val.hasOwnProperty('latitude') && val.hasOwnProperty('longitude')) {
+            val = new google.maps.LatLng(val.latitude, val.longitude);
+        }
         if (this.Get(key) !== val) {
             (<any>this).set(key, val);
         }
@@ -94,7 +120,12 @@ export class GoogleMapLabel extends MapLabel {
      */
     public SetValues(options: { [key: string]: any }): void {
         for (const key in options) {
-            if (this.Get(key) === options[key]) { delete options[key]; }
+            if (key !== '') {
+                if (key === 'position' &&  options[key].hasOwnProperty('latitude') &&  options[key].hasOwnProperty('longitude')) {
+                    options[key] = new google.maps.LatLng( options[key].latitude,  options[key].longitude);
+                }
+                if (this.Get(key) === options[key]) { delete options[key]; }
+            }
         }
         (<any>this).setValues(options);
     }
@@ -175,7 +206,7 @@ export class GoogleMapLabel extends MapLabel {
  * @export
  * @method
  */
-export function ExtendMapLabelWithOverlayView() {
+export function MixinMapLabelWithOverlayView() {
     const x = GoogleMapLabel.prototype;
     GoogleMapLabel.prototype = new google.maps.OverlayView;
     for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleMapLabel.prototype)[y] = (<any>x)[y]; }}

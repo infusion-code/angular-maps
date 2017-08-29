@@ -12,6 +12,7 @@ import { IClusterOptions } from '../../interfaces/icluster-options';
 import { IMapOptions } from '../../interfaces/imap-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPoint } from '../../interfaces/ipoint';
+import { ISize } from '../../interfaces/isize';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
@@ -21,7 +22,10 @@ import { MapTypeId } from '../../models/map-type-id';
 import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
-import { ExtendMapLabelWithOverlayView } from '../../models/google/google-label';
+import { MixinMapLabelWithOverlayView } from '../../models/google/google-label';
+import { MixinCanvasOverlay } from '../../models/google/google-canvas-overlay';
+import { GoogleCanvasOverlay } from './../../models/google/google-canvas-overlay';
+import { CanvasOverlay } from './../../models/canvas-overlay';
 import { Layer } from '../../models/layer';
 import { InfoWindow } from '../../models/info-window';
 import { GooglePolygon } from '../../models/google/google-polygon';
@@ -78,6 +82,23 @@ export class GoogleMapService implements MapService {
      */
     public get MapPromise(): Promise<GoogleMapTypes.GoogleMap> { return this._map; }
 
+    /**
+     * Gets the maps physical size.
+     *
+     * @readonly
+     * @abstract
+     * @type {ISize}
+     * @memberof BingMapService
+     */
+    public get MapSize(): ISize {
+        if (this.MapInstance) {
+            const el: HTMLDivElement = this.MapInstance.getDiv();
+            const s: ISize = { width: el.offsetWidth, height: el.offsetHeight };
+            return s;
+        }
+        return null;
+    }
+
     ///
     /// Constructor
     ///
@@ -91,7 +112,7 @@ export class GoogleMapService implements MapService {
      */
     constructor(private _loader: MapAPILoader, private _zone: NgZone) {
         this._map = new Promise<GoogleMapTypes.GoogleMap>(
-                (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
+            (resolve: (map: GoogleMapTypes.GoogleMap) => void) => { this._mapResolver = resolve; }
         );
         this._config = (<GoogleMapAPILoader>this._loader).Config;
     }
@@ -99,6 +120,22 @@ export class GoogleMapService implements MapService {
     ///
     /// Public methods and MapService interface implementation
     ///
+
+    /**
+     * Creates a canvas overlay layer to perform custom drawing over the map with out
+     * some of the overhead associated with going through the Map objects.
+     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * rendered for the current map view.
+     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @memberof GoogleMapService
+     */
+    public CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay> {
+        return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            const overlay: GoogleCanvasOverlay = new GoogleCanvasOverlay(drawCallback);
+            overlay.SetMap(map);
+            return overlay;
+        });
+    }
 
     /*
      * Creates a Google map cluster layer within the map context
@@ -156,7 +193,11 @@ export class GoogleMapService implements MapService {
      */
     public CreateMap(el: HTMLElement, mapOptions: IMapOptions): Promise<void> {
         return this._loader.Load().then(() => {
-            ExtendMapLabelWithOverlayView();
+            // apply mixins
+            MixinMapLabelWithOverlayView();
+            MixinCanvasOverlay();
+
+            // execute map startup
             if (!mapOptions.mapTypeId == null) { mapOptions.mapTypeId = MapTypeId.hybrid; }
             if (this._mapInstance != null) {
                 this.DisposeMap();
@@ -287,10 +328,8 @@ export class GoogleMapService implements MapService {
      * @memberof GoogleMapService
      */
     public DeleteLayer(layer: Layer): Promise<void> {
+        // return resolved promise as there is no conept of a custom layer in Google.
         return Promise.resolve();
-        // return this._map.then((map: GoogleMapTypes.GoogleMap) => {
-        //     map.layers.remove(layer.NativePrimitve);
-        // });
     }
 
     /**
@@ -336,9 +375,9 @@ export class GoogleMapService implements MapService {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
             const box = map.getBounds();
             return <IBox>{
-                maxLatitude: Math.max(box.getNorthEast().lat(), box.getSouthWest().lat()),
+                maxLatitude: box.getNorthEast().lat(),
                 maxLongitude: Math.max(box.getNorthEast().lng(), box.getSouthWest().lng()),
-                minLatitude: Math.min(box.getNorthEast().lat(), box.getSouthWest().lat()),
+                minLatitude: box.getSouthWest().lat(),
                 minLongitude: Math.min(box.getNorthEast().lng(), box.getSouthWest().lng()),
                 center: { latitude: box.getCenter().lat(), longitude: box.getCenter().lng() },
                 padding: 0
@@ -368,10 +407,53 @@ export class GoogleMapService implements MapService {
      */
     public LocationToPoint(loc: ILatLong): Promise<IPoint> {
         return this._map.then((m: GoogleMapTypes.GoogleMap) => {
-            // let l: Microsoft.Maps.Location = GoogleConversions.TranslateLocation(loc);
-            // let p: Microsoft.Maps.Point = <Microsoft.Maps.Point>m.tryLocationToPixel(l, Microsoft.Maps.PixelReference.control);
-            // if (p != null) return { x: p.x, y: p.y };
-            return null;
+            let crossesDateLine: boolean = false;
+            const l: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(loc);
+            const p = m.getProjection();
+            const s: number = Math.pow(2, m.getZoom());
+            const b: GoogleMapTypes.LatLngBounds = m.getBounds();
+            if (b.getCenter().lng() < b.getSouthWest().lng()  ||
+                b.getCenter().lng() > b.getNorthEast().lng()) { crossesDateLine = true; }
+
+
+            const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
+            const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
+            const point: GoogleMapTypes.Point = p.fromLatLngToPoint(l);
+            return {
+                x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
+                y: Math.floor((point.y - offsetY) * s)
+            };
+        })
+    }
+
+    /**
+     * Provides a conversion of geo coordinates to pixels on the map control.
+     *
+     * @param {ILatLong} loc - The geo coordinates to translate.
+     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     *
+     * @memberof BingMapService
+     */
+    public LocationsToPoints(locs: Array<ILatLong>): Promise<Array<IPoint>> {
+        return this._map.then((m: GoogleMapTypes.GoogleMap) => {
+            let crossesDateLine: boolean = false;
+            const p = m.getProjection();
+            const s: number = Math.pow(2, m.getZoom());
+            const b: GoogleMapTypes.LatLngBounds = m.getBounds();
+            if (b.getCenter().lng() < b.getSouthWest().lng()  ||
+                b.getCenter().lng() > b.getNorthEast().lng()) { crossesDateLine = true; }
+
+            const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
+            const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
+            const l = locs.map(ll => {
+                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(ll)
+                const point: GoogleMapTypes.Point = p.fromLatLngToPoint(l1);
+                return {
+                    x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
+                    y: Math.floor((point.y - offsetY) * s)
+                };
+            });
+            return l;
         })
     }
 

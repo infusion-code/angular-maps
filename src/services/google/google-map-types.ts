@@ -9,6 +9,8 @@ export interface GoogleMap extends MVCObject {
   setCenter(latLng: LatLng|LatLngLiteral): void;
   getBounds(): LatLngBounds;
   getZoom(): number;
+  getDiv(): HTMLDivElement;
+  getProjection(): any;
   setOptions(options: MapOptions): void;
   panToBounds(latLngBounds: LatLngBounds|LatLngBoundsLiteral): void;
   fitBounds(bounds: LatLngBounds|LatLngBoundsLiteral): void;
