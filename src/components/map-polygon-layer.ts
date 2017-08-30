@@ -66,7 +66,6 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private _service: LayerService;
     private _canvas: CanvasOverlay;
     private _labels: Array<{loc: ILatLong, title: string}> = new Array<{loc: ILatLong, title: string}>();
-    private _allLabels: Array<{loc: ILatLong, title: string}> = new Array<{loc: ILatLong, title: string}>();
     private _tooltip: MapLabel;
     private _tooltipSubscriptions: Array<Subscription> = new Array<Subscription>();
     private _tooltipVisible: boolean = false;
@@ -324,10 +323,6 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             (changes['LabelMaxZoom'] && !changes['LabelMaxZoom'].firstChange)
         ) {
             if (this._canvas) {
-                if (this._streaming) {
-                    this._labels.splice(0);
-                    this._labels.push(...this._allLabels);
-                }
                 this._canvas.Redraw(true);
             }
         }
@@ -472,7 +467,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         this._layerPromise.then(l => {
             const polygons: Array<IPolygonOptions> = this._streaming ? this._polygonsLast : this._polygons;
 
-            this._labels.splice(0);
+            if (!this._streaming) { this._labels.splice(0); }
             if (this.Visible === false) { this.PolygonOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
@@ -485,7 +480,6 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                     this.AddEventListeners(poly);
                 });
                 this._streaming ? l.AddEntities(p) : l.SetEntities(p);
-                if (this._streaming) { this._allLabels.push(...this._labels); }
                 if (this._canvas) { this._canvas.Redraw(!this._streaming); }
             });
         });
