@@ -66,6 +66,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private _service: LayerService;
     private _canvas: CanvasOverlay;
     private _labels: Array<{loc: ILatLong, title: string}> = new Array<{loc: ILatLong, title: string}>();
+    private _allLabels: Array<{loc: ILatLong, title: string}> = new Array<{loc: ILatLong, title: string}>();
     private _tooltip: MapLabel;
     private _tooltipSubscriptions: Array<Subscription> = new Array<Subscription>();
     private _tooltipVisible: boolean = false;
@@ -76,6 +77,9 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         strokeColor: '#000000',
         fontColor: '#ffffff'
     };
+    private _streaming: boolean = false;
+    private _polygons: Array<IPolygonOptions> = new Array<IPolygonOptions>();
+    private _polygonsLast: Array<IPolygonOptions> = new Array<IPolygonOptions>();
 
     /**
      * Set the maximum zoom at which the polygon labels are visible. Ignored if ShowLabel is false.
@@ -100,12 +104,30 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     @Input() public LabelOptions: ILabelOptions;
 
     /**
+     * Gets or sets An offset applied to the positioning of the layer.
+     *
+     * @type {IPoint}
+     * @memberof MapPolygonLayerDirective
+     */
+    @Input() public LayerOffset: IPoint = null;
+
+    /**
      * An array of polygon options representing the polygons in the layer.
      *
      * @type {Array<IPolygonOptions>}
      * @memberof MapPolygonLayerDirective
      */
-    @Input() public PolygonOptions: Array<IPolygonOptions> = [];
+    @Input()
+        public get PolygonOptions(): Array<IPolygonOptions> { return this._polygons; }
+        public set PolygonOptions(val: Array<IPolygonOptions>) {
+            if (this._streaming) {
+                this._polygonsLast = val.slice(0);
+                this._polygons.push(...val);
+            }
+            else {
+                this._polygons = val.slice(0);
+            }
+        }
 
     /**
      * Whether to show the polygon titles as the labels on the polygons.
@@ -124,12 +146,15 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     @Input() public ShowTooltips: boolean = true;
 
     /**
-     * Gets or sets An offset applied to the positioning of the layer.
+     * Sets whether to treat changes in the PolygonOptions as streams of new markers. In this mode, changing the
+     * Array supplied in PolygonOptions will be incrementally drawn on the map as opposed to replace the polygons on the map.
      *
-     * @type {IPoint}
+     * @type {boolean}
      * @memberof MapPolygonLayerDirective
      */
-    @Input() public LayerOffset: IPoint = null;
+    @Input()
+        public get TreatNewPolygonOptionsAsStream(): boolean { return this._streaming; }
+        public set TreatNewPolygonOptionsAsStream(val: boolean) { this._streaming = val; }
 
     /**
      * Sets the visibility of the marker layer
@@ -298,7 +323,13 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             (changes['LabelMinZoom'] && !changes['LabelMinZoom'].firstChange) ||
             (changes['LabelMaxZoom'] && !changes['LabelMaxZoom'].firstChange)
         ) {
-           if (this._canvas) { this._canvas.Redraw(); }
+            if (this._canvas) {
+                if (this._streaming) {
+                    this._labels.splice(0);
+                    this._labels.push(...this._allLabels);
+                }
+                this._canvas.Redraw(true);
+            }
         }
         if (changes['ShowTooltips'] && this._tooltip) {
             this.ManageTooltip(changes['ShowTooltips'].currentValue)
@@ -439,6 +470,8 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private UpdatePolygons(): void {
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
+            const polygons: Array<IPolygonOptions> = this._streaming ? this._polygonsLast : this._polygons;
+
             this._labels.splice(0);
             if (this.Visible === false) { this.PolygonOptions.forEach(o => o.visible = false); }
 
@@ -451,8 +484,9 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                     if (poly.Title != null && poly.Title.length > 0) { this._labels.push({loc: poly.Centroid, title: poly.Title}); }
                     this.AddEventListeners(poly);
                 });
-                l.SetEntities(p);
-                if (this._canvas) { this._canvas.Redraw(); }
+                this._streaming ? l.AddEntities(p) : l.SetEntities(p);
+                if (this._streaming) { this._allLabels.push(...this._labels); }
+                if (this._canvas) { this._canvas.Redraw(!this._streaming); }
             });
         });
     }

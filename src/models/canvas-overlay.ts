@@ -139,15 +139,16 @@ export abstract class CanvasOverlay {
 
     /**
      * Redraws the canvas for the current map view.
+     * @param {boolean} clear - True to clear the canvas before drawing.
      * @memberof CanvasOverlay
      * @method
      * @public
      */
-    public Redraw(): void {
+    public Redraw(clear: boolean): void {
         if (this._canvas == null) { return; }
 
         // Clear canvas by updating dimensions. This also ensures canvas stays the same size as the map.
-        this.Resize();
+        if (clear) { this.Resize(); }
 
         // Call the drawing callback function if specified.
         if (this._drawCallback) {
