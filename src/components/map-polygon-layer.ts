@@ -421,7 +421,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
     private ManageTooltip(show: boolean): void {
         if (show && this._canvas) {
             // add tooltip subscriptions
-            this._tooltip.Set('hidden', false);
+            this._tooltip.Set('hidden', true);
             this._tooltipVisible = false;
             this._tooltipSubscriptions.push(this.PolygonMouseMove.asObservable().subscribe(e => {
                 if (this._tooltipVisible) {
@@ -430,12 +430,14 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                 }
             }));
             this._tooltipSubscriptions.push(this.PolygonMouseOver.asObservable().subscribe(e => {
-                const loc: ILatLong = this._canvas.GetCoordinatesFromClick(e.Click);
-                this._tooltip.Set('text', e.Polygon.Title);
-                this._tooltip.Set('position', loc);
-                if (!this._tooltipVisible) {
-                    this._tooltip.Set('hidden', false);
-                    this._tooltipVisible = true;
+                if (e.Polygon.Title && e.Polygon.Title.length > 0) {
+                    const loc: ILatLong = this._canvas.GetCoordinatesFromClick(e.Click);
+                    this._tooltip.Set('text', e.Polygon.Title);
+                    this._tooltip.Set('position', loc);
+                    if (!this._tooltipVisible) {
+                        this._tooltip.Set('hidden', false);
+                        this._tooltipVisible = true;
+                    }
                 }
             }));
             this._tooltipSubscriptions.push(this.PolygonMouseOut.asObservable().subscribe(e => {
