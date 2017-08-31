@@ -99,7 +99,7 @@ export class BingCanvasOverlay extends CanvasOverlay {
         this._centerStart = <ILatLong>map.getCenter();
 
         // Redraw the canvas.
-        this.Redraw();
+        this.Redraw(true);
 
         // When the map moves, move the canvas accordingly.
         this._viewChangeEvent = Microsoft.Maps.Events.addHandler(map, 'viewchange', (e) => {
@@ -225,7 +225,7 @@ export class BingCanvasOverlay extends CanvasOverlay {
             this.UpdatePosition(0, 0, map.getWidth(), map.getHeight());
 
             // Redraw the canvas.
-            this.Redraw();
+            this.Redraw(true);
 
             // Get the current map view information.
             this._zoomStart = map.getZoom();

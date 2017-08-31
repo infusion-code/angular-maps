@@ -364,52 +364,6 @@ export class BingConversions {
      *
      * @static
      * @param {IMarkerOptions} options - Object to be mapped.
-     * @returns {Promise<Microsoft.Maps.IPushpinOptions>} - Promise that when resolved contains the mapped object.
-     *
-     * @memberof BingConversions
-     */
-    public static TranslateMarkerOptions1(options: IMarkerOptions): Promise<Microsoft.Maps.IPushpinOptions> {
-        const o: Microsoft.Maps.IPushpinOptions|any = {};
-        let s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = null;
-        const p: Promise<Microsoft.Maps.IPushpinOptions> = new Promise<Microsoft.Maps.IPushpinOptions>((resolve, reject) => {
-            Object.keys(options)
-                .filter(k => BingConversions._markerOptionsAttributes.indexOf(k) !== -1)
-                .forEach((k) => {
-                    if (k === 'iconInfo') { return; }
-                    else if (k === 'icon') { return; }
-                    else if (k === 'anchor') {
-                        o.anchor = BingConversions.TranslatePoint(options.anchor);
-                    }
-                    else {
-                        o[k] = (<any>options)[k];
-                    }
-            });
-            if (options.iconInfo != null) {
-                s = Marker.CreateMarker(options.iconInfo);
-                if (typeof(s) === 'string') {
-                    o.icon = s;
-                    resolve(o);
-                }
-                else {
-                    s.then(x => {
-                        o.icon = x.icon;
-                        resolve(o);
-                    });
-                }
-            }
-            else {
-                if (options.icon) {o.icon = options.icon; }
-                resolve(o);
-            }
-        });
-        return p;
-    }
-
-    /**
-     * Maps an IMarkerOptions object to a Microsoft.Maps.IPushpinOptions object.
-     *
-     * @static
-     * @param {IMarkerOptions} options - Object to be mapped.
      * @returns {Microsoft.Maps.IPushpinOptions} - The mapped object.
      *
      * @memberof BingConversions
@@ -518,7 +472,7 @@ export class BingConversions {
      * @memberof BingConversions
      */
     public static TranslatePolygonOptions(options: IPolygonOptions): Microsoft.Maps.IPolygonOptions {
-        const o: Microsoft.Maps.IPolygonOptions | any = {};
+        const o: Microsoft.Maps.IPolygonOptions = {};
         const f: (s: string, a: number) => string = (s, a) => {
             const m = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)/g.exec(s);
             if (m && m.length > 3) {
@@ -526,12 +480,12 @@ export class BingConversions {
                 return 'rgba(' + [m[1], m[2], m[3], a].join(',') + ')';
             }
             else if (s[0] === '#') {
-                const x: number = Math.floor(a * 255);
-                let y: string = x.toString(16);
-                let z: string = s.substr(0);
-                if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { y = y + '0'; }
-                return z + y;
+                const x: number = a > 1 ? a : Math.floor(a * 255);
+                const z: string = s.substr(1);
+                const r: number = parseInt(z.substr(0, 2), 16);
+                const g: number = parseInt(z.substr(2, 2), 16);
+                const b: number = parseInt(z.substr(4, 2), 16);
+                return 'rgba(' + [r , g, b, a].join(',') + ')';
             }
             else {
                 return s;
@@ -552,8 +506,7 @@ export class BingConversions {
                         o.strokeColor = options.strokeColor;
                     }
                 }
-                else if (k === 'strokeOpacity') {
-                }
+                else if (k === 'strokeOpacity') {}
                 else if (k === 'fillColor') {
                     if (options.fillOpacity) {
                         o.fillColor = f(options.fillColor, options.fillOpacity);
@@ -562,9 +515,9 @@ export class BingConversions {
                         o.fillColor = options.fillColor;
                     }
                 }
-                else if (k === 'fillOpacity') { }
+                else if (k === 'fillOpacity') {}
                 else {
-                    o[k] = (<any>options)[k];
+                    (<any>o)[k] = (<any>options)[k];
                 }
             });
         return o;
@@ -588,12 +541,12 @@ export class BingConversions {
                 return 'rgba(' + [m[1], m[2], m[3], a].join(',') + ')';
             }
             else if (s[0] === '#') {
-                const x: number = Math.floor(a * 255);
-                let y: string = x.toString(16);
-                let z: string = s.substr(0);
-                if (z.length > 7) { z = z.substr(0, 7); }
-                if (x < 16) { y = y + '0'; }
-                return z + y;
+                const x: number = a > 1 ? a : Math.floor(a * 255);
+                const z: string = s.substr(1);
+                const r: number = parseInt(z.substr(0, 2), 16);
+                const g: number = parseInt(z.substr(2, 2), 16);
+                const b: number = parseInt(z.substr(4, 2), 16);
+                return 'rgba(' + [r , g, b, a].join(',') + ')';
             }
             else {
                 return s;

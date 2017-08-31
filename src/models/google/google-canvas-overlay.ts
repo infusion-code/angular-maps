@@ -255,7 +255,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
             this.UpdatePosition((centerPoint.x - w / 2), (centerPoint.y - h / 2), w, h);
 
             // Redraw the canvas.
-            this.Redraw();
+            this.Redraw(true);
 
             // Get the current map view information.
             this._zoomStart = map.getZoom();
