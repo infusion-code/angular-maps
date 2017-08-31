@@ -452,7 +452,9 @@ export class BingClusterLayer implements Layer {
                 const m: BingSpiderClusterMarker = this.GetSpiderMarkerFromBingMarker(pin);
                 const p: BingMarker = m.ParentMarker;
                 const ppin: Microsoft.Maps.Pushpin = p.NativePrimitve;
-                if (this._spiderOptions.markerSelected) { this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster)); }
+                if (this._spiderOptions.markerSelected) {
+                    this._spiderOptions.markerSelected(p, new BingMarker(this._currentCluster, null, null));
+                }
                 if (Microsoft.Maps.Events.hasHandler(ppin, 'click')) { Microsoft.Maps.Events.invoke(ppin, 'click', e); }
                 this._mapclicks = 0;
             } else {
@@ -657,7 +659,7 @@ export class BingClusterLayer implements Layer {
                 pin.setOptions(this.GetBasicPushpinOptions(pins[i]));
                 this._spiderLayer.add(pin);
 
-                const spiderMarker: BingSpiderClusterMarker = new BingSpiderClusterMarker(pin);
+                const spiderMarker: BingSpiderClusterMarker = new BingSpiderClusterMarker(pin, null, this._spiderLayer);
                 spiderMarker.Stick = stick;
                 spiderMarker.ParentMarker = <BingMarker>this.GetMarkerFromBingMarker(pins[i]);
                 this._spiderMarkers.push(spiderMarker);

@@ -91,7 +91,7 @@ export abstract class BingLayerBase {
             const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
             if (icon && icon !== '') { o.icon = icon; }
             const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
-            const marker: BingMarker = new BingMarker(pushpin);
+            const marker: BingMarker = new BingMarker(pushpin, null, l.NativePrimitve);
             marker.IsFirst = options.isFirst;
             marker.IsLast = options.isLast;
             if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
@@ -141,7 +141,7 @@ export abstract class BingLayerBase {
                 const img = Marker.GetImageForMarker(s);
                 if (img != null) { (<any>pushpin).image = img; }
 
-                const marker: BingMarker = new BingMarker(pushpin);
+                const marker: BingMarker = new BingMarker(pushpin, null, null);
                 marker.IsFirst = mo.isFirst;
                 marker.IsLast = mo.isLast;
                 if (mo.metadata) { mo.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
