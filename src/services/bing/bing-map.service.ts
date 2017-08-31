@@ -237,7 +237,7 @@ export class BingMapService implements MapService {
             const o: Microsoft.Maps.IPushpinOptions = BingConversions.TranslateMarkerOptions(options);
             if (icon && icon !== '') { o.icon = icon; }
             const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
-            const marker: BingMarker = new BingMarker(pushpin);
+            const marker: BingMarker = new BingMarker(pushpin, map, null);
             if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
             map.entities.push(pushpin);
             return marker;

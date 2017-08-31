@@ -99,7 +99,6 @@ export class BingLayer implements Layer {
      */
     public Delete(): void {
         this._maps.DeleteLayer(this);
-        this._layer.dispose();
     }
 
     /**

@@ -83,10 +83,12 @@ export class BingMarker implements Marker {
     /**
      * Creates an instance of BingMarker.
      * @param {Microsoft.Maps.Pushpin} _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model.
+     * @param {Microsoft.Maps.Map} _map - The context map.
+     * @param {Microsoft.Maps.Layer} _layer - The context layer.
      *
      * @memberof BingMarker
      */
-    constructor(private _pushpin: Microsoft.Maps.Pushpin) { }
+    constructor(private _pushpin: Microsoft.Maps.Pushpin, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) { }
 
     ///
     /// Public methods
@@ -115,9 +117,11 @@ export class BingMarker implements Marker {
      * @memberof BingMarker
      */
     public DeleteMarker(): void {
-        const o: Microsoft.Maps.IPushpinOptions = {};
-        o.visible = false;
-        this._pushpin.setOptions(o);
+        if (!this._map && !this._layer) { return; }
+        if (this._layer) { this._layer.remove(this.NativePrimitve); }
+        else {
+            this._map.entities.remove(this.NativePrimitve);
+        }
     }
 
     /**

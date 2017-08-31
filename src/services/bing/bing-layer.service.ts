@@ -183,10 +183,8 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             return Promise.resolve();
         }
         return l.then((l1: Layer) => {
-            return this._zone.run(() => {
-                l1.Delete();
-                this._layers.delete(layer.Id);
-            });
+            l1.Delete();
+            this._layers.delete(layer.Id);
         });
     }
 
