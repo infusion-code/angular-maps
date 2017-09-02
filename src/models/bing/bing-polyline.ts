@@ -247,7 +247,10 @@ export class BingPolyline implements Polyline {
                 align: 'left',
                 offset: new Microsoft.Maps.Point(0, 25),
                 backgroundColor: 'bisque',
-                hidden: true
+                hidden: true,
+                fontSize: 12,
+                fontColor: '#000000',
+                strokeWeight: 0
             };
             if (this._tooltip == null) {
                 this._tooltip = new BingMapLabel(o);
