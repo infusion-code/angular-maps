@@ -473,7 +473,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             if (this.Visible === false) { this.PolygonOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
-            const lp: Promise<Array<Polygon>> = this._service.CreatePolygons(l.GetOptions().id, this.PolygonOptions);
+            const lp: Promise<Array<Polygon>> = this._service.CreatePolygons(l.GetOptions().id, polygons);
 
             // set markers once promises are fullfilled.
             lp.then(p => {
