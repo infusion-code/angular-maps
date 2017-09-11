@@ -270,11 +270,12 @@ export class BingMapService implements MapService {
     public CreatePolygon(options: IPolygonOptions): Promise<Polygon> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
-            const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
+            const o: Microsoft.Maps.IPolygonOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             map.entities.push(poly);
 
             const p = new BingPolygon(poly, map, null);
+            if (options.metadata) { options.metadata.forEach((v, k) => p.Metadata.set(k, v)); }
             if (options.title && options.title !== '') { p.Title = options.title; }
             if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
@@ -304,6 +305,7 @@ export class BingMapService implements MapService {
                 map.entities.push(polyline);
 
                 const pl = new BingPolyline(polyline, map, null);
+                if (options.metadata) { options.metadata.forEach((v, k) => pl.Metadata.set(k, v)); }
                 if (options.title && options.title !== '') { pl.Title = options.title; }
                 if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
                 return pl;
@@ -315,6 +317,7 @@ export class BingMapService implements MapService {
                     map.entities.push(polyline);
 
                     const pl = new BingPolyline(polyline, map, null);
+                    if (options.metadata) { options.metadata.forEach((v, k) => pl.Metadata.set(k, v)); }
                     if (options.title && options.title !== '') { pl.Title = options.title; }
                     if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
                     lines.push(pl);

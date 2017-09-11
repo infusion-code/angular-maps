@@ -24,6 +24,16 @@ export abstract class Polyline {
     public abstract get NativePrimitve(): any;
 
     /**
+     * Gets the polyline metadata.
+     *
+     * @readonly
+     * @abstract
+     * @type {Map<string, any>}
+     * @memberof Polylin
+     */
+    public abstract get Metadata(): Map<string, any>;
+
+    /**
      * Gets or sets whether to show the tooltip
      *
      * @abstract

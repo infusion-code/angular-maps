@@ -148,6 +148,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
                     const poly: GoogleMapTypes.Polygon = new google.maps.Polygon(op);
                     const polygon: GooglePolygon = new GooglePolygon(poly);
                     if (o.title && o.title !== '') { polygon.Title = o.title; }
+                    if (o.metadata) { o.metadata.forEach((val: any, key: string) => polygon.Metadata.set(key, val)); }
                     return polygon;
                 });
                 resolve(polys);

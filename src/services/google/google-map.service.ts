@@ -268,6 +268,7 @@ export class GoogleMapService implements MapService {
             polygon.setMap(map);
 
             const p: GooglePolygon = new GooglePolygon(polygon);
+            if (options.metadata) { options.metadata.forEach((val: any, key: string) => p.Metadata.set(key, val)); }
             if (options.title && options.title !== '') { p.Title = options.title; }
             if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
@@ -297,6 +298,7 @@ export class GoogleMapService implements MapService {
                 polyline.setMap(map);
 
                 const pl = new GooglePolyline(polyline);
+                if (options.metadata) { options.metadata.forEach((val: any, key: string) => pl.Metadata.set(key, val)); }
                 if (options.title && options.title !== '') { pl.Title = options.title; }
                 if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
                 return pl;
@@ -310,6 +312,7 @@ export class GoogleMapService implements MapService {
                     polyline.setMap(map);
 
                     const pl = new GooglePolyline(polyline);
+                    if (options.metadata) { options.metadata.forEach((val: any, key: string) => pl.Metadata.set(key, val)); }
                     if (options.title && options.title !== '') { pl.Title = options.title; }
                     if (options.showTooltip != null) { pl.ShowTooltip = options.showTooltip; }
                     lines.push(pl);

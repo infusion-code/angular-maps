@@ -29,6 +29,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
+    private _metadata: Map<string, any> = new Map<string, any>();
 
     ///
     /// Property declarations
@@ -61,6 +62,15 @@ export class GooglePolygon extends Polygon implements Polygon {
         this._minZoom = val;
         this.ManageLabel();
     }
+
+    /**
+     * Gets the polygon metadata.
+     *
+     * @readonly
+     * @type {Map<string, any>}
+     * @memberof GoolePolygon
+     */
+    public get Metadata(): Map<string, any> { return this._metadata; }
 
     /**
      * Gets the native primitve implementing the polygon, in this case {@link GoogleMapTypes.Polygon}

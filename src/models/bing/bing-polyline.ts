@@ -29,6 +29,16 @@ export class BingPolyline implements Polyline {
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
+    private _metadata: Map<string, any> = new Map<string, any>();
+
+    /**
+     * Gets the polyline metadata.
+     *
+     * @readonly
+     * @type {Map<string, any>}
+     * @memberof BingPolyline
+     */
+    public get Metadata(): Map<string, any> { return this._metadata; }
 
     /**
      * Gets the Navitve Polyline underlying the model

@@ -30,6 +30,7 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseOverListener: Microsoft.Maps.IHandlerId;
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
+    private _metadata: Map<string, any> = new Map<string, any>();
 
     ///
     /// Property declarations
@@ -63,9 +64,17 @@ export class BingPolygon extends Polygon implements Polygon {
         this.ManageLabel();
     }
 
+    /**
+     * Gets the polygon metadata.
+     *
+     * @readonly
+     * @type {Map<string, any>}
+     * @memberof BingPolygon
+     */
+    public get Metadata(): Map<string, any> { return this._metadata; }
 
     /**
-     * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Polygon}
+     * Gets the native primitve implementing the polygon, in this case {@link Microsoft.Maps.Polygon}
      *
      * @readonly
      * @type {*}

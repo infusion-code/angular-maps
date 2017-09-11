@@ -9,7 +9,6 @@ import { IPolygonOptions } from '../interfaces/ipolygon-options';
  * @class Polygon
  */
 export abstract class Polygon {
-
     protected _centroid: ILatLong;
 
     ///
@@ -39,6 +38,16 @@ export abstract class Polygon {
      */
     public abstract get LabelMinZoom(): number;
     public abstract set LabelMinZoom(val: number);
+
+    /**
+     * Gets the polygon metadata.
+     *
+     * @readonly
+     * @abstract
+     * @type {Map<string, any>}
+     * @memberof Polygon
+     */
+    public abstract get Metadata(): Map<string, any>;
 
     /**
      * Gets the native primitve implementing the polygon.

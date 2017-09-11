@@ -13,5 +13,6 @@ export interface IPolylineOptions {
     strokeWeight?: number;
     title?: string;
     visible?: boolean;
+    metadata?: Map<string, any>;
     zIndex?: number;
 }

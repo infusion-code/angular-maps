@@ -27,10 +27,20 @@ export class GooglePolyline implements Polyline {
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
+    private _metadata: Map<string, any> = new Map<string, any>();
 
     ///
     /// Property declarations
     ///
+
+    /**
+     * Gets the polyline metadata.
+     *
+     * @readonly
+     * @type {Map<string, any>}
+     * @memberof GooglePolyline
+     */
+    public get Metadata(): Map<string, any> { return this._metadata; }
 
     /**
      * Gets the native primitve implementing the marker, in this case {@link GoogleMApTypes.Polyline}

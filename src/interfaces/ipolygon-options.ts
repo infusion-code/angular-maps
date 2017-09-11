@@ -18,5 +18,6 @@ export interface IPolygonOptions {
     strokeWeight?: number;
     title?: string;
     visible?: boolean;
+    metadata?: Map<string, any>;
     zIndex?: number;
 }

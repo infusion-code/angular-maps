@@ -84,6 +84,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             const polygon: Polygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
 
+            if (options.metadata) { options.metadata.forEach((v, k) => polygon.Metadata.set(k, v)); }
             if (options.title && options.title !== '') {polygon.Title = options.title; }
             if (options.showLabel != null) { polygon.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { polygon.ShowTooltip = options.showTooltip; }
@@ -115,6 +116,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                     const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, op);
                     const polygon: BingPolygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
                     if (o.title && o.title !== '') { polygon.Title = o.title; }
+                    if (o.metadata) { o.metadata.forEach((v, k) => polygon.Metadata.set(k, v)); }
                     return polygon;
                 });
                 resolve(polys);
@@ -148,6 +150,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                 line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
                 l.AddEntity(line);
 
+                if (options.metadata) { options.metadata.forEach((v, k) => line.Metadata.set(k, v)); }
                 if (options.title && options.title !== '') {line.Title = options.title; }
                 if (options.showTooltip != null) { line.ShowTooltip = options.showTooltip; }
                 return line;
@@ -159,6 +162,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                     line = new BingPolyline(polyline, this._mapService.MapInstance, l.NativePrimitve);
                     l.AddEntity(line);
 
+                    if (options.metadata) { options.metadata.forEach((v, k) => line.Metadata.set(k, v)); }
                     if (options.title && options.title !== '') {line.Title = options.title; }
                     if (options.showTooltip != null) { line.ShowTooltip = options.showTooltip; }
                     lines.push(line);
