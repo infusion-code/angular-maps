@@ -159,14 +159,26 @@ export class BingInfoBoxService implements InfoBoxService {
             });
         }
         return this._boxes.get(info).then((w) => {
+            const options: IInfoWindowOptions = {};
+            if (info.HtmlContent !== '') {
+                options.htmlContent = info.HtmlContent;
+            }
+            else {
+                options.title = info.Title;
+                options.description = info.Description;
+            }
+            w.SetOptions(options);
+
             if (info.Latitude && info.Longitude) {
                 w.SetPosition({ latitude: info.Latitude, longitude: info.Longitude });
-            } else if (loc) {
+            }
+            else if (loc) {
                 ///
                 /// this situation is specifically used for cluster layers that use spidering.
                 ///
                 w.SetPosition(loc);
-            } else if (info.HostMarker) {
+            }
+            else if (info.HostMarker) {
                 w.SetPosition({ latitude: info.HostMarker.Latitude, longitude: info.HostMarker.Longitude });
             }
             w.Open();

@@ -139,6 +139,15 @@ export class GoogleInfoBoxService extends InfoBoxService {
             });
         }
         return this._boxes.get(info).then((w: GoogleInfoWindow) => {
+            const options: IInfoWindowOptions = {};
+            if (info.HtmlContent !== '') {
+                options.htmlContent = info.HtmlContent;
+            }
+            else {
+                options.title = info.Title;
+                options.description = info.Description;
+            }
+            w.SetOptions(options);
             if (info.HostMarker != null) {
                 return this._markerService.GetNativeMarker(info.HostMarker).then((marker) => {
                     return this._mapService.MapPromise.then((map) => (<GoogleInfoWindow>w).Open((<GoogleMarker>marker).NativePrimitve));
@@ -161,7 +170,9 @@ export class GoogleInfoBoxService extends InfoBoxService {
      * @memberof GoogleInfoBoxService
      */
     public SetOptions(info: InfoBoxComponent, options: IInfoWindowOptions): Promise<void> {
-        return Promise.resolve();
+        return this._boxes.get(info).then((w: GoogleInfoWindow) => {
+            w.SetOptions(options);
+        });
     };
 
     /**
