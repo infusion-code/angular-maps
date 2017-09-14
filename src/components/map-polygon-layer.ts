@@ -451,7 +451,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             // remove tooltip subscriptions
             this._tooltipSubscriptions.forEach(s => s.unsubscribe());
             this._tooltipSubscriptions.splice(0);
-            this._tooltip.Set('hidden', false);
+            this._tooltip.Set('hidden', true);
             this._tooltipVisible = false;
         }
     }
