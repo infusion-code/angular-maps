@@ -200,7 +200,7 @@ export class GoogleMapAPILoader extends MapAPILoader {
     private GetMapsScriptSrc(callbackName: string) {
         const hostAndPath: string = this._config.hostAndPath || 'maps.googleapis.com/maps/api/js';
         const queryParams: { [key: string]: string | Array<string> } = {
-            v: this._config.apiVersion || '3',
+            v: this._config.apiVersion,
             callback: callbackName,
             key: this._config.apiKey,
             client: this._config.clientId,

@@ -41,6 +41,7 @@ export class GoogleConversions {
         'draggable',
         'draggableCursor',
         'draggingCursor',
+        'disableZooming',
         'fullscreenControl',
         'fullscreenControlOptions',
         'gestureHandling',
@@ -59,6 +60,7 @@ export class GoogleConversions {
         'scaleControl',
         'scaleControlOptions',
         'scrollwheel',
+        'showMapTypeSelector',
         'streetView',
         'streetViewControl',
         'streetViewControlOptions',
@@ -357,7 +359,7 @@ export class GoogleConversions {
      * @memberof GoogleConversions
      */
     public static TranslateOptions(options: IMapOptions): GoogleMapTypes.MapOptions {
-        const o: GoogleMapTypes.MapOptions | any = {};
+        const o: GoogleMapTypes.MapOptions = {};
         Object.keys(options)
             .filter(k => GoogleConversions._mapOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
@@ -367,8 +369,15 @@ export class GoogleConversions {
                 else if (k === 'mapTypeId') {
                     o.mapTypeId = GoogleConversions.TranslateMapTypeId(options.mapTypeId);
                 }
+                else if (k === 'disableZooming') {
+                    o.gestureHandling = 'none';
+                    o.zoomControl =  false;
+                }
+                else if (k === 'showMapTypeSelector') {
+                    o.mapTypeControl = false;
+                }
                 else {
-                    o[k] = (<any>options)[k]
+                    (<any>o)[k] = (<any>options)[k]
                 };
             });
         return o;
