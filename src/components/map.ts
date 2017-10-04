@@ -244,6 +244,17 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     MapMouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
     /**
+     * The event emitter is fired when the map service is available and the maps has been
+     * Initialized (but not necessarily created). It contains a Promise that when fullfilled returns
+     * the main map object of the underlying platform.
+     *
+     * @type {EventEmitter<Promise<any>>}
+     * @memberof MapComponent
+     */
+    @Output()
+    MapPromise: EventEmitter<Promise<any>> = new EventEmitter<Promise<any>>();
+
+    /**
      * This event emiiter is fired when the map zoom changes
      *
      * @type {EventEmitter<Number>}
@@ -279,6 +290,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      */
     public ngOnInit(): void {
         this.InitMapInstance(this._container.nativeElement);
+        this.MapPromise.emit(this._mapService.MapPromise);
     }
 
     /**
