@@ -1,53 +1,53 @@
 {
-  "name": "angular-maps",
-  "version": "0.7.0",
-  "description": "Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.",
-  "homepage": "https://github.com/infusion-code/angular-maps/wiki",
-  "bugs": {
-    "url": "https://github.com/infusion-code/angular-maps/issues",
-    "email": "tschueler@infusion.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/infusion-code/angular-maps"
-  },
-  "main": "./dist/index.js",
-  "scripts": {
-    "lint": "./node_modules/.bin/tslint -c tslint.json ./src/**/*.ts ./index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run lint && npm run build",
-    "watch": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json -w ",
-    "build": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json"
-  },
-  "keywords": [
-    "ng2",
-    "angular",
-    "maps",
-    "bing",
-    "google",
-    "esri"
-  ],
-  "typings": "./dist/index.d.ts",
-  "author": "Thor Schueler",
-  "license": "MIT",
-  "dependencies": {
-    "@angular/common": ">=2.4.9",
-    "@angular/compiler": ">=2.4.9",
-    "@angular/core": ">=2.4.9",
-    "bingmaps": "^1.0.15",
-    "font-awesome": "^4.6.3",
-    "json-loader": "^0.5.4",
-    "rxjs": "^5.2.0",
-    "zone.js": "^0.8.2"
-  },
-  "devDependencies": {
-    "@angular/animations": ">=2.4.9",
-    "@angular/platform-browser": ">=2.4.9",
-    "@angular/platform-server": ">=2.4.9",
-    "@angular/compiler-cli": ">=2.4.9",
-    "codelyzer": ">=3.0.1",
-    "tslint": ">=5.4.2",
-    "@types/node": "^7.0.5",
-    "typescript": "^2.3.2"
-  }
+    "name": "angular-maps",
+    "version": "0.6.12",
+    "description": "Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains a default implementation for Bing Maps.",
+    "homepage": "https://github.com/infusion-code/angular-maps/wiki",
+    "bugs": {
+        "url": "https://github.com/infusion-code/angular-maps/issues",
+        "email": "tschueler@infusion.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion-code/angular-maps"
+    },
+    "main": "./dist/index.js",
+    "scripts": {
+        "lint": "./node_modules/.bin/tslint -c tslint.json ./src/**/*.ts ./index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepublish": "npm run lint && npm run build",
+        "watch": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json -w ",
+        "build": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json"
+    },
+    "keywords": [
+        "ng2",
+        "angular",
+        "maps",
+        "bing",
+        "google",
+        "esri"
+    ],
+    "typings": "./dist/index.d.ts",
+    "author": "Thor Schueler",
+    "license": "MIT",
+    "dependencies": {
+        "@angular/common": ">=2.4.9",
+        "@angular/compiler": ">=2.4.9",
+        "@angular/core": ">=2.4.9",
+        "bingmaps": "^1.0.15",
+        "font-awesome": "^4.6.3",
+        "json-loader": "^0.5.4",
+        "rxjs": "^5.2.0",
+        "zone.js": "^0.8.2"
+    },
+    "devDependencies": {
+        "@angular/animations": ">=2.4.9",
+        "@angular/platform-browser": ">=2.4.9",
+        "@angular/platform-server": ">=2.4.9",
+        "@angular/compiler-cli": ">=2.4.9",
+        "codelyzer": ">=3.0.1",
+        "tslint": ">=5.4.2",
+        "@types/node": "^7.0.5",
+        "typescript": "^2.3.2"
+    }
 }
