@@ -274,8 +274,8 @@ export abstract class Marker {
                 const rads: number = iconInfo.rotation * Math.PI / 180;
 
                 // Calculate rotated image size.
-                c.width = Math.abs(Math.ceil(image.width * Math.cos(rads) + image.height * Math.sin(rads)));
-                c.height = Math.abs(Math.ceil(image.width * Math.sin(rads) + image.height * Math.cos(rads)));
+                c.width = Math.ceil(Math.abs(image.width * Math.cos(rads)) + Math.abs(image.height * Math.sin(rads)));
+                c.height = Math.ceil(Math.abs(image.width * Math.sin(rads)) + Math.abs(image.height * Math.cos(rads)));
 
                 // Move to the center of the canvas.
                 ctx.translate(c.width / 2, c.height / 2);

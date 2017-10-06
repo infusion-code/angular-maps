@@ -1,6 +1,7 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { ILatLong } from './../../interfaces/ilatlong';
 import { IMarkerOptions } from './../../interfaces/imarker-options';
 import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
@@ -115,6 +116,18 @@ export class BingMarkerService implements MarkerService {
      * @memberof BingMarkerService
      */
     public CreateEventObservable<T>(eventName: string, marker: MapMarkerDirective): Observable<T> {
+        const b: Subject<T> = new Subject<T>();
+        if (eventName === 'mousemove') {
+            return b.asObservable();
+        }
+        if (eventName === 'rightclick') {
+            return b.asObservable();
+        }
+        ///
+        /// mousemove and rightclick are not supported by bing polygons.
+        ///
+
+
         return Observable.create((observer: Observer<T>) => {
             this._markers.get(marker).then((m: Marker) => {
                 m.AddListener(eventName, (e: T) => this._zone.run(() =>

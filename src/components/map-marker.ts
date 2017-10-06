@@ -2,7 +2,7 @@
     Directive, SimpleChange, Input, Output, OnDestroy, OnChanges,
     EventEmitter, ContentChild, AfterContentInit, ViewContainerRef
 } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription, Observable } from 'rxjs/Rx';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IMarkerEvent } from '../interfaces/imarker-event';
@@ -58,6 +58,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     private _id: string;
     private _layerId: number;
     private _events: Subscription[] = [];
+    private _clickTimeout: Subscription = null;
 
     /**
      * Any InfoBox that is a direct children of the marker
@@ -203,12 +204,84 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     @Output() public MarkerClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
 
     /**
-     * This event is fired when the user stops dragging the marker.
+     * This event is fired when the DOM dblclick event is fired on the marker.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
-    @Output() public DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DblClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is repeatedly fired while the user drags the marker.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() Drag: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired when the user stops dragging the marker.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() DragEnd: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired when the user starts dragging the marker.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() DragStart: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired when the DOM mousedown event is fired on the marker.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() MouseDown: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired when the DOM mousemove event is fired on the marker.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() MouseMove: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired on marker mouseout.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() MouseOut: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired on marker mouseover.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() MouseOver: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This event is fired whe the DOM mouseup event is fired on the marker
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() MouseUp: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
+
+    /**
+     * This even is fired when the marker is right-clicked on.
+     *
+     * @type {EventEmitter<IMarkerEvent>}
+     * @memberof MapMarkerDirective
+     */
+    @Output() RightClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
 
 
     ///
@@ -381,22 +454,50 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * @memberof MapMarkerDirective
      */
     private AddEventListeners(): void {
-        this._events.push(this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
-            const t: MapMarkerDirective = this;
-            if (this._infoBox != null) {
-                this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
-            }
-            this.MarkerClick.emit({
+        const _getEventArg: (e: MouseEvent) => IMarkerEvent = e => {
+            return {
                 Marker: this,
                 Click: e,
                 Location: this._markerService.GetCoordinatesFromClick(e),
-                Pixels: this._markerService.GetPixelsFromClick(e),
+                Pixels: this._markerService.GetPixelsFromClick(e)
+            }
+        };
+
+        this._events.push(this._markerService.CreateEventObservable('click', this).subscribe((e: MouseEvent) => {
+            ///
+            /// this is necessary since map will treat a doubleclick first as two clicks...'
+            ///
+            this._clickTimeout = Observable.timer(300).subscribe(n => {
+                if (this._infoBox != null) {
+                    this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
+                }
+                this.MarkerClick.emit(_getEventArg(e));
             });
         }));
-        this._events.push(this._markerService.CreateEventObservable<MouseEvent>('dragend', this)
-            .subscribe((e: MouseEvent) => {
-                this.DragEnd.emit(e);
-            }));
+
+        this._events.push(this._markerService.CreateEventObservable('dblclick', this).subscribe((e: MouseEvent) => {
+            if (this._clickTimeout) {
+                this._clickTimeout.unsubscribe();
+                this._clickTimeout = null;
+            }
+            this.DblClick.emit(_getEventArg(e));
+        }));
+
+        const handlers = [
+            { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(_getEventArg(ev)) },
+            { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(_getEventArg(ev)) },
+            { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(_getEventArg(ev)) },
+            { name: 'mousedown', handler: (ev: MouseEvent) => this.MouseDown.emit(_getEventArg(ev)) },
+            { name: 'mousemove', handler: (ev: MouseEvent) => this.MouseMove.emit(_getEventArg(ev)) },
+            { name: 'mouseout', handler: (ev: MouseEvent) => this.MouseOut.emit(_getEventArg(ev)) },
+            { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(_getEventArg(ev)) },
+            { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(_getEventArg(ev)) },
+            { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(_getEventArg(ev)) },
+        ];
+        handlers.forEach((obj) => {
+            const os = this._markerService.CreateEventObservable(obj.name, this).subscribe(obj.handler);
+            this._events.push(os);
+        });
     }
 
 }

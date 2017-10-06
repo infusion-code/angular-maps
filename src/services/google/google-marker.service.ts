@@ -175,7 +175,28 @@ export class GoogleMarkerService implements MarkerService {
      * @memberof GoogleMarkerService
      */
     public GetPixelsFromClick(e: MouseEvent | any): IPoint {
-        return { x: 0, y: 0 };
+        if (!e || !e.latLng || !e.latLng.lat || !e.latLng.lng) {
+            return null;
+        }
+        if (this._mapService.MapInstance == null) {
+            return null;
+        }
+
+        let crossesDateLine: boolean = false;
+        const m = this._mapService.MapInstance;
+        const p = m.getProjection();
+        const s: number = Math.pow(2, m.getZoom());
+        const b: GoogleMapTypes.LatLngBounds = m.getBounds();
+        if (b.getCenter().lng() < b.getSouthWest().lng()  ||
+            b.getCenter().lng() > b.getNorthEast().lng()) { crossesDateLine = true; }
+
+        const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
+        const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
+        const point: GoogleMapTypes.Point = p.fromLatLngToPoint(e.latLng);
+        return {
+            x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
+            y: Math.floor((point.y - offsetY) * s)
+        };
     };
 
     /**
