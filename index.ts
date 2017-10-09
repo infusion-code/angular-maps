@@ -21,6 +21,7 @@ import { ILineOptions } from './src/interfaces/iline-options';
 import { IPolygonOptions } from './src/interfaces/ipolygon-options';
 import { IPolylineOptions } from './src/interfaces/ipolyline-options';
 import { IPolygonEvent } from './src/interfaces/ipolygon-event';
+import { IPolylineEvent } from './src/interfaces/ipolyline-event';
 import { IMapEventLookup } from './src/interfaces/imap-event-lookup';
 import { ILabelOptions } from './src/interfaces/ilabel-options';
 
@@ -67,6 +68,7 @@ import { MapPolygonDirective } from './src/components/map-polygon';
 import { MapPolylineDirective } from './src/components/map-polyline';
 import { MapMarkerLayerDirective } from './src/components/map-marker-layer';
 import { MapPolygonLayerDirective } from './src/components/map-polygon-layer';
+import { MapPolylineLayerDirective } from './src/components/map-polyline-layer';
 
 ///
 /// import module services
@@ -107,10 +109,10 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 /// export publics components, models, interfaces etc for external reuse.
 ///
 export {
-    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent,
+    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolylineEvent,
     IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions, ILabelOptions,
     MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
-    MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective, ClusterLayerDirective,
+    MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective, ClusterLayerDirective, MapPolylineLayerDirective,
     MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
     ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService,
     MapServiceFactory, MarkerService,
@@ -142,7 +144,8 @@ export {
         MapPolylineDirective,
         ClusterLayerDirective,
         MapMarkerLayerDirective,
-        MapPolygonLayerDirective
+        MapPolygonLayerDirective,
+        MapPolylineLayerDirective
     ],
     imports: [CommonModule],
     exports: [
@@ -156,7 +159,8 @@ export {
         MapLayerDirective,
         ClusterLayerDirective,
         MapMarkerLayerDirective,
-        MapPolygonLayerDirective
+        MapPolygonLayerDirective,
+        MapPolylineLayerDirective
     ]
 })
 export class MapModule {
