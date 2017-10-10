@@ -110,7 +110,9 @@ export class BingClusterLayer implements Layer {
      * @memberof BingClusterLayer
      */
     public AddEntity(entity: Marker): void {
-        if (entity instanceof Marker || entity instanceof BingMarker) {
+        let isMarker: boolean = entity instanceof Marker;
+        isMarker =  entity instanceof BingMarker || isMarker;
+        if (isMarker) {
             if (entity.IsFirst) {
                 this.StopClustering();
             }
@@ -127,7 +129,7 @@ export class BingClusterLayer implements Layer {
             }
             this._markerLookup.set(entity.NativePrimitve, entity);
         }
-        if (entity instanceof Marker || entity instanceof BingMarker) {
+        if (isMarker) {
             if (entity.IsLast) {
                 this.StartClustering();
             }

@@ -253,12 +253,12 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                         );
                         cluster.setOptions(o);
                 };
-                const s: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = Marker.CreateMarker(layer.IconInfo);
-                if (typeof(s) === 'string') {
-                    payload(s, layer.IconInfo);
+                const icon: string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> = Marker.CreateMarker(layer.IconInfo);
+                if (typeof(icon) === 'string') {
+                    payload(icon, layer.IconInfo);
                 }
                 else {
-                    s.then(x => {
+                    icon.then(x => {
                         payload(x.icon, x.iconInfo);
                     });
                 }
