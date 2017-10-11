@@ -30,6 +30,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
     private _metadata: Map<string, any> = new Map<string, any>();
+    private _editingCompleteEmitter: (path: Array<ILatLong>) => void;
 
     ///
     /// Property declarations
@@ -165,6 +166,9 @@ export class GooglePolygon extends Polygon implements Polygon {
         if (supportedEvents.indexOf(eventType) !== -1) {
             this._polygon.addListener(eventType, fn);
         }
+        if (eventType === 'pathchanged') {
+            this._editingCompleteEmitter = <(path: Array<ILatLong>) => void>fn;
+        }
     }
 
     /**
@@ -262,7 +266,12 @@ export class GooglePolygon extends Polygon implements Polygon {
      * @memberof GooglePolygon
      */
     public SetEditable(editable: boolean): void {
+        const previous = this._polygon.getEditable();
         this._polygon.setEditable(editable);
+
+        if (previous && !editable && this._editingCompleteEmitter) {
+            this._editingCompleteEmitter(this.GetPath());
+        }
     }
 
     /**
@@ -275,6 +284,12 @@ export class GooglePolygon extends Polygon implements Polygon {
      */
     public SetOptions(options: IPolygonOptions): void {
         const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
+
+        if (typeof o.editable !== 'undefined') {
+            this.SetEditable(o.editable);
+            delete o.editable;
+        }
+
         this._polygon.setOptions(o);
         if (options.visible != null && this._showLabel && this._label) { this._label.Set('hidden', !options.visible); }
     }

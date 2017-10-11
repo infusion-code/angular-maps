@@ -291,13 +291,23 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      */
     @Output() MouseUp: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
+
     /**
-     * This even is fired when the Polygon is right-clicked on.
+     * This event is fired when the Polygon is right-clicked on.
      *
      * @type {EventEmitter<MouseEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() RightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+
+    /**
+     * This event is fired when editing has completed.
+     *
+     * @type {EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>}
+     * @memberof MapPolygonDirective
+     */
+    @Output() PathChanged: EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>
+        = new EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>();
 
     ///
     /// Property declarations
@@ -416,9 +426,9 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     ngOnDestroy() {
         this._polygonService.DeletePolygon(this);
         this._events.forEach((s) => s.unsubscribe());
-            ///
-            /// remove event subscriptions
-            ///
+        ///
+        /// remove event subscriptions
+        ///
     }
 
     ///
@@ -451,6 +461,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
             { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(ev) },
             { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(ev) },
             { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(ev) },
+            { name: 'pathchanged', handler: (ev: Array<ILatLong>) => this.PathChanged.emit(ev) }
         ];
         handlers.forEach((obj) => {
             const os = this._polygonService.CreateEventObservable(obj.name, this).subscribe(obj.handler);
