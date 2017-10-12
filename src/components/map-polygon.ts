@@ -474,15 +474,21 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
         if (changes['Clickable']) { options.clickable = this.Clickable; hasOptions = true; }
         if (changes['Draggable']) { options.draggable = this.Draggable; hasOptions = true; }
         if (changes['Editable']) { options.editable = this.Editable; hasOptions = true; }
-        if (changes['FillColor']) { options.fillColor = this.FillColor; hasOptions = true; }
-        if (changes['FillOpacity']) { options.fillOpacity = this.FillOpacity; hasOptions = true; }
+        if (changes['FillColor'] || changes['FillOpacity']) {
+            options.fillColor = this.FillColor;
+            options.fillOpacity = this.FillOpacity;
+            hasOptions = true;
+        }
         if (changes['Geodesic']) { options.geodesic = this.Geodesic; hasOptions = true; }
         if (changes['LabelMaxZoom']) { options.labelMaxZoom = this.LabelMaxZoom; hasOptions = true; }
         if (changes['LabelMinZoom']) { options.labelMinZoom = this.LabelMinZoom; hasOptions = true; }
         if (changes['ShowTooltip']) { options.showTooltip = this.ShowTooltip; hasOptions = true; }
         if (changes['ShowLabel']) { options.showLabel = this.ShowLabel; hasOptions = true; }
-        if (changes['StrokeColor']) { options.strokeColor = this.StrokeColor; hasOptions = true; }
-        if (changes['StrokeOpacity']) { options.strokeOpacity = this.StrokeOpacity; hasOptions = true; }
+        if (changes['StrokeColor'] || changes['StrokeOpacity']) {
+            options.strokeColor = this.StrokeColor;
+            options.strokeOpacity = this.StrokeOpacity;
+            hasOptions = true;
+        }
         if (changes['StrokeWeight']) { options.strokeWeight = this.StrokeWeight; hasOptions = true; }
         if (changes['Title']) { options.title = this.Title; hasOptions = true; }
         if (changes['Visible']) { options.visible = this.Visible; hasOptions = true; }
