@@ -84,7 +84,9 @@ export class GoogleMarkerClusterer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public AddEntity(entity: Marker): void {
-        if (entity instanceof Marker || entity instanceof GoogleMarker) {
+        let isMarker: boolean = entity instanceof Marker;
+        isMarker = entity instanceof GoogleMarker || isMarker;
+        if (isMarker) {
             if (entity.IsFirst) {
                 this.StopClustering();
             }
@@ -99,7 +101,7 @@ export class GoogleMarkerClusterer implements Layer {
             }
             this._markerLookup.set(entity.NativePrimitve, entity);
         }
-        if (entity instanceof Marker || entity instanceof GoogleMarker) {
+        if (isMarker) {
             if (entity.IsLast) {
                 this.StartClustering();
             }

@@ -9,11 +9,43 @@ import { IPolygonOptions } from '../interfaces/ipolygon-options';
  * @class Polygon
  */
 export abstract class Polygon {
+    ///
+    /// Field declarations
+    ///
     protected _centroid: ILatLong;
+    protected _center: ILatLong;
 
     ///
     /// Property definitions
     ///
+
+    /**
+     * Gets the polygon's center.
+     * @readonly
+     * @public
+     * @type {ILatLong}
+     * @memberof Polygon
+     */
+    public get Center(): ILatLong {
+        if (this._center == null) {
+            this._center = this.GetBoundingCenter();
+        }
+        return this._center;
+    }
+
+    /**
+     * Gets the polygon's centroid.
+     * @readonly
+     * @public
+     * @type {ILatLong}
+     * @memberof Polygon
+     */
+    public get Centroid(): ILatLong {
+        if (this._centroid == null) {
+            this._centroid = this.GetPolygonCentroid();
+        }
+        return this._centroid;
+    }
 
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
@@ -116,20 +148,6 @@ export abstract class Polygon {
      * @memberof Polygon
      */
     public abstract Delete(): void;
-
-    /**
-     * Gets the polygon's centroid.
-     * @readonly
-     * @public
-     * @type {GoogleMapTypes.LatLngLiteral}
-     * @memberof GooglePolygon
-     */
-    public get Centroid(): ILatLong {
-        if (this._centroid == null) {
-            this._centroid = this.GetPolygonCentroid();
-        }
-        return this._centroid;
-    }
 
     /**
      * Gets whether the polygon is draggable.

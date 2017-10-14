@@ -472,16 +472,31 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
             if (!this._streaming) { this._labels.splice(0); }
             if (this.Visible === false) { this.PolylineOptions.forEach(o => o.visible = false); }
 
-            // generate the promise for the markers
-            const lp: Promise<Array<Polyline>> = this._service.CreatePolylines(l.GetOptions().id, polylines);
+            // generate the promise for the polylines
+            const lp: Promise<Array<Polyline|Array<Polyline>>> = this._service.CreatePolylines(l.GetOptions().id, polylines);
 
-            // set markers once promises are fullfilled.
+            // set polylines once promises are fullfilled.
             lp.then(p => {
+                const y: Array<Polyline> = new Array<Polyline>();
                 p.forEach(poly => {
-                    if (poly.Title != null && poly.Title.length > 0) { this._labels.push({loc: poly.Centroid, title: poly.Title}); }
-                    this.AddEventListeners(poly);
+                    if (Array.isArray(poly)) {
+                        let title: string = '';
+                        const centroids: Array<ILatLong> = new Array<ILatLong>();
+                        poly.forEach(x => {
+                            y.push(x);
+                            this.AddEventListeners(x);
+                            centroids.push(x.Centroid);
+                            if (x.Title != null && x.Title.length > 0 && title.length === 0) { title = x.Title; }
+                        });
+                        this._labels.push({loc: Polyline.GetPolylineCentroid(centroids), title: title});
+                    }
+                    else {
+                        y.push(poly);
+                        if (poly.Title != null && poly.Title.length > 0) { this._labels.push({loc: poly.Centroid, title: poly.Title}); }
+                        this.AddEventListeners(poly);
+                    }
                 });
-                this._streaming ? l.AddEntities(p) : l.SetEntities(p);
+                this._streaming ? l.AddEntities(y) : l.SetEntities(y);
                 if (this._canvas) { this._canvas.Redraw(!this._streaming); }
             });
         });

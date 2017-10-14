@@ -14,7 +14,7 @@ declare var google: any;
  * @implements Polyline
  * @class Polyline
  */
-export class GooglePolyline implements Polyline {
+export class GooglePolyline extends Polyline implements Polyline {
 
     ///
     /// Field declarations
@@ -91,7 +91,9 @@ export class GooglePolyline implements Polyline {
      *
      * @memberof GooglePolyline
      */
-    constructor(private _polyline: GoogleMapTypes.Polyline) { }
+    constructor(private _polyline: GoogleMapTypes.Polyline) {
+        super();
+    }
 
     /**
      * Adds a delegate for an event.
@@ -101,7 +103,21 @@ export class GooglePolyline implements Polyline {
      * @memberof Polyline
      */
     public AddListener(eventType: string, fn: Function): void {
-        this._polyline.addListener(eventType, fn);
+        const supportedEvents = [
+            'click',
+            'dblclick',
+            'drag', 'dragend',
+            'dragstart',
+            'mousedown',
+            'mousemove',
+            'mouseout',
+            'mouseover',
+            'mouseup',
+            'rightclick'
+        ];
+        if (supportedEvents.indexOf(eventType) !== -1) {
+            this._polyline.addListener(eventType, fn);
+        }
     }
 
     /**

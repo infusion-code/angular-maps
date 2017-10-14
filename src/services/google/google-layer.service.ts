@@ -8,7 +8,7 @@ import { Polyline } from '../../models/polyline';
 import { Layer } from '../../models/layer';
 import { GoogleLayer } from '../../models/google/google-layer';
 import { GooglePolygon } from '../../models/google/google-polygon';
-
+import { GooglePolyline } from '../../models/google/google-polyline';
 import { MapLayerDirective } from '../../components/map-layer'
 import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
@@ -177,5 +177,50 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
         });
         return p;
     };
+
+    /**
+     * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polylines.
+     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
+     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     *
+     * @memberof GoogleLayerService
+     */
+    public CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>> {
+        const p: Promise<Layer> = this.GetLayerById(layer);
+        if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
+        return p.then((l: Layer) => {
+            const polylines: Promise<Array<Polyline|Array<Polyline>>> = new Promise<Array<Polyline|Array<Polyline>>>((resolve, reject) => {
+                const polys: Array<Polyline|Array<Polyline>> = options.map(o => {
+                    const op: GoogleMapTypes.PolylineOptions = GoogleConversions.TranslatePolylineOptions(o);
+                    if (o.path && o.path.length > 0 && !Array.isArray(o.path[0])) {
+                        op.path = GoogleConversions.TranslatePaths(o.path)[0];
+                        const poly: GoogleMapTypes.Polyline = new google.maps.Polyline(op);
+                        const polyline: GooglePolyline = new GooglePolyline(poly);
+                        if (o.title && o.title !== '') { polyline.Title = o.title; }
+                        if (o.metadata) { o.metadata.forEach((v, k) => polyline.Metadata.set(k, v)); }
+                        return polyline;
+                    }
+                    else {
+                        const paths: Array<Array<GoogleMapTypes.LatLng>> = GoogleConversions.TranslatePaths(o.path);
+                        const lines: Array<Polyline> = new Array<Polyline>();
+                        paths.forEach(x => {
+                            op.path = x;
+                            const poly = new google.maps.Polyline(op);
+                            const polyline: GooglePolyline = new GooglePolyline(poly);
+                            if (o.metadata) { o.metadata.forEach((v, k) => polyline.Metadata.set(k, v)); }
+                            if (o.title && o.title !== '') {polyline.Title = o.title; }
+                            lines.push(polyline);
+                        });
+                        return lines;
+                    }
+                });
+                resolve(polys);
+            });
+            return polylines;
+        });
+    }
 
 }
