@@ -170,7 +170,7 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM click event is fired on the Polyline.
      *
-     *   @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<MouseEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() Click: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();

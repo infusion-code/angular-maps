@@ -111,7 +111,7 @@ export class BingClusterLayer implements Layer {
      */
     public AddEntity(entity: Marker): void {
         let isMarker: boolean = entity instanceof Marker;
-        isMarker =  entity instanceof BingMarker || isMarker;
+        isMarker = entity instanceof BingMarker || isMarker;
         if (isMarker) {
             if (entity.IsFirst) {
                 this.StopClustering();

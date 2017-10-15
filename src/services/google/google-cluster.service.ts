@@ -311,4 +311,18 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public CreatePolyline(layer: number, options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
         throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
     }
+
+    /**
+     * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polylines.
+     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
+     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     *
+     * @memberof GoogleClusterService
+     */
+    public CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>> {
+        throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
+    }
 }

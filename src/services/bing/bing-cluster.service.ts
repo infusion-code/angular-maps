@@ -146,6 +146,20 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
     }
 
     /**
+     * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polylines.
+     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
+     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     *
+     * @memberof BingClusterService
+     */
+    public CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>> {
+        throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
+    }
+
+    /**
      * Returns the Layer model represented by this layer.
      *
      * @abstract
@@ -245,11 +259,11 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         this._layers.get(layer.Id).then((l: BingClusterLayer) => {
             if (layer.IconInfo) {
                 const o: Microsoft.Maps.IPushpinOptions = {};
-                const payload: (s: string, i: IMarkerIconInfo) => void = (s, i) => {
-                        o.icon = s;
+                const payload: (icon: string, info: IMarkerIconInfo) => void = (icon, info) => {
+                        o.icon = icon;
                         o.anchor = new Microsoft.Maps.Point(
-                            (i.size && i.markerOffsetRatio) ? (i.size.width * i.markerOffsetRatio.x) : 0,
-                            (i.size && i.markerOffsetRatio) ? (i.size.height * i.markerOffsetRatio.y) : 0
+                            (info.size && info.markerOffsetRatio) ? (info.size.width * info.markerOffsetRatio.x) : 0,
+                            (info.size && info.markerOffsetRatio) ? (info.size.height * info.markerOffsetRatio.y) : 0
                         );
                         cluster.setOptions(o);
                 };

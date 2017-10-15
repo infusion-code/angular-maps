@@ -1,6 +1,7 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from './../interfaces/imarker-options';
 import { IPolygonOptions } from './../interfaces/ipolygon-options';
+import { IPolylineOptions } from './../interfaces/ipolyline-options';
 import { IMarkerIconInfo } from './../interfaces/imarker-icon-info';
 import { Marker } from './../models/marker';
 import { Polygon } from './../models/polygon';
@@ -91,6 +92,18 @@ export abstract class LayerService {
      * @memberof LayerService
      */
     public abstract CreatePolyline(layer: number, options: IPolygonOptions): Promise<Polyline|Array<Polyline>>;
+
+    /**
+     * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
+     * operations.
+     *
+     * @param {number} layer - The id of the layer to which to add the polylines.
+     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
+     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     *
+     * @memberof LayerService
+     */
+    public abstract CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>>;
 
     /**
      * Deletes the layer

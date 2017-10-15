@@ -11,7 +11,7 @@ import { BingMapLabel } from './bing-label';
  * @implements Polyline
  * @class BingPolyline
  */
-export class BingPolyline implements Polyline {
+export class BingPolyline extends Polyline implements Polyline {
 
     ///
     /// Field declarations
@@ -90,7 +90,9 @@ export class BingPolyline implements Polyline {
      * @param {Microsoft.Maps.Layer} _layer - The context layer.
      * @memberof BingPolyline
      */
-    constructor(private _polyline: Microsoft.Maps.Polyline, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) { }
+    constructor(private _polyline: Microsoft.Maps.Polyline, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) {
+        super();
+    }
 
     /**
      * Adds a delegate for an event.
@@ -100,9 +102,21 @@ export class BingPolyline implements Polyline {
      * @memberof BingPolyline
      */
     public AddListener(eventType: string, fn: Function): void {
-        Microsoft.Maps.Events.addHandler(this._polyline, eventType, (e) => {
-            fn(e);
-        });
+        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup' ]
+        if (supportedEvents.indexOf(eventType) !== -1) {
+            Microsoft.Maps.Events.addHandler(this._polyline, eventType, (e) => {
+                fn(e);
+            });
+        }
+        if (eventType === 'mousemove') {
+            let handlerId: Microsoft.Maps.IHandlerId;
+            Microsoft.Maps.Events.addHandler(this._polyline, 'mouseover', e => {
+                handlerId = Microsoft.Maps.Events.addHandler(this._map, 'mousemove', m => fn(m));
+            });
+            Microsoft.Maps.Events.addHandler(this._polyline, 'mouseout', e => {
+                if (handlerId) { Microsoft.Maps.Events.removeHandler(handlerId); }
+            });
+        }
     }
 
     /**
