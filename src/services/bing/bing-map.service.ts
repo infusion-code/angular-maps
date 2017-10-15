@@ -54,6 +54,7 @@ export class BingMapService implements MapService {
     private _mapInstance: Microsoft.Maps.Map;
     private _mapResolver: (value?: Microsoft.Maps.Map) => void;
     private _config: BingMapAPILoaderConfig;
+    private _tools: Microsoft.Maps.DrawingTools;
 
     ///
     /// Property Definitions
@@ -217,8 +218,12 @@ export class BingMapService implements MapService {
                 o.credentials = this._config.apiKey;
             }
             const map = new Microsoft.Maps.Map(el, o);
-            this._mapInstance = map;
-            this._mapResolver(map);
+            const self = this;
+            Microsoft.Maps.loadModule('Microsoft.Maps.DrawingTools', function () {
+                self._tools = new Microsoft.Maps.DrawingTools(map);
+                self._mapInstance = map;
+                self._mapResolver(map);
+            });
             return;
         });
     }
@@ -245,10 +250,10 @@ export class BingMapService implements MapService {
         return this._map.then((map: Microsoft.Maps.Map) => {
             if (options.iconInfo && options.iconInfo.markerType) {
                 const s = Marker.CreateMarker(options.iconInfo);
-                if (typeof(s) === 'string') { return(payload(s, map)); }
+                if (typeof (s) === 'string') { return (payload(s, map)); }
                 else {
                     return s.then(x => {
-                        return(payload(x.icon, map));
+                        return (payload(x.icon, map));
                     });
                 }
             }
@@ -274,13 +279,14 @@ export class BingMapService implements MapService {
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             map.entities.push(poly);
 
-            const p = new BingPolygon(poly, map, null);
+            const p = new BingPolygon(poly, map, null, this._tools);
             if (options.metadata) { options.metadata.forEach((v, k) => p.Metadata.set(k, v)); }
             if (options.title && options.title !== '') { p.Title = options.title; }
             if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
             if (options.labelMaxZoom != null) { p.LabelMaxZoom = options.labelMaxZoom; }
             if (options.labelMinZoom != null) { p.LabelMinZoom = options.labelMinZoom; }
+            if (options.editable) { p.SetEditable(options.editable); }
             return p;
         });
     }
@@ -295,7 +301,7 @@ export class BingMapService implements MapService {
      *
      * @memberof MapService
      */
-    public CreatePolyline(options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline | Array<Polyline>> {
         let polyline: Microsoft.Maps.Polyline;
         return this._map.then((map: Microsoft.Maps.Map) => {
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
@@ -386,11 +392,11 @@ export class BingMapService implements MapService {
     public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
-            return <IBox> {
+            return <IBox>{
                 maxLatitude: box.getNorth(),
                 maxLongitude: box.crossesInternationalDateLine() ? box.getWest() : box.getEast(),
                 minLatitude: box.getSouth(),
-                minLongitude: box.crossesInternationalDateLine() ?  box.getEast() : box.getWest(),
+                minLongitude: box.crossesInternationalDateLine() ? box.getEast() : box.getWest(),
                 center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
