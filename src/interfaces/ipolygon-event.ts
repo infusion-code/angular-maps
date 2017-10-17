@@ -6,4 +6,6 @@ import { IPoint } from './ipoint';
 export interface IPolygonEvent {
     Polygon: MapPolygonDirective|Polygon;
     Click: MouseEvent;
+    OriginalPath?: Array<Array<ILatLong>>;
+    NewPath?: Array<Array<ILatLong>>;
 }

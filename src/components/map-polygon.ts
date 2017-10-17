@@ -5,6 +5,7 @@
 import { Subscription } from 'rxjs/subscription';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPoint } from '../interfaces/ipoint';
+import { IPolygonEvent } from '../interfaces/ipolygon-event';
 import { ILatLong } from '../interfaces/ilatlong';
 import { PolygonService } from '../services/polygon.service';
 import { InfoBoxComponent } from './infobox';
@@ -214,74 +215,74 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the DOM click event is fired on the Polygon.
      *
-     *   @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() Click: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() Click: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when the DOM dblclick event is fired on the Polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() DblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DblClick: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is repeatedly fired while the user drags the polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() Drag: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() Drag: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when the user stops dragging the polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DragEnd: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when the user starts dragging the polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() DragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DragStart: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when the DOM mousedown event is fired on the Polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() MouseDown: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseDown: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when the DOM mousemove event is fired on the Polygon.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() MouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseMove: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired on Polygon mouseout.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() MouseOut: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseOut: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired on Polygon mouseover.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() MouseOver: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseOver: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired whe the DOM mouseup event is fired on the Polygon
@@ -289,25 +290,24 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @type {EventEmitter<MouseEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() MouseUp: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseUp: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
 
     /**
      * This event is fired when the Polygon is right-clicked on.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() RightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() RightClick: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     /**
      * This event is fired when editing has completed.
      *
-     * @type {EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>}
+     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
-    @Output() PathChanged: EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>
-        = new EventEmitter<Array<ILatLong> | Array<Array<ILatLong>>>();
+    @Output() PathChanged: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
 
     ///
     /// Property declarations
@@ -443,25 +443,31 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     private AddEventListeners() {
+        const _getEventArg: (e: MouseEvent) => IPolygonEvent = e => {
+            return {
+                Polygon: this,
+                Click: e
+            }
+        };
         this._events.push(this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
             const t: MapPolygonDirective = this;
             if (this._infoBox != null) {
                 this._infoBox.Open(this._polygonService.GetCoordinatesFromClick(ev));
             }
+            this.Click.emit(_getEventArg(ev));
         }));
         const handlers = [
-            { name: 'click', handler: (ev: MouseEvent) => this.Click.emit(ev) },
-            { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
-            { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(ev) },
-            { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(ev) },
-            { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(ev) },
-            { name: 'mousedown', handler: (ev: MouseEvent) => this.MouseDown.emit(ev) },
-            { name: 'mousemove', handler: (ev: MouseEvent) => this.MouseMove.emit(ev) },
-            { name: 'mouseout', handler: (ev: MouseEvent) => this.MouseOut.emit(ev) },
-            { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(ev) },
-            { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(ev) },
-            { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(ev) },
-            { name: 'pathchanged', handler: (ev: Array<ILatLong>) => this.PathChanged.emit(ev) }
+            { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(_getEventArg(ev)) },
+            { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(_getEventArg(ev)) },
+            { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(_getEventArg(ev)) },
+            { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(_getEventArg(ev)) },
+            { name: 'mousedown', handler: (ev: MouseEvent) => this.MouseDown.emit(_getEventArg(ev)) },
+            { name: 'mousemove', handler: (ev: MouseEvent) => this.MouseMove.emit(_getEventArg(ev)) },
+            { name: 'mouseout', handler: (ev: MouseEvent) => this.MouseOut.emit(_getEventArg(ev)) },
+            { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(_getEventArg(ev)) },
+            { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(_getEventArg(ev)) },
+            { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(_getEventArg(ev)) },
+            { name: 'pathchanged', handler: (ev: IPolygonEvent) => this.PathChanged.emit(ev) }
         ];
         handlers.forEach((obj) => {
             const os = this._polygonService.CreateEventObservable(obj.name, this).subscribe(obj.handler);

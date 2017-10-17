@@ -55,11 +55,20 @@ export class BingMapService implements MapService {
     private _mapResolver: (value?: Microsoft.Maps.Map) => void;
     private _config: BingMapAPILoaderConfig;
     private _tools: Microsoft.Maps.DrawingTools;
+    private _modules: Array<string> = new Array<string>();
 
     ///
     /// Property Definitions
     ///
 
+    /**
+     * Gets an array of loaded Bong modules.
+     *
+     * @readonly
+     * @type {Array<string>}
+     * @memberof BingMapService
+     */
+    public get LoadedModules(): Array<string> { return this._modules; }
 
     /**
      * Gets the Bing Map control instance underlying the implementation
@@ -142,7 +151,7 @@ export class BingMapService implements MapService {
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const p: Promise<Layer> = new Promise<Layer>(resolve => {
-                Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', () => {
+                this.LoadModule('Microsoft.Maps.Clustering', () => {
                     const o: Microsoft.Maps.IClusterLayerOptions = BingConversions.TranslateClusterOptions(options);
                     const layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer(new Array<Microsoft.Maps.Pushpin>(), o);
                     let bl: BingClusterLayer;
@@ -218,11 +227,11 @@ export class BingMapService implements MapService {
                 o.credentials = this._config.apiKey;
             }
             const map = new Microsoft.Maps.Map(el, o);
+            this._mapInstance = map;
             const self = this;
-            Microsoft.Maps.loadModule('Microsoft.Maps.DrawingTools', function () {
-                self._tools = new Microsoft.Maps.DrawingTools(map);
-                self._mapInstance = map;
-                self._mapResolver(map);
+            Microsoft.Maps.loadModule('Microsoft.Maps.DrawingTools', () => {
+                this._tools = new Microsoft.Maps.DrawingTools(map);
+                this._mapResolver(map);
             });
             return;
         });
@@ -412,6 +421,27 @@ export class BingMapService implements MapService {
      */
     public GetZoom(): Promise<number> {
         return this._map.then((map: Microsoft.Maps.Map) => map.getZoom());
+    }
+
+    /**
+     * Loads a module into the Map.
+     *
+     * @param {(string)} moduleName - The module to load.
+     * @param {() => {}} callback - Callback to call once loading is complete.
+     * @method
+     * @public
+     * @memberof BingMapService
+     */
+    public LoadModule(moduleName: string, callback: () => void) {
+        if (this._modules.indexOf(moduleName) !== -1) {
+            callback();
+        }
+        else {
+            Microsoft.Maps.loadModule(moduleName, () => {
+                this._modules.push(moduleName);
+                callback();
+            });
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolygonEvent } from '../../interfaces/ipolygon-event';
 import { BingConversions } from '../../services/bing/bing-conversions';
 import { Polygon } from '../polygon';
 import { BingMapLabel } from './bing-label';
@@ -31,7 +32,8 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
     private _metadata: Map<string, any> = new Map<string, any>();
-    private _editingCompleteEmitter: (path: Array<ILatLong>) => void;
+    private _originalPath: Array<Array<ILatLong>>;
+    private _editingCompleteEmitter: (event: IPolygonEvent) => void;
 
     ///
     /// Property declarations
@@ -145,6 +147,7 @@ export class BingPolygon extends Polygon implements Polygon {
         protected _layer: Microsoft.Maps.Layer,
         protected _tools: Microsoft.Maps.DrawingTools) {
         super();
+        this._originalPath = this.GetPaths();
     }
 
     /**
@@ -171,7 +174,7 @@ export class BingPolygon extends Polygon implements Polygon {
                 if (handlerId) { Microsoft.Maps.Events.removeHandler(handlerId); }
             });
         } if (eventType === 'pathchanged') {
-            this._editingCompleteEmitter = <(path: Array<ILatLong>) => void>fn;
+            this._editingCompleteEmitter = <(event: IPolygonEvent) => void>fn;
         }
     }
 
@@ -289,21 +292,29 @@ export class BingPolygon extends Polygon implements Polygon {
     public SetEditable(editable: boolean): void {
         const isChanged = this._isEditable !== editable;
         this._isEditable = editable;
-
         if (!isChanged) {
             return;
         }
 
         if (this._isEditable) {
+            this._originalPath = this.GetPaths();
             this._tools.edit(this._polygon);
-        } else {
-            const self = this;
+        }
+        else {
             this._tools.finish((editedPolygon: Microsoft.Maps.Polygon) => {
-                if (editedPolygon !== self._polygon || !self._editingCompleteEmitter) {
+                if (editedPolygon !== this._polygon || !this._editingCompleteEmitter) {
                     return;
                 }
-
-                self._editingCompleteEmitter(this.GetPath());
+                const newPath: Array<Array<ILatLong>> = this.GetPaths();
+                const originalPath: Array<Array<ILatLong>> = this._originalPath;
+                this.SetPaths(newPath);
+                    // this is necessary for the new path to persist it appears.
+                this._editingCompleteEmitter({
+                    Click: null,
+                    Polygon: this,
+                    OriginalPath: originalPath,
+                    NewPath: newPath
+                });
             });
         }
     }
@@ -336,6 +347,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public SetPath(path: Array<ILatLong>): void {
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+        this._originalPath = [path];
         this._polygon.setLocations(p);
         if (this._label) {
             this._centroid = null;
@@ -352,9 +364,6 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetPaths(paths: Array<Array<ILatLong>> | Array<ILatLong>): void {
-        if (!this._isEditable) {
-            throw (new Error('Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.'));
-        }
         if (paths == null) { return; }
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {
@@ -373,6 +382,7 @@ export class BingPolygon extends Polygon implements Polygon {
                 path.forEach(x => _p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
                 p.push(_p);
             });
+            this._originalPath = <Array<Array<ILatLong>>>paths;
             this._polygon.setRings(p);
             if (this._label) {
                 this._centroid = null;
