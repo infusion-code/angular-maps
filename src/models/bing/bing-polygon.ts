@@ -2,6 +2,7 @@ import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { IPolygonEvent } from '../../interfaces/ipolygon-event';
 import { BingConversions } from '../../services/bing/bing-conversions';
+import { BingMapService } from '../../services/bing/bing-map.service';
 import { Polygon } from '../polygon';
 import { BingMapLabel } from './bing-label';
 
@@ -18,6 +19,7 @@ export class BingPolygon extends Polygon implements Polygon {
     ///
     /// Field declarations
     ///
+    private _map: Microsoft.Maps.Map = null;
     private _isEditable: boolean = false;
     private _title: string = '';
     private _maxZoom: number = -1;
@@ -138,15 +140,17 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Creates an instance of BingPolygon.
      * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
-     * @param {Microsoft.Maps.Map} _map - The context map.
+     * @param {BingMapService} - Instance of the Map Service.
      * @param {Microsoft.Maps.Layer} _layer - The context layer.
      * @memberof BingPolygon
      */
-    constructor(private _polygon: Microsoft.Maps.Polygon,
-        protected _map: Microsoft.Maps.Map,
+    constructor(
+        private _polygon: Microsoft.Maps.Polygon,
+        protected _mapService: BingMapService,
         protected _layer: Microsoft.Maps.Layer,
-        protected _tools: Microsoft.Maps.DrawingTools) {
+    ) {
         super();
+        this._map = this._mapService.MapInstance;
         this._originalPath = this.GetPaths();
     }
 
@@ -298,22 +302,26 @@ export class BingPolygon extends Polygon implements Polygon {
 
         if (this._isEditable) {
             this._originalPath = this.GetPaths();
-            this._tools.edit(this._polygon);
+            this._mapService.GetDrawingTools().then(t => {
+                t.edit(this._polygon);
+            });
         }
         else {
-            this._tools.finish((editedPolygon: Microsoft.Maps.Polygon) => {
-                if (editedPolygon !== this._polygon || !this._editingCompleteEmitter) {
-                    return;
-                }
-                const newPath: Array<Array<ILatLong>> = this.GetPaths();
-                const originalPath: Array<Array<ILatLong>> = this._originalPath;
-                this.SetPaths(newPath);
-                    // this is necessary for the new path to persist it appears.
-                this._editingCompleteEmitter({
-                    Click: null,
-                    Polygon: this,
-                    OriginalPath: originalPath,
-                    NewPath: newPath
+            this._mapService.GetDrawingTools().then(t => {
+                t.finish((editedPolygon: Microsoft.Maps.Polygon) => {
+                    if (editedPolygon !== this._polygon || !this._editingCompleteEmitter) {
+                        return;
+                    }
+                    const newPath: Array<Array<ILatLong>> = this.GetPaths();
+                    const originalPath: Array<Array<ILatLong>> = this._originalPath;
+                    this.SetPaths(newPath);
+                        // this is necessary for the new path to persist it appears.
+                    this._editingCompleteEmitter({
+                        Click: null,
+                        Polygon: this,
+                        OriginalPath: originalPath,
+                        NewPath: newPath
+                    });
                 });
             });
         }
