@@ -394,9 +394,9 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
             if (this._infoBox != null) {
                 this._infoBox.Open(this._polylineService.GetCoordinatesFromClick(ev));
             }
+            this.Click.emit(ev);
         });
         const handlers = [
-            { name: 'click', handler: (ev: MouseEvent) => this.Click.emit(ev) },
             { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
             { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(ev) },
             { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(ev) },

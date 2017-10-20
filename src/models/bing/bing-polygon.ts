@@ -1,6 +1,8 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolygonEvent } from '../../interfaces/ipolygon-event';
 import { BingConversions } from '../../services/bing/bing-conversions';
+import { BingMapService } from '../../services/bing/bing-map.service';
 import { Polygon } from '../polygon';
 import { BingMapLabel } from './bing-label';
 
@@ -17,7 +19,8 @@ export class BingPolygon extends Polygon implements Polygon {
     ///
     /// Field declarations
     ///
-    private _isEditable: boolean = true;
+    private _map: Microsoft.Maps.Map = null;
+    private _isEditable: boolean = false;
     private _title: string = '';
     private _maxZoom: number = -1;
     private _minZoom: number = -1;
@@ -31,6 +34,8 @@ export class BingPolygon extends Polygon implements Polygon {
     private _mouseMoveListener: Microsoft.Maps.IHandlerId;
     private _mouseOutListener: Microsoft.Maps.IHandlerId;
     private _metadata: Map<string, any> = new Map<string, any>();
+    private _originalPath: Array<Array<ILatLong>>;
+    private _editingCompleteEmitter: (event: IPolygonEvent) => void;
 
     ///
     /// Property declarations
@@ -135,12 +140,18 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Creates an instance of BingPolygon.
      * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
-     * @param {Microsoft.Maps.Map} _map - The context map.
+     * @param {BingMapService} - Instance of the Map Service.
      * @param {Microsoft.Maps.Layer} _layer - The context layer.
      * @memberof BingPolygon
      */
-    constructor(private _polygon: Microsoft.Maps.Polygon, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) {
+    constructor(
+        private _polygon: Microsoft.Maps.Polygon,
+        protected _mapService: BingMapService,
+        protected _layer: Microsoft.Maps.Layer,
+    ) {
         super();
+        this._map = this._mapService.MapInstance;
+        this._originalPath = this.GetPaths();
     }
 
     /**
@@ -152,7 +163,7 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public AddListener(eventType: string, fn: Function): void {
-        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup' ]
+        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup']
         if (supportedEvents.indexOf(eventType) !== -1) {
             Microsoft.Maps.Events.addHandler(this._polygon, eventType, (e) => {
                 fn(e);
@@ -166,6 +177,8 @@ export class BingPolygon extends Polygon implements Polygon {
             Microsoft.Maps.Events.addHandler(this._polygon, 'mouseout', e => {
                 if (handlerId) { Microsoft.Maps.Events.removeHandler(handlerId); }
             });
+        } if (eventType === 'pathchanged') {
+            this._editingCompleteEmitter = <(event: IPolygonEvent) => void>fn;
         }
     }
 
@@ -270,7 +283,7 @@ export class BingPolygon extends Polygon implements Polygon {
         //      ?forum=bingmaps
         /// for a possible approach to be implemented in the model.
         ///
-        throw(new Error('The bing maps implementation currently does not support draggable polygons.'));
+        throw (new Error('The bing maps implementation currently does not support draggable polygons.'));
     }
 
     /**
@@ -281,7 +294,37 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetEditable(editable: boolean): void {
+        const isChanged = this._isEditable !== editable;
         this._isEditable = editable;
+        if (!isChanged) {
+            return;
+        }
+
+        if (this._isEditable) {
+            this._originalPath = this.GetPaths();
+            this._mapService.GetDrawingTools().then(t => {
+                t.edit(this._polygon);
+            });
+        }
+        else {
+            this._mapService.GetDrawingTools().then(t => {
+                t.finish((editedPolygon: Microsoft.Maps.Polygon) => {
+                    if (editedPolygon !== this._polygon || !this._editingCompleteEmitter) {
+                        return;
+                    }
+                    const newPath: Array<Array<ILatLong>> = this.GetPaths();
+                    const originalPath: Array<Array<ILatLong>> = this._originalPath;
+                    this.SetPaths(newPath);
+                        // this is necessary for the new path to persist it appears.
+                    this._editingCompleteEmitter({
+                        Click: null,
+                        Polygon: this,
+                        OriginalPath: originalPath,
+                        NewPath: newPath
+                    });
+                });
+            });
+        }
     }
 
     /**
@@ -296,6 +339,10 @@ export class BingPolygon extends Polygon implements Polygon {
         const o: Microsoft.Maps.IPolygonOptions = BingConversions.TranslatePolygonOptions(options);
         this._polygon.setOptions(o);
         if (options.visible != null && this._showLabel && this._label) { this._label.Set('hidden', !options.visible); }
+
+        if (typeof options.editable !== 'undefined') {
+            this.SetEditable(options.editable);
+        }
     }
 
     /**
@@ -308,6 +355,7 @@ export class BingPolygon extends Polygon implements Polygon {
     public SetPath(path: Array<ILatLong>): void {
         const p: Array<Microsoft.Maps.Location> = new Array<Microsoft.Maps.Location>();
         path.forEach(x => p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
+        this._originalPath = [path];
         this._polygon.setLocations(p);
         if (this._label) {
             this._centroid = null;
@@ -324,9 +372,6 @@ export class BingPolygon extends Polygon implements Polygon {
      * @memberof BingPolygon
      */
     public SetPaths(paths: Array<Array<ILatLong>> | Array<ILatLong>): void {
-        if (!this._isEditable) {
-            throw(new Error('Polygon is not editable. Use Polygon.SetEditable() to make the polygon editable.'));
-        }
         if (paths == null) { return; }
         if (!Array.isArray(paths)) { return; }
         if (paths.length === 0) {
@@ -345,6 +390,7 @@ export class BingPolygon extends Polygon implements Polygon {
                 path.forEach(x => _p.push(new Microsoft.Maps.Location(x.latitude, x.longitude)));
                 p.push(_p);
             });
+            this._originalPath = <Array<Array<ILatLong>>>paths;
             this._polygon.setRings(p);
             if (this._label) {
                 this._centroid = null;
@@ -431,33 +477,33 @@ export class BingPolygon extends Polygon implements Polygon {
             }
             if (!this._hasToolTipReceiver) {
                 this._mouseOverListener = Microsoft.Maps.Events.addHandler(
-                        this._polygon, 'mouseover', (e: Microsoft.Maps.IMouseEventArgs) => {
-                    this._tooltip.Set('position', e.location);
-                    if (!this._tooltipVisible) {
-                        this._tooltip.Set('hidden', false);
-                        this._tooltipVisible = true;
-                    }
-                    this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
-                        this._map, 'mousemove', (m: Microsoft.Maps.IMouseEventArgs) => {
-                        if (this._tooltipVisible && m.location && m.primitive === this._polygon) {
-                            this._tooltip.Set('position', m.location);
+                    this._polygon, 'mouseover', (e: Microsoft.Maps.IMouseEventArgs) => {
+                        this._tooltip.Set('position', e.location);
+                        if (!this._tooltipVisible) {
+                            this._tooltip.Set('hidden', false);
+                            this._tooltipVisible = true;
                         }
+                        this._mouseMoveListener = Microsoft.Maps.Events.addHandler(
+                            this._map, 'mousemove', (m: Microsoft.Maps.IMouseEventArgs) => {
+                                if (this._tooltipVisible && m.location && m.primitive === this._polygon) {
+                                    this._tooltip.Set('position', m.location);
+                                }
+                            });
                     });
-                });
                 this._mouseOutListener = Microsoft.Maps.Events.addHandler(
-                            this._polygon, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
-                    if (this._tooltipVisible) {
-                        this._tooltip.Set('hidden', true);
-                        this._tooltipVisible = false;
-                    }
-                    if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
-                });
+                    this._polygon, 'mouseout', (e: Microsoft.Maps.IMouseEventArgs) => {
+                        if (this._tooltipVisible) {
+                            this._tooltip.Set('hidden', true);
+                            this._tooltipVisible = false;
+                        }
+                        if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
+                    });
                 this._hasToolTipReceiver = true;
             }
         }
         if ((!this._showTooltip || this._title === '' || this._title == null)) {
             if (this._hasToolTipReceiver) {
-                if (this._mouseOutListener) { Microsoft.Maps.Events.removeHandler(this._mouseOutListener) ; }
+                if (this._mouseOutListener) { Microsoft.Maps.Events.removeHandler(this._mouseOutListener); }
                 if (this._mouseOverListener) { Microsoft.Maps.Events.removeHandler(this._mouseOverListener); }
                 if (this._mouseMoveListener) { Microsoft.Maps.Events.removeHandler(this._mouseMoveListener); }
                 this._hasToolTipReceiver = false;

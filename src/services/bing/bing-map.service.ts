@@ -54,11 +54,20 @@ export class BingMapService implements MapService {
     private _mapInstance: Microsoft.Maps.Map;
     private _mapResolver: (value?: Microsoft.Maps.Map) => void;
     private _config: BingMapAPILoaderConfig;
+    private _modules: Map<string, Object> = new Map<string, Object>();
 
     ///
     /// Property Definitions
     ///
 
+    /**
+     * Gets an array of loaded Bong modules.
+     *
+     * @readonly
+     * @type Map<string, Object>
+     * @memberof BingMapService
+     */
+    public get LoadedModules(): Map<string, Object> { return this._modules; }
 
     /**
      * Gets the Bing Map control instance underlying the implementation
@@ -141,7 +150,7 @@ export class BingMapService implements MapService {
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const p: Promise<Layer> = new Promise<Layer>(resolve => {
-                Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', () => {
+                this.LoadModule('Microsoft.Maps.Clustering', () => {
                     const o: Microsoft.Maps.IClusterLayerOptions = BingConversions.TranslateClusterOptions(options);
                     const layer: Microsoft.Maps.ClusterLayer = new Microsoft.Maps.ClusterLayer(new Array<Microsoft.Maps.Pushpin>(), o);
                     let bl: BingClusterLayer;
@@ -219,7 +228,6 @@ export class BingMapService implements MapService {
             const map = new Microsoft.Maps.Map(el, o);
             this._mapInstance = map;
             this._mapResolver(map);
-            return;
         });
     }
 
@@ -245,10 +253,10 @@ export class BingMapService implements MapService {
         return this._map.then((map: Microsoft.Maps.Map) => {
             if (options.iconInfo && options.iconInfo.markerType) {
                 const s = Marker.CreateMarker(options.iconInfo);
-                if (typeof(s) === 'string') { return(payload(s, map)); }
+                if (typeof (s) === 'string') { return (payload(s, map)); }
                 else {
                     return s.then(x => {
-                        return(payload(x.icon, map));
+                        return (payload(x.icon, map));
                     });
                 }
             }
@@ -274,13 +282,14 @@ export class BingMapService implements MapService {
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
             map.entities.push(poly);
 
-            const p = new BingPolygon(poly, map, null);
+            const p = new BingPolygon(poly, this, null);
             if (options.metadata) { options.metadata.forEach((v, k) => p.Metadata.set(k, v)); }
             if (options.title && options.title !== '') { p.Title = options.title; }
             if (options.showLabel != null) { p.ShowLabel = options.showLabel; }
             if (options.showTooltip != null) { p.ShowTooltip = options.showTooltip; }
             if (options.labelMaxZoom != null) { p.LabelMaxZoom = options.labelMaxZoom; }
             if (options.labelMinZoom != null) { p.LabelMinZoom = options.labelMinZoom; }
+            if (options.editable) { p.SetEditable(options.editable); }
             return p;
         });
     }
@@ -295,7 +304,7 @@ export class BingMapService implements MapService {
      *
      * @memberof MapService
      */
-    public CreatePolyline(options: IPolylineOptions): Promise<Polyline|Array<Polyline>> {
+    public CreatePolyline(options: IPolylineOptions): Promise<Polyline | Array<Polyline>> {
         let polyline: Microsoft.Maps.Polyline;
         return this._map.then((map: Microsoft.Maps.Map) => {
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolylineOptions(options);
@@ -386,14 +395,30 @@ export class BingMapService implements MapService {
     public GetBounds(): Promise<IBox> {
         return this._map.then((map: Microsoft.Maps.Map) => {
             const box = map.getBounds();
-            return <IBox> {
+            return <IBox>{
                 maxLatitude: box.getNorth(),
                 maxLongitude: box.crossesInternationalDateLine() ? box.getWest() : box.getEast(),
                 minLatitude: box.getSouth(),
-                minLongitude: box.crossesInternationalDateLine() ?  box.getEast() : box.getWest(),
+                minLongitude: box.crossesInternationalDateLine() ? box.getEast() : box.getWest(),
                 center: { latitude: box.center.latitude, longitude: box.center.longitude },
                 padding: 0
             };
+        });
+    }
+
+    /**
+     * Gets a shared or private instance of the map drawing tools.
+     *
+     * @param {boolean} [useSharedInstance=true] - Set to false to create a private instance.
+     * @returns {Promise<Microsoft.Maps.DrawingTools>} - Promise that when resolved containst an instance of the drawing tools.
+     * @memberof BingMapService
+     * @public
+     */
+    public GetDrawingTools (useSharedInstance: boolean = true): Promise<Microsoft.Maps.DrawingTools> {
+        return new Promise<Microsoft.Maps.DrawingTools>((resolve, reject) => {
+            this.LoadModuleInstance('Microsoft.Maps.DrawingTools', useSharedInstance).then((o: Microsoft.Maps.DrawingTools) => {
+                resolve(o)
+            });
         });
     }
 
@@ -406,6 +431,72 @@ export class BingMapService implements MapService {
      */
     public GetZoom(): Promise<number> {
         return this._map.then((map: Microsoft.Maps.Map) => map.getZoom());
+    }
+
+    /**
+     * Loads a module into the Map.
+     *
+     * @param {string} moduleName - The module to load.
+     * @param {() => {}} callback - Callback to call once loading is complete.
+     * @method
+     * @public
+     * @memberof BingMapService
+     */
+    public LoadModule(moduleName: string, callback: () => void) {
+        if (this._modules.has(moduleName)) {
+            callback();
+        }
+        else {
+            Microsoft.Maps.loadModule(moduleName, () => {
+                this._modules.set(moduleName, null);
+                callback();
+            });
+        }
+    }
+
+    /**
+     * Loads a module into the Map and delivers and instance of the module payload.
+     *
+     * @param {string} moduleName - The module to load.
+     * @param {boolean} callback - Use a shared instance if true, create a new instance if false.
+     * @method
+     * @public
+     * @memberof BingMapService
+     */
+    public LoadModuleInstance(moduleName: string, useSharedInstance: boolean = true): Promise<Object> {
+        const s: string = moduleName.substr(moduleName.lastIndexOf('.') + 1);
+        if (this._modules.has(moduleName)) {
+            let o: any = null;
+            if (!useSharedInstance)  {
+                o = new (<any>Microsoft.Maps)[s](this._mapInstance);
+            }
+            else if (this._modules.get(moduleName) != null) {
+                o = this._modules.get(moduleName);
+            }
+            else {
+                o = new (<any>Microsoft.Maps)[s](this._mapInstance);
+                this._modules.set(moduleName, o);
+            }
+            return Promise.resolve(o);
+        }
+        else {
+            return new Promise<Object>((resolve, reject) => {
+                try {
+                Microsoft.Maps.loadModule(moduleName, () => {
+                    const o = new (<any>Microsoft.Maps)[s](this._mapInstance);
+                    if (useSharedInstance) {
+                        this._modules.set(moduleName, o);
+                    }
+                    else {
+                        this._modules.set(moduleName, null);
+                    }
+                    resolve(o);
+                });
+                } catch (e) {
+                    reject('Could not load module or create instance.')
+                }
+            });
+        }
     }
 
     /**

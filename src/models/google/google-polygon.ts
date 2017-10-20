@@ -1,5 +1,6 @@
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
+import { IPolygonEvent } from '../../interfaces/ipolygon-event';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import { Polygon } from '../polygon';
 import { GoogleMapLabel } from './google-label';
@@ -26,10 +27,12 @@ export class GooglePolygon extends Polygon implements Polygon {
     private _tooltip: GoogleMapLabel = null;
     private _tooltipVisible: boolean = false;
     private _hasToolTipReceiver: boolean = false;
+    private _originalPath: Array<Array<ILatLong>>;
     private _mouseOverListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseOutListener: GoogleMapTypes.MapsEventListener = null;
     private _mouseMoveListener: GoogleMapTypes.MapsEventListener = null;
     private _metadata: Map<string, any> = new Map<string, any>();
+    private _editingCompleteEmitter: (event: IPolygonEvent) => void = null;
 
     ///
     /// Property declarations
@@ -139,6 +142,7 @@ export class GooglePolygon extends Polygon implements Polygon {
      */
     constructor(private _polygon: GoogleMapTypes.Polygon) {
         super();
+        this._originalPath = this.GetPaths();
     }
 
     /**
@@ -164,6 +168,9 @@ export class GooglePolygon extends Polygon implements Polygon {
         ];
         if (supportedEvents.indexOf(eventType) !== -1) {
             this._polygon.addListener(eventType, fn);
+        }
+        if (eventType === 'pathchanged') {
+            this._editingCompleteEmitter = <(event: IPolygonEvent) => void>fn;
         }
     }
 
@@ -262,7 +269,17 @@ export class GooglePolygon extends Polygon implements Polygon {
      * @memberof GooglePolygon
      */
     public SetEditable(editable: boolean): void {
+        const previous = this._polygon.getEditable();
         this._polygon.setEditable(editable);
+        if (previous && !editable && this._editingCompleteEmitter) {
+            this._editingCompleteEmitter({
+                Click: null,
+                Polygon: this,
+                OriginalPath: this._originalPath,
+                NewPath: this.GetPaths()
+            });
+            this._originalPath = this.GetPaths();
+        }
     }
 
     /**
@@ -275,6 +292,12 @@ export class GooglePolygon extends Polygon implements Polygon {
      */
     public SetOptions(options: IPolygonOptions): void {
         const o: GoogleMapTypes.PolygonOptions = GoogleConversions.TranslatePolygonOptions(options);
+
+        if (typeof o.editable !== 'undefined') {
+            this.SetEditable(o.editable);
+            delete o.editable;
+        }
+
         this._polygon.setOptions(o);
         if (options.visible != null && this._showLabel && this._label) { this._label.Set('hidden', !options.visible); }
     }
@@ -290,6 +313,7 @@ export class GooglePolygon extends Polygon implements Polygon {
         const p: Array<GoogleMapTypes.LatLng> = new Array<GoogleMapTypes.LatLng>();
         path.forEach(x => p.push(new google.maps.LatLng(x.latitude, x.longitude)));
         this._polygon.setPath(p);
+        this._originalPath = [path];
         if (this._label) {
             this._centroid = null;
             this.ManageLabel();
@@ -324,6 +348,7 @@ export class GooglePolygon extends Polygon implements Polygon {
                 p.push(_p);
             });
             this._polygon.setPaths(p);
+            this._originalPath = <Array<Array<ILatLong>>>paths;
             if (this._label) {
                 this._centroid = null;
                 this.ManageLabel();

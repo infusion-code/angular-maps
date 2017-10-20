@@ -259,8 +259,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
         this._layers.get(layer.Id).then((l: BingClusterLayer) => {
             if (layer.IconInfo) {
                 const o: Microsoft.Maps.IPushpinOptions = {};
-                const payload: (icon: string, info: IMarkerIconInfo) => void = (icon, info) => {
-                        o.icon = icon;
+                const payload: (ico: string, info: IMarkerIconInfo) => void = (ico, info) => {
+                        o.icon = ico;
                         o.anchor = new Microsoft.Maps.Point(
                             (info.size && info.markerOffsetRatio) ? (info.size.width * info.markerOffsetRatio.x) : 0,
                             (info.size && info.markerOffsetRatio) ? (info.size.height * info.markerOffsetRatio.y) : 0

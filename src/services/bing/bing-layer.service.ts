@@ -82,7 +82,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
-            const polygon: Polygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
+            const polygon: Polygon = new BingPolygon(poly, <BingMapService>this._mapService, l.NativePrimitve)
 
             if (options.metadata) { options.metadata.forEach((v, k) => polygon.Metadata.set(k, v)); }
             if (options.title && options.title !== '') {polygon.Title = options.title; }
@@ -114,7 +114,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                     const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(o.paths);
                     const op: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(o);
                     const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, op);
-                    const polygon: BingPolygon = new BingPolygon(poly, this._mapService.MapInstance, l.NativePrimitve);
+                    const polygon: BingPolygon = new BingPolygon(poly, <BingMapService>this._mapService, l.NativePrimitve);
                     if (o.title && o.title !== '') { polygon.Title = o.title; }
                     if (o.metadata) { o.metadata.forEach((v, k) => polygon.Metadata.set(k, v)); }
                     return polygon;
