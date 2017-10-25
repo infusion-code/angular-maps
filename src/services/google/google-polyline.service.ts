@@ -1,10 +1,10 @@
-import { ILatLong } from './../../interfaces/ilatlong';
+import { ILatLong } from '../../interfaces/ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { Polyline } from '../../models/polyline';
-import { MapPolylineDirective } from './../../components/map-polyline';
+import { MapPolylineDirective } from '../../components/map-polyline';
 import { PolylineService } from '../polyline.service';
 import { MapService } from '../map.service';
 import { LayerService } from '../layer.service';

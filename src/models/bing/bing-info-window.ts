@@ -1,8 +1,8 @@
-﻿import { ILatLong } from './../../interfaces/ilatlong';
-import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
-import { InfoWindow } from './../info-window';
-import { BingMapService } from './../../services/bing/bing-map.service';
-import { BingConversions } from './../../services/bing/bing-conversions';
+﻿import { ILatLong } from '../../interfaces/ilatlong';
+import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { InfoWindow } from '../info-window';
+import { BingMapService } from '../../services/bing/bing-map.service';
+import { BingConversions } from '../../services/bing/bing-conversions';
 
 /**
  * Concrete implementation of the {@link InfoWindow} contract for the Bing Maps V8 map architecture.

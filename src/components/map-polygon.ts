@@ -2,7 +2,7 @@
     Directive, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Rx';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPoint } from '../interfaces/ipoint';
 import { IPolygonEvent } from '../interfaces/ipolygon-event';

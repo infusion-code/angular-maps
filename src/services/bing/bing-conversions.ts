@@ -1,17 +1,17 @@
-﻿import { IMapOptions } from './../../interfaces/imap-options';
-import { IBox } from './../../interfaces/ibox';
-import { ILatLong } from './../../interfaces/ilatlong';
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
-import { IClusterOptions } from './../../interfaces/icluster-options';
-import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
-import { IInfoWindowAction } from './../../interfaces/iinfo-window-action';
+﻿import { IMapOptions } from '../../interfaces/imap-options';
+import { IBox } from '../../interfaces/ibox';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
+import { IClusterOptions } from '../../interfaces/icluster-options';
+import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { IInfoWindowAction } from '../../interfaces/iinfo-window-action';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
-import { IPoint } from './../../interfaces/ipoint';
-import { MapTypeId } from './../../models/map-type-id';
-import { Marker } from './../../models/marker';
-import { ClusterPlacementMode } from './../../models/cluster-placement-mode';
+import { IPoint } from '../../interfaces/ipoint';
+import { MapTypeId } from '../../models/map-type-id';
+import { Marker } from '../../models/marker';
+import { ClusterPlacementMode } from '../../models/cluster-placement-mode';
 import { BingMapService } from './bing-map.service';
 
 /**

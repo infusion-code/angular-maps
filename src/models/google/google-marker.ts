@@ -1,7 +1,7 @@
-import { GoogleConversions } from './../../services/google/google-conversions';
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { ILatLong } from './../../interfaces/ilatlong';
-import { Marker } from './../marker';
+import { GoogleConversions } from '../../services/google/google-conversions';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { Marker } from '../marker';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 
 /**

@@ -1,16 +1,16 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { InfoBoxComponent } from './../../components/infobox';
-import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
-import { ILatLong } from './../../interfaces/ilatlong';
-import { InfoBoxService } from './../infobox.service';
-import { MarkerService } from './../marker.service';
-import { MapService } from './../map.service';
+import { InfoBoxComponent } from '../../components/infobox';
+import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { InfoBoxService } from '../infobox.service';
+import { MarkerService } from '../marker.service';
+import { MapService } from '../map.service';
 import { InfoWindow } from '../../models/info-window';
-import { GoogleInfoWindow } from './../../models/google/google-info-window';
-import { GoogleMarker } from './../../models/google/google-marker';
-import { GoogleMapEventsLookup } from './../../models/google/google-events-lookup';
+import { GoogleInfoWindow } from '../../models/google/google-info-window';
+import { GoogleMarker } from '../../models/google/google-marker';
+import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup';
 
 @Injectable()
 export class GoogleInfoBoxService extends InfoBoxService {

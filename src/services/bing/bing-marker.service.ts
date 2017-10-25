@@ -2,16 +2,16 @@
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { ILatLong } from './../../interfaces/ilatlong';
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
-import { IPoint } from './../../interfaces/ipoint';
-import { MapMarkerDirective } from './../../components/map-marker';
-import { MarkerService } from './../../services/marker.service';
-import { MapService } from './../../services/map.service';
-import { LayerService } from './../../services/layer.service';
-import { ClusterService } from './../../services/cluster.service';
-import { Marker } from './../../models/marker';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
+import { IPoint } from '../../interfaces/ipoint';
+import { MapMarkerDirective } from '../../components/map-marker';
+import { MarkerService } from '../../services/marker.service';
+import { MapService } from '../../services/map.service';
+import { LayerService } from '../../services/layer.service';
+import { ClusterService } from '../../services/cluster.service';
+import { Marker } from '../../models/marker';
 import { BingMapService } from './bing-map.service';
 import { BingConversions } from './bing-conversions';
 

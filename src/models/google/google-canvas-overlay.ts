@@ -1,5 +1,5 @@
 import { ILatLong } from '../../interfaces/ilatlong';
-import { GoogleConversions } from './../../services/google/google-conversions';
+import { GoogleConversions } from '../../services/google/google-conversions';
 import { CanvasOverlay } from '../canvas-overlay';
 import { MapLabel } from '../map-label';
 import { GoogleMapLabel } from './google-label';

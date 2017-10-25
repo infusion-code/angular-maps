@@ -1,4 +1,4 @@
-import { ILatLong } from './../../interfaces/ilatlong';
+import { ILatLong } from '../../interfaces/ilatlong';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';

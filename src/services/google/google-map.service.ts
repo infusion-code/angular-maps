@@ -1,5 +1,5 @@
-import { GoogleMarkerClusterer } from './../../models/google/google-marker-clusterer';
-import { GoogleInfoWindow } from './../../models/google/google-info-window';
+import { GoogleMarkerClusterer } from '../../models/google/google-marker-clusterer';
+import { GoogleInfoWindow } from '../../models/google/google-info-window';
 import { Injectable, NgZone } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
@@ -24,21 +24,21 @@ import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
 import { MixinMapLabelWithOverlayView } from '../../models/google/google-label';
 import { MixinCanvasOverlay } from '../../models/google/google-canvas-overlay';
-import { GoogleCanvasOverlay } from './../../models/google/google-canvas-overlay';
-import { CanvasOverlay } from './../../models/canvas-overlay';
+import { GoogleCanvasOverlay } from '../../models/google/google-canvas-overlay';
+import { CanvasOverlay } from '../../models/canvas-overlay';
 import { Layer } from '../../models/layer';
 import { InfoWindow } from '../../models/info-window';
 import { GooglePolygon } from '../../models/google/google-polygon';
 import { GooglePolyline } from '../../models/google/google-polyline';
 import { GoogleConversions } from './google-conversions';
-import { GoogleMarker } from './../../models/google/google-marker';
-import { GoogleLayer } from './../../models/google/google-layer';
+import { GoogleMarker } from '../../models/google/google-marker';
+import { GoogleLayer } from '../../models/google/google-layer';
 import { IBox } from '../../interfaces/ibox';
 import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
 import * as GoogleMapTypes from './google-map-types';
 
-declare var google: any;
-declare var MarkerClusterer: any;
+declare const google: any;
+declare const MarkerClusterer: any;
 
 /**
  * Concrete implementation of the MapService abstract implementing a Google Maps provider

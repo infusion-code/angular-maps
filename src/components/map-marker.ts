@@ -2,7 +2,7 @@
     Directive, SimpleChange, Input, Output, OnDestroy, OnChanges,
     EventEmitter, ContentChild, AfterContentInit, ViewContainerRef
 } from '@angular/core';
-import { Subscription, Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IMarkerEvent } from '../interfaces/imarker-event';

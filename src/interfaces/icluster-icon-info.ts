@@ -1,4 +1,4 @@
-import { IMarkerIconInfo } from './../interfaces/imarker-icon-info';
+import { IMarkerIconInfo } from './imarker-icon-info';
 
 export interface IClusterIconInfo {
     url?: string;

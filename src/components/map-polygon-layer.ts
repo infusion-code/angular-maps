@@ -3,8 +3,7 @@
     EventEmitter, ContentChild, AfterContentInit, ViewContainerRef, NgZone,
     SimpleChanges
 } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { IPoint } from '../interfaces/ipoint';
 import { ISize } from '../interfaces/isize';
 import { ILatLong } from '../interfaces/ilatlong';

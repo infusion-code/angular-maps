@@ -1,16 +1,16 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { InfoWindow } from './../../models/info-window';
-import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
-import { ILatLong } from './../../interfaces/ilatlong';
-import { InfoBoxActionDirective } from './../../components/infobox-action';
-import { InfoBoxService } from './../infobox.service';
-import { MapService } from './../../services/map.service';
-import { InfoBoxComponent } from './../../components/infobox';
+import { InfoWindow } from '../../models/info-window';
+import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { ILatLong } from '../../interfaces/ilatlong';
+import { InfoBoxActionDirective } from '../../components/infobox-action';
+import { InfoBoxService } from '../infobox.service';
+import { MapService } from '../../services/map.service';
+import { InfoBoxComponent } from '../../components/infobox';
 import { BingMapService } from './bing-map.service';
-import { BingInfoWindow } from './../../models/bing/bing-info-window';
-import { BingMapEventsLookup } from './../../models/bing/bing-events-lookup';
+import { BingInfoWindow } from '../../models/bing/bing-info-window';
+import { BingMapEventsLookup } from '../../models/bing/bing-events-lookup';
 
 /**
  * Concrete implementation of the {@link InfoBoxService} contract for the Bing Maps V8 architecture.

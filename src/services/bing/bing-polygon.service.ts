@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Subject } from 'rxjs/Subject';
-import { ILatLong } from './../../interfaces/ilatlong';
+import { ILatLong } from '../../interfaces/ilatlong';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';
 import { Polygon } from '../../models/polygon';
 import { MapPolygonDirective } from '../../components/map-polygon';

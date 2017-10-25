@@ -2,11 +2,11 @@ import {
     Directive, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Rx';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
-import { IPolylineOptions } from './../interfaces/ipolyline-options';
-import { PolylineService } from './../services/polyline.service';
+import { IPolylineOptions } from '../interfaces/ipolyline-options';
+import { PolylineService } from '../services/polyline.service';
 import { InfoBoxComponent } from './infobox';
 
 let polylineId = 0;
