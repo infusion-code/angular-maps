@@ -110,13 +110,11 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 ///
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolygonEvent,
-    IPolylineEvent, IMapEventLookup,
-    IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions, ILabelOptions,
-    MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
-    MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective, ClusterLayerDirective, MapPolylineLayerDirective,
-    MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer,
-    ClusterPlacementMode, ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService,
-    MapServiceFactory, MarkerService,
+    IPolylineEvent, IMapEventLookup, IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions,
+    IPolygonOptions, IPolylineOptions, ILabelOptions, MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective,
+    MapPolylineDirective, InfoBoxActionDirective, MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective,
+    ClusterLayerDirective, MapPolylineLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
+    ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService, MapServiceFactory, MarkerService,
     InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
 }
 export {
