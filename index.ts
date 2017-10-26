@@ -109,7 +109,8 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 /// export publics components, models, interfaces etc for external reuse.
 ///
 export {
-    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolylineEvent,
+    ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolygonEvent,
+    IPolylineEvent, IMapEventLookup,
     IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions, IPolygonOptions, IPolylineOptions, ILabelOptions,
     MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective, MapPolylineDirective, InfoBoxActionDirective,
     MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective, ClusterLayerDirective, MapPolylineLayerDirective,
@@ -121,13 +122,13 @@ export {
 export {
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService,
     BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader,
-    BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingPolygon,
-    BingInfoWindow, BingSpiderClusterMarker, BingCanvasOverlay
+    BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingMapEventsLookup, BingPolygon,
+    BingInfoWindow, BingClusterLayer, BingSpiderClusterMarker, BingCanvasOverlay
 }
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
     GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService,
-    GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline, GoogleCanvasOverlay
+    GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline, GoogleMapEventsLookup, GoogleCanvasOverlay
 }
 
 ///

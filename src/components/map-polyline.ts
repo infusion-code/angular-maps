@@ -98,6 +98,14 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     @Input() public Geodesic = false;
 
     /**
+     * Arbitary metadata to assign to the Polyline. This is useful for events
+     *
+     * @type {Map<string, any>}
+     * @memberof MapPolylineDirective
+     */
+    @Input() public Metadata: Map<string, any> = new Map<string, any>();
+
+    /**
      * The ordered sequence of coordinates that designates a polyline.
      * Simple polylines may be defined using a single array of LatLngs. More
      * complex polylines may specify an array of arrays.

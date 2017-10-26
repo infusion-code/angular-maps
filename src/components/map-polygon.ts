@@ -129,6 +129,14 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     @Input() public LabelMinZoom: number;
 
     /**
+     * Arbitary metadata to assign to the Polygon. This is useful for events
+     *
+     * @type {Map<string, any>}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public Metadata: Map<string, any> = new Map<string, any>();
+
+    /**
      * The ordered sequence of coordinates that designates a closed loop.
      * Unlike polylines, a polygon may consist of one or more paths.
      * As a result, the paths property may specify one or more arrays of
