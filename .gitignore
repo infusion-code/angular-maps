@@ -12,6 +12,9 @@ dist
 Thumbs.db
 .DS_Store
 
+# IDE files
+.idea
+
 # Ignored files
 *.js
 *.map

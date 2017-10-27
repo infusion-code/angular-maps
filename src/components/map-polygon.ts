@@ -2,7 +2,7 @@
     Directive, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Rx';
 import { IPolygonOptions } from '../interfaces/ipolygon-options';
 import { IPoint } from '../interfaces/ipoint';
 import { IPolygonEvent } from '../interfaces/ipolygon-event';
@@ -127,6 +127,14 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * @memberof MapPolygonDirective
      */
     @Input() public LabelMinZoom: number;
+
+    /**
+     * Arbitary metadata to assign to the Polygon. This is useful for events
+     *
+     * @type {Map<string, any>}
+     * @memberof MapPolygonDirective
+     */
+    @Input() public Metadata: Map<string, any> = new Map<string, any>();
 
     /**
      * The ordered sequence of coordinates that designates a closed loop.

@@ -1,12 +1,12 @@
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
-import { Marker } from './../../models/marker';
-import { BingMarker } from './../../models/bing/bing-marker';
-import { Layer } from './../../models/layer';
-import { MarkerTypeId } from './../../models/marker-type-id';
-import { MapService } from './../map.service';
-import { MapLayerDirective } from './../../components/map-layer';
-import { LayerService } from './../layer.service';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
+import { Marker } from '../../models/marker';
+import { BingMarker } from '../../models/bing/bing-marker';
+import { Layer } from '../../models/layer';
+import { MarkerTypeId } from '../../models/marker-type-id';
+import { MapService } from '../map.service';
+import { MapLayerDirective } from '../../components/map-layer';
+import { LayerService } from '../layer.service';
 import { BingMapService } from './bing-map.service';
 import { BingConversions } from './bing-conversions';
 

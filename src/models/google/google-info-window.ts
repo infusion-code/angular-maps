@@ -1,4 +1,4 @@
-import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
+import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { GoogleConversions } from '../../services/google/google-conversions';
 import { GoogleMapService} from '../../services/google/google-map.service';

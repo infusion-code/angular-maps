@@ -1,4 +1,4 @@
-import { IClusterIconInfo } from './../interfaces/icluster-icon-info';
+import { IClusterIconInfo } from '../interfaces/icluster-icon-info';
 import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChange,
     ContentChildren, Input, ElementRef, ViewContainerRef } from '@angular/core';
 import { Marker } from '../models/marker';

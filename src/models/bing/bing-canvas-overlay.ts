@@ -1,5 +1,5 @@
 import { ILatLong } from '../../interfaces/ilatlong';
-import { BingConversions } from './../../services/bing/bing-conversions';
+import { BingConversions } from '../../services/bing/bing-conversions';
 import { CanvasOverlay } from '../canvas-overlay';
 import { MapLabel } from '../map-label';
 import { BingMapLabel } from './bing-label';

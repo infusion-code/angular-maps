@@ -1,5 +1,5 @@
-﻿import { IInfoWindowOptions } from './../../interfaces/iinfo-window-options';
-import { IBox } from './../../interfaces/ibox';
+﻿import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
+import { IBox } from '../../interfaces/ibox';
 import { IMapOptions } from '../../interfaces/imap-options';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IPolygonOptions } from '../../interfaces/ipolygon-options';

@@ -1,9 +1,9 @@
-﻿import { ILatLong } from './../../interfaces/ilatlong';
-import { IPoint } from './../../interfaces/ipoint';
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { Marker } from './../marker';
-import { BingMapService } from './../../services/bing/bing-map.service';
-import { BingConversions } from './../../services/bing/bing-conversions';
+﻿import { ILatLong } from '../../interfaces/ilatlong';
+import { IPoint } from '../../interfaces/ipoint';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { Marker } from '../marker';
+import { BingMapService } from '../../services/bing/bing-map.service';
+import { BingConversions } from '../../services/bing/bing-conversions';
 
 /**
  * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture.

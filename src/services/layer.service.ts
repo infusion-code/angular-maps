@@ -1,13 +1,13 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { IMarkerOptions } from './../interfaces/imarker-options';
-import { IPolygonOptions } from './../interfaces/ipolygon-options';
-import { IPolylineOptions } from './../interfaces/ipolyline-options';
-import { IMarkerIconInfo } from './../interfaces/imarker-icon-info';
-import { Marker } from './../models/marker';
-import { Polygon } from './../models/polygon';
-import { Polyline } from './../models/polyline';
-import { Layer } from './../models/layer';
-import { MapLayerDirective } from './../components/map-layer';
+import { IMarkerOptions } from '../interfaces/imarker-options';
+import { IPolygonOptions } from '../interfaces/ipolygon-options';
+import { IPolylineOptions } from '../interfaces/ipolyline-options';
+import { IMarkerIconInfo } from '../interfaces/imarker-icon-info';
+import { Marker } from '../models/marker';
+import { Polygon } from '../models/polygon';
+import { Polyline } from '../models/polyline';
+import { Layer } from '../models/layer';
+import { MapLayerDirective } from '../components/map-layer';
 
 /**
  * Abstract class to to define the layer service contract. Must be realized by implementing provider.

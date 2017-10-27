@@ -1,11 +1,11 @@
-import { ILayerOptions } from './../../interfaces/ilayer-options';
-import { Layer } from './../layer';
-import { Marker } from './../marker';
-import { Polygon } from './../polygon';
-import { Polyline } from './../polyline';
-import { InfoWindow } from './../info-window';
-import { BingMapService } from './../../services/bing/bing-map.service';
-import { MapService} from './../../services/map.service';
+import { ILayerOptions } from '../../interfaces/ilayer-options';
+import { Layer } from '../layer';
+import { Marker } from '../marker';
+import { Polygon } from '../polygon';
+import { Polyline } from '../polyline';
+import { InfoWindow } from '../info-window';
+import { BingMapService } from '../../services/bing/bing-map.service';
+import { MapService} from '../../services/map.service';
 
 /**
  * Concrete implementation of a map layer for the Bing Map Provider.

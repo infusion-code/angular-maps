@@ -1,5 +1,5 @@
-import { BingMapService } from './../../services/bing/bing-map.service';
-import { BingConversions } from './../../services/bing/bing-conversions';
+import { BingMapService } from '../../services/bing/bing-map.service';
+import { BingConversions } from '../../services/bing/bing-conversions';
 import { ILabelOptions } from '../../interfaces/ilabel-options';
 import { MapLabel } from '../map-label';
 

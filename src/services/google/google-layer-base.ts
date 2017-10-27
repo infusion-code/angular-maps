@@ -1,14 +1,14 @@
-import { IMarkerOptions } from './../../interfaces/imarker-options';
-import { IMarkerIconInfo } from './../../interfaces/imarker-icon-info';
-import { Marker } from './../../models/marker';
-import { Layer } from './../../models/layer';
-import { MarkerTypeId } from './../../models/marker-type-id';
-import { MapService } from './../map.service';
-import { MapLayerDirective } from './../../components/map-layer';
-import { LayerService } from './../layer.service';
+import { IMarkerOptions } from '../../interfaces/imarker-options';
+import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
+import { Marker } from '../../models/marker';
+import { Layer } from '../../models/layer';
+import { MarkerTypeId } from '../../models/marker-type-id';
+import { MapService } from '../map.service';
+import { MapLayerDirective } from '../../components/map-layer';
+import { LayerService } from '../layer.service';
 import { GoogleMapService } from './google-map.service';
 import { GoogleConversions } from './google-conversions';
-import { GoogleMarker } from './../../models/google/google-marker';
+import { GoogleMarker } from '../../models/google/google-marker';
 import * as GoogleMapTypes from './google-map-types';
 
 declare var google: any;
@@ -137,7 +137,6 @@ export abstract class GoogleLayerBase {
      */
     public CreateMarkers(options: Array<IMarkerOptions>, markerIcon?: IMarkerIconInfo): Promise<Array<Marker>> {
         const payload = (icon: string): Array<GoogleMarker> => {
-            const t0 = performance.now();
             const markers: Array<GoogleMarker> = options.map(mo => {
                 const o: GoogleMapTypes.MarkerOptions = GoogleConversions.TranslateMarkerOptions(mo);
                 if (icon && icon !== '') { o.icon = icon; }
@@ -148,8 +147,6 @@ export abstract class GoogleLayerBase {
                 if (mo.metadata) { mo.metadata.forEach((val: any, key: string) => marker.Metadata.set(key, val)); }
                 return marker;
             });
-            const t1 = performance.now();
-            console.log(`${t1 - t0}`);
             return markers;
         };
         const p: Promise<Array<Marker>> = new Promise<Array<Marker>>((resolve, reject) => {
