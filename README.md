@@ -167,7 +167,8 @@ As with all these, I am looking for help in evolving this module. The top things
 - ~~Currently the markers are directly placed on the map. Moving them into (optionaly multiple) layers would be good for larger app scenarios. (done for Bing, still in progress for Google)~~
 - ~~Looking for someone to implement a Google Maps wrapper implementing thin proxy services against [Angular Google Maps](https://github.com/SebastianM/angular-google-maps)~~
 - Looking for someone to create a set of ESRI concrete implementations.
-- Performance improvements for very large data sets (~~more than 10000 markers~~, polylines and polygones, polylines and ~~polygones~~ with 100000 path points).
+- ~~Performance improvements for very large data sets (more than 10000 markers, polylines and polygones, polylines and polygones with 100000 path points)~~.
+- Add Circle Component and support
 - Add KML layer capability.
 - Add GeoJSON capability.
 - Add Server side rendering support with sample tile server implementation.
