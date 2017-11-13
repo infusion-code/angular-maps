@@ -1,3 +1,5 @@
+import { nextTick, whilst } from 'async';
+import { noop } from 'lodash';
 import { GoogleMarker } from './google-marker';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { MapService } from '../../services/map.service';
@@ -99,7 +101,15 @@ export class GoogleLayer implements Layer {
     public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             this._entities.push(...entities);
-            entities.forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
+            const entitiesToSet = [...entities];
+            whilst(
+                () => entitiesToSet.length > 0,
+                (next) => {
+                    entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
+                    nextTick(() => next());
+                },
+                (err) => noop()
+            );
         }
     };
 
@@ -109,10 +119,15 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleLayer
      */
     public Delete(): void {
-        this._entities.forEach(m => {
-            m.NativePrimitve.setMap(null);
-        });
-        this._entities.splice(0);
+        const entitiesToSet = this._entities.splice(0);
+        whilst(
+            () => entitiesToSet.length > 0,
+            (next) => {
+                entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setMap(null));
+                nextTick(() => next());
+            },
+            (err) => noop()
+        );
     }
 
     /**
@@ -164,9 +179,8 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleLayer
      */
     public SetEntities(entities: Array<Marker> | Array<InfoWindow> | Array<Polygon> | Array<Polyline>): void {
-        this._entities.splice(0).forEach(m => {m.NativePrimitve.setMap(null)});
-        this._entities.push(...entities);
-        this._entities.forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
+        this.Delete();
+        this.AddEntities(entities);
     }
 
     /**
@@ -189,10 +203,15 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetVisible(visible: boolean): void {
-        const map: GoogleMapTypes.GoogleMap = visible ? this.NativePrimitve : null;
-        this._entities.forEach(m => {
-            m.NativePrimitve.setVisible(visible);
-        });
+        const entitiesToSet = [...this._entities];
+        whilst(
+            () => entitiesToSet.length > 0,
+            (next) => {
+                entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setVisible(visible));
+                nextTick(() => next());
+            },
+            (err) => noop()
+        );
         this._visible = visible;
     }
 
