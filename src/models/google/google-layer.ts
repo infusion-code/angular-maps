@@ -1,5 +1,4 @@
-import { nextTick, whilst } from 'async';
-import { noop } from 'lodash';
+import { each, nextTick } from 'async';
 import { GoogleMarker } from './google-marker';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { MapService } from '../../services/map.service';
@@ -101,15 +100,10 @@ export class GoogleLayer implements Layer {
     public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             this._entities.push(...entities);
-            const entitiesToSet = [...entities];
-            whilst(
-                () => entitiesToSet.length > 0,
-                (next) => {
-                    entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setMap(this.NativePrimitve));
-                    nextTick(() => next());
-                },
-                (err) => noop()
-            );
+            each([...entities], (e, next) => {
+                e.NativePrimitve.setMap(this.NativePrimitve);
+                nextTick(() => next());
+            });
         }
     };
 
@@ -119,15 +113,10 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleLayer
      */
     public Delete(): void {
-        const entitiesToSet = this._entities.splice(0);
-        whilst(
-            () => entitiesToSet.length > 0,
-            (next) => {
-                entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setMap(null));
-                nextTick(() => next());
-            },
-            (err) => noop()
-        );
+        each(this._entities.splice(0), (e, next) => {
+            e.NativePrimitve.setMap(null);
+            nextTick(() => next());
+        });
     }
 
     /**
@@ -203,15 +192,10 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetVisible(visible: boolean): void {
-        const entitiesToSet = [...this._entities];
-        whilst(
-            () => entitiesToSet.length > 0,
-            (next) => {
-                entitiesToSet.splice(0, 50).forEach(e => e.NativePrimitve.setVisible(visible));
-                nextTick(() => next());
-            },
-            (err) => noop()
-        );
+        each([...this._entities], (e, next) => {
+            e.NativePrimitve.setVisible(visible);
+            nextTick(() => next());
+        });
         this._visible = visible;
     }
 

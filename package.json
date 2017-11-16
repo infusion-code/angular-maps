@@ -38,7 +38,6 @@
     "bingmaps": "^1.0.15",
     "font-awesome": "^4.6.3",
     "json-loader": "^0.5.4",
-    "lodash": "^4.17.4",
     "rxjs": "^5.2.0",
     "zone.js": "^0.8.2"
   },
@@ -48,7 +47,6 @@
     "@angular/platform-browser": ">=2.4.9",
     "@angular/platform-server": ">=2.4.9",
     "@types/async": "^2.0.45",
-    "@types/lodash": "^4.14.85",
     "@types/node": "^7.0.5",
     "codelyzer": ">=3.0.1",
     "tslint": ">=5.4.2",
