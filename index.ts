@@ -24,6 +24,7 @@ import { IPolygonEvent } from './src/interfaces/ipolygon-event';
 import { IPolylineEvent } from './src/interfaces/ipolyline-event';
 import { IMapEventLookup } from './src/interfaces/imap-event-lookup';
 import { ILabelOptions } from './src/interfaces/ilabel-options';
+import { INotificationEvent } from './src/interfaces/inotification-event';
 
 ///
 /// import module models
@@ -69,6 +70,7 @@ import { MapPolylineDirective } from './src/components/map-polyline';
 import { MapMarkerLayerDirective } from './src/components/map-marker-layer';
 import { MapPolygonLayerDirective } from './src/components/map-polygon-layer';
 import { MapPolylineLayerDirective } from './src/components/map-polyline-layer';
+import { InfoBoxContentComponent } from './src/components/infobox-content';
 
 ///
 /// import module services
@@ -82,8 +84,11 @@ import { MarkerService } from './src/services/marker.service';
 import { ClusterService } from './src/services/cluster.service';
 import { PolygonService } from './src/services/polygon.service';
 import { PolylineService } from './src/services/polyline.service';
-import { BingMapServiceFactory,
-    BingMapServiceFactoryFactory, BingMapLoaderFactory } from './src/services/bing/bing-map.service.factory';
+import {
+    BingMapServiceFactory,
+    BingMapServiceFactoryFactory,
+    BingMapLoaderFactory
+} from './src/services/bing/bing-map.service.factory';
 import { BingMapService } from './src/services/bing/bing-map.service';
 import { BingMapAPILoader, BingMapAPILoaderConfig } from './src/services/bing/bing-map.api-loader.service';
 import { BingInfoBoxService } from './src/services/bing/bing-infobox.service';
@@ -97,7 +102,8 @@ import { GoogleInfoBoxService } from './src/services/google/google-infobox.servi
 import { GoogleLayerService } from './src/services/google/google-layer.service';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './src/services/google/google-map-api-loader.service';
 import {
-    GoogleMapServiceFactory, GoogleMapServiceFactoryFactory,
+    GoogleMapServiceFactory,
+    GoogleMapServiceFactoryFactory,
     GoogleMapLoaderFactory
 } from './src/services/google/google-map.service.factory';
 import { GoogleMapService } from './src/services/google/google-map.service';
@@ -111,7 +117,8 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolygonEvent,
     IPolylineEvent, IMapEventLookup, IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions,
-    IPolygonOptions, IPolylineOptions, ILabelOptions, MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective,
+    INotificationEvent, IPolygonOptions, IPolylineOptions, ILabelOptions, MapComponent, InfoBoxComponent, MapMarkerDirective,
+    MapPolygonDirective, InfoBoxContentComponent,
     MapPolylineDirective, InfoBoxActionDirective, MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective,
     ClusterLayerDirective, MapPolylineLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
     ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService, MapServiceFactory, MarkerService,

@@ -1,5 +1,6 @@
 ﻿import {
     AfterViewInit,
+    AfterContentInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -13,11 +14,14 @@
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Subscription } from 'rxjs/Rx';
 import { IInfoWindowOptions } from '../interfaces/iinfo-window-options';
 import { ILatLong } from '../interfaces/ilatlong';
 import { InfoBoxService } from '../services/infobox.service';
+import { INotificationEvent } from '../interfaces/inotification-event';
 import { MapMarkerDirective } from './map-marker';
 import { InfoBoxActionDirective } from './infobox-action';
+import { InfoBoxContentComponent } from './infobox-content';
 
 /**
  * internal counter to use as ids for multiple infoboxes.
@@ -67,13 +71,14 @@ let infoBoxId = 0;
     `],
     encapsulation: ViewEncapsulation.None
 })
-export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
+export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit, AfterContentInit {
 
     ///
     /// Field declarations
     ///
     private _infoBoxAddedToManager = false;
     private _id: string = (infoBoxId++).toString();
+    private _trackedSubscriptions: Array<Subscription> = new Array<Subscription>();
 
     /**
      * HTML conent of the infobox
@@ -85,6 +90,16 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     @ViewChild('infoBoxContent') private _content: ElementRef;
 
     /**
+     * Zero or more content components (deriving from {@link InfoBoxContentComponent}) that implement
+     * more complex infobox behaviors.
+     *
+     * @public
+     * @type {QueryList<InfoBoxContentComponent>}
+     * @memberof InfoBoxComponent
+     */
+    @ContentChildren(InfoBoxContentComponent) private _infoWindowObjects: QueryList<InfoBoxComponent>;
+
+    /**
      * Zero or more actions to show on the info window
      *
      * @private
@@ -92,7 +107,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * @memberof InfoBoxComponent
      */
     @ContentChildren(InfoBoxActionDirective) public InfoWindowActions: QueryList<InfoBoxActionDirective>;
-
 
     /**
      * The latitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
@@ -200,10 +214,19 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Emits an event when the info window is closed.
      *
-     * @type {EventEmitter<void>}
+     * @type {EventEmitter<string>}
      * @memberof InfoBoxComponent
      */
     @Output() public InfoBoxClose: EventEmitter<string> = new EventEmitter<string>();
+
+    /**
+     * Emits notification events originating from the events
+     * emitted by any hosted {@link InfoBoxContentComponent}.
+     *
+     * @type {EventEmitter<INotificationEvent>}
+     * @memberof InfoBoxComponent
+     */
+    @Output() public Notification: EventEmitter<INotificationEvent> = new EventEmitter<INotificationEvent>();
 
     ///
     /// Property declarations.
@@ -238,8 +261,8 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
 
     /**
      * Creates an instance of InfoBoxComponent.
-     * @param {InfoBoxService} _infoBoxService - Concrete {@link InfoBoxService} implementation for underlying Map architecture.
      *
+     * @param {InfoBoxService} _infoBoxService - Concrete {@link InfoBoxService} implementation for underlying Map architecture.
      * @memberof InfoBoxComponent
      */
     constructor(private _infoBoxService: InfoBoxService) { }
@@ -251,8 +274,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Closes the Infobox.
      *
-     * @returns {Promise<void>} -
-     *
+     * @returns {Promise<void>}
      * @memberof InfoBoxComponent
      */
     public Close(): Promise<void> {
@@ -265,8 +287,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Called on after component view as been initialized. Part of the ng Component life cycle.
      *
      * @returns {void}
-     *
-     * @memberof Map
+     * @memberof InfoBoxComponent
      */
     public ngAfterViewInit() {
         this._infoBoxService.AddInfoWindow(this);
@@ -275,12 +296,28 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     }
 
     /**
+     * Called after child components have been created. Wires up event forwarding of the notification events.
+     *
+     * @returns {void}
+     * @memberof InfoBoxComponent
+     */
+    public ngAfterContentInit() {
+        if (this._infoWindowObjects != null) {
+            this._infoWindowObjects.forEach(x => {
+                this._trackedSubscriptions.push(
+                    x.Notification.asObservable().subscribe(event => {
+                        this.Notification.emit(event);
+                }));
+            });
+        }
+    }
+
+    /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
      * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
      * @return {void}
-     *
-     * @memberof Map
+     * @memberof InfoBoxComponent
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (!this._infoBoxAddedToManager) { return; }
@@ -298,17 +335,18 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
      * @returns {void}
-     *
-     * @memberof Map
+     * @memberof InfoBoxComponent
      */
-    public ngOnDestroy() { this._infoBoxService.DeleteInfoWindow(this); }
+    public ngOnDestroy() {
+        this._infoBoxService.DeleteInfoWindow(this);
+        this._trackedSubscriptions.forEach(s => s.unsubscribe());
+    }
 
     /**
      * Opens a closed info window.
      *
      * @param {ILatLong} [loc]  - {@link ILatLong } representing position on which to open the window.
      * @returns {Promise<void>} - Promise that is fullfilled when the infobox has been opened.
-     *
      * @memberof InfoBoxComponent
      */
     public Open(loc?: ILatLong): Promise<void> {
@@ -319,7 +357,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Returns a string representation of the info box.
      *
      * @returns {string} - string representation of the info box.
-     *
      * @memberof InfoBoxComponent
      */
     public ToString(): string { return 'InfoBoxComponent-' + this._id; }
@@ -332,8 +369,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Delegate handling the map click events.
      *
      * @private
-     *
-     * @memberof MapComponent
+     * @memberof InfoBoxComponent
      */
     private HandleEvents(): void {
         this._infoBoxService.CreateEventObservable('infowindowclose', this).subscribe(e => {
@@ -346,7 +382,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      *
      * @private
      * @param {{ [key: string]: SimpleChange }} changes
-     *
      * @memberof InfoBoxComponent
      */
     private SetInfoWindowOptions(changes: { [key: string]: SimpleChange }) {
