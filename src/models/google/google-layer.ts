@@ -1,4 +1,4 @@
-import { each, nextTick } from 'async';
+import { eachSeries, nextTick } from 'async';
 import { GoogleMarker } from './google-marker';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { MapService } from '../../services/map.service';
@@ -100,7 +100,7 @@ export class GoogleLayer implements Layer {
     public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             this._entities.push(...entities);
-            each([...entities], (e, next) => {
+            eachSeries([...entities], (e, next) => {
                 e.NativePrimitve.setMap(this.NativePrimitve);
                 nextTick(() => next());
             });
@@ -113,7 +113,7 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleLayer
      */
     public Delete(): void {
-        each(this._entities.splice(0), (e, next) => {
+        eachSeries(this._entities.splice(0), (e, next) => {
             e.NativePrimitve.setMap(null);
             nextTick(() => next());
         });
@@ -192,7 +192,7 @@ export class GoogleLayer implements Layer {
      * @memberof GoogleMarkerClusterer
      */
     public SetVisible(visible: boolean): void {
-        each([...this._entities], (e, next) => {
+        eachSeries([...this._entities], (e, next) => {
             e.NativePrimitve.setVisible(visible);
             nextTick(() => next());
         });
