@@ -29,7 +29,7 @@ To use angular-maps with the default Bing Map implementation, follow these three
 Add the Bing Type Declarations to your main app module (or a particular feature module, if you don't want it globally). This is currently necessary even if you do not want to use the Bing Maps providers as the types are in the signatures but not part of the distribution (the bingmaps Typescript types npm package is part of the dependencies and should have been installed when you installed angular maps). We are looking for ways around that... In the meanwhile, insert the following on the top of your app module file (depending on your project structure, you might have to manipulate the path):
 
 ```
-    /// <reference path="node_modules/bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
+    /// <reference path="node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
 ```
 
 Import MapModule, MapAPILoader, BingMapAPILoaderConfig, BingMapAPILoader, WindowRef, DocumentRef, MapServiceFactory and BingMapServiceFactory (yeah, I know...) in your main app module (or a particular feature module, if you don't want it globally). 
