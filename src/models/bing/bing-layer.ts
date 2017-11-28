@@ -1,3 +1,4 @@
+import { eachSeries, nextTick } from 'async';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { Layer } from '../layer';
 import { Marker } from '../marker';
@@ -86,9 +87,14 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public AddEntities(entities: Array<Marker|InfoWindow|Polygon|Polyline>): void {
+        //
+        // use eachSeries as opposed to _layer.add([]) to provide a non-blocking experience for larger data sets.
+        //
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
-            const e: Array<Microsoft.Maps.IPrimitive> = entities.map(p => p.NativePrimitve);
-            this._layer.add(e);
+            eachSeries([...entities], (e, next) => {
+                this._layer.add(e.NativePrimitve);
+                nextTick(() => next());
+            });
         }
     };
 
@@ -148,8 +154,12 @@ export class BingLayer implements Layer {
      * @memberof BingLayer
      */
     public SetEntities(entities: Array<Marker>|Array<InfoWindow>|Array<Polygon>|Array<Polyline>): void {
-        const p: Array<Microsoft.Maps.IPrimitive> = (<Array<any>>entities).map((e: Marker|InfoWindow|Polygon|Polyline) => e.NativePrimitve);
-        this._layer.setPrimitives(p);
+        //
+        // we are using removal and add as opposed to set as for large number of objects it yields a non-blocking, smoother performance...
+        //
+        this._layer.setPrimitives([]);
+        this.AddEntities(entities);
+
     }
 
     /**

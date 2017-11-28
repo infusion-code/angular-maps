@@ -34,6 +34,7 @@
     "@angular/common": ">=2.4.9",
     "@angular/compiler": ">=2.4.9",
     "@angular/core": ">=2.4.9",
+    "async": "^2.5.0",
     "bingmaps": "^1.0.15",
     "font-awesome": "^4.6.3",
     "json-loader": "^0.5.4",
@@ -42,12 +43,13 @@
   },
   "devDependencies": {
     "@angular/animations": ">=2.4.9",
+    "@angular/compiler-cli": ">=2.4.9",
     "@angular/platform-browser": ">=2.4.9",
     "@angular/platform-server": ">=2.4.9",
-    "@angular/compiler-cli": ">=2.4.9",
+    "@types/async": "^2.0.45",
+    "@types/node": "^7.0.5",
     "codelyzer": ">=3.0.1",
     "tslint": ">=5.4.2",
-    "@types/node": "^7.0.5",
     "typescript": "^2.3.2"
   }
 }
