@@ -55,7 +55,7 @@ export class BingMarker implements Marker {
         return {
             latitude: l.latitude,
             longitude: l.longitude
-        }
+        };
     }
 
     /**

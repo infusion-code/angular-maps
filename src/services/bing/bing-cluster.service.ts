@@ -31,11 +31,6 @@ import { BingConversions } from './bing-conversions';
 export class BingClusterService extends BingLayerBase implements ClusterService {
 
     ///
-    /// Field declarations
-    ///
-    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
-
-    ///
     /// Constructor
     ///
 
@@ -46,8 +41,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      *
      * @memberof BingClusterService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService);
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     ///
@@ -87,7 +82,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             Microsoft.Maps.Events.addHandler(m, 'viewchangeend', (e) => {
                 if (layer.ClusteringEnabled && m.getZoom() === 19) {
                     layerPromise.then((l: BingClusterLayer) => {
-                        l.SetOptions({ id: layer.Id, clusteringEnabled: false })
+                        l.SetOptions({ id: layer.Id, clusteringEnabled: false });
                     });
                 }
                 if (layer.ClusteringEnabled && m.getZoom() < 19) {
@@ -97,7 +92,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
                         }
                     });
                 }
-            })
+            });
         });
         this._layers.set(layer.Id, layerPromise);
     }
@@ -157,41 +152,6 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      */
     public CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>> {
         throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
-    }
-
-    /**
-     * Returns the Layer model represented by this layer.
-     *
-     * @abstract
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
-     *
-     * @memberof BingClusterService
-     */
-    public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
-        return this._layers.get(layer.Id);
-    }
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof BingClusterService
-     */
-    public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
-        const l = this._layers.get(layer.Id);
-        if (l == null) {
-            return Promise.resolve();
-        }
-        return l.then((l1: Layer) => {
-            return this._zone.run(() => {
-                l1.Delete();
-                this._layers.delete(layer.Id);
-            });
-        });
     }
 
     /**
@@ -304,7 +264,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
             // assemble markers for callback
             const m: Array<Marker> = new Array<Marker>();
             cluster.containedPushpins.forEach(p => {
-                const marker: Marker = l.GetMarkerFromBingMarker(p)
+                const marker: Marker = l.GetMarkerFromBingMarker(p);
                 if (marker) { m.push(marker); }
             });
             const iconInfo: IMarkerIconInfo = { markerType: MarkerTypeId.None };

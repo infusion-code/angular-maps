@@ -187,7 +187,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * @memberof MapMarkerLayerDirective
      */
     @Input()
-        public get MarkerOptions(): Array<IMarkerOptions> { return this._markers };
+        public get MarkerOptions(): Array<IMarkerOptions> { return this._markers; }
         public set MarkerOptions(val: Array<IMarkerOptions>) {
             if (this._streaming) {
                 this._markersLast = val.slice(0);
@@ -196,7 +196,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
             else {
                 this._markers = val.slice(0);
             }
-        };
+        }
 
     /**
      * Gets or sets the cluster styles
@@ -234,7 +234,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
                     return ClusterLayerDirective.CreateDynamicSizeMarker(
                         m.length, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
-                }
+                };
             }
         }
 
@@ -361,7 +361,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 Visible: this.Visible,
                 LayerOffset: this.LayerOffset,
                 ZIndex: this.ZIndex
-            }
+            };
             if (!this.EnableClustering) {
                 this._layerService.AddLayer(fakeLayerDirective);
                 this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
@@ -421,7 +421,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         }
         if (changes['EnableClustering'] && !changes['EnableClustering'].firstChange) {
             if ('StopClustering' in this._service) {
-                o.clusteringEnabled = this.EnableClustering
+                o.clusteringEnabled = this.EnableClustering;
                 shouldSetOptions = true;
             }
             else {

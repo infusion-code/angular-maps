@@ -9,7 +9,7 @@ import { Layer } from '../../models/layer';
 import { GoogleLayer } from '../../models/google/google-layer';
 import { GooglePolygon } from '../../models/google/google-polygon';
 import { GooglePolyline } from '../../models/google/google-polyline';
-import { MapLayerDirective } from '../../components/map-layer'
+import { MapLayerDirective } from '../../components/map-layer';
 import { LayerService } from '../layer.service';
 import { GoogleLayerBase } from './google-layer-base';
 import { MapService } from '../map.service';
@@ -45,8 +45,8 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      *
      * @memberof GoogleLayerService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService)
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     /**
@@ -62,46 +62,11 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     public AddLayer(layer: MapLayerDirective): void {
         const p: Promise<Layer> = new Promise<Layer>((resolve, reject) => {
             this._mapService.MapPromise.then(m => {
-                resolve(new GoogleLayer(m, this._mapService, layer.Id))
+                resolve(new GoogleLayer(m, this._mapService, layer.Id));
             });
         });
         this._layers.set(layer.Id, p);
-    };
-
-    /**
-     * Returns the Layer model represented by this layer.
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
-     *
-     * @memberof GoogleLayerService
-     */
-    public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return this._layers.get(layer.Id);
-    };
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof GoogleLayerService
-     */
-    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        const l = this._layers.get(layer.Id);
-        if (l == null) {
-            return Promise.resolve();
-        }
-        return l.then((l1: Layer) => {
-            return this._zone.run(() => {
-                l1.Delete();
-                this._layers.delete(layer.Id);
-            });
-        });
-    };
+    }
 
     /**
      * Adds a polygon to the layer.
@@ -118,7 +83,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
         const l: Promise<Layer> = this._layers.get(layer);
         Promise.all([p, l]).then(x => x[1].AddEntity(x[0]));
         return p;
-    };
+    }
 
     /**
      * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
@@ -176,7 +141,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
             for (const p2 of p1) {x[1].AddEntity(p2); }
         });
         return p;
-    };
+    }
 
     /**
      * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk

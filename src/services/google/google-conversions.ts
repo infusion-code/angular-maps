@@ -197,7 +197,7 @@ export class GoogleConversions {
             north: bounds.maxLatitude,
             south: bounds.minLatitude,
             west: bounds.minLongitude,
-        }
+        };
         return b;
     }
 
@@ -218,8 +218,8 @@ export class GoogleConversions {
                 if (k === 'htmlContent') {
                     o.content = (<any>options)[k];
                 } else {
-                    o[k] = (<any>options)[k]
-                };
+                    o[k] = (<any>options)[k];
+                }
             });
         if (o.content == null || o.content === '') {
             if (options.title !== '' && options.description !== '') {
@@ -343,8 +343,8 @@ export class GoogleConversions {
                     o.position = latlng;
                 }
                 else {
-                    o[k] = (<any>options)[k]
-                };
+                    o[k] = (<any>options)[k];
+                }
             });
         return o;
     }
@@ -377,8 +377,8 @@ export class GoogleConversions {
                     o.mapTypeControl = false;
                 }
                 else {
-                    (<any>o)[k] = (<any>options)[k]
-                };
+                    (<any>o)[k] = (<any>options)[k];
+                }
             });
         return o;
     }
@@ -452,8 +452,8 @@ export class GoogleConversions {
                     }
                 }
                 else {
-                    o[k] = (<any>options)[k]
-                };
+                    o[k] = (<any>options)[k];
+                }
             });
         return o;
     }
@@ -472,7 +472,7 @@ export class GoogleConversions {
         Object.keys(options)
             .filter(k => GoogleConversions._polylineOptionsAttributes.indexOf(k) !== -1)
             .forEach((k) => {
-                o[k] = (<any>options)[k]
+                o[k] = (<any>options)[k];
             });
         return o;
     }

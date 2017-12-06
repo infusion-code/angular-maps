@@ -129,7 +129,7 @@ export class GoogleMarkerClusterer implements Layer {
                 this._pendingMarkers.push(...entities);
             }
         }
-    };
+    }
 
     /**
      * Deletes the clustering layer.
@@ -231,7 +231,7 @@ export class GoogleMarkerClusterer implements Layer {
         entities.forEach((e: any) => {
             if (e.NativePrimitve && e.Location) {
                 this._markers.push(e);
-                this._markerLookup.set(e.NativePrimitve, e)
+                this._markerLookup.set(e.NativePrimitve, e);
                 p.push(e.NativePrimitve);
             }
         });
@@ -249,7 +249,7 @@ export class GoogleMarkerClusterer implements Layer {
     public SetOptions(options: IClusterOptions): void {
         if (options.placementMode != null) {
             throw(new Error('GoogleMarkerClusterer: PlacementMode option cannot be set after initial creation.'));
-        };
+        }
         if (options.zoomOnClick != null) {
             throw(new Error('GoogleMarkerClusterer: ZoomOnClick option cannot be set after initial creation.'));
         }
@@ -327,7 +327,7 @@ export class GoogleMarkerClusterer implements Layer {
         this._layer.addMarkers(p);
         this._markers = this._markers.concat(this._pendingMarkers.splice(0));
         this._isClustering = true;
-    };
+    }
 
     /**
      * Stop to actually cluster the entities in a cluster layer.
@@ -342,5 +342,5 @@ export class GoogleMarkerClusterer implements Layer {
     public StopClustering() {
         if (!this._isClustering) { return; }
         this._isClustering = false;
-    };
+    }
 }

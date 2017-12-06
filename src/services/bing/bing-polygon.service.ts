@@ -71,7 +71,7 @@ export class BingPolygonService implements PolygonService {
             title: polygon.Title,
             visible: polygon.Visible,
             zIndex: polygon.zIndex,
-        }
+        };
         let polygonPromise: Promise<Polygon>;
         if (polygon.InCustomLayer) {
             polygonPromise = this._layerService.CreatePolygon(polygon.LayerId, o);
@@ -131,7 +131,7 @@ export class BingPolygonService implements PolygonService {
             });
         });
 
-    };
+    }
 
     /**
      * Obtains geo coordinates for the polygon on the click location
@@ -145,7 +145,7 @@ export class BingPolygonService implements PolygonService {
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
         const x: Microsoft.Maps.IMouseEventArgs = <Microsoft.Maps.IMouseEventArgs>e;
         return { latitude: x.location.latitude, longitude: x.location.longitude };
-    };
+    }
 
     /**
      * Obtains the polygon model for the polygon allowing access to native implementation functionatiliy.
@@ -188,7 +188,7 @@ export class BingPolygonService implements PolygonService {
         }
         return m.then((l: Polygon) =>  {
             if (Array.isArray(polygon.Paths[0])) {
-                l.SetPaths(polygon.Paths)
+                l.SetPaths(polygon.Paths);
             }
             else {
                 l.SetPath(<Array<ILatLong>>polygon.Paths);

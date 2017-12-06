@@ -455,7 +455,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
             return {
                 Polygon: this,
                 Click: e
-            }
+            };
         };
         this._events.push(this._polygonService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
             const t: MapPolygonDirective = this;

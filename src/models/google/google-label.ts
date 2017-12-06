@@ -28,7 +28,7 @@ export class GoogleMapLabel extends MapLabel {
             fontColor: '#ffffff',
             strokeWeight: 3,
             strokeColor: '#000000'
-        }
+        };
     }
 
     ///
@@ -168,7 +168,7 @@ export class GoogleMapLabel extends MapLabel {
         style['top'] = (pos.y + offset.y) + 'px';
         style['left'] = (pos.x + offset.x) + 'px';
         style['visibility'] = visibility;
-    };
+    }
 
     /**
      * Delegate called when the label is added to the map. Generates and configures

@@ -99,7 +99,7 @@ export class BingMarkerService implements MarkerService {
                 const p: IPoint = {
                     x: (o.iconInfo.size && o.iconInfo.markerOffsetRatio) ? (o.iconInfo.size.width * o.iconInfo.markerOffsetRatio.x) : 0,
                     y: (o.iconInfo.size && o.iconInfo.markerOffsetRatio) ? (o.iconInfo.size.height * o.iconInfo.markerOffsetRatio.y) : 0,
-                }
+                };
                 m.SetAnchor(p);
             });
         }
@@ -146,15 +146,22 @@ export class BingMarkerService implements MarkerService {
      */
     public DeleteMarker(marker: MapMarkerDirective): Promise<void> {
         const m = this._markers.get(marker);
-        if (m == null) {
-            return Promise.resolve();
-        }
-        return m.then((ma: Marker) => {
-            return this._zone.run(() => {
-                ma.DeleteMarker();
-                this._markers.delete(marker);
+        let p: Promise<void> = Promise.resolve();
+        if (m != null) {
+            p = m.then((ma: Marker) => {
+                if (marker.InClusterLayer) {
+                    this._clusterService.GetNativeLayer(marker.LayerId).then(l => { l.RemoveEntity(ma); });
+                }
+                if (marker.InCustomLayer) {
+                    this._layerService.GetNativeLayer(marker.LayerId).then(l => { l.RemoveEntity(ma); });
+                }
+                return this._zone.run(() => {
+                    ma.DeleteMarker();
+                    this._markers.delete(marker);
+                });
             });
-        });
+        }
+        return p;
     }
 
     /**

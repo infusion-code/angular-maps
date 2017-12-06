@@ -1,3 +1,4 @@
+import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { Marker } from '../../models/marker';
@@ -37,10 +38,11 @@ export abstract class GoogleLayerBase {
      * Creates an instance of GoogleLayerBase.
      * @param {MapService} _mapService - Concrete {@link MapService} implementation for Google Maps.
      * An instance of {@link GoogleMapService}.
+     * @param {NgZone} _zone - NgZone instance to provide zone aware promises.
      *
      * @memberof GoogleLayerBase
      */
-    constructor(protected _mapService: MapService) { }
+    constructor(protected _mapService: MapService, protected _zone: NgZone) { }
 
     ///
     /// Public methods
@@ -59,26 +61,44 @@ export abstract class GoogleLayerBase {
     public abstract AddLayer(layer: MapLayerDirective): void;
 
     /**
-     * Returns the Layer model represented by this layer.
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
-     *
-     * @memberof GoogleLayerBase
-     */
-    public abstract GetNativeLayer(layer: MapLayerDirective): Promise<Layer>;
-
-    /**
      * Deletes the layer
      *
-     * @abstract
      * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
      * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
      *
      * @memberof GoogleLayerBase
      */
-    public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
+    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
+        const l = this._layers.get(layer.Id);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l1: Layer) => {
+            return this._zone.run(() => {
+                l1.Delete();
+                this._layers.delete(layer.Id);
+            });
+        });
+    }
+
+    /**
+     * Returns the Layer model represented by this layer.
+     *
+     * @param {MapLayerDirective|number} layer - MapLayerDirective component object or layer id for which to retrieve the layer model.
+     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
+     *
+     * @memberof GoogleLayerBase
+     */
+    public GetNativeLayer(layer: MapLayerDirective|number): Promise<Layer> {
+        let p: Promise<Layer> = null;
+        if (typeof(layer) === 'number') {
+            p = this._layers.get(layer);
+        }
+        else {
+            p = this._layers.get((<MapLayerDirective>layer).Id);
+        }
+        return p;
+    }
 
     /**
      * Creates a marker in the layer.
@@ -123,7 +143,7 @@ export abstract class GoogleLayerBase {
                 return payload(o);
             }
         });
-    };
+    }
 
     /**
      * Creates an array of unbound markers. Use this method to create arrays of markers to be used in bulk

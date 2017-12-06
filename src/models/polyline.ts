@@ -13,7 +13,7 @@ export abstract class Polyline {
     /// Field declarations
     ///
     protected _centroid: ILatLong;
-    protected _center: ILatLong
+    protected _center: ILatLong;
 
     ///
     /// Property definitions

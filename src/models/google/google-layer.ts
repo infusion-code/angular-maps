@@ -105,7 +105,7 @@ export class GoogleLayer implements Layer {
                 nextTick(() => next());
             });
         }
-    };
+    }
 
     /**
      * Deletes the layer anbd the markers in it.

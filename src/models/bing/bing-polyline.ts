@@ -102,7 +102,7 @@ export class BingPolyline extends Polyline implements Polyline {
      * @memberof BingPolyline
      */
     public AddListener(eventType: string, fn: Function): void {
-        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup' ]
+        const supportedEvents = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup' ];
         if (supportedEvents.indexOf(eventType) !== -1) {
             Microsoft.Maps.Events.addHandler(this._polyline, eventType, (e) => {
                 fn(e);
