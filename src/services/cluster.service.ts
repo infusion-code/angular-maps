@@ -7,7 +7,7 @@ import { Marker } from '../models/marker';
 import { Layer } from '../models/layer';
 import { Polygon } from '../models/polygon';
 import { Polyline } from '../models/polyline';
-import { ClusterLayerDirective } from '../components/cluster-layer'
+import { ClusterLayerDirective } from '../components/cluster-layer';
 import { LayerService } from './layer.service';
 
 /**

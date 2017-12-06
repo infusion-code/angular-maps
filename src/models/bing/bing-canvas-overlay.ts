@@ -45,7 +45,7 @@ export class BingCanvasOverlay extends CanvasOverlay {
      */
     public GetCoordinatesFromClick(e: Microsoft.Maps.IMouseEventArgs): ILatLong {
         return { latitude: e.location.latitude, longitude: e.location.longitude };
-    };
+    }
 
     /**
      * Gets the map associted with the label.

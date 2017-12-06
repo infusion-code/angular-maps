@@ -69,7 +69,7 @@ export class GooglePolylineService implements PolylineService {
             title: polyline.Title,
             visible: polyline.Visible,
             zIndex: polyline.zIndex,
-        }
+        };
         const polylinePromise: Promise<Polyline|Array<Polyline>> = this._mapService.CreatePolyline(o);
         this._polylines.set(polyline, polylinePromise);
     }
@@ -114,7 +114,7 @@ export class GooglePolylineService implements PolylineService {
             });
         });
 
-    };
+    }
 
     /**
      * Obtains geo coordinates for the line on the click location
@@ -136,7 +136,7 @@ export class GooglePolylineService implements PolylineService {
             return null;
         }
         return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
-    };
+    }
 
     /**
      * Obtains the polyline model for the line allowing access to native implementation functionatiliy.

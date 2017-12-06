@@ -95,7 +95,7 @@ export abstract class Layer {
      * @memberof Layer
      * @abstract
      */
-    public abstract GetVisible(): boolean
+    public abstract GetVisible(): boolean;
 
      /**
      * Removes an entity from the cluster layer. Entities in this context should be model abstractions of concered map functionality (such

@@ -5,7 +5,7 @@ import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
-import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service'
+import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service';
 import { GoogleClusterService } from './google-cluster.service';
 import { ILayerOptions } from '../../interfaces/ilayer-options';
 import { IClusterOptions } from '../../interfaces/icluster-options';
@@ -34,7 +34,7 @@ import { GoogleConversions } from './google-conversions';
 import { GoogleMarker } from '../../models/google/google-marker';
 import { GoogleLayer } from '../../models/google/google-layer';
 import { IBox } from '../../interfaces/ibox';
-import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup'
+import { GoogleMapEventsLookup } from '../../models/google/google-events-lookup';
 import * as GoogleMapTypes from './google-map-types';
 
 declare const google: any;
@@ -426,7 +426,7 @@ export class GoogleMapService implements MapService {
                 x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
                 y: Math.floor((point.y - offsetY) * s)
             };
-        })
+        });
     }
 
     /**
@@ -449,7 +449,7 @@ export class GoogleMapService implements MapService {
             const offsetX: number = p.fromLatLngToPoint(b.getSouthWest()).x;
             const offsetY: number = p.fromLatLngToPoint(b.getNorthEast()).y;
             const l = locs.map(ll => {
-                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(ll)
+                const l1: GoogleMapTypes.LatLng = GoogleConversions.TranslateLocationObject(ll);
                 const point: GoogleMapTypes.Point = p.fromLatLngToPoint(l1);
                 return {
                     x: Math.floor((point.x - offsetX + ((crossesDateLine && point.x < offsetX) ? 256 : 0)) * s),
@@ -457,7 +457,7 @@ export class GoogleMapService implements MapService {
                 };
             });
             return l;
-        })
+        });
     }
 
     /**

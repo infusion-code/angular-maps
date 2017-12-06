@@ -176,7 +176,7 @@ export abstract class MapLabel {
         const mapZoom: number = this.GetMap().getZoom();
         if (mapZoom < minZoom || mapZoom > maxZoom) { return 'hidden'; }
         return '';
-    };
+    }
 
     /**
      * Draws the label on the map.
@@ -240,7 +240,7 @@ export abstract class MapLabel {
             case 'right':   return -textWidth;
         }
         return textWidth / -2;
-    };
+    }
 
     /**
      * Delegate called when the label is added to the map. Generates and configures
@@ -263,6 +263,6 @@ export abstract class MapLabel {
         if (this._canvas && this._canvas.parentNode) {
             this._canvas.parentNode.removeChild(this._canvas);
         }
-    };
+    }
 }
 

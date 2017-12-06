@@ -73,7 +73,7 @@ export class GooglePolygonService implements PolygonService {
             title: polygon.Title,
             visible: polygon.Visible,
             zIndex: polygon.zIndex,
-        }
+        };
         const polygonPromise: Promise<Polygon> = this._mapService.CreatePolygon(o);
         this._polygons.set(polygon, polygonPromise);
     }
@@ -116,7 +116,7 @@ export class GooglePolygonService implements PolygonService {
             });
         });
 
-    };
+    }
 
     /**
      * Obtains geo coordinates for the polygon on the click location
@@ -129,7 +129,7 @@ export class GooglePolygonService implements PolygonService {
      */
     public GetCoordinatesFromClick(e: MouseEvent | any): ILatLong {
         return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
-    };
+    }
 
     /**
      * Obtains the polygon model for the polygon allowing access to native implementation functionatiliy.
@@ -172,7 +172,7 @@ export class GooglePolygonService implements PolygonService {
         }
         return m.then((l: Polygon) => {
             if (Array.isArray(polygon.Paths[0])) {
-                l.SetPaths(polygon.Paths)
+                l.SetPaths(polygon.Paths);
             }
             else {
                 l.SetPath(<Array<ILatLong>>polygon.Paths);

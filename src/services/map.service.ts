@@ -93,11 +93,12 @@ export abstract class MapService {
         let crossesDateLine: boolean = false;
 
         if (bounds == null) { bounds = <IBox>{
-            maxLatitude: 360,
-            minLatitude: 0,
-            maxLongitude: 170,
-            minLongitude: 0
-        }}
+                maxLatitude: 360,
+                minLatitude: 0,
+                maxLongitude: 170,
+                minLongitude: 0
+            };
+        }
         if (bounds.center.longitude < bounds.minLongitude  || bounds.center.longitude > bounds.maxLongitude) { crossesDateLine = true; }
         if (!count || count <= 0) {
             return [_getRandomLocation(bounds)];

@@ -71,7 +71,7 @@ export class BingPolylineService implements PolylineService {
             title: polyline.Title,
             visible: polyline.Visible,
             zIndex: polyline.zIndex,
-        }
+        };
         let polylinePromise: Promise<Polyline|Array<Polyline>>;
         if (polyline.InCustomLayer) {
             polylinePromise = this._layerService.CreatePolyline(polyline.LayerId, o);
@@ -131,7 +131,7 @@ export class BingPolylineService implements PolylineService {
             });
         });
 
-    };
+    }
 
     /**
      * Obtains geo coordinates for the marker on the click location
@@ -146,7 +146,7 @@ export class BingPolylineService implements PolylineService {
         if (!e) { return null; }
         if (!e.location) { return null; }
         return { latitude: e.location.latitude, longitude: e.location.longitude };
-    };
+    }
 
     /**
      * Obtains the marker model for the marker allowing access to native implementation functionatiliy.

@@ -114,7 +114,7 @@ export abstract class CanvasOverlay {
 
         // Add the canvas to the overlay.
         this.SetCanvasElement(this._canvas);
-    };
+    }
 
     /**
      * CanvasOverlay loaded, attach map events for updating canvas.

@@ -131,7 +131,7 @@ export class GoogleInfoWindow implements InfoWindow {
     public SetOptions(options: IInfoWindowOptions): void {
         const o: GoogleMapTypes.InfoWindowOptions = GoogleConversions.TranslateInfoWindowOptions(options);
         this._infoWindow.setOptions(o);
-    };
+    }
 
     /**
      * Sets the info window position
@@ -143,7 +143,7 @@ export class GoogleInfoWindow implements InfoWindow {
      * @public
      */
     public SetPosition(position: ILatLong): void {
-        const l: GoogleMapTypes.LatLngLiteral = GoogleConversions.TranslateLocation(position)
+        const l: GoogleMapTypes.LatLngLiteral = GoogleConversions.TranslateLocation(position);
         this._infoWindow.setPosition(l);
-    };
+    }
 }

@@ -147,7 +147,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof MapComponent
      */
     @Input()
-    public get Options(): IMapOptions { return this._options };
+    public get Options(): IMapOptions { return this._options; }
     public set Options(val: IMapOptions) { this._options = val; }
 
     /**
@@ -381,7 +381,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
             ///
             this._clickTimeout = setTimeout(() => {
                 this.MapClick.emit(<MouseEvent>e);
-            }, 300)
+            }, 300);
         });
         this._mapService.SubscribeToMapEvent<any>('dblclick').subscribe(e => {
             if (this._clickTimeout) {

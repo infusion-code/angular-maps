@@ -120,10 +120,10 @@ export abstract class LayerService {
      * Returns the Layer model represented by this layer.
      *
      * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
+     * @param {MapLayerDirective | number} layer - MapLayerDirective component object or MapLayerId for which to retrieve the layer model.
      * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
      *
      * @memberof LayerService
      */
-    public abstract GetNativeLayer(layer: MapLayerDirective): Promise<Layer>;
+    public abstract GetNativeLayer(layer: MapLayerDirective|number): Promise<Layer>;
 }

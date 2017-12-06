@@ -52,7 +52,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                             style.height = style.iconInfo.size.height;
                         }
                         if (style.iconInfo.markerOffsetRatio && style.iconInfo.size && style.anchor == null) {
-                            const o: IMarkerIconInfo = style.iconInfo
+                            const o: IMarkerIconInfo = style.iconInfo;
                             style.anchor = [
                                 o.size.width * o.markerOffsetRatio.x,
                                 o.size.height * o.markerOffsetRatio.y
@@ -68,7 +68,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                                 style.height = x.iconInfo.size.height;
                             }
                             if (x.iconInfo.markerOffsetRatio && x.iconInfo.size && style.anchor == null) {
-                                const o: IMarkerIconInfo = x.iconInfo
+                                const o: IMarkerIconInfo = x.iconInfo;
                                 style.anchor = [
                                     o.size.width * o.markerOffsetRatio.x,
                                     o.size.height * o.markerOffsetRatio.y
@@ -85,7 +85,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                 Promise.all(pa).then(() => {
                     resolve(styles);
                 });
-            };
+            }
         });
         return i;
     }
@@ -119,7 +119,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
         if (layer.MinimumClusterSize) { options.minimumClusterSize = layer.MinimumClusterSize; }
         if (layer.Styles) { options.styles = layer.Styles; }
         if (layer.UseDynamicSizeMarkers) {
-            options.styles = null
+            options.styles = null;
             // do not to attempt to setup styles here as the dynamic call back will generate them.
         }
         else {
@@ -148,7 +148,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
             const styles: Array<GoogleMapTypes.ClusterStyle> = this._layerStyles.get(layer.Id);
             const iconInfo: IMarkerIconInfo = {
                 markerType: MarkerTypeId.None
-            }
+            };
             const icon: string = layer.CustomMarkerCallback(<any>markers, iconInfo);
             styles[0] = {
                 url: `\"data:image/svg+xml;utf8,${icon}\"`,
@@ -161,7 +161,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
             return {
                 text: markers.length.toString(),
                 index: 1
-            }
+            };
         };
         const resetStyles = (clusterer: GoogleMapTypes.MarkerClusterer) => {
             if (this._layerStyles.has(layer.Id)) { this._layerStyles.get(layer.Id).splice(0); }
@@ -199,18 +199,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                 });
             }
         });
-    };
-
-    /**
-     * Returns the native layer
-     *
-     * @param {ClusterLayerDirective} layer
-     * @returns {Promise<Layer>}
-     * @memberof GoogleClusterService
-     */
-    public GetNativeLayer(layer: ClusterLayerDirective): Promise<Layer> {
-        return this._layers.get(layer.Id);
-    };
+    }
 
     /**
      * Delets the native layer
@@ -222,7 +211,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
         this._layers.delete(layer.Id);
         return Promise.resolve();
-    };
+    }
 
     /**
      * Create a marker in the cluster
@@ -245,7 +234,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                     return marker;
                 });
         });
-    };
+    }
 
     /**
      * Starts the clustering

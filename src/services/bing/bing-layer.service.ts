@@ -30,11 +30,6 @@ import { BingConversions } from './bing-conversions';
 export class BingLayerService extends BingLayerBase implements LayerService {
 
     ///
-    /// Field Declarations.
-    ///
-    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
-
-    ///
     /// Constructor
     ///
 
@@ -46,7 +41,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      * @memberof BingLayerService
      */
     constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService)
+        super(_mapService);
     }
 
     /**
@@ -82,7 +77,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             const locs: Array<Array<Microsoft.Maps.Location>> = BingConversions.TranslatePaths(options.paths);
             const o: Microsoft.Maps.IPolylineOptions = BingConversions.TranslatePolygonOptions(options);
             const poly: Microsoft.Maps.Polygon = new Microsoft.Maps.Polygon(locs, o);
-            const polygon: Polygon = new BingPolygon(poly, <BingMapService>this._mapService, l.NativePrimitve)
+            const polygon: Polygon = new BingPolygon(poly, <BingMapService>this._mapService, l.NativePrimitve);
 
             if (options.metadata) { options.metadata.forEach((v, k) => polygon.Metadata.set(k, v)); }
             if (options.title && options.title !== '') {polygon.Title = options.title; }
@@ -232,19 +227,6 @@ export class BingLayerService extends BingLayerBase implements LayerService {
             l1.Delete();
             this._layers.delete(layer.Id);
         });
-    }
-
-    /**
-     * Returns the Layer model represented by this layer.
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
-     *
-     * @memberof BingLayerService
-     */
-    public GetNativeLayer(layer: MapLayerDirective): Promise<Layer> {
-        return this._layers.get(layer.Id);
     }
 
 }

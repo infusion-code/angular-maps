@@ -68,7 +68,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
         }
         const infoWindowPromise = this._mapService.CreateInfoWindow(options);
         this._boxes.set(info, infoWindowPromise);
-    };
+    }
 
     /**
      * Closes the info window
@@ -82,7 +82,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
         return this._boxes.get(info).then(w => {
             w.Close();
         });
-    };
+    }
 
     /**
      * Registers an event delegate for an info window.
@@ -113,7 +113,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
      */
     public DeleteInfoWindow(info: InfoBoxComponent): Promise<void> {
         return Promise.resolve();
-    };
+    }
 
     /**
      * Opens the info window. Window opens on a marker, if supplied, or a specific location if given
@@ -158,7 +158,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
                 w.Open();
             });
         });
-    };
+    }
 
     /**
      * Sets the info window options
@@ -173,7 +173,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
         return this._boxes.get(info).then((w: GoogleInfoWindow) => {
             w.SetOptions(options);
         });
-    };
+    }
 
     /**
      * Sets the info window position
@@ -189,6 +189,6 @@ export class GoogleInfoBoxService extends InfoBoxService {
             w.SetPosition(latlng);
         });
         return Promise.resolve();
-    };
+    }
 
 }

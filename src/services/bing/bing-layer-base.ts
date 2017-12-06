@@ -24,7 +24,8 @@ export abstract class BingLayerBase {
     ///
     /// Field declarations
     ///
-    protected abstract _layers: Map<number, Promise<Layer>>;
+
+    protected _layers: Map<number, Promise<Layer>> = new Map<number, Promise<Layer>>();
 
     ///
     /// Constructor
@@ -55,28 +56,6 @@ export abstract class BingLayerBase {
     public abstract AddLayer(layer: MapLayerDirective): void;
 
     /**
-     * Returns the Layer model represented by this layer.
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
-     *
-     * @memberof BingLayerBase
-     */
-    public abstract GetNativeLayer(layer: MapLayerDirective): Promise<Layer>;
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof BingLayerBase
-     */
-    public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
-
-    /**
      * Creates a marker in the layer.
      *
      * @param {number} layer - The Id of the layer in which to create the marker.
@@ -97,7 +76,7 @@ export abstract class BingLayerBase {
             if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
             l.AddEntity(marker);
             return marker;
-        }
+        };
         const p: Promise<Layer> = this.GetLayerById(layer);
         if (p == null) { throw (new Error(`Layer with id ${layer} not found in Layer Map`)); }
         return p.then((l: Layer) => {
@@ -135,7 +114,7 @@ export abstract class BingLayerBase {
                 else if (o.icon) {
                     s = o.icon;
                 }
-                if (o.icon) { delete o.icon };
+                if (o.icon) { delete o.icon; }
                 const loc: Microsoft.Maps.Location = BingConversions.TranslateLocation(mo.position);
                 const pushpin: Microsoft.Maps.Pushpin = new Microsoft.Maps.Pushpin(loc, o);
                 const img = Marker.GetImageForMarker(s);
@@ -163,6 +142,36 @@ export abstract class BingLayerBase {
                 resolve(payload(null, options));
             }
         });
+        return p;
+    }
+
+    /**
+     * Deletes the layer
+     *
+     * @abstract
+     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
+     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
+     *
+     * @memberof BingLayerBase
+     */
+    public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
+
+    /**
+     * Returns the Layer model represented by this layer.
+     *
+     * @param {MapLayerDirective|number} layer - MapLayerDirective component object or Layer Id for which to retrieve the layer model.
+     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
+     *
+     * @memberof BingLayerBase
+     */
+    public GetNativeLayer(layer: MapLayerDirective|number): Promise<Layer> {
+        let p: Promise<Layer> = null;
+        if (typeof(layer) === 'number') {
+            p = this._layers.get(layer);
+        }
+        else {
+            p = this._layers.get((<MapLayerDirective>layer).Id);
+        }
         return p;
     }
 

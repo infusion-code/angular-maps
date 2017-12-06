@@ -74,7 +74,7 @@ export class GoogleMarker implements Marker {
         return {
             latitude: l.lat(),
             longitude: l.lng()
-        }
+        };
     }
 
     ///

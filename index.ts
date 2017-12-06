@@ -10,7 +10,7 @@ import { IInfoWindowAction } from './src/interfaces/iinfo-window-action';
 import { IMarkerOptions } from './src/interfaces/imarker-options';
 import { IMapOptions } from './src/interfaces/imap-options';
 import { ISize } from './src/interfaces/isize';
-import { IPoint } from './src/interfaces/ipoint'
+import { IPoint } from './src/interfaces/ipoint';
 import { IBox } from './src/interfaces/ibox';
 import { IMarkerEvent } from './src/interfaces/imarker-event';
 import { IMarkerIconInfo } from './src/interfaces/imarker-icon-info';
@@ -61,7 +61,7 @@ import { GoogleCanvasOverlay } from './src/models/google/google-canvas-overlay';
 import { MapComponent } from './src/components/map';
 import { MapMarkerDirective } from './src/components/map-marker';
 import { InfoBoxComponent } from './src/components/infobox';
-import { InfoBoxActionDirective } from './src/components/infobox-action'
+import { InfoBoxActionDirective } from './src/components/infobox-action';
 import { MapLayerDirective } from './src/components/map-layer';
 import { ClusterLayerDirective } from './src/components/cluster-layer';
 import { MapPolygonDirective } from './src/components/map-polygon';
@@ -116,18 +116,18 @@ export {
     ClusterLayerDirective, MapPolylineLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
     ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService, MapServiceFactory, MarkerService,
     InfoBoxService, MapAPILoader, WindowRef, DocumentRef, LayerService, PolygonService, PolylineService, ClusterService
-}
+};
 export {
     BingMapServiceFactory, BingMapAPILoaderConfig, BingMapService, BingInfoBoxService,
     BingMarkerService, BingPolygonService, BingPolylineService, BingMapAPILoader,
     BingLayerService, BingClusterService, BingLayer, BingMarker, BingPolyline, BingMapEventsLookup, BingPolygon,
     BingInfoWindow, BingClusterLayer, BingSpiderClusterMarker, BingCanvasOverlay
-}
+};
 export {
     GoogleClusterService, GoogleInfoBoxService, GoogleLayerService, GoogleMapAPILoader, GoogleMapAPILoaderConfig,
     GoogleMapServiceFactory, GoogleMapService, GoogleMarkerService, GooglePolygonService, GooglePolylineService,
     GoogleMarker, GoogleInfoWindow, GooglePolygon, GooglePolyline, GoogleMapEventsLookup, GoogleCanvasOverlay
-}
+};
 
 ///
 /// define module
@@ -174,7 +174,7 @@ export class MapModule {
                 DocumentRef,
                 WindowRef
             ]
-        }
+        };
     }
 
     static forRootBing(): ModuleWithProviders {
@@ -186,7 +186,7 @@ export class MapModule {
                 DocumentRef,
                 WindowRef
             ]
-        }
+        };
     }
 
     static forRootGoogle(): ModuleWithProviders {
@@ -198,6 +198,6 @@ export class MapModule {
                 DocumentRef,
                 WindowRef
             ]
-        }
+        };
     }
 }

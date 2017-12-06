@@ -89,7 +89,7 @@ export class BingInfoWindow implements InfoWindow {
         const o: Microsoft.Maps.IInfoboxOptions = {};
         o.visible = false;
         this._infoBox.setOptions(o);
-    };
+    }
 
     /**
      * Gets the position of the info window.
@@ -105,7 +105,7 @@ export class BingInfoWindow implements InfoWindow {
             longitude: this._infoBox.getLocation().longitude
         };
         return p;
-    };
+    }
 
     /**
      * Opens the info window.
@@ -118,7 +118,7 @@ export class BingInfoWindow implements InfoWindow {
         const o: Microsoft.Maps.IInfoboxOptions = {};
         o.visible = true;
         this._infoBox.setOptions(o);
-    };
+    }
 
     /**
      * Sets the info window options.
@@ -132,7 +132,7 @@ export class BingInfoWindow implements InfoWindow {
     public SetOptions(options: IInfoWindowOptions): void {
         const o: Microsoft.Maps.IInfoboxOptions = BingConversions.TranslateInfoBoxOptions(options);
         this._infoBox.setOptions(o);
-    };
+    }
 
     /**
      * Sets the info window position.
@@ -144,7 +144,7 @@ export class BingInfoWindow implements InfoWindow {
      * @public
      */
     public SetPosition(position: ILatLong): void {
-        const l: Microsoft.Maps.Location = BingConversions.TranslateLocation(position)
+        const l: Microsoft.Maps.Location = BingConversions.TranslateLocation(position);
         this._infoBox.setLocation(l);
-    };
+    }
 }

@@ -90,6 +90,29 @@ export abstract class Marker {
     }
 
     /**
+     * Obtains a shared img element for a marker icon to prevent unecessary creation of
+     * DOM items. This has sped up large scale makers on Bing Maps by about 70%
+     * @static
+     * @param {string} icon - The icon string (url, data url, svg) for which to obtain the image.
+     * @returns {HTMLImageElement}  - The obtained image element.
+     * @memberof Marker
+     */
+    public static GetImageForMarker(icon: string): HTMLImageElement {
+        if (icon == null || icon === '' ) { return  null; }
+
+        let img: HTMLImageElement = null;
+        img = Marker.ImageElementCache.get(icon);
+        if (img != null) { return img; }
+
+        if (typeof(document) !== 'undefined' && document != null) {
+            img = document.createElement('img');
+            img.src = icon;
+            Marker.ImageElementCache.set(icon, img);
+        }
+        return img;
+    }
+
+    /**
      * Creates a canvased based marker using the point collection contained in the iconInfo parameter.
      *
      * @protected
@@ -128,7 +151,7 @@ export abstract class Marker {
         // Draw a path in the shape of an arrow.
         ctx.beginPath();
         if (iconInfo.drawingOffset) { ctx.moveTo(iconInfo.drawingOffset.x, iconInfo.drawingOffset.y); }
-        iconInfo.points.forEach((p: IPoint) => { ctx.lineTo(p.x, p.y) });
+        iconInfo.points.forEach((p: IPoint) => { ctx.lineTo(p.x, p.y); });
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
@@ -208,7 +231,7 @@ export abstract class Marker {
         const c: HTMLCanvasElement = document.createElement('canvas');
         const ctx: CanvasRenderingContext2D = c.getContext('2d');
         const font: string = iconInfo.fontSize + 'px ' + iconInfo.fontName;
-        ctx.font = font
+        ctx.font = font;
 
         // Resize canvas based on sie of text.
         const size: TextMetrics = ctx.measureText(iconInfo.text);
@@ -394,29 +417,6 @@ export abstract class Marker {
             };
         });
         return promise;
-    }
-
-    /**
-     * Obtains a shared img element for a marker icon to prevent unecessary creation of
-     * DOM items. This has sped up large scale makers on Bing Maps by about 70%
-     * @static
-     * @param {string} icon - The icon string (url, data url, svg) for which to obtain the image.
-     * @returns {HTMLImageElement}  - The obtained image element.
-     * @memberof Marker
-     */
-    public static GetImageForMarker(icon: string): HTMLImageElement {
-        if (icon == null || icon === '' ) { return  null; }
-
-        let img: HTMLImageElement = null;
-        img = Marker.ImageElementCache.get(icon);
-        if (img != null) { return img; }
-
-        if (typeof(document) !== 'undefined' && document != null) {
-            img = document.createElement('img');
-            img.src = icon;
-            Marker.ImageElementCache.set(icon, img);
-        }
-        return img;
     }
 
     ///

@@ -96,7 +96,7 @@ export class BingLayer implements Layer {
                 nextTick(() => next());
             });
         }
-    };
+    }
 
     /**
      * Deletes the layer.

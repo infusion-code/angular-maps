@@ -61,13 +61,21 @@ export abstract class GoogleLayerBase {
     /**
      * Returns the Layer model represented by this layer.
      *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer model.
+     * @param {MapLayerDirective|number} layer - MapLayerDirective component object or layer id for which to retrieve the layer model.
      * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
      *
      * @memberof GoogleLayerBase
      */
-    public abstract GetNativeLayer(layer: MapLayerDirective): Promise<Layer>;
+    public GetNativeLayer(layer: MapLayerDirective|number): Promise<Layer> {
+        let p: Promise<Layer> = null;
+        if (typeof(layer) === 'number') {
+            p = this._layers.get(layer);
+        }
+        else {
+            p = this._layers.get((<MapLayerDirective>layer).Id);
+        }
+        return p;
+    }
 
     /**
      * Deletes the layer
@@ -123,7 +131,7 @@ export abstract class GoogleLayerBase {
                 return payload(o);
             }
         });
-    };
+    }
 
     /**
      * Creates an array of unbound markers. Use this method to create arrays of markers to be used in bulk

@@ -401,7 +401,7 @@ export class BingConversions {
                     o.center = BingConversions.TranslateLocation(options.center);
                 }
                 else if (k === 'mapTypeId') {
-                    o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]]
+                    o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]];
                 }
                 else {
                     o[k] = (<any>options)[k];
@@ -434,7 +434,7 @@ export class BingConversions {
                     _p.push(new Microsoft.Maps.Location(p1[i][j].latitude, p1[i][j].longitude));
                 }
                 p.push(_p);
-            };
+            }
         }
         else {
             // parameter is a simple array....
@@ -595,7 +595,7 @@ export class BingConversions {
                 } else if (k === 'centerOffset') {
                     o.centerOffset = BingConversions.TranslatePoint(options.centerOffset);
                 } else if (k === 'mapTypeId') {
-                    o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]]
+                    o.mapTypeId = Microsoft.Maps.MapTypeId[(<any>MapTypeId)[options.mapTypeId]];
                 } else {
                     o[k] = (<any>options)[k];
                 }

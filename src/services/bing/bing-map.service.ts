@@ -10,7 +10,7 @@ import { Marker } from '../../models/marker';
 import { Polygon } from '../../models/polygon';
 import { Polyline } from '../../models/polyline';
 import { MarkerTypeId } from '../../models/marker-type-id';
-import { InfoWindow } from '../../models/info-window'
+import { InfoWindow } from '../../models/info-window';
 import { BingMarker } from '../../models/bing/bing-marker';
 import { Layer } from '../../models/layer';
 import { BingLayer } from '../../models/bing/bing-layer';
@@ -249,7 +249,7 @@ export class BingMapService implements MapService {
             if (options.metadata) { options.metadata.forEach((v, k) => marker.Metadata.set(k, v)); }
             map.entities.push(pushpin);
             return marker;
-        }
+        };
         return this._map.then((map: Microsoft.Maps.Map) => {
             if (options.iconInfo && options.iconInfo.markerType) {
                 const s = Marker.CreateMarker(options.iconInfo);
@@ -417,7 +417,7 @@ export class BingMapService implements MapService {
     public GetDrawingTools (useSharedInstance: boolean = true): Promise<Microsoft.Maps.DrawingTools> {
         return new Promise<Microsoft.Maps.DrawingTools>((resolve, reject) => {
             this.LoadModuleInstance('Microsoft.Maps.DrawingTools', useSharedInstance).then((o: Microsoft.Maps.DrawingTools) => {
-                resolve(o)
+                resolve(o);
             });
         });
     }
@@ -493,7 +493,7 @@ export class BingMapService implements MapService {
                     resolve(o);
                 });
                 } catch (e) {
-                    reject('Could not load module or create instance.')
+                    reject('Could not load module or create instance.');
                 }
             });
         }
@@ -516,7 +516,7 @@ export class BingMapService implements MapService {
                 return { x: p.x, y: p.y };
             }
             return null;
-        })
+        });
     }
 
     /**
@@ -533,7 +533,7 @@ export class BingMapService implements MapService {
             const p: Array<Microsoft.Maps.Point> = <Array<Microsoft.Maps.Point>>m.tryLocationToPixel(l,
                 Microsoft.Maps.PixelReference.control);
             return p ? p : new Array<IPoint>();
-        })
+        });
     }
 
     /**

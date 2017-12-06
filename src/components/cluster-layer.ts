@@ -229,7 +229,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
                 this._iconCreationCallback = (m: Array<Marker>, info: IMarkerIconInfo) => {
                     return ClusterLayerDirective.CreateDynamicSizeMarker(
                         m.length, info, this._dynamicMarkerBaseSize, this._dynamicMarkerRanges);
-                }
+                };
             }
         }
 
@@ -282,7 +282,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         ranges.forEach((v, k) => {
             if (total <= k && !fillColor) { fillColor = v; }
         });
-        if (!fillColor) { fillColor = 'rgba(20, 180, 20, 0.5)' };
+        if (!fillColor) { fillColor = 'rgba(20, 180, 20, 0.5)'; }
 
         // Create an SVG string of two circles, one on top of the other, with the specified radius and color.
         const svg: Array<any> = [`<svg xmlns='http://www.w3.org/2000/svg' width='${d}' height='${d}'>`,
@@ -328,7 +328,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         if (changes['ClusterClickAction']) {
             throw (
                 new Error('You cannot change the ClusterClickAction after the layer has been added to the layerservice.')
-            )
+            );
         }
 
         const options: IClusterOptions = { id: this._id };

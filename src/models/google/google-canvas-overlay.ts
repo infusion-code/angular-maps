@@ -47,7 +47,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
         if (!e.latLng) { return null; }
         if (!e.latLng.lat || !e.latLng.lng) { return null; }
         return { latitude: e.latLng.lat(), longitude: e.latLng.lng() };
-    };
+    }
 
     /**
      * Gets the map associted with the label.
@@ -157,7 +157,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
         this._centerStart = {
             latitude: c.lat(),
             longitude: c.lng()
-        }
+        };
 
         // When the map stops moving, render new data on the canvas.
         this._viewChangeEndEvent = google.maps.event.addListener(map, 'idle', (e: any) => {
@@ -263,7 +263,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
             this._centerStart = {
                 latitude: c.lat(),
                 longitude: c.lng()
-            }
+            };
         }
     }
 }

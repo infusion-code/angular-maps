@@ -267,7 +267,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                 Visible: this.Visible,
                 LayerOffset: this.LayerOffset,
                 ZIndex: this.ZIndex
-            }
+            };
             this._layerService.AddLayer(fakeLayerDirective);
             this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
             this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el)).then(c => {
@@ -326,7 +326,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             }
         }
         if (changes['ShowTooltips'] && this._tooltip) {
-            this.ManageTooltip(changes['ShowTooltips'].currentValue)
+            this.ManageTooltip(changes['ShowTooltips'].currentValue);
         }
     }
 
@@ -401,7 +401,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         ctx.strokeStyle = lo.strokeColor;
         ctx.font = `${lo.fontSize}px ${lo.fontFamily}`;
         ctx.textAlign = 'center';
-        const strokeWeight: number = lo.strokeWeight
+        const strokeWeight: number = lo.strokeWeight;
         if (text && strokeWeight && strokeWeight > 0) {
                 ctx.lineWidth = strokeWeight;
                 ctx.strokeText(text, loc.x, loc.y);

@@ -89,7 +89,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * @memberof MapLayerDirective
      */
     constructor(protected _layerService: LayerService, protected _containerRef: ViewContainerRef) {
-        this._id = layerId++
+        this._id = layerId++;
     }
 
     ///

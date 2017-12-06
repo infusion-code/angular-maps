@@ -49,7 +49,7 @@ export class BingClusterLayer implements Layer {
         markerSelected: null,
         markerUnSelected: null
     };
-    private _currentCluster: Microsoft.Maps.ClusterPushpin = null
+    private _currentCluster: Microsoft.Maps.ClusterPushpin = null;
 
     ///
     /// Property definitions
@@ -120,7 +120,7 @@ export class BingClusterLayer implements Layer {
         if (entity.NativePrimitve && entity.Location) {
             if (this._isClustering) {
                 const p: Array<Microsoft.Maps.Pushpin> = this._layer.getPushpins();
-                p.push(entity.NativePrimitve)
+                p.push(entity.NativePrimitve);
                 this._layer.setPushpins(p);
                 this._markers.push(entity);
             }
@@ -159,7 +159,7 @@ export class BingClusterLayer implements Layer {
                 this._pendingMarkers.push(...entities);
             }
         }
-    };
+    }
 
     /**
      * Initializes spider behavior for the clusering layer (when a cluster maker is clicked, it explodes into a spider of the
@@ -256,6 +256,18 @@ export class BingClusterLayer implements Layer {
      */
     public GetVisible(): boolean {
         return this._layer.getOptions().visible;
+    }
+
+    /**
+     * Returns the abstract marker used to wrap the Bing Pushpin.
+     *
+     * @returns {@BingSpiderClusterMarker} . The abstract marker object representing the pushpin.
+     *
+     * @memberof BingClusterLayer
+     */
+    public GetSpiderMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): BingSpiderClusterMarker {
+        const m: BingSpiderClusterMarker = this._spiderMarkerLookup.get(pin);
+        return m;
     }
 
     /**
@@ -359,7 +371,7 @@ export class BingClusterLayer implements Layer {
         this._layer.setPushpins(p);
         this._markers = this._markers.concat(this._pendingMarkers.splice(0));
         this._isClustering = true;
-    };
+    }
 
     /**
      * Stop to actually cluster the entities in a cluster layer.
@@ -374,7 +386,7 @@ export class BingClusterLayer implements Layer {
     public StopClustering() {
         if (!this._isClustering) { return; }
         this._isClustering = false;
-    };
+    }
 
 
     ///
@@ -401,18 +413,6 @@ export class BingClusterLayer implements Layer {
             textOffset: pin.getTextOffset(),
             title: pin.getTitle()
         };
-    }
-
-    /**
-     * Returns the abstract marker used to wrap the Bing Pushpin.
-     *
-     * @returns {@BingSpiderClusterMarker} . The abstract marker object representing the pushpin.
-     *
-     * @memberof BingClusterLayer
-     */
-    public GetSpiderMarkerFromBingMarker(pin: Microsoft.Maps.Pushpin): BingSpiderClusterMarker {
-        const m: BingSpiderClusterMarker = this._spiderMarkerLookup.get(pin);
-        return m;
     }
 
     /**
