@@ -1,3 +1,4 @@
+import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { Marker } from '../../models/marker';
@@ -37,7 +38,7 @@ export abstract class BingLayerBase {
      *
      * @memberof BingLayerBase
      */
-    constructor(protected _mapService: MapService) { }
+    constructor(protected _mapService: MapService, protected _zone: NgZone) { }
 
     ///
     /// Public methods
@@ -148,13 +149,23 @@ export abstract class BingLayerBase {
     /**
      * Deletes the layer
      *
-     * @abstract
      * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
      * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
      *
      * @memberof BingLayerBase
      */
-    public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
+    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
+        const l = this._layers.get(layer.Id);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l1: Layer) => {
+            return this._zone.run(() => {
+                l1.Delete();
+                this._layers.delete(layer.Id);
+            });
+        });
+    }
 
     /**
      * Returns the Layer model represented by this layer.

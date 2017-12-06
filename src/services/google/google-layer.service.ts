@@ -45,8 +45,8 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      *
      * @memberof GoogleLayerService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService);
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     /**
@@ -66,28 +66,6 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
             });
         });
         this._layers.set(layer.Id, p);
-    }
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof GoogleLayerService
-     */
-    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        const l = this._layers.get(layer.Id);
-        if (l == null) {
-            return Promise.resolve();
-        }
-        return l.then((l1: Layer) => {
-            return this._zone.run(() => {
-                l1.Delete();
-                this._layers.delete(layer.Id);
-            });
-        });
     }
 
     /**

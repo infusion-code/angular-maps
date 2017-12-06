@@ -100,8 +100,8 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * @param {NgZone} _zone
      * @memberof GoogleClusterService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService);
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     /**
@@ -199,18 +199,6 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
                 });
             }
         });
-    }
-
-    /**
-     * Delets the native layer
-     *
-     * @param {ClusterLayerDirective} layer
-     * @returns {Promise<void>}
-     * @memberof GoogleClusterService
-     */
-    public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
-        this._layers.delete(layer.Id);
-        return Promise.resolve();
     }
 
     /**

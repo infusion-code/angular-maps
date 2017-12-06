@@ -41,8 +41,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      *
      * @memberof BingClusterService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService);
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     ///
@@ -152,28 +152,6 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      */
     public CreatePolylines(layer: number, options: Array<IPolylineOptions>): Promise<Array<Polyline|Array<Polyline>>> {
         throw (new Error('Polylines are not supported in clustering layers. You can only use markers.'));
-    }
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof BingClusterService
-     */
-    public DeleteLayer(layer: ClusterLayerDirective): Promise<void> {
-        const l = this._layers.get(layer.Id);
-        if (l == null) {
-            return Promise.resolve();
-        }
-        return l.then((l1: Layer) => {
-            return this._zone.run(() => {
-                l1.Delete();
-                this._layers.delete(layer.Id);
-            });
-        });
     }
 
     /**

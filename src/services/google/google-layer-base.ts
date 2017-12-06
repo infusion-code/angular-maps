@@ -1,3 +1,4 @@
+import { Injectable, NgZone } from '@angular/core';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
 import { Marker } from '../../models/marker';
@@ -37,10 +38,11 @@ export abstract class GoogleLayerBase {
      * Creates an instance of GoogleLayerBase.
      * @param {MapService} _mapService - Concrete {@link MapService} implementation for Google Maps.
      * An instance of {@link GoogleMapService}.
+     * @param {NgZone} _zone - NgZone instance to provide zone aware promises.
      *
      * @memberof GoogleLayerBase
      */
-    constructor(protected _mapService: MapService) { }
+    constructor(protected _mapService: MapService, protected _zone: NgZone) { }
 
     ///
     /// Public methods
@@ -57,6 +59,27 @@ export abstract class GoogleLayerBase {
      * @memberof GoogleLayerBase
      */
     public abstract AddLayer(layer: MapLayerDirective): void;
+
+    /**
+     * Deletes the layer
+     *
+     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
+     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
+     *
+     * @memberof GoogleLayerBase
+     */
+    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
+        const l = this._layers.get(layer.Id);
+        if (l == null) {
+            return Promise.resolve();
+        }
+        return l.then((l1: Layer) => {
+            return this._zone.run(() => {
+                l1.Delete();
+                this._layers.delete(layer.Id);
+            });
+        });
+    }
 
     /**
      * Returns the Layer model represented by this layer.
@@ -76,17 +99,6 @@ export abstract class GoogleLayerBase {
         }
         return p;
     }
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof GoogleLayerBase
-     */
-    public abstract DeleteLayer(layer: MapLayerDirective): Promise<void>;
 
     /**
      * Creates a marker in the layer.

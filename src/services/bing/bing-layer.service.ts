@@ -40,8 +40,8 @@ export class BingLayerService extends BingLayerBase implements LayerService {
      *
      * @memberof BingLayerService
      */
-    constructor(_mapService: MapService, private _zone: NgZone) {
-        super(_mapService);
+    constructor(_mapService: MapService, _zone: NgZone) {
+        super(_mapService, _zone);
     }
 
     /**
@@ -206,26 +206,6 @@ export class BingLayerService extends BingLayerBase implements LayerService {
                 resolve(polys);
             });
             return polylines;
-        });
-    }
-
-    /**
-     * Deletes the layer
-     *
-     * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
-     *
-     * @memberof BingLayerService
-     */
-    public DeleteLayer(layer: MapLayerDirective): Promise<void> {
-        const l = this._layers.get(layer.Id);
-        if (l == null) {
-            return Promise.resolve();
-        }
-        return l.then((l1: Layer) => {
-            l1.Delete();
-            this._layers.delete(layer.Id);
         });
     }
 
