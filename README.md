@@ -111,7 +111,7 @@ To use maps, create a simple component (or implement the below in an existin com
         template: `
             <div style="height: 500px">
                 <x-map #xmap [Options]="_options">
-                    <map-marker
+                    <x-map-marker
                         [Latitude]="30" 
                         [Longitude]="90" 
                         [Title]="'My Marker'" 
@@ -127,7 +127,7 @@ To use maps, create a simple component (or implement the below in an existin com
                         <info-box [DisableAutoPan]="true" [Title]="'My InfoBox'" [Description]="'Hi, this is the content of the <strong>info window</strong>. It is your responsibility to implement functionality such as close, etc...'">
                             <info-box-action [Label]="'Click Me'" (ActionClicked)="_click()"></info-box-action>
                         </info-box>   
-                    </map-marker>
+                    </x-map-marker>
                 </x-map>
             </div>
         `,
