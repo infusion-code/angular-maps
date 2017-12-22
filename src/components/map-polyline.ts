@@ -7,6 +7,7 @@ import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPolylineOptions } from '../interfaces/ipolyline-options';
 import { PolylineService } from '../services/polyline.service';
+import { IPolylineEvent } from '../interfaces/ipolyline-event';
 import { InfoBoxComponent } from './infobox';
 
 let polylineId = 0;
@@ -178,90 +179,90 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM click event is fired on the Polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() Click: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() Click: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired when the DOM dblclick event is fired on the Polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() DblClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DblClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is repeatedly fired while the user drags the polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() Drag: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() Drag: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired when the user stops dragging the polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() DragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DragEnd: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired when the user starts dragging the polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() DragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() DragStart: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired when the DOM mousedown event is fired on the Polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() MouseDown: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseDown: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired when the DOM mousemove event is fired on the Polyline.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() MouseMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseMove: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired on Polyline mouseout.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() MouseOut: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseOut: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired on Polyline mouseover.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() MouseOver: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseOver: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This event is fired whe the DOM mouseup event is fired on the Polyline
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() MouseUp: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() MouseUp: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     /**
      * This even is fired when the Polyline is right-clicked on.
      *
-     * @type {EventEmitter<MouseEvent>}
+     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
-    @Output() RightClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+    @Output() RightClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
 
     ///
     /// Property declarations
@@ -398,23 +399,29 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * @memberof MapPolylineDirective
      */
     private AddEventListeners() {
+        const _getEventArg: (e: MouseEvent) => IPolylineEvent = e => {
+            return {
+                Polyline: this,
+                Click: e
+            };
+        };
         this._polylineService.CreateEventObservable('click', this).subscribe((ev: MouseEvent) => {
             if (this._infoBox != null) {
                 this._infoBox.Open(this._polylineService.GetCoordinatesFromClick(ev));
             }
-            this.Click.emit(ev);
+            this.Click.emit(_getEventArg(ev));
         });
         const handlers = [
-            { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(ev) },
-            { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(ev) },
-            { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(ev) },
-            { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(ev) },
-            { name: 'mousedown', handler: (ev: MouseEvent) => this.MouseDown.emit(ev) },
-            { name: 'mousemove', handler: (ev: MouseEvent) => this.MouseMove.emit(ev) },
-            { name: 'mouseout', handler: (ev: MouseEvent) => this.MouseOut.emit(ev) },
-            { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(ev) },
-            { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(ev) },
-            { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(ev) },
+            { name: 'dblclick', handler: (ev: MouseEvent) => this.DblClick.emit(_getEventArg(ev)) },
+            { name: 'drag', handler: (ev: MouseEvent) => this.Drag.emit(_getEventArg(ev)) },
+            { name: 'dragend', handler: (ev: MouseEvent) => this.DragEnd.emit(_getEventArg(ev)) },
+            { name: 'dragstart', handler: (ev: MouseEvent) => this.DragStart.emit(_getEventArg(ev)) },
+            { name: 'mousedown', handler: (ev: MouseEvent) => this.MouseDown.emit(_getEventArg(ev)) },
+            { name: 'mousemove', handler: (ev: MouseEvent) => this.MouseMove.emit(_getEventArg(ev)) },
+            { name: 'mouseout', handler: (ev: MouseEvent) => this.MouseOut.emit(_getEventArg(ev)) },
+            { name: 'mouseover', handler: (ev: MouseEvent) => this.MouseOver.emit(_getEventArg(ev)) },
+            { name: 'mouseup', handler: (ev: MouseEvent) => this.MouseUp.emit(_getEventArg(ev)) },
+            { name: 'rightclick', handler: (ev: MouseEvent) => this.RightClick.emit(_getEventArg(ev)) },
         ];
         handlers.forEach((obj) => {
             const os = this._polylineService.CreateEventObservable(obj.name, this).subscribe(obj.handler);
