@@ -241,7 +241,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Sets the visibility of the marker layer
      *
-     * @type {string}
+     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public Visible: boolean;

@@ -332,7 +332,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
         }
 
         const options: IClusterOptions = { id: this._id };
-        if (changes['ClusteringEnbabled']) { options.clusteringEnabled = this._clusteringEnabled; }
+        if (changes['ClusteringEnabled']) { options.clusteringEnabled = this._clusteringEnabled; }
         if (changes['GridSize']) { options.gridSize = this._gridSize; }
         if (changes['LayerOffset']) { options.layerOffset = this._layerOffset; }
         if (changes['SpiderClusterOptions']) { options.spiderClusterOptions = this._spiderClusterOptions; }

@@ -147,8 +147,24 @@ export class GoogleMapService implements MapService {
      */
     public CreateClusterLayer(options: IClusterOptions): Promise<Layer> {
         return this._map.then((map: GoogleMapTypes.GoogleMap) => {
+            let updateOptions: boolean = false;
             const markerClusterer: GoogleMapTypes.MarkerClusterer = new MarkerClusterer(map, [], options);
-            return new GoogleMarkerClusterer(markerClusterer);
+            const clusterLayer = new GoogleMarkerClusterer(markerClusterer);
+            const o: IClusterOptions = {
+                id: options.id
+            };
+            if (!options.visible) {
+                o.visible = false;
+                updateOptions = true;
+            }
+            if (!options.clusteringEnabled) {
+                o.clusteringEnabled = false;
+                updateOptions = true;
+            }
+            if (updateOptions) {
+                clusterLayer.SetOptions(o);
+            }
+            return clusterLayer;
         });
     }
 
