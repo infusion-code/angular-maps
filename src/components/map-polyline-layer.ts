@@ -280,6 +280,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
                     this._zone.runOutsideAngular(() => this.UpdatePolylines());
                 }
             });
+            this._layerPromise.then(l => l.SetVisible(this.Visible));
             this._service = this._layerService;
         });
     }
@@ -467,9 +468,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
             const polylines: Array<IPolylineOptions> = this._streaming ? this._polylinesLast : this._polylines;
-
             if (!this._streaming) { this._labels.splice(0); }
-            if (this.Visible === false) { this.PolylineOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the polylines
             const lp: Promise<Array<Polyline|Array<Polyline>>> = this._service.CreatePolylines(l.GetOptions().id, polylines);

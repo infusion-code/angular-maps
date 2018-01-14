@@ -280,6 +280,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
                     this._zone.runOutsideAngular(() => this.UpdatePolygons());
                 }
             });
+            this._layerPromise.then(l => l.SetVisible(this.Visible));
             this._service = this._layerService;
         });
     }
@@ -467,9 +468,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
             const polygons: Array<IPolygonOptions> = this._streaming ? this._polygonsLast : this._polygons;
-
             if (!this._streaming) { this._labels.splice(0); }
-            if (this.Visible === false) { this.PolygonOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
             const lp: Promise<Array<Polygon>> = this._service.CreatePolygons(l.GetOptions().id, polygons);
