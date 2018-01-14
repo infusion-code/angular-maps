@@ -238,9 +238,15 @@ export class GoogleMarkerClusterer implements Layer {
         const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
         entities.forEach((e: any) => {
             if (e.NativePrimitve && e.Location) {
-                this._markers.push(e);
+                e.NativePrimitve.setMap(null);
                 this._markerLookup.set(e.NativePrimitve, e);
-                p.push(e.NativePrimitve);
+                if (this._visible) {
+                    this._markers.push(e);
+                    p.push(e.NativePrimitve);
+                }
+                else {
+                    this._pendingMarkers.push(e);
+                }
             }
         });
         this._layer.addMarkers(p);

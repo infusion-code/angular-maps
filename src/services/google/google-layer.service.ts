@@ -62,7 +62,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
     public AddLayer(layer: MapLayerDirective): void {
         const p: Promise<Layer> = new Promise<Layer>((resolve, reject) => {
             this._mapService.MapPromise.then(m => {
-                resolve(new GoogleLayer(m, this._mapService, layer.Id));
+                const l: GoogleLayer = new GoogleLayer(m, this._mapService, layer.Id);
+                l.SetVisible(layer.Visible);
+                resolve(l);
             });
         });
         this._layers.set(layer.Id, p);

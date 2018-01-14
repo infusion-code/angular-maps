@@ -85,6 +85,7 @@ export class GoogleLayer implements Layer {
     public AddEntity(entity: Marker | InfoWindow | Polygon | Polyline): void {
         if (entity.NativePrimitve) {
             this._entities.push(entity);
+            entity.NativePrimitve.setVisible(this._visible);
             entity.NativePrimitve.setMap(this.NativePrimitve);
         }
     }
@@ -101,6 +102,7 @@ export class GoogleLayer implements Layer {
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             this._entities.push(...entities);
             eachSeries([...entities], (e, next) => {
+                e.NativePrimitve.setVisible(this._visible);
                 e.NativePrimitve.setMap(this.NativePrimitve);
                 nextTick(() => next());
             });

@@ -358,9 +358,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         this._zone.runOutsideAngular(() => {
             const fakeLayerDirective: any = {
                 Id : this._id,
-                Visible: this.Visible,
-                LayerOffset: this.LayerOffset,
-                ZIndex: this.ZIndex
+                Visible: this.Visible
             };
             if (!this.EnableClustering) {
                 this._layerService.AddLayer(fakeLayerDirective);
@@ -368,6 +366,8 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 this._service = this._layerService;
             }
             else {
+                fakeLayerDirective.LayerOffset = this.LayerOffset;
+                fakeLayerDirective.ZIndex = this.ZIndex;
                 fakeLayerDirective.ClusteringEnabled = this.EnableClustering;
                 fakeLayerDirective.ClusterPlacementMode = this.ClusterPlacementMode;
                 fakeLayerDirective.GridSize = this.GridSize;
@@ -379,6 +379,9 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 this._layerPromise = this._clusterService.GetNativeLayer(fakeLayerDirective);
                 this._service = this._clusterService;
             }
+            this._layerPromise.then(l => {
+                l.SetVisible(this.Visible);
+            });
             if (this.MarkerOptions) {
                 this._zone.runOutsideAngular(() => this.UpdateMarkers());
             }
@@ -501,7 +504,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
             const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast : this._markers;
-            if (this.Visible === false) { markers.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
             const mp: Promise<Array<Marker>> = this._service.CreateMarkers(markers, this.IconInfo);
