@@ -57,6 +57,7 @@ export class BingLayerService extends BingLayerBase implements LayerService {
     public AddLayer(layer: MapLayerDirective): void {
         const layerPromise = this._mapService.CreateLayer({ id: layer.Id });
         this._layers.set(layer.Id, layerPromise);
+        layerPromise.then(l => l.SetVisible(layer.Visible));
     }
 
 
