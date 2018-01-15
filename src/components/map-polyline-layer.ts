@@ -119,7 +119,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
         public get PolylineOptions(): Array<IPolylineOptions> { return this._polylines; }
         public set PolylineOptions(val: Array<IPolylineOptions>) {
             if (this._streaming) {
-                this._polylinesLast = val.slice(0);
+                this._polylinesLast.push(...val.slice(0));
                 this._polylines.push(...val);
             }
             else {
@@ -270,16 +270,21 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
             };
             this._layerService.AddLayer(fakeLayerDirective);
             this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
-            this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el)).then(c => {
-                this._canvas = c;
-                c._canvasReady.then(b => {
-                    this._tooltip = c.GetToolTipOverlay();
-                    this.ManageTooltip(this.ShowTooltips);
+
+            Promise.all([
+                    this._layerPromise,
+                    this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el))
+                ]).then(values => {
+                    values[0].SetVisible(this.Visible);
+                    this._canvas = values[1];
+                    this._canvas._canvasReady.then(b => {
+                        this._tooltip = this._canvas.GetToolTipOverlay();
+                        this.ManageTooltip(this.ShowTooltips);
+                    });
+                    if (this.PolylineOptions) {
+                        this._zone.runOutsideAngular(() => this.UpdatePolylines());
+                    }
                 });
-                if (this.PolylineOptions) {
-                    this._zone.runOutsideAngular(() => this.UpdatePolylines());
-                }
-            });
             this._service = this._layerService;
         });
     }
@@ -464,12 +469,12 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
      * @private
      */
     private UpdatePolylines(): void {
-        if (this._layerPromise == null) { return; }
+        if (this._layerPromise == null) {
+            return;
+        }
         this._layerPromise.then(l => {
-            const polylines: Array<IPolylineOptions> = this._streaming ? this._polylinesLast : this._polylines;
-
+            const polylines: Array<IPolylineOptions> = this._streaming ? this._polylinesLast.splice(0) : this._polylines;
             if (!this._streaming) { this._labels.splice(0); }
-            if (this.Visible === false) { this.PolylineOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the polylines
             const lp: Promise<Array<Polyline|Array<Polyline>>> = this._service.CreatePolylines(l.GetOptions().id, polylines);

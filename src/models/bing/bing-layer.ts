@@ -16,6 +16,9 @@ import { MapService} from '../../services/map.service';
  * @implements {Layer}
  */
 export class BingLayer implements Layer {
+
+    private _pendingEntities: Array<Marker|InfoWindow|Polygon|Polyline> = new Array<Marker|InfoWindow|Polygon|Polyline>();
+
     ///
     /// Property definitions
     ///
@@ -74,7 +77,12 @@ export class BingLayer implements Layer {
      */
     public AddEntity(entity: Marker|InfoWindow|Polygon|Polyline): void {
         if (entity && entity.NativePrimitve) {
-            this._layer.add(entity.NativePrimitve);
+            if (this.GetVisible()) {
+                this._layer.add(entity.NativePrimitve);
+            }
+            else {
+                this._pendingEntities.push(entity);
+            }
         }
     }
 
@@ -92,7 +100,12 @@ export class BingLayer implements Layer {
         //
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             eachSeries([...entities], (e, next) => {
-                this._layer.add(e.NativePrimitve);
+                if (this.GetVisible()) {
+                    this._layer.add(e.NativePrimitve);
+                }
+                else {
+                    this._pendingEntities.push(e);
+                }
                 nextTick(() => next());
             });
         }
@@ -179,10 +192,13 @@ export class BingLayer implements Layer {
      *
      * @param visible Boolean true to make the layer visible, false to hide the layer.
      *
-     * @memberof BingClusterLayer
+     * @memberof BingLayer
      */
     public SetVisible(visible: boolean): void {
         this._layer.setVisible(visible);
+        if (visible && this._pendingEntities.length > 0) {
+            this.AddEntities(this._pendingEntities.splice(0));
+        }
     }
 
 }

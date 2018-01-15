@@ -119,7 +119,7 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
         public get PolygonOptions(): Array<IPolygonOptions> { return this._polygons; }
         public set PolygonOptions(val: Array<IPolygonOptions>) {
             if (this._streaming) {
-                this._polygonsLast = val.slice(0);
+                this._polygonsLast.push(...val.slice(0));
                 this._polygons.push(...val);
             }
             else {
@@ -270,10 +270,15 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
             };
             this._layerService.AddLayer(fakeLayerDirective);
             this._layerPromise = this._layerService.GetNativeLayer(fakeLayerDirective);
-            this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el)).then(c => {
-                this._canvas = c;
-                c._canvasReady.then(b => {
-                    this._tooltip = c.GetToolTipOverlay();
+
+            Promise.all([
+                this._layerPromise,
+                this._mapService.CreateCanvasOverlay(el => this.DrawLabels(el))
+            ]).then(values => {
+                values[0].SetVisible(this.Visible);
+                this._canvas = values[1];
+                this._canvas._canvasReady.then(b => {
+                    this._tooltip = this._canvas.GetToolTipOverlay();
                     this.ManageTooltip(this.ShowTooltips);
                 });
                 if (this.PolygonOptions) {
@@ -464,12 +469,12 @@ export class MapPolygonLayerDirective implements OnDestroy, OnChanges, AfterCont
      * @private
      */
     private UpdatePolygons(): void {
-        if (this._layerPromise == null) { return; }
+        if (this._layerPromise == null) {
+            return;
+        }
         this._layerPromise.then(l => {
-            const polygons: Array<IPolygonOptions> = this._streaming ? this._polygonsLast : this._polygons;
-
+            const polygons: Array<IPolygonOptions> = this._streaming ? this._polygonsLast.splice(0) : this._polygons;
             if (!this._streaming) { this._labels.splice(0); }
-            if (this.Visible === false) { this.PolygonOptions.forEach(o => o.visible = false); }
 
             // generate the promise for the markers
             const lp: Promise<Array<Polygon>> = this._service.CreatePolygons(l.GetOptions().id, polygons);

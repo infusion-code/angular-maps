@@ -113,6 +113,8 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     public AddLayer(layer: ClusterLayerDirective): void {
         const options: IClusterOptions = {
             id: layer.Id,
+            visible: layer.Visible,
+            clusteringEnabled: layer.ClusteringEnabled,
             zoomOnClick: layer.ClusterClickAction === ClusterClickAction.ZoomIntoCluster
         };
         if (layer.GridSize) { options.gridSize = layer.GridSize; }

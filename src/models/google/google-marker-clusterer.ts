@@ -6,6 +6,7 @@ import { Marker } from '../marker';
 import { InfoWindow } from '../info-window';
 import { ClusterPlacementMode } from '../cluster-placement-mode';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Concrete implementation of a clustering layer for the Google Map Provider.
@@ -87,12 +88,14 @@ export class GoogleMarkerClusterer implements Layer {
         let isMarker: boolean = entity instanceof Marker;
         isMarker = entity instanceof GoogleMarker || isMarker;
         if (isMarker) {
+            entity.NativePrimitve.setMap(null);
+                // remove the marker from the map as the clusterer will control marker visibility.
             if (entity.IsFirst) {
                 this.StopClustering();
             }
         }
         if (entity.NativePrimitve && entity.Location) {
-            if (this._isClustering) {
+            if (this._isClustering && this._visible) {
                 this._layer.addMarker(entity.NativePrimitve);
                 this._markers.push(entity);
             }
@@ -119,13 +122,17 @@ export class GoogleMarkerClusterer implements Layer {
         if (entities != null && Array.isArray(entities) && entities.length !== 0 ) {
             const e: Array<GoogleMapTypes.Marker> = entities.map(p => {
                 this._markerLookup.set(p.NativePrimitve, p);
+                p.NativePrimitve.setMap(null);
+                    // remove the marker from the map as the clusterer will control marker visibility.
                 return p.NativePrimitve;
             });
-            if (this._isClustering) {
+            if (this._isClustering && this._visible) {
                 this._layer.addMarkers(e);
                 this._markers.push(...entities);
             }
             else {
+                // if layer is not visible, always add to pendingMarkers. Setting the layer to visible later
+                // will render the markers appropriately
                 this._pendingMarkers.push(...entities);
             }
         }
@@ -139,6 +146,7 @@ export class GoogleMarkerClusterer implements Layer {
     public Delete(): void {
         this._layer.getMarkers().forEach(m => {
             m.setMap(null);
+                // remove the marker from the map as the clusterer will control marker visibility.
         });
         this._layer.clearMarkers();
         this._markers.splice(0);
@@ -230,9 +238,15 @@ export class GoogleMarkerClusterer implements Layer {
         const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
         entities.forEach((e: any) => {
             if (e.NativePrimitve && e.Location) {
-                this._markers.push(e);
+                e.NativePrimitve.setMap(null);
                 this._markerLookup.set(e.NativePrimitve, e);
-                p.push(e.NativePrimitve);
+                if (this._visible) {
+                    this._markers.push(e);
+                    p.push(e.NativePrimitve);
+                }
+                else {
+                    this._pendingMarkers.push(e);
+                }
             }
         });
         this._layer.addMarkers(p);
@@ -313,19 +327,29 @@ export class GoogleMarkerClusterer implements Layer {
     public StartClustering(): void {
         if (this._isClustering) { return; }
 
-        const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
-        this._markers.forEach(e => {
-            if (e.NativePrimitve && e.Location) {
-                p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
-            }
-        });
-        this._pendingMarkers.forEach(e => {
-            if (e.NativePrimitve && e.Location) {
-                p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
-            }
-        });
-        this._layer.addMarkers(p);
-        this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+        if (this._visible) {
+            const p: Array<GoogleMapTypes.Marker> = new Array<GoogleMapTypes.Marker>();
+            this._markers.forEach(e => {
+                if (e.NativePrimitve && e.Location) {
+                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
+                }
+            });
+            this._pendingMarkers.forEach(e => {
+                if (e.NativePrimitve && e.Location) {
+                    p.push(<GoogleMapTypes.Marker>e.NativePrimitve);
+                }
+            });
+            this._layer.addMarkers(p);
+            this._markers = this._markers.concat(this._pendingMarkers.splice(0));
+        }
+
+        if (!this._visible) {
+            // only add the markers if the layer is visible. Otherwise, keep them pending. They would be added once the
+            // layer is set to visible.
+            Observable.timer(0).subscribe(() => {
+                this._layer.resetViewport(true);
+            });
+        }
         this._isClustering = true;
     }
 

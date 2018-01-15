@@ -190,7 +190,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         public get MarkerOptions(): Array<IMarkerOptions> { return this._markers; }
         public set MarkerOptions(val: Array<IMarkerOptions>) {
             if (this._streaming) {
-                this._markersLast = val.slice(0);
+                this._markersLast.push(...val.slice(0));
                 this._markers.push(...val);
             }
             else {
@@ -241,7 +241,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Sets the visibility of the marker layer
      *
-     * @type {string}
+     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public Visible: boolean;
@@ -358,9 +358,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         this._zone.runOutsideAngular(() => {
             const fakeLayerDirective: any = {
                 Id : this._id,
-                Visible: this.Visible,
-                LayerOffset: this.LayerOffset,
-                ZIndex: this.ZIndex
+                Visible: this.Visible
             };
             if (!this.EnableClustering) {
                 this._layerService.AddLayer(fakeLayerDirective);
@@ -368,6 +366,8 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 this._service = this._layerService;
             }
             else {
+                fakeLayerDirective.LayerOffset = this.LayerOffset;
+                fakeLayerDirective.ZIndex = this.ZIndex;
                 fakeLayerDirective.ClusteringEnabled = this.EnableClustering;
                 fakeLayerDirective.ClusterPlacementMode = this.ClusterPlacementMode;
                 fakeLayerDirective.GridSize = this.GridSize;
@@ -379,9 +379,12 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
                 this._layerPromise = this._clusterService.GetNativeLayer(fakeLayerDirective);
                 this._service = this._clusterService;
             }
-            if (this.MarkerOptions) {
-                this._zone.runOutsideAngular(() => this.UpdateMarkers());
-            }
+            this._layerPromise.then(l => {
+                l.SetVisible(this.Visible);
+                if (this.MarkerOptions) {
+                    this._zone.runOutsideAngular(() => this.UpdateMarkers());
+                }
+            });
         });
     }
 
@@ -500,8 +503,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     private UpdateMarkers(): void {
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
-            const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast : this._markers;
-            if (this.Visible === false) { markers.forEach(o => o.visible = false); }
+            const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast.splice(0) : this._markers;
 
             // generate the promise for the markers
             const mp: Promise<Array<Marker>> = this._service.CreateMarkers(markers, this.IconInfo);
