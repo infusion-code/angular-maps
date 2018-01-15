@@ -190,7 +190,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         public get MarkerOptions(): Array<IMarkerOptions> { return this._markers; }
         public set MarkerOptions(val: Array<IMarkerOptions>) {
             if (this._streaming) {
-                this._markersLast = val.slice(0);
+                this._markersLast.push(...val.slice(0));
                 this._markers.push(...val);
             }
             else {
@@ -381,10 +381,10 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
             }
             this._layerPromise.then(l => {
                 l.SetVisible(this.Visible);
+                if (this.MarkerOptions) {
+                    this._zone.runOutsideAngular(() => this.UpdateMarkers());
+                }
             });
-            if (this.MarkerOptions) {
-                this._zone.runOutsideAngular(() => this.UpdateMarkers());
-            }
         });
     }
 
@@ -503,7 +503,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     private UpdateMarkers(): void {
         if (this._layerPromise == null) { return; }
         this._layerPromise.then(l => {
-            const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast : this._markers;
+            const markers: Array<IMarkerOptions> = this._streaming ? this._markersLast.splice(0) : this._markers;
 
             // generate the promise for the markers
             const mp: Promise<Array<Marker>> = this._service.CreateMarkers(markers, this.IconInfo);
