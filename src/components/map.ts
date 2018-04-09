@@ -263,6 +263,15 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     @Output()
     ZoomChange: EventEmitter<Number> = new EventEmitter<Number>();
 
+    /**
+     * This event emitter is fired when the map service is available and the maps has been
+     * Initialized
+     * @type {EventEmitter<MapService>}
+     * @memberOf MapComponent
+     */
+    @Output()
+    MapService: EventEmitter<MapService> = new EventEmitter<MapService>();
+
 
     ///
     /// Constructor
@@ -291,6 +300,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     public ngOnInit(): void {
         this.InitMapInstance(this._container.nativeElement);
         this.MapPromise.emit(this._mapService.MapPromise);
+        this.MapService.emit(this._mapService);
     }
 
     /**
