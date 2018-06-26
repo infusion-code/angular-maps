@@ -24,8 +24,6 @@ import { GooglePolylineService } from './google-polyline.service';
  * Implements a factory to create three necessary Google Maps specific service instances.
  *
  * @export
- * @class GoogleMapServiceFactory
- * @implements {MapServiceFactory}
  */
 @Injectable()
 export class GoogleMapServiceFactory implements MapServiceFactory {
@@ -38,8 +36,8 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
 
     /**
      * Creates an instance of GoogleMapServiceFactory.
-     * @param {MapAPILoader} _loader - {@link MapAPILoader} implementation for the Google Map provider.
-     * @param {NgZone} _zone - NgZone object to implement zone aware promises.
+     * @param _loader - {@link MapAPILoader} implementation for the Google Map provider.
+     * @param _zone - NgZone object to implement zone aware promises.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -55,7 +53,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the map service for the Google Maps implementation.
      *
-     * @returns {MapService} - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @returns - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -66,8 +64,8 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the cluster service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
-     * @returns {ClusterService} - {@link ClusterService}. A concreted instance of the {@link GoogleClusterService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @returns - {@link ClusterService}. A concreted instance of the {@link GoogleClusterService}.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -78,9 +76,9 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates thh info box service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
-     * @param {MarkerService} map - {@link MarkerService}. A concreted instance of the {@link GoogleMarkerService}.
-     * @returns {InfoBoxService} - {@link InfoBoxService}. A concreted instance of the {@link GoogleInfoBoxService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @param map - {@link MarkerService}. A concreted instance of the {@link GoogleMarkerService}.
+     * @returns - {@link InfoBoxService}. A concreted instance of the {@link GoogleInfoBoxService}.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -91,8 +89,8 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the layer service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
-     * @returns {LayerService} - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @returns - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -103,10 +101,10 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the marker service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
-     * @param {LayerService} layers - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
-     * @param {ClusterService} clusters  - {@link ClusterService}. A concreted instance of the {@link GoogleClusterService}.
-     * @returns {MarkerService} - {@link MarkerService}. A concreted instance of the {@link GoogleMarkerService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link GoogleMapService}.
+     * @param layers - {@link LayerService}. A concreted instance of the {@link GoogleLayerService}.
+     * @param clusters  - {@link ClusterService}. A concreted instance of the {@link GoogleClusterService}.
+     * @returns - {@link MarkerService}. A concreted instance of the {@link GoogleMarkerService}.
      *
      * @memberof GoogleMapServiceFactory
      */
@@ -117,9 +115,9 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the polygon service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
-     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
-     * @returns {PolygonService} - {@link PolygonService} implementation for the underlying map architecture.
+     * @param map - {@link MapService} implementation for thh underlying map archticture.
+     * @param layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns - {@link PolygonService} implementation for the underlying map architecture.
      *
      * @memberof MapServiceFactory
      */
@@ -130,9 +128,9 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the polyline service for the Google Maps implementation.
      *
-     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
-     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
-     * @returns {PolylineService} - {@link PolylineService} implementation for the underlying map architecture.
+     * @param map - {@link MapService} implementation for thh underlying map archticture.
+     * @param layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns - {@link PolylineService} implementation for the underlying map architecture.
      *
      * @memberof MapServiceFactory
      */
@@ -148,7 +146,7 @@ export class GoogleMapServiceFactory implements MapServiceFactory {
  * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link GoogleMapAPILoader}.
  * @param zone - An NgZone instance to provide zone aware promises.
  *
- * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance.
+ * @returns - A {@link MapServiceFactory} instance.
  */
 export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
     return new GoogleMapServiceFactory(apiLoader, zone);
@@ -158,7 +156,7 @@ export function GoogleMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: Ng
  * Creates a new instance of a plaform specific MapLoaderFactory.
  *
  * @export
- * @returns {MapAPILoader} - A {@link MapAPILoader} instance.
+ * @returns - A {@link MapAPILoader} instance.
  */
 export function GoogleMapLoaderFactory(): MapAPILoader {
     return new GoogleMapAPILoader(new GoogleMapAPILoaderConfig(), new WindowRef(), new DocumentRef());

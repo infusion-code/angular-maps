@@ -9,7 +9,6 @@ export interface IMarkerIconInfo {
      * conavas bases this can provide a significant performance increase if a large number
      * of markers are used.
      *
-     * @type {string}
      * @memberof IMarkerIconInfo
      */
     id?: string;

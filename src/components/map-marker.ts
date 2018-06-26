@@ -39,10 +39,6 @@ let markerId = 0;
  * ```
  *
  * @export
- * @class MapMarkerDirective
- * @implements {OnDestroy}
- * @implements {OnChanges}
- * @implements {AfterContentInit}
  */
 @Directive({
     selector: 'x-map-marker'
@@ -62,7 +58,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Any InfoBox that is a direct children of the marker
      *
      * @protected
-     * @type {InfoBox}
      * @memberof MapMarkerDirective
      */
     @ContentChild(InfoBoxComponent) protected _infoBox: InfoBoxComponent;
@@ -73,7 +68,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      *  Icon anchor relative to marker root
      *
-     * @type {IPoint}
      * @memberof MapMarkerDirective
      */
     @Input() public Anchor: IPoint;
@@ -81,7 +75,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired when the DOM dblclick event is fired on the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() DblClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -89,7 +82,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is repeatedly fired while the user drags the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() Drag: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -97,7 +89,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired when the user stops dragging the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() DragEnd: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -105,7 +96,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * If true, the marker can be dragged. Default value is false.
      *
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     @Input() public Draggable = false;
@@ -113,7 +103,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired when the user starts dragging the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() DragStart: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -121,7 +110,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event emitter gets emitted when a marker icon is being created.
      *
-     * @type {EventEmitter<IMarkerIconInfo>}
      * @memberof MapMarkerDirective
      */
     @Output() public DynamicMarkerCreated: EventEmitter<IMarkerIconInfo> = new EventEmitter<IMarkerIconInfo>();
@@ -129,7 +117,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Icon height
      *
-     * @type {number}
      * @memberof MapMarkerDirective
      */
     @Input() public Height: number;
@@ -137,7 +124,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Information for dynamic, custom created icons.
      *
-     * @type {IMarkerIconInfo}
      * @memberof MapMarkerDirective
      */
     @Input() public IconInfo: IMarkerIconInfo;
@@ -145,7 +131,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Icon (the URL of the image) for the foreground.
      *
-     * @type {string}
      * @memberof MapMarkerDirective
      */
     @Input() public IconUrl: string;
@@ -154,7 +139,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * True to indiciate whether this is the first marker in a set.
      * Use this for bulk operations (particularily clustering) to ensure performance.
      *
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     @Input() public IsFirstInSet = false;
@@ -163,7 +147,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * True to indiciate whether this is the last marker in a set.
      * Use this for bulk operations (particularily clustering) to ensure performance.
      *
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     @Input() public IsLastInSet = true;
@@ -171,7 +154,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * The label (a single uppercase character) for the marker.
      *
-     * @type {string}
      * @memberof MapMarkerDirective
      */
     @Input() public Label: string;
@@ -179,7 +161,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * The latitude position of the marker.
      *
-     * @type {number}
      * @memberof MapMarkerDirective
      */
     @Input() public Latitude: number;
@@ -187,7 +168,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * The longitude position of the marker.
      *
-     * @type {number}
      * @memberof MapMarkerDirective
      */
     @Input() public Longitude: number;
@@ -195,7 +175,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event emitter gets emitted when the user clicks on the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() public MarkerClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -203,7 +182,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Arbitary metadata to assign to the Marker. This is useful for events
      *
-     * @type {Map<string, any>}
      * @memberof MapMarkerDirective
      */
     @Input() public Metadata: Map<string, any> = new Map<string, any>();
@@ -211,7 +189,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired when the DOM mousedown event is fired on the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() MouseDown: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -219,7 +196,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired when the DOM mousemove event is fired on the marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() MouseMove: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -227,7 +203,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired on marker mouseout.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() MouseOut: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -235,7 +210,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired on marker mouseover.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() MouseOver: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -243,7 +217,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This event is fired whe the DOM mouseup event is fired on the marker
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() MouseUp: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -251,7 +224,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * This even is fired when the marker is right-clicked on.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerDirective
      */
     @Output() RightClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -259,7 +231,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      *  The title of the marker.
      *
-     * @type {string}
      * @memberof MapMarkerDirective
      */
     @Input() public Title: string;
@@ -267,7 +238,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Sets the visibility of the marker
      *
-     * @type {string}
      * @memberof MapMarkerDirective
      */
     @Input() public Visible: boolean;
@@ -275,7 +245,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Icon Width
      *
-     * @type {number}
      * @memberof MapMarkerDirective
      */
     @Input() public Width: number;
@@ -296,7 +265,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Getswhether the marker has already been added to the marker service and is ready for use.
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     public get AddedToManager(): boolean { return this._markerAddedToManger; }
@@ -305,7 +273,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Gets the id of the marker as a string.
      *
      * @readonly
-     * @type {string}
      * @memberof MapMarkerDirective
      */
     public get Id(): string { return this._id; }
@@ -314,7 +281,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Gets whether the marker is in a cluster layer. See {@link ClusterLayer}.
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     public get InClusterLayer(): boolean { return this._inClusterLayer; }
@@ -323,7 +289,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * Gets whether the marker is in a custom layer. See {@link MapLayer}.
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapMarkerDirective
      */
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
@@ -332,7 +297,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
      * gets the id of the Layer the marker belongs to.
      *
      * @readonly
-     * @type {number}
      * @memberof MapMarkerDirective
      */
     public get LayerId(): number { return this._layerId; }
@@ -343,8 +307,8 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
 
     /**
      * Creates an instance of MapMarkerDirective.
-     * @param {MarkerService} _markerService - Concreate implementation of a {@link MarkerService}.
-     * @param {ViewContainerRef} _containerRef - View container hosting the marker.
+     * @param _markerService - Concreate implementation of a {@link MarkerService}.
+     * @param _containerRef - View container hosting the marker.
      * Used to determine parent layer through markup.
      *
      * @memberof MapMarkerDirective
@@ -360,8 +324,8 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Translates a marker geo location to a pixel location relative to the map viewport.
      *
-     * @param {ILatLong} [loc] - {@link ILatLong} containing the geo coordinates. If null, the marker's coordinates are used.
-     * @returns {Promise<IPoint>} - A promise that when fullfilled contains an {@link IPoint} representing the pixel coordinates.
+     * @param [loc] - {@link ILatLong} containing the geo coordinates. If null, the marker's coordinates are used.
+     * @returns - A promise that when fullfilled contains an {@link IPoint} representing the pixel coordinates.
      *
      * @memberof MapMarkerDirective
      */
@@ -371,7 +335,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
 
     /**
      * Called after Component content initialization. Part of ng Component life cycle.
-     * @returns {void}
      *
      * @memberof MapMarkerDirective
      */
@@ -396,7 +359,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
+     * @param changes - collection of changes.
      *
      * @memberof MapMarkerDirective
      */
@@ -441,7 +404,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
 
     /**
      * Obtains a string representation of the Marker Id.
-     * @return {string} - string representation of the marker id.
+     * @returns - string representation of the marker id.
      * @memberof MapMarkerDirective
      */
     public toString(): string { return 'MapMarker-' + this._id.toString(); }
@@ -452,8 +415,6 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
 
     /**
      * Adds various event listeners for the marker.
-     *
-     * @private
      *
      * @memberof MapMarkerDirective
      */

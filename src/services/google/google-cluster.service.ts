@@ -34,8 +34,8 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /**
      * Creates the cluster icon from the styles
      *
-     * @param {Array<IClusterIconInfo>} styles
-     * @returns {Promise<Array<IClusterIconInfo>>} - Promise that when resolved contains an Array of IClusterIconInfo objects
+     * @param styles
+     * @returns - Promise that when resolved contains an Array of IClusterIconInfo objects
      * containing the hydrated cluster icons.
      * @memberof GoogleClusterService
      */
@@ -96,8 +96,8 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
 
     /**
      * Creates an instance of GoogleClusterService.
-     * @param {MapService} _mapService
-     * @param {NgZone} _zone
+     * @param _mapService
+     * @param _zone
      * @memberof GoogleClusterService
      */
     constructor(_mapService: MapService, _zone: NgZone) {
@@ -107,7 +107,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /**
      * Adds the cluster layer to the map
      *
-     * @param {ClusterLayerDirective} layer
+     * @param layer
      * @memberof GoogleClusterService
      */
     public AddLayer(layer: ClusterLayerDirective): void {
@@ -206,9 +206,8 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /**
      * Create a marker in the cluster
      *
-     * @param {number} layer
-     * @param {IMarkerOptions} options
-     * @returns {Promise<Marker>}
+     * @param layer
+     * @param options
      * @memberof GoogleClusterService
      */
     public CreateMarker(layer: number, options: IMarkerOptions): Promise<Marker> {
@@ -229,8 +228,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /**
      * Starts the clustering
      *
-     * @param {ClusterLayerDirective} layer
-     * @returns {Promise<void>}
+     * @param layer
      * @memberof GoogleClusterService
      */
     public StartClustering(layer: ClusterLayerDirective): Promise<void> {
@@ -240,8 +238,7 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
     /**
      * Stops the clustering
      *
-     * @param {ClusterLayerDirective} layer
-     * @returns {Promise<void>}
+     * @param layer
      * @memberof GoogleClusterService
      */
     public StopClustering(layer: ClusterLayerDirective): Promise<void> {
@@ -252,9 +249,9 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {IPolygonOptions} options - Polygon options defining the polygon.
-     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygon.
+     * @returns - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof GoogleClusterService
      */
@@ -266,9 +263,9 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
-     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygons.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polygon models.
      *
      * @memberof GoogleClusterService
      */
@@ -280,9 +277,9 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * Adds a polyline to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the line.
-     * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline|Array<Polyline>} - A promise that when fullfilled contains the an instance of the Polyline (or an
+     * @param layer - The id of the layer to which to add the line.
+     * @param options - Polyline options defining the line.
+     * @returns - A promise that when fullfilled contains the an instance of the Polyline (or an
      * array of polygons for complex paths) model.
      *
      * @memberof GoogleClusterService
@@ -295,9 +292,9 @@ export class GoogleClusterService extends GoogleLayerBase implements ClusterServ
      * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polylines.
-     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
-     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     * @param layer - The id of the layer to which to add the polylines.
+     * @param options - Polyline options defining the polylines.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polyline models.
      *
      * @memberof GoogleClusterService
      */

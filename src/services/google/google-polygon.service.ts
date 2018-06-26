@@ -12,8 +12,6 @@ import { LayerService } from '../layer.service';
  * Concrete implementation of the Polygon Service abstract class for Google Maps.
  *
  * @export
- * @class GooglePolygonService
- * @implements {PolygonService}
  */
 @Injectable()
 export class GooglePolygonService implements PolygonService {
@@ -29,10 +27,10 @@ export class GooglePolygonService implements PolygonService {
 
     /**
      * Creates an instance of GooglePolygonService.
-     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
-     * @param {LayerService} _layerService - {@link GoogleLayerService} instance.
+     * @param _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
+     * @param _layerService - {@link GoogleLayerService} instance.
      * The concrete {@link GoogleLayerService} implementation is expected.
-     * @param {NgZone} _zone - NgZone instance to support zone aware promises.
+     * @param _zone - NgZone instance to support zone aware promises.
      *
      * @memberof GooglePolygonService
      */
@@ -49,7 +47,7 @@ export class GooglePolygonService implements PolygonService {
      * Adds a polygon to a map. Depending on the polygon context, the polygon will either by added to the map or a
      * correcsponding layer.
      *
-     * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} to be added.
+     * @param polygon - The {@link MapPolygonDirective} to be added.
      *
      * @memberof GooglePolygonService
      */
@@ -81,10 +79,9 @@ export class GooglePolygonService implements PolygonService {
     /**
       * Registers an event delegate for a polygon.
       *
-      * @template T - Type of the event to emit.
-      * @param {string} eventName - The name of the event to register (e.g. 'click')
-      * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to register the event.
-      * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+      * @param eventName - The name of the event to register (e.g. 'click')
+      * @param polygon - The {@link MapPolygonDirective} for which to register the event.
+      * @returns - Observable emiting an instance of T each time the event occurs.
       *
       * @memberof GooglePolygonService
       */
@@ -99,8 +96,8 @@ export class GooglePolygonService implements PolygonService {
     /**
       * Deletes a polygon.
       *
-      * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be deleted.
-      * @returns {Promise<void>} - A promise fullfilled once the polygon has been deleted.
+      * @param polygon - {@link MapPolygonDirective} to be deleted.
+      * @returns - A promise fullfilled once the polygon has been deleted.
       *
       * @memberof GooglePolygonService
       */
@@ -122,8 +119,8 @@ export class GooglePolygonService implements PolygonService {
      * Obtains geo coordinates for the polygon on the click location
      *
      * @abstract
-     * @param {(MouseEvent| any)} e - The mouse event.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @param e - The mouse event.
+     * @returns - {@link ILatLong} containing the geo coordinates of the clicked marker.
      *
      * @memberof GooglePolygonService
      */
@@ -134,8 +131,8 @@ export class GooglePolygonService implements PolygonService {
     /**
      * Obtains the polygon model for the polygon allowing access to native implementation functionatiliy.
      *
-     * @param {MapPolygonDirective} polygon - The {@link MapPolygonDirective} for which to obtain the polygon model.
-     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the {@link Polygon} implementation of the underlying platform.
+     * @param polygon - The {@link MapPolygonDirective} for which to obtain the polygon model.
+     * @returns - A promise that when fullfilled contains the {@link Polygon} implementation of the underlying platform.
      *
      * @memberof GooglePolygonService
      */
@@ -146,10 +143,10 @@ export class GooglePolygonService implements PolygonService {
     /**
      * Set the polygon options.
      *
-     * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
-     * @param {IPolygonOptions} options - {@link IPolygonOptions} object containing the options. Options will be merged with the
+     * @param polygon - {@link MapPolygonDirective} to be updated.
+     * @param options - {@link IPolygonOptions} object containing the options. Options will be merged with the
      * options already on the underlying object.
-     * @returns {Promise<void>} - A promise fullfilled once the polygon options have been set.
+     * @returns - A promise fullfilled once the polygon options have been set.
      *
      * @memberof GooglePolygonService
      */
@@ -160,8 +157,8 @@ export class GooglePolygonService implements PolygonService {
     /**
      * Updates the Polygon path
      *
-     * @param {MapPolygonDirective} polygon - {@link MapPolygonDirective} to be updated.
-     * @returns {Promise<void>} - A promise fullfilled once the polygon has been updated.
+     * @param polygon - {@link MapPolygonDirective} to be updated.
+     * @returns - A promise fullfilled once the polygon has been updated.
      *
      * @memberof GooglePolygonService
      */

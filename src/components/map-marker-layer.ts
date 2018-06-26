@@ -50,10 +50,6 @@ let layerId = 1000000;
  * ```
  *
  * @export
- * @class MapMarkerLayerDirective
- * @implements {OnDestroy}
- * @implements {OnChanges}
- * @implements {AfterContentInit}
  */
 @Directive({
     selector: 'x-map-marker-layer'
@@ -83,7 +79,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
      *
-     * @type {ClusterClickAction}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public ClusterClickAction: ClusterClickAction =  ClusterClickAction.ZoomIntoCluster;
@@ -92,7 +87,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets the IconInfo to be used to create a custom cluster marker. Supports font-based, SVG, graphics and more.
      * See {@link IMarkerIconInfo}.
      *
-     * @type {IMarkerIconInfo}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public ClusterIconInfo: IMarkerIconInfo;
@@ -100,7 +94,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets the cluster placement mode. {@link ClusterPlacementMode}
      *
-     * @type {ClusterPlacementMode}
      * @memberof MapMarkerLayerDirective
      */
     @Input()  public ClusterPlacementMode: ClusterPlacementMode = ClusterPlacementMode.MeanValue;
@@ -109,7 +102,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets the callback invoked to create a custom cluster marker. Note that when {@link UseDynamicSizeMarkers} is enabled,
      * you cannot set a custom marker callback.
      *
-     * @type (Array<Marker>, IMarkerIconInfo) => string
      * @memberof MapMarkerLayerDirective
      */
     @Input()
@@ -128,7 +120,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets the base size of dynamic markers in pixels. The actualy size of the dynamic marker is based on this.
      * See {@link UseDynamicSizeMarkers}.
      *
-     * @type {number}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -140,7 +131,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * The map contains key/value pairs, with the keys being
      * the breakpoint sizes and the values the colors to be used for the dynamic marker in that range. See {@link UseDynamicSizeMarkers}.
      *
-     * @type {Map<number, string>}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -148,9 +138,8 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
         public set DynamicMarkerRanges(val: Map<number, string>) { this._dynamicMarkerRanges = val; }
 
     /**
-     *  Determines whether the layer clusters. This property can only be set on creation of the layer.
+     * Determines whether the layer clusters. This property can only be set on creation of the layer.
      *
-     * @type {Boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public EnableClustering: boolean = false;
@@ -158,7 +147,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets the grid size to be used for clustering.
      *
-     * @type {number}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public GridSize: number = 150;
@@ -167,7 +155,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets the IconInfo to be used to create a custom marker images. Supports font-based, SVG, graphics and more.
      * See {@link IMarkerIconInfo}.
      *
-     * @type {IMarkerIconInfo}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public IconInfo: IMarkerIconInfo;
@@ -175,7 +162,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets An offset applied to the positioning of the layer.
      *
-     * @type {IPoint}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public LayerOffset: IPoint = null;
@@ -183,7 +169,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      *  IMarkerOptions array holding the marker info.
      *
-     * @type {Array<IMarkerOptions>}
      * @memberof MapMarkerLayerDirective
      */
     @Input()
@@ -201,7 +186,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets the cluster styles
      *
-     * @type {Array<IClusterIconInfo>)}
      * @memberof MapMarkerLayerDirective
      */
     @Input()
@@ -212,7 +196,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Sets whether to treat changes in the MarkerOptions as streams of new markers. In thsi mode, changing the
      * Array supplied in MarkerOptions will be incrementally drawn on the map as opposed to replace the markers on the map.
      *
-     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input()
@@ -223,7 +206,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
      * pins in the cluster. If set to true, this will take precendence over any custom marker creation.
      *
-     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input()
@@ -241,7 +223,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Sets the visibility of the marker layer
      *
-     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public Visible: boolean;
@@ -249,7 +230,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Gets or sets the z-index of the layer. If not used, layers get stacked in the order created.
      *
-     * @type {number}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public ZIndex: number = 0;
@@ -258,7 +238,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets or sets whether the cluster should zoom in on click
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapMarkerLayerDirective
      */
     @Input() public ZoomOnClick: boolean = true;
@@ -271,7 +250,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * This event emitter gets emitted when the dynamic icon for a marker is being created.
      *
-     * @type {EventEmitter<IMarkerIconInfo>}
      * @memberof MapMarkerLayerDirective
      */
     @Output() public DynamicMarkerCreated: EventEmitter<IMarkerIconInfo> = new EventEmitter<IMarkerIconInfo>();
@@ -279,7 +257,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * This event emitter gets emitted when the user clicks a marker in the layer.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerLayerDirective
      */
     @Output() public MarkerClick: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -287,7 +264,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * This event is fired when the user stops dragging a marker.
      *
-     * @type {EventEmitter<IMarkerEvent>}
      * @memberof MapMarkerLayerDirective
      */
     @Output() public DragEnd: EventEmitter<IMarkerEvent> = new EventEmitter<IMarkerEvent>();
@@ -301,7 +277,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      * Gets the id of the marker layer.
      *
      * @readonly
-     * @type {number}
      * @memberof MapMarkerLayerDirective
      */
     public get Id(): number { return this._id; }
@@ -312,11 +287,11 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
 
     /**
      * Creates an instance of MapMarkerLayerDirective.
-     * @param {MarkerService} _markerService - Concreate implementation of a {@link MarkerService}.
-     * @param {LayerService} _layerService - Concreate implementation of a {@link LayerService}.
-     * @param {ClusterService} _clusterService - Concreate implementation of a {@link ClusterService}.
-     * @param {MapService} _mapService - Concreate implementation of a {@link MapService}.
-     * @param {NgZone} _zone - Concreate implementation of a {@link NgZone} service.
+     * @param _markerService - Concreate implementation of a {@link MarkerService}.
+     * @param _layerService - Concreate implementation of a {@link LayerService}.
+     * @param _clusterService - Concreate implementation of a {@link ClusterService}.
+     * @param _mapService - Concreate implementation of a {@link MapService}.
+     * @param _zone - Concreate implementation of a {@link NgZone} service.
      *
      * @memberof MapMarkerLayerDirective
      */
@@ -336,8 +311,8 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Translates a geo location to a pixel location relative to the map viewport.
      *
-     * @param {ILatLong} [loc] - {@link ILatLong} containing the geo coordinates.
-     * @returns {Promise<IPoint>} - A promise that when fullfilled contains an {@link IPoint} representing the pixel coordinates.
+     * @param [loc] - {@link ILatLong} containing the geo coordinates.
+     * @returns - A promise that when fullfilled contains an {@link IPoint} representing the pixel coordinates.
      *
      * @memberof MapMarkerLayerDirective
      */
@@ -347,7 +322,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
 
     /**
      * Called after Component content initialization. Part of ng Component life cycle.
-     * @returns {void}
      *
      * @memberof MapMarkerLayerDirective
      */
@@ -403,7 +377,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
+     * @param changes - collection of changes.
      *
      * @memberof MapMarkerLayerDirective
      */
@@ -460,7 +434,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
 
     /**
      * Obtains a string representation of the Marker Id.
-     * @return {string} - string representation of the marker id.
+     * @returns - string representation of the marker id.
      * @memberof MapMarkerLayerDirective
      */
     public toString(): string { return 'MapMarkerLayer-' + this._id.toString(); }
@@ -472,8 +446,7 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
     /**
      * Adds various event listeners for the marker.
      *
-     * @param {Marker} m - the marker for which to add the event.
-     * @private
+     * @param m - the marker for which to add the event.
      *
      * @memberof MapMarkerLayerDirective
      */
@@ -498,7 +471,6 @@ export class MapMarkerLayerDirective implements OnDestroy, OnChanges, AfterConte
      *
      * @memberof MapMarkerLayerDirective
      * @method
-     * @private
      */
     private UpdateMarkers(): void {
         if (this._layerPromise == null) { return; }

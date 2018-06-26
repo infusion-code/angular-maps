@@ -5,7 +5,6 @@ import { ILabelOptions } from '../interfaces/ilabel-options';
  *
  * @export
  * @abstract
- * @class MapLabel
  */
 export abstract class MapLabel {
 // export class MapLabel extends Microsoft.Maps.CustomOverlay {
@@ -19,7 +18,6 @@ export abstract class MapLabel {
      *
      * @readonly
      * @abstract
-     * @type {ILabelOptions}
      * @memberof MapLabel
      */
     public abstract get DefaultLabelStyle(): ILabelOptions;
@@ -30,10 +28,7 @@ export abstract class MapLabel {
 
     /**
      * Creates a new MapLabel
-     * @constructor
-     * @param {{ [key: string]: any }} opt_options Optional properties to set.
-     * @constructor
-     * @public
+     * @param options Optional properties to set.
      */
     constructor(options: { [key: string]: any }) {
         this.Set('fontFamily', 'sans-serif');
@@ -54,7 +49,6 @@ export abstract class MapLabel {
      * it can be readded to map later.
      * @memberof MapLabel
      * @method
-     * @public
      */
     public Delete(): void {
         this.SetMap(null);
@@ -63,11 +57,9 @@ export abstract class MapLabel {
     /**
      * Delegate called when underlying properties change.
      *
-     * @param {string | Array<string>} prop - The property or properties that have changed.
-     * @returns {void}
+     * @param prop - The property or properties that have changed.
      * @memberof MapLabel
      * @method
-     * @public
      */
     public Changed(prop: string | Array<string>): void {
         let shouldRunDrawCanvas = false;
@@ -100,11 +92,10 @@ export abstract class MapLabel {
     /**
      * Gets the value of a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @returns {*} - The value of the setting.
+     * @param key - Key specifying the setting.
+     * @returns - The value of the setting.
      * @memberof MapLabel
      * @abstract
-     * @public
      * @method
      */
     public abstract Get(key: string): any;
@@ -112,23 +103,21 @@ export abstract class MapLabel {
     /**
      * Gets the map associted with the label.
      *
-     * @returns {*} - A native map object for the underlying implementation. Implementing derivatives should return the
+     * @returns - A native map object for the underlying implementation. Implementing derivatives should return the
      * actual native object.
      * @memberof MapLabel
      * @method
      * @abstract
-     * @public
      */
     public abstract GetMap(): any;
 
     /**
      * Set the value for a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @param {*} val - The value to set.
+     * @param key - Key specifying the setting.
+     * @param val - The value to set.
      * @memberof MapLabel
      * @abstract
-     * @public
      * @method
      */
     public abstract Set(key: string, val: any): void;
@@ -136,21 +125,19 @@ export abstract class MapLabel {
     /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
-     * @param {*} map - A native map object for the underlying implementation. Implementing derivatives should return the
+     * @param map - A native map object for the underlying implementation. Implementing derivatives should return the
      * actual native object.
      * @memberof MapLabel
      * @method
-     * @public
      */
     public abstract SetMap(map: any): void;
 
     /**
      * Applies settings to the object
      *
-     * @param {{ [key: string]: any }} options - An object containing the settings key value pairs.
+     * @param options - An object containing the settings key value pairs.
      * @memberof MapLabel
      * @abstract
-     * @public
      * @method
      */
     public abstract SetValues(options: { [key: string]: any }): void;
@@ -161,7 +148,7 @@ export abstract class MapLabel {
 
     /**
      * Get the visibility of the label. Visibility depends on Zoom settings.
-     * @return {string} blank string if visible, 'hidden' if invisible.
+     * @returns - blank string if visible, 'hidden' if invisible.
      * @protected
      */
     protected GetVisible() {
@@ -228,8 +215,8 @@ export abstract class MapLabel {
 
     /**
      * Gets the appropriate margin-left for the canvas.
-     * @param {number} textWidth  - The width of the text, in pixels.
-     * @return {number} - The margin-left, in pixels.
+     * @param textWidth  - The width of the text, in pixels.
+     * @returns - The margin-left, in pixels.
      * @protected
      * @method
      * @memberof MapLabel

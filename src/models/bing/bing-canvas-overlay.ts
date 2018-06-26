@@ -8,7 +8,6 @@ import { BingMapLabel } from './bing-label';
  * Concrete implementing a canvas overlay to be placed on the map for Bing Maps.
  *
  * @export
- * @class BingCanvasOverlay
  */
 export class BingCanvasOverlay extends CanvasOverlay {
 
@@ -22,10 +21,9 @@ export class BingCanvasOverlay extends CanvasOverlay {
 
     /**
      * Creates a new instance of the BingCanvasOverlay class.
-     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * @param drawCallback A callback function that is triggered when the canvas is ready to be
      * rendered for the current map view.
      * @memberof BingCanvasOverlay
-     * @constructor
      */
     constructor(drawCallback: (canvas: HTMLCanvasElement) => void) {
         super(drawCallback);
@@ -39,8 +37,8 @@ export class BingCanvasOverlay extends CanvasOverlay {
      * Obtains geo coordinates for the click location
      *
      * @abstract
-     * @param {Microsoft.Maps.IMouseEventArgs} e - The mouse event. Expected to implement {@link Microsoft.Maps.IMouseEventArgs}.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @param e - The mouse event. Expected to implement {@link Microsoft.Maps.IMouseEventArgs}.
+     * @returns - {@link ILatLong} containing the geo coordinates of the clicked marker.
      * @memberof BingCanvasOverlay
      */
     public GetCoordinatesFromClick(e: Microsoft.Maps.IMouseEventArgs): ILatLong {
@@ -50,10 +48,8 @@ export class BingCanvasOverlay extends CanvasOverlay {
     /**
      * Gets the map associted with the label.
      *
-     * @returns {Microsoft.Maps.Map}
      * @memberof BingCanvasOverlay
      * @method
-     * @public
      */
     public GetMap(): Microsoft.Maps.Map {
         return (<any>this).getMap();
@@ -64,10 +60,9 @@ export class BingCanvasOverlay extends CanvasOverlay {
      * This method only generates the map label. Content and placement is the responsibility
      * of the caller. Note that this method returns null until OnLoad has been called.
      *
-     * @returns {MapLabel} - The label to be used for the tooltip.
+     * @returns - The label to be used for the tooltip.
      * @memberof BingCanvasOverlay
      * @method
-     * @public
      */
     public GetToolTipOverlay(): MapLabel {
         const o: { [key: string]: any } = {
@@ -88,7 +83,6 @@ export class BingCanvasOverlay extends CanvasOverlay {
      * CanvasOverlay loaded, attach map events for updating canvas.
      * @abstract
      * @method
-     * @public
      * @memberof BingCanvasOverlay
      */
     public OnLoad() {
@@ -151,10 +145,9 @@ export class BingCanvasOverlay extends CanvasOverlay {
     /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
-     * @param {Microsoft.Maps.Map} map - Map to associated with the label.
+     * @param map - Map to associated with the label.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     public SetMap(map: Microsoft.Maps.Map): void {
         const m: Microsoft.Maps.Map = this.GetMap();
@@ -175,7 +168,6 @@ export class BingCanvasOverlay extends CanvasOverlay {
      * Attaches the canvas to the map.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     protected SetCanvasElement(el: HTMLCanvasElement): void {
         (<any>this).setHtmlElement(el);

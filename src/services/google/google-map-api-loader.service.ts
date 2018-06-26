@@ -17,7 +17,6 @@ export enum ScriptProtocol {
  * Bing Maps V8 specific loader configuration to be used with the {@link GoogleMapAPILoader}
  *
  * @export
- * @class GoogleMapAPILoaderConfig
  */
 @Injectable()
 export class GoogleMapAPILoaderConfig {
@@ -100,8 +99,6 @@ const DEFAULT_CONFIGURATION = new GoogleMapAPILoaderConfig();
  * Bing Maps V8 implementation for the {@link MapAPILoader} service.
  *
  * @export
- * @class GoogleMapAPILoader
- * @extends {MapAPILoader}
  */
 @Injectable()
 export class GoogleMapAPILoader extends MapAPILoader {
@@ -119,16 +116,15 @@ export class GoogleMapAPILoader extends MapAPILoader {
      * Gets the loader configuration.
      *
      * @readonly
-     * @type {GoogleMapAPILoaderConfig}
      * @memberof GoogleMapAPILoader
      */
     public get Config(): GoogleMapAPILoaderConfig { return this._config; }
 
     /**
      * Creates an instance of GoogleMapAPILoader.
-     * @param {GoogleMapAPILoaderConfig} _config  - The loader configuration.
-     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
-     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}.
+     * @param _config - The loader configuration.
+     * @param _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
+     * @param _documentRef - An instance of {@link DocumentRef}.
      *                                     Necessary because Bing Map V8 interacts with the document object.
      * @memberof GoogleMapAPILoader
      */
@@ -145,8 +141,6 @@ export class GoogleMapAPILoader extends MapAPILoader {
 
     /**
      * Loads the necessary resources for Bing Maps V8.
-     *
-     * @returns {Promise<void>}
      *
      * @memberof GoogleMapAPILoader
      */
@@ -191,9 +185,8 @@ export class GoogleMapAPILoader extends MapAPILoader {
     /**
      * Gets the Google Maps scripts url for injections into the header.
      *
-     * @private
-     * @param {string} callbackName - Name of the function to be called when the Google Maps scripts are loaded.
-     * @returns {string} - The url to be used to load the Google Map scripts.
+     * @param callbackName - Name of the function to be called when the Google Maps scripts are loaded.
+     * @returns - The url to be used to load the Google Map scripts.
      *
      * @memberof GoogleMapAPILoader
      */
@@ -215,8 +208,7 @@ export class GoogleMapAPILoader extends MapAPILoader {
     /**
      * Gets the Google Maps Cluster library url for injections into the header.
      *
-     * @private
-     * @returns {string} - The url to be used to load the Google Map Cluster library.
+     * @returns - The url to be used to load the Google Map Cluster library.
      *
      * @memberof GoogleMapAPILoader
      */
@@ -229,10 +221,9 @@ export class GoogleMapAPILoader extends MapAPILoader {
     /**
      * Gets a scripts url for injections into the header.
      *
-     * @private
-     * @param {string} hostAndPath - Host and path name of the script to load.
-     * @param {{ [key: string]: string | Array<string> }} queryParams - Url query parameters.
-     * @returns {string} - The url with correct protocol, path, and query parameters.
+     * @param hostAndPath - Host and path name of the script to load.
+     * @param queryParams - Url query parameters.
+     * @returns - The url with correct protocol, path, and query parameters.
      *
      * @memberof GoogleMapAPILoader
      */

@@ -8,8 +8,6 @@ import * as GoogleMapTypes from '../../services/google/google-map-types';
  * Concrete implementation of the {@link Marker} contract for the Google Maps map architecture.
  *
  * @export
- * @class GoogleMarker
- * @implements {Marker}
  */
 export class GoogleMarker implements Marker {
 
@@ -27,7 +25,6 @@ export class GoogleMarker implements Marker {
     /**
      * Indicates that the marker is the first marker in a set.
      *
-     * @type {boolean}
      * @memberof Marker
      */
     public get IsFirst(): boolean { return this._isFirst; }
@@ -36,7 +33,6 @@ export class GoogleMarker implements Marker {
     /**
      * Indicates that the marker is the last marker in the set.
      *
-     * @type {boolean}
      * @memberof Marker
      */
     public get IsLast(): boolean { return this._isLast; }
@@ -46,7 +42,6 @@ export class GoogleMarker implements Marker {
      * Gets the marker metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof BingMarker
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -56,7 +51,6 @@ export class GoogleMarker implements Marker {
      *
      * @readonly
      * @abstract
-     * @type {*}
      * @memberof BingMarker
      */
     public get NativePrimitve(): GoogleMapTypes.Marker { return this._marker; }
@@ -66,7 +60,6 @@ export class GoogleMarker implements Marker {
      *
      * @readonly
      * @abstract
-     * @type {ILatLong}
      * @memberof BingMarker
      */
     public get Location(): ILatLong {
@@ -83,7 +76,7 @@ export class GoogleMarker implements Marker {
 
     /**
      * Creates an instance of GoogleMarker.
-     * @param {GoogleMapTypes.Marker} _marker
+     * @param _marker
      *
      * @memberof GoogleMarker
      */
@@ -96,8 +89,8 @@ export class GoogleMarker implements Marker {
     /**
      * Adds an event listener to the marker.
      *
-     * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs.
+     * @param eventType - String containing the event for which to register the listener (e.g. "click")
+     * @param fn - Delegate invoked when the event occurs.
      *
      * @memberof GoogleMarker
      */
@@ -118,8 +111,6 @@ export class GoogleMarker implements Marker {
     /**
      * Gets the marker label
      *
-     * @returns {string}
-     *
      * @memberof GoogleMarker
      */
     public GetLabel(): string {
@@ -129,7 +120,7 @@ export class GoogleMarker implements Marker {
     /**
      * Gets whether the marker is visible.
      *
-     * @returns {boolean} - True if the marker is visible, false otherwise.
+     * @returns - True if the marker is visible, false otherwise.
      *
      * @memberof GoogleMarker
      */
@@ -140,7 +131,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
-     * @param {IPoint} anchor - Point coordinates for the marker anchor.
+     * @param anchor - Point coordinates for the marker anchor.
      *
      * @memberof GoogleMarker
      */
@@ -154,7 +145,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the draggability of a marker.
      *
-     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
+     * @param draggable - True to mark the marker as draggable, false otherwise.
      *
      * @memberof GoogleMarker
      */
@@ -165,7 +156,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the icon for the marker.
      *
-     * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
+     * @param icon - String containing the icon in various forms (url, data url, etc.)
      *
      * @memberof GoogleMarker
      */
@@ -176,7 +167,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the marker label.
      *
-     * @param {string} label - String containing the label to set.
+     * @param label - String containing the label to set.
      *
      * @memberof GoogleMarker
      */
@@ -187,7 +178,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the marker position.
      *
-     * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
+     * @param latLng - Geo coordinates to set the marker position to.
      *
      * @memberof GoogleMarker
      */
@@ -199,7 +190,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the marker title.
      *
-     * @param {string} title - String containing the title to set.
+     * @param title - String containing the title to set.
      *
      * @memberof GoogleMarker
      */
@@ -210,7 +201,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets the marker options.
      *
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
+     * @param options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
      * merged with the underlying marker options.
      *
      * @memberof GoogleMarker
@@ -223,7 +214,7 @@ export class GoogleMarker implements Marker {
     /**
      * Sets whether the marker is visible.
      *
-     * @param {boolean} visible - True to set the marker visible, false otherwise.
+     * @param visible - True to set the marker visible, false otherwise.
      *
      * @memberof GoogleMarker
      */

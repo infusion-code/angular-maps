@@ -13,8 +13,6 @@ import { BingMarker } from './bing-marker';
  * Concrete implementation of a clustering layer for the Bing Map Provider.
  *
  * @export
- * @class BingClusterLayer
- * @implements {Layer}
  */
 export class BingClusterLayer implements Layer {
 
@@ -261,7 +259,7 @@ export class BingClusterLayer implements Layer {
     /**
      * Returns the abstract marker used to wrap the Bing Pushpin.
      *
-     * @returns {@BingSpiderClusterMarker} . The abstract marker object representing the pushpin.
+     * @returns - The abstract marker object representing the pushpin.
      *
      * @memberof BingClusterLayer
      */
@@ -350,8 +348,6 @@ export class BingClusterLayer implements Layer {
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @returns {void}
-     *
      * @memberof BingClusterLayer
      */
     public StartClustering(): void {
@@ -379,8 +375,6 @@ export class BingClusterLayer implements Layer {
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @returns
-     *
      * @memberof BingClusterLayer
      */
     public StopClustering() {
@@ -397,7 +391,7 @@ export class BingClusterLayer implements Layer {
      * Creates a copy of a pushpins basic options.
      *
      * @param pin Pushpin to copy options from.
-     * @returns A copy of a pushpins basic options.
+     * @returns - A copy of a pushpins basic options.
      *
      * @memberof BingClusterLayer
      */
@@ -436,7 +430,6 @@ export class BingClusterLayer implements Layer {
      * Click event handler for when a shape in the cluster layer is clicked.
      *
      * @param e The mouse event argurment from the click event.
-     * @returns {void}
      *
      * @memberof BingClusterLayer
      */
@@ -470,9 +463,7 @@ export class BingClusterLayer implements Layer {
      * Delegate handling the click event on the map (outside a spider cluster). Depending on the
      * spider options, closes the cluster or increments the click counter.
      *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event
-     * @returns {void}
+     * @param e - Mouse event
      *
      * @memberof BingClusterLayer
      */
@@ -489,8 +480,7 @@ export class BingClusterLayer implements Layer {
     /**
      * Delegate handling the map view changed end event. Hides the spider cluster if the zoom level has changed.
      *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
+     * @param e - Mouse event.
      *
      * @memberof BingClusterLayer
      */
@@ -507,8 +497,7 @@ export class BingClusterLayer implements Layer {
      * Delegate handling the map view change start event. Depending on the spider options, hides the
      * the exploded spider or does nothing.
      *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs|Microsoft.Maps.IMapTypeChangeEventArgs} e - Mouse event.
+     * @param e - Mouse event.
      *
      * @memberof BingClusterLayer
      */

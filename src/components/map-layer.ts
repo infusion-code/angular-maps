@@ -34,10 +34,6 @@ let layerId = 0;
  * ```
  *
  * @export
- * @class MapLayerDirective
- * @implements {OnInit}
- * @implements {OnDestroy}
- * @implements {OnChanges}
  */
 @Directive({
     selector: 'x-map-layer'
@@ -60,7 +56,6 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
     /**
      * Gets or sets the layer visibility.
      *
-     * @type {boolean}
      * @memberof MapLayerDirective
      */
     @Input()
@@ -71,7 +66,6 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
      * Gets the layer id.
      *
      * @readonly
-     * @type {number}
      * @memberof MapLayerDirective
      */
     public get Id(): number { return this._id; }
@@ -82,9 +76,9 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
 
     /**
      * Creates an instance of MapLayerDirective.
-     * @param {LayerService} _layerService - Concreted implementation of a layer service for the underlying maps implementations.
+     * @param _layerService - Concreted implementation of a layer service for the underlying maps implementations.
      * Generally provided via injections.
-     * @param {ViewContainerRef} _containerRef - Reference to the container hosting the map canvas. Generally provided via injection.
+     * @param _containerRef - Reference to the container hosting the map canvas. Generally provided via injection.
      *
      * @memberof MapLayerDirective
      */
@@ -98,7 +92,6 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
 
     /**
      * Called on Component initialization. Part of ng Component life cycle.
-     * @returns {void}
      *
      * @memberof MapLayerDirective
      */
@@ -111,8 +104,7 @@ export class MapLayerDirective implements OnInit, OnDestroy, OnChanges {
     /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
-     * @returns {void}
+     * @param changes - Changes that have occured.
      *
      * @memberof MapLayerDirective
      */

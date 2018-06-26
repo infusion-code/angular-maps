@@ -16,7 +16,6 @@ declare var google: any;
  * corresponding Google Maps specific implementations.
  *
  * @export
- * @class GoogleConversions
  */
 export class GoogleConversions {
 
@@ -27,10 +26,7 @@ export class GoogleConversions {
     /**
      * Map option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _mapOptionsAttributes: string[] = [
         'backgroundColor',
@@ -74,10 +70,7 @@ export class GoogleConversions {
     /**
      * InfoWindow option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _infoWindowOptionsAttributes: string[] = [
         'actions',
@@ -100,10 +93,7 @@ export class GoogleConversions {
     /**
      * Marker option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _markerOptionsAttributes: string[] = [
         'anchor',
@@ -123,10 +113,7 @@ export class GoogleConversions {
     /**
      * Cluster option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _clusterOptionsAttributes: string[] = [
         'callback',
@@ -142,10 +129,7 @@ export class GoogleConversions {
     /**
      * Polygon option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _polygonOptionsAttributes: string[] = [
         'clickable',
@@ -165,10 +149,7 @@ export class GoogleConversions {
     /**
      * Polyline option attributes that are supported for conversion to Google Map properties
      *
-     * @type string[]
      * @memberof GoogleConversions
-     * @private
-     * @static
      */
     private static _polylineOptionsAttributes: string[] = [
         'clickable',
@@ -185,9 +166,8 @@ export class GoogleConversions {
     /**
      * Maps an IBox object to a GoogleMapTypes.LatLngBoundsLiteral object.
      *
-     * @static
-     * @param {IBox} box - Object to be mapped.
-     * @returns {GoogleMapTypes.LatLngBoundsLiteral} - Mapped object.
+     * @param bounds - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -204,9 +184,8 @@ export class GoogleConversions {
     /**
      * Maps an IInfoWindowOptions object to a GoogleMapTypes.InfoWindowOptions object.
      *
-     * @static
-     * @param {IInfoWindowOptions} options - Object to be mapped.
-     * @returns {GoogleMapTypes.InfoWindowOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -234,9 +213,8 @@ export class GoogleConversions {
     /**
      * Maps an ILatLong object to a GoogleMapTypes.LatLngLiteral object.
      *
-     * @static
-     * @param {ILatLong} latlong - Object to be mapped.
-     * @returns {GoogleMapTypes.LatLngLiteral} - Mapped object.
+     * @param latlong - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -248,9 +226,8 @@ export class GoogleConversions {
     /**
      * Maps an GoogleMapTypes.LatLngLiteral object to a ILatLong object.
      *
-     * @static
-     * @param {GoogleMapTypes.LatLngLiteral} latlong - Object to be mapped.
-     * @returns {ILatLong} - Mapped object.
+     * @param latlng - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -262,9 +239,8 @@ export class GoogleConversions {
     /**
      * Maps an ILatLong object to a GoogleMapTypes.LatLng object.
      *
-     * @static
-     * @param {ILatLong} latlong - Object to be mapped.
-     * @returns {GoogleMapTypes.LatLng} - Mapped object.
+     * @param latlong - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -276,9 +252,8 @@ export class GoogleConversions {
     /**
      * Maps an GoogleMapTypes.LatLng object to a ILatLong object.
      *
-     * @static
-     * @param {GoogleMapTypes.LatLng} latlong - Object to be mapped.
-     * @returns {ILatLong} - Mapped object.
+     * @param latlng - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -290,9 +265,8 @@ export class GoogleConversions {
     /**
      * Maps an ILatLong array to a array of GoogleMapTypes.LatLng object.
      *
-     * @static
-     * @param {Array<ILatLong>} latlongArray - Object to be mapped.
-     * @returns {Array<GoogleMapTypes.LatLng>} - Mapped object.
+     * @param latlongArray - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -308,9 +282,8 @@ export class GoogleConversions {
     /**
      * Maps a MapTypeId object to a Google maptype string.
      *
-     * @static
-     * @param {MapTypeId} mapTypeId - Object to be mapped.
-     * @returns {string} - Mapped object.
+     * @param mapTypeId - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -327,9 +300,8 @@ export class GoogleConversions {
     /**
      * Maps an IMarkerOptions object to a GoogleMapTypes.MarkerOptions object.
      *
-     * @static
-     * @param {IMarkerOptions} options - Object to be mapped.
-     * @returns {GoogleMapTypes.MarkerOptions} - Promise that when resolved contains the mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Promise that when resolved contains the mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -352,9 +324,8 @@ export class GoogleConversions {
     /**
      * Maps an IMapOptions object to a GoogleMapTypes.MapOptions object.
      *
-     * @static
-     * @param {IMapOptions} options - Object to be mapped.
-     * @returns {GoogleMapTypes.MapOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -386,9 +357,8 @@ export class GoogleConversions {
     /**
      * Translates an array of locations or an array or arrays of location to and array of arrays of Bing Map Locations
      *
-     * @static
-     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert.
-     * @returns {Array<Array<GoogleMapTypes.LatLng>>} - converted locations.
+     * @param paths - ILatLong based locations to convert.
+     * @returns - converted locations.
      *
      * @memberof GoogleConversions
      */
@@ -415,9 +385,8 @@ export class GoogleConversions {
     /**
      *  Maps an IPolygonOptions object to a GoogleMapTypes.PolygonOptions.
      *
-     * @static
-     * @param {IPolygonOptions} options - Object to be mapped.
-     * @returns {GoogleMapTypes.PolygonOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */
@@ -461,9 +430,8 @@ export class GoogleConversions {
     /**
      *  Maps an IPolylineOptions object to a GoogleMapTypes.PolylineOptions.
      *
-     * @static
-     * @param {IPolylineOptions} options - Object to be mapped.
-     * @returns {GoogleMapTypes.PolylineOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof GoogleConversions
      */

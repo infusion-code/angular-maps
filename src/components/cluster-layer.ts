@@ -40,11 +40,6 @@ import { MapLayerDirective } from './map-layer';
  * ```
  *
  * @export
- * @class ClusterLayerDirective
- * @extends {MapLayerDirective}
- * @implements {OnInit}
- * @implements {OnDestroy}
- * @implements {OnChanges}
  */
 @Directive({
     selector: 'x-cluster-layer'
@@ -81,7 +76,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets the the Cluster Click Action {@link ClusterClickAction}.
      *
-     * @type {ClusterClickAction}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -92,7 +86,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets whether the clustering layer enables clustering. When set to false, the layer
      * behaves like a generic layer. This is handy if you want to prevent clustering at certain zoom levels.
      *
-     * @type {boolean}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -102,7 +95,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets the cluster placement mode. {@link ClusterPlacementMode}
      *
-     * @type {ClusterPlacementMode}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -113,7 +105,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the callback invoked to create a custom cluster marker. Note that when {@link UseDynamicSizeMarkers} is enabled,
      * you cannot set a custom marker callback.
      *
-     * @type (Array<Marker>, IMarkerIconInfo) => string
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -132,7 +123,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the base size of dynamic markers in pixels. The actualy size of the dynamic marker is based on this.
      * See {@link UseDynamicSizeMarkers}.
      *
-     * @type {number}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -144,7 +134,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * The map contains key/value pairs, with the keys being
      * the breakpoint sizes and the values the colors to be used for the dynamic marker in that range. See {@link UseDynamicSizeMarkers}.
      *
-     * @type {Map<number, string>}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -154,7 +143,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets the grid size to be used for clustering.
      *
-     * @type {number}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -165,7 +153,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the IconInfo to be used to create a custom cluster marker. Supports font-based, SVG, graphics and more.
      * See {@link IMarkerIconInfo}.
      *
-     * @type {IMarkerIconInfo}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -175,7 +162,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets An offset applied to the positioning of the layer.
      *
-     * @type {IPoint}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -186,7 +172,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the minimum pins required to form a cluster
      *
      * @readonly
-     * @type {number}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -196,7 +181,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets the options for spider clustering behavior. See {@link ISpiderClusterOptions}
      *
-     * @type {ISpiderClusterOptions}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -207,7 +191,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets the cluster styles
      *
      * @readonly
-     * @type {Array<IClusterIconInfo>)}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -218,7 +201,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets whether to use dynamic markers. Dynamic markers change in size and color depending on the number of
      * pins in the cluster. If set to true, this will take precendence over any custom marker creation.
      *
-     * @type {boolean}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -236,7 +218,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Gets or sets the z-index of the layer. If not used, layers get stacked in the order created.
      *
-     * @type {number}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -247,7 +228,6 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
      * Gets or sets whether the cluster should zoom in on click
      *
      * @readonly
-     * @type {boolean}
      * @memberof ClusterLayerDirective
      */
     @Input()
@@ -257,17 +237,15 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Creates the dynamic size marker to be used for cluster markers if UseDynamicSizeMarkers is set to true.
      *
-     * @public
-     * @static
-     * @param {integer} size - The number of markers in the cluster.
-     * @param {IMarkerIconInfo} info  - The icon info to be used. This will be hydrated with
+     * @param size - The number of markers in the cluster.
+     * @param info  - The icon info to be used. This will be hydrated with
      * the actualy dimensions of the created markers and is used by the underlying model/services
      * to correctly offset the marker for correct positioning.
-     * @param {number} baseMarkerSize - The base size for dynmic markers.
-     * @param {Map<number, string>} ranges - The ranges to use to calculate breakpoints and colors for dynamic markers.
+     * @param baseMarkerSize - The base size for dynmic markers.
+     * @param ranges - The ranges to use to calculate breakpoints and colors for dynamic markers.
      * The map contains key/value pairs, with the keys being
      * the breakpoint sizes and the values the colors to be used for the dynamic marker in that range.
-     * @returns {string} - An string containing the SVG for the marker.
+     * @returns - An string containing the SVG for the marker.
      *
      * @memberof ClusterLayerDirective
      */
@@ -302,9 +280,9 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Creates an instance of ClusterLayerDirective.
      *
-     * @param {ClusterService} _layerService - Concreted implementation of a cluster layer service for the underlying maps
+     * @param _layerService - Concreted implementation of a cluster layer service for the underlying maps
      * implementations. Generally provided via injections.
-     * @param {ViewContainerRef} _containerRef - A reference to the view container of the layer. Generally provided via injection.
+     * @param _containerRef - A reference to the view container of the layer. Generally provided via injection.
      *
      * @memberof ClusterLayerDirective
      */
@@ -319,7 +297,7 @@ export class ClusterLayerDirective extends MapLayerDirective implements OnInit, 
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
+     * @param changes - collection of changes.
      *
      * @memberof ClusterLayerDirective
      */

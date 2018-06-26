@@ -6,7 +6,6 @@ import { IPolylineOptions } from '../interfaces/ipolyline-options';
  *
  * @export
  * @abstract
- * @class Polyline
  */
 export abstract class Polyline {
     ///
@@ -22,8 +21,6 @@ export abstract class Polyline {
     /**
      * Gets the polyline's center.
      * @readonly
-     * @public
-     * @type {ILatLong}
      * @memberof Polyline
      */
     public get Center(): ILatLong {
@@ -36,8 +33,6 @@ export abstract class Polyline {
     /**
      * Gets the polyline's centroid.
      * @readonly
-     * @public
-     * @type {ILatLong}
      * @memberof Polyline
      */
     public get Centroid(): ILatLong {
@@ -51,7 +46,6 @@ export abstract class Polyline {
      * Gets the native primitve implementing the polyline.
      *
      * @readonly
-     * @type {*}
      * @memberof Polyline
      */
     public abstract get NativePrimitve(): any;
@@ -61,7 +55,6 @@ export abstract class Polyline {
      *
      * @readonly
      * @abstract
-     * @type {Map<string, any>}
      * @memberof Polylin
      */
     public abstract get Metadata(): Map<string, any>;
@@ -70,10 +63,8 @@ export abstract class Polyline {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof Polyline
      * @property
-     * @public
      */
     public abstract get ShowTooltip(): boolean;
     public abstract set ShowTooltip(val: boolean);
@@ -82,10 +73,8 @@ export abstract class Polyline {
      * Gets or sets the title off the polyline
      *
      * @abstract
-     * @type {string}
      * @memberof Polyline
      * @property
-     * @public
      */
     public abstract get Title(): string;
     public abstract set Title(val: string);
@@ -97,12 +86,10 @@ export abstract class Polyline {
     /**
      * Get the centroid of the polyline based on the a path.
      *
-     * @param {Array<ILatLong>} path - the path for which to generate the centroid
-     * @return {ILatLong} - The centroid coordinates of the polyline.
+     * @param path - the path for which to generate the centroid
+     * @returns - The centroid coordinates of the polyline.
      * @memberof Polyline
      * @method
-     * @public
-     * @static
      */
     public static GetPolylineCentroid(path: Array<ILatLong>): ILatLong {
         let c: ILatLong = {latitude: 0, longitude: 0};
@@ -143,7 +130,7 @@ export abstract class Polyline {
      * Adds a delegate for an event.
      *
      * @abstract
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
      *
      * @memberof Polyline
@@ -163,7 +150,7 @@ export abstract class Polyline {
      * Gets whether the polyline is draggable.
      *
      * @abstract
-     * @returns {boolean} - True if the polyline is dragable, false otherwise.
+     * @returns - True if the polyline is dragable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -173,7 +160,7 @@ export abstract class Polyline {
      * Gets whether the polyline path can be edited.
      *
      * @abstract
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof Polyline
      */
@@ -183,7 +170,7 @@ export abstract class Polyline {
      * Gets the polyline path.
      *
      * @abstract
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polyline path.
+     * @returns - Array of ILatLong objects describing the polyline path.
      *
      * @memberof Polyline
      */
@@ -193,7 +180,7 @@ export abstract class Polyline {
      * Gets whether the polyline is visible.
      *
      * @abstract
-     * @returns {boolean} - True if the polyline is visible, false otherwise.
+     * @returns - True if the polyline is visible, false otherwise.
      *
      * @memberof Polyline
      */
@@ -203,7 +190,7 @@ export abstract class Polyline {
      * Sets whether the polyline is dragable.
      *
      * @abstract
-     * @param {boolean} draggable - True to make the polyline dragable, false otherwise.
+     * @param draggable - True to make the polyline dragable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -213,7 +200,7 @@ export abstract class Polyline {
      * Sets wether the polyline path is editable.
      *
      * @abstract
-     * @param {boolean} editable - True to make polyline path editable, false otherwise.
+     * @param editable - True to make polyline path editable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -223,7 +210,7 @@ export abstract class Polyline {
      * Sets the polyline options
      *
      * @abstract
-     * @param {IPolylineOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof Polyline
@@ -234,7 +221,7 @@ export abstract class Polyline {
      * Sets the polyline path.
      *
      * @abstract
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
      *
      * @memberof Polyline
      */
@@ -244,7 +231,7 @@ export abstract class Polyline {
      * Sets whether the polyline is visible.
      *
      * @abstract
-     * @param {boolean} visible - True to set the polyline visible, false otherwise.
+     * @param visible - True to set the polyline visible, false otherwise.
      *
      * @memberof Polyline
      */
@@ -257,7 +244,7 @@ export abstract class Polyline {
     /**
      * Gets the center of the polyline' bounding box.
      *
-     * @returns {ILatLong} - {@link ILatLong} object containing the center of the bounding box.
+     * @returns - {@link ILatLong} object containing the center of the bounding box.
      * @memberof Polyline
      * @method
      * @protected
@@ -285,7 +272,7 @@ export abstract class Polyline {
     /**
      * Get the centroid of the polyline based on the polyline path.
      *
-     * @return {ILatLong} - The centroid coordinates of the polyline.
+     * @returns - The centroid coordinates of the polyline.
      * @memberof Polyline
      * @method
      * @protected

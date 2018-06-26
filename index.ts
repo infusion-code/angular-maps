@@ -1,4 +1,6 @@
-﻿import { NgModule, ModuleWithProviders, NgZone } from '@angular/core';
+﻿/// <reference path="node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
+
+import { NgModule, ModuleWithProviders, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 ///

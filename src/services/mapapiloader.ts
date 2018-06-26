@@ -6,7 +6,6 @@
  *
  * @export
  * @abstract
- * @class MapAPILoader
  */
 @Injectable()
 export abstract class MapAPILoader {
@@ -15,7 +14,7 @@ export abstract class MapAPILoader {
      * Loads the necessary resources for a given map architecture.
      *
      * @abstract
-     * @returns {Promise<void>} - Promise fullfilled when the resources have been loaded.
+     * @returns - Promise fullfilled when the resources have been loaded.
      *
      * @memberof MapAPILoader
      */
@@ -28,7 +27,6 @@ export abstract class MapAPILoader {
  * Server Side rendering
  *
  * @export
- * @class DocumentRef
  */
 @Injectable()
 export class DocumentRef {
@@ -38,7 +36,6 @@ export class DocumentRef {
      * there is a browser-less implementation in the current non-browser environment.
      *
      * @readonly
-     * @type {boolean}
      * @memberof DocumentRef
      */
     public get IsAvailable(): boolean {
@@ -48,7 +45,7 @@ export class DocumentRef {
     /**
      * Returns the document object of the current environment.
      *
-     * @returns {*} - The document object.
+     * @returns - The document object.
      *
      * @memberof DocumentRef
      */
@@ -65,7 +62,6 @@ export class DocumentRef {
  * Server Side rendering
  *
  * @export
- * @class WindowRef
  */
 @Injectable()
 export class WindowRef {
@@ -75,7 +71,6 @@ export class WindowRef {
      * there is a browser-less implementation in the current non-browser environment.
      *
      * @readonly
-     * @type {boolean}
      * @memberof WindowRef
      */
     public get IsAvailable(): boolean {
@@ -85,7 +80,7 @@ export class WindowRef {
     /**
      * Returns the window object of the current environment.
      *
-     * @returns {*} - The window object.
+     * @returns - The window object.
      *
      * @memberof WindowRef
      */

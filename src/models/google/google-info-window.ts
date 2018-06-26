@@ -10,8 +10,6 @@ declare var google: any;
 /**
  * Concrete implementation for a {@link InfoWindow}} model for Google Maps.
  *
- * @implements InfoWindow
- * @class GoogleInfoWindow
  * @export
  */
 export class GoogleInfoWindow implements InfoWindow {
@@ -22,7 +20,6 @@ export class GoogleInfoWindow implements InfoWindow {
      * Gets whether the info box is currently open.
      *
      * @readonly
-     * @type {boolean}
      * @memberof InfoWGoogleInfoWindowindow
      */
     public get IsOpen(): boolean {
@@ -33,9 +30,7 @@ export class GoogleInfoWindow implements InfoWindow {
     /**
      * Gets the underlying native object.
      *
-     * @type {GoogleMapTypes.InfoWindow}
      * @property
-     * @public
      * @readonly
      */
     public get NativePrimitve(): GoogleMapTypes.InfoWindow {
@@ -48,11 +43,9 @@ export class GoogleInfoWindow implements InfoWindow {
 
     /**
      * Creates an instance of GoogleInfoWindow.
-     * @param {GoogleMapTypes.InfoWindow} _infoWindow - A {@link GoogleMapTypes.InfoWindow} instance underlying the model.
-     * @param {GoogleMapService} _mapService - An instance of the {@link GoogleMapService}.
+     * @param _infoWindow - A {@link GoogleMapTypes.InfoWindow} instance underlying the model.
+     * @param _mapService - An instance of the {@link GoogleMapService}.
      * @memberof GoogleInfoWindow
-     * @public
-     * @constructor
      */
     constructor(private _infoWindow: GoogleMapTypes.InfoWindow, private _mapService: GoogleMapService) { }
 
@@ -63,12 +56,11 @@ export class GoogleInfoWindow implements InfoWindow {
    /**
      * Adds an event listener to the InfoWindow.
      *
-     * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs.
+     * @param eventType - String containing the event for which to register the listener (e.g. "click")
+     * @param fn - Delegate invoked when the event occurs.
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public AddListener(eventType: string, fn: Function): void {
         this._infoWindow.addListener(eventType, (e: any) => {
@@ -83,7 +75,6 @@ export class GoogleInfoWindow implements InfoWindow {
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public Close() {
         this._isOpen = false;
@@ -93,11 +84,10 @@ export class GoogleInfoWindow implements InfoWindow {
     /**
      * Gets the position of the info window
      *
-     * @returns {ILatLong} - The geo coordinates of the info window.
+     * @returns - The geo coordinates of the info window.
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public GetPosition(): ILatLong {
         return GoogleConversions.TranslateLatLngObject(this._infoWindow.getPosition());
@@ -106,11 +96,10 @@ export class GoogleInfoWindow implements InfoWindow {
     /**
      * Opens the info window
      *
-     * @param {*} [anchor] - Optional Anchor.
+     * @param [anchor] - Optional Anchor.
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public Open(anchor?: any) {
         this._mapService.MapPromise.then(m => {
@@ -122,11 +111,10 @@ export class GoogleInfoWindow implements InfoWindow {
     /**
      * Sets the info window options
      *
-     * @param {IInfoWindowOptions} options - The options to set. This object will be merged with the existing options.
+     * @param options - The options to set. This object will be merged with the existing options.
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public SetOptions(options: IInfoWindowOptions): void {
         const o: GoogleMapTypes.InfoWindowOptions = GoogleConversions.TranslateInfoWindowOptions(options);
@@ -136,11 +124,10 @@ export class GoogleInfoWindow implements InfoWindow {
     /**
      * Sets the info window position
      *
-     * @param {ILatLong} position - Geo coordinates at which to anchor the info window.
+     * @param position - Geo coordinates at which to anchor the info window.
      *
      * @memberof GoogleInfoWindow
      * @method
-     * @public
      */
     public SetPosition(position: ILatLong): void {
         const l: GoogleMapTypes.LatLngLiteral = GoogleConversions.TranslateLocation(position);

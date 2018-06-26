@@ -36,10 +36,6 @@ let polylineId = 0;
  *
  *
  * @export
- * @class MapPolylineDirective
- * @implements {OnDestroy}
- * @implements {OnChanges}
- * @implements {AfterContentInit}
  */
 @Directive({
     selector: 'x-map-polyline'
@@ -64,7 +60,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Gets or sets whether this Polyline handles mouse events.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public Clickable = true;
@@ -72,7 +67,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * If set to true, the user can drag this shape over the map.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public Draggable = false;
@@ -81,7 +75,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * If set to true, the user can edit this shape by dragging the control
      * points shown at the vertices and on each segment.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public Editable = false;
@@ -93,7 +86,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * geodesic polyline may appear to change when dragged, as the dimensions
      * are maintained relative to the surface of the earth. Defaults to false.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public Geodesic = false;
@@ -101,7 +93,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Arbitary metadata to assign to the Polyline. This is useful for events
      *
-     * @type {Map<string, any>}
      * @memberof MapPolylineDirective
      */
     @Input() public Metadata: Map<string, any> = new Map<string, any>();
@@ -111,7 +102,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * Simple polylines may be defined using a single array of LatLngs. More
      * complex polylines may specify an array of arrays.
      *
-     * @type {(Array<ILatLong>}
      * @memberof MapPolylineDirective
      */
     @Input() public Path: Array<ILatLong> | Array<Array<ILatLong>> = [];
@@ -119,7 +109,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Whether to show the title of the polyline as the tooltip on the polygon.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public ShowTooltip: boolean = true;
@@ -127,7 +116,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The stroke color.
      *
-     * @type {string}
      * @memberof MapPolylineDirective
      */
     @Input() public StrokeColor: string;
@@ -135,7 +123,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The stroke opacity between 0.0 and 1.0
      *
-     * @type {number}
      * @memberof MapPolylineDirective
      */
     @Input() public StrokeOpacity: number;
@@ -143,7 +130,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The stroke width in pixels.
      *
-     * @type {number}
      * @memberof MapPolylineDirective
      */
     @Input() public StrokeWeight: number;
@@ -151,7 +137,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The title of the polygon.
      *
-     * @type {string}
      * @memberof MapPolylineDirective
      */
     @Input() public Title: string;
@@ -159,7 +144,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Whether this polyline is visible on the map. Defaults to true.
      *
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     @Input() public Visible: boolean;
@@ -167,7 +151,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * The zIndex compared to other polys.
      *
-     * @type {number}
      * @memberof MapPolylineDirective
      */
     @Input() public zIndex: number;
@@ -179,7 +162,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM click event is fired on the Polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() Click: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -187,7 +169,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM dblclick event is fired on the Polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() DblClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -195,7 +176,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is repeatedly fired while the user drags the polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() Drag: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -203,7 +183,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the user stops dragging the polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() DragEnd: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -211,7 +190,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the user starts dragging the polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() DragStart: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -219,7 +197,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM mousedown event is fired on the Polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() MouseDown: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -227,7 +204,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired when the DOM mousemove event is fired on the Polyline.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() MouseMove: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -235,7 +211,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired on Polyline mouseout.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() MouseOut: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -243,7 +218,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired on Polyline mouseover.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() MouseOver: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -251,7 +225,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This event is fired whe the DOM mouseup event is fired on the Polyline
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() MouseUp: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -259,7 +232,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * This even is fired when the Polyline is right-clicked on.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineDirective
      */
     @Output() RightClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -271,7 +243,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Gets whether the polyline has been registered with the service.
      * @readonly
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     public get AddedToService(): boolean { return this._addedToService; }
@@ -280,7 +251,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * Get the id of the polyline.
      *
      * @readonly
-     * @type {number}
      * @memberof MapPolylineDirective
      */
     public get Id(): number { return this._id; }
@@ -289,7 +259,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * Gets the id of the polyline as a string.
      *
      * @readonly
-     * @type {string}
      * @memberof MapPolylineDirective
      */
     public get IdAsString(): string { return this._id.toString(); }
@@ -298,7 +267,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * Gets whether the polyline is in a custom layer. See {@link MapLayer}.
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapPolylineDirective
      */
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
@@ -307,7 +275,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
      * gets the id of the Layer the polyline belongs to.
      *
      * @readonly
-     * @type {number}
      * @memberof MapPolylineDirective
      */
     public get LayerId(): number { return this._layerId; }
@@ -318,7 +285,7 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
 
     /**
      * Creates an instance of MapPolylineDirective.
-     * @param {PolylineManager} _polylineManager
+     * @param _polylineManager
      *
      * @memberof MapPolylineDirective
      */
@@ -332,8 +299,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
 
     /**
      * Called after the content intialization of the directive is complete. Part of the ng Component life cycle.
-     *
-     * @return {void}
      *
      * @memberof MapPolylineDirective
      */
@@ -356,8 +321,7 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
-     * @return {void}
+     * @param changes - Changes that have occured.
      *
      * @memberof MapPolylineDirective
      */
@@ -393,8 +357,6 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
 
     /**
      * Wires up the event receivers.
-     *
-     * @private
      *
      * @memberof MapPolylineDirective
      */
@@ -433,9 +395,8 @@ export class MapPolylineDirective implements OnDestroy, OnChanges, AfterContentI
     /**
      * Generates IPolyline option changeset from directive settings.
      *
-     * @private
-     * @param {SimpleChanges} changes - {@link SimpleChanges} identifying the changes that occured.
-     * @returns {IPolylineOptions} - {@link IPolylineOptions} containing the polyline options.
+     * @param changes - {@link SimpleChanges} identifying the changes that occured.
+     * @returns - {@link IPolylineOptions} containing the polyline options.
      *
      * @memberof MapPolylineDirective
      */

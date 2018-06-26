@@ -8,8 +8,6 @@ import { BingMapLabel } from './bing-label';
  * Concrete implementation for a polyline model for Bing Maps V8.
  *
  * @export
- * @implements Polyline
- * @class BingPolyline
  */
 export class BingPolyline extends Polyline implements Polyline {
 
@@ -35,7 +33,6 @@ export class BingPolyline extends Polyline implements Polyline {
      * Gets the polyline metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof BingPolyline
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -44,7 +41,6 @@ export class BingPolyline extends Polyline implements Polyline {
      * Gets the Navitve Polyline underlying the model
      *
      * @readonly
-     * @type {Microsoft.MapConstructor.Polyline}
      * @memberof BingPolyline
      */
     public get NativePrimitve(): Microsoft.Maps.Polyline { return this._polyline; }
@@ -53,10 +49,8 @@ export class BingPolyline extends Polyline implements Polyline {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof BingPolyline
      * @property
-     * @public
      */
     public get ShowTooltip(): boolean { return this._showTooltip; }
     public set ShowTooltip(val: boolean) {
@@ -68,10 +62,8 @@ export class BingPolyline extends Polyline implements Polyline {
      * Gets or sets the title off the polyline
      *
      * @abstract
-     * @type {string}
      * @memberof BingPolyline
      * @property
-     * @public
      */
     public get Title(): string { return this._title; }
     public set Title(val: string) {
@@ -85,9 +77,9 @@ export class BingPolyline extends Polyline implements Polyline {
 
     /**
      * Creates an instance of BingPolygon.
-     * @param {Microsoft.Maps.Polyline} _polyline - The {@link Microsoft.Maps.Polyline} underlying the model.
-     * @param {Microsoft.Maps.Map} _map - The context map.
-     * @param {Microsoft.Maps.Layer} _layer - The context layer.
+     * @param _polyline - The {@link Microsoft.Maps.Polyline} underlying the model.
+     * @param _map - The context map.
+     * @param _layer - The context layer.
      * @memberof BingPolyline
      */
     constructor(private _polyline: Microsoft.Maps.Polyline, protected _map: Microsoft.Maps.Map, protected _layer: Microsoft.Maps.Layer) {
@@ -97,7 +89,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Adds a delegate for an event.
      *
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
      * @memberof BingPolyline
      */
@@ -135,7 +127,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline is draggable.
      *
-     * @returns {boolean} - True if the polyline is dragable, false otherwise.
+     * @returns - True if the polyline is dragable, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -153,7 +145,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline path can be edited.
      *
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -164,7 +156,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Gets the polyline path.
      *
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polyline path.
+     * @returns - Array of {@link ILatLong} objects describing the polyline path.
      *
      * @memberof BingPolyline
      */
@@ -178,7 +170,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline is visible.
      *
-     * @returns {boolean} - True if the polyline is visible, false otherwise.
+     * @returns - True if the polyline is visible, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -189,7 +181,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Sets whether the polyline is dragable.
      *
-     * @param {boolean} draggable - True to make the polyline dragable, false otherwise.
+     * @param draggable - True to make the polyline dragable, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -207,7 +199,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Sets wether the polyline path is editable.
      *
-     * @param {boolean} editable - True to make polyline path editable, false otherwise.
+     * @param editable - True to make polyline path editable, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -218,7 +210,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Sets the polyline options
      *
-     * @param {IPolylineOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof BingPolyline
@@ -234,7 +226,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Sets the polyline path.
      *
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
      *
      * @memberof BingPolyline
      */
@@ -247,7 +239,7 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Sets whether the polyline is visible.
      *
-     * @param {boolean} visible - True to set the polyline visible, false otherwise.
+     * @param visible - True to set the polyline visible, false otherwise.
      *
      * @memberof BingPolyline
      */
@@ -262,7 +254,6 @@ export class BingPolyline extends Polyline implements Polyline {
     /**
      * Configures the tooltip for the polygon
      * @memberof Polygon
-     * @private
      */
     private ManageTooltip(): void {
         if (this._showTooltip && this._title != null && this._title !== '') {

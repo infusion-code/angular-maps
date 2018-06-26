@@ -10,7 +10,6 @@ import { InfoWindow } from './info-window';
  *
  * @export
  * @abstract
- * @class Layer
  */
 export abstract class Layer {
 
@@ -21,7 +20,7 @@ export abstract class Layer {
     /**
      * Get the native primitive underneath the abstraction layer.
      *
-     * @returns An object representing the native implementation of the layer in the underlying provider (such as
+     * @returns - An object representing the native implementation of the layer in the underlying provider (such as
      * Microsoft.Maps.Layer).
      *
      * @memberof Layer
@@ -80,7 +79,7 @@ export abstract class Layer {
     /**
      * Returns the options governing the behavior of the layer.
      *
-     * @returns IClusterOptions. The layer options.
+     * @returns - The layer options.
      *
      * @memberof Layer
      * @abstract
@@ -90,7 +89,7 @@ export abstract class Layer {
     /**
      * Returns the visibility state of the layer.
      *
-     * @returns Boolean. True is the layer is visible, false otherwise.
+     * @returns - True is the layer is visible, false otherwise.
      *
      * @memberof Layer
      * @abstract

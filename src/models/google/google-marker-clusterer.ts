@@ -12,8 +12,6 @@ import { Observable } from 'rxjs/Observable';
  * Concrete implementation of a clustering layer for the Google Map Provider.
  *
  * @export
- * @class GoogleMarkerClusterer
- * @implements {Layer}
  */
 export class GoogleMarkerClusterer implements Layer {
 
@@ -319,8 +317,6 @@ export class GoogleMarkerClusterer implements Layer {
      * have been added to the cluster. This method is used for performance reasons as adding an entitiy will recalculate all clusters.
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
-     *
-     * @returns {void}
      *
      * @memberof GoogleMarkerClusterer
      */

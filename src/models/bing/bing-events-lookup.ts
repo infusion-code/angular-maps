@@ -3,7 +3,6 @@ import { IMapEventLookup } from '../../interfaces/imap-event-lookup';
 /**
  * This contstant translates the abstract map events into their corresponding bing map
  * equivalents.
- * @implements {IMapEventLookup}
  */
 export const BingMapEventsLookup: IMapEventLookup = {
     click :             'click',

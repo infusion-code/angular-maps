@@ -8,7 +8,6 @@ let id: number = 0;
  *
  * @export
  * @abstract
- * @class MapLabel
  */
 export abstract class CanvasOverlay {
 
@@ -23,28 +22,17 @@ export abstract class CanvasOverlay {
 
     /**
      * Returns a promise that gets resolved when the canvas overlay is ready for interaction.
-     *
-     * @readonly
-     * @type {Promise<boolean>}
-     * @memberof CanvasOverlay
      */
     public get CanvasReady(): Promise<boolean> { return this._canvasReady; }
 
     /**
     * A callback function that is triggered when the canvas is ready to be rendered for the current map view.
-    * @type {HTMLCanvasElements => void}
-    * @memberof CanvasOverlay
-    * @private
     */
     private _drawCallback: (canvas: HTMLCanvasElement) => void;
 
 
     /**
      * Creates a new instance of the CanvasOverlay class.
-     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
-     * rendered for the current map view.
-     * @memberof CanvasOverlay
-     * @constructor
      */
     constructor(drawCallback: (canvas: HTMLCanvasElement) => void) {
         this._drawCallback = drawCallback;
@@ -57,8 +45,6 @@ export abstract class CanvasOverlay {
 
     /**
      * Deletes the canvas overlay.
-     *
-     * @memberof CanvasOverlay
      */
     public Delete(): void {
         this.SetMap(null);
@@ -66,24 +52,12 @@ export abstract class CanvasOverlay {
 
     /**
      * Obtains geo coordinates for the click location
-     *
-     * @abstract
-     * @param {*} e - The mouse event. The actual type will depend on the implementation.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
-     * @memberof CanvasOverlay
      */
     public abstract GetCoordinatesFromClick(e: any): ILatLong;
 
 
     /**
      * Gets the map associted with the label.
-     *
-     * @returns {*} - A native map object for the underlying implementation. Implementing derivatives should return the
-     * actual native object.
-     * @memberof CanvasOverlay
-     * @method
-     * @abstract
-     * @public
      */
     public abstract GetMap(): any;
 
@@ -91,19 +65,11 @@ export abstract class CanvasOverlay {
      * Returns a MapLabel instance for the current platform that can be used as a tooltip.
      * This method only generates the map label. Content and placement is the responsibility
      * of the caller.
-     *
-     * @abstract
-     * @returns {MapLabel} - The label to be used for the tooltip.
-     * @memberof CanvasOverlay
      */
     public abstract GetToolTipOverlay(): MapLabel;
 
     /**
      * CanvasOverlay added to map, load canvas.
-     * @memberof CanvasOverlay
-     * @method
-     * @public
-     * @memberof CanvasOverlay
      */
     public OnAdd(): void {
         this._canvas = document.createElement('canvas');
@@ -120,7 +86,6 @@ export abstract class CanvasOverlay {
      * CanvasOverlay loaded, attach map events for updating canvas.
      * @abstract
      * @method
-     * @public
      * @memberof CanvasOverlay
      */
     public abstract OnLoad(): void;
@@ -129,7 +94,6 @@ export abstract class CanvasOverlay {
      * When the CanvasLayer is removed from the map, release resources.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     public OnRemove(): void {
         this.SetCanvasElement(null);
@@ -139,10 +103,9 @@ export abstract class CanvasOverlay {
 
     /**
      * Redraws the canvas for the current map view.
-     * @param {boolean} clear - True to clear the canvas before drawing.
+     * @param clear - True to clear the canvas before drawing.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     public Redraw(clear: boolean): void {
         if (this._canvas == null) { return; }
@@ -159,11 +122,10 @@ export abstract class CanvasOverlay {
     /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
-     * @param {*} map - A native map object for the underlying implementation. Implementing derivatives should return the
+     * @param map - A native map object for the underlying implementation. Implementing derivatives should return the
      * actual native object.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     public abstract SetMap(map: any): void;
 
@@ -175,7 +137,6 @@ export abstract class CanvasOverlay {
      * Attaches the canvas to the map.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     protected abstract SetCanvasElement(el: HTMLCanvasElement): void;
 

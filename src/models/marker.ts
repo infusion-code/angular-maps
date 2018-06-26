@@ -7,14 +7,11 @@ import { MarkerTypeId } from '../models/marker-type-id';
 
 /**
  * This interface defines the contract for an icon cache entry.
- *
- * @interface IMarkerIconCacheEntry
  */
 interface IMarkerIconCacheEntry {
     /**
      * The icon string of the cache entry.
      *
-     * @type {string}
      * @memberof IMarkerIconCacheEntry
      */
     markerIconString: string;
@@ -22,7 +19,6 @@ interface IMarkerIconCacheEntry {
     /**
      * The Size of the icon.
      *
-     * @type {ISize}
      * @memberof IMarkerIconCacheEntry
     * */
     markerSize: ISize;
@@ -33,7 +29,6 @@ interface IMarkerIconCacheEntry {
  *
  * @export
  * @abstract
- * @class Marker
  */
 export abstract class Marker {
 
@@ -44,9 +39,6 @@ export abstract class Marker {
     /**
      * Caches concrete img elements for marker icons to accelerate patining.
      *
-     * @private
-     * @static
-     * @type {Map<string, HTMLImageElement>}
      * @memberof Marker
      */
     private static ImageElementCache: Map<string, HTMLImageElement> = new Map<string, HTMLImageElement>();
@@ -55,9 +47,6 @@ export abstract class Marker {
     /**
      * Used to cache generated markers for performance and reusability.
      *
-     * @private
-     * @static
-     * @type {Map<string, IMarkerIconCacheEntry>}
      * @memberof Marker
      */
     private static MarkerCache: Map<string, IMarkerIconCacheEntry> = new Map<string, IMarkerIconCacheEntry>();
@@ -66,13 +55,12 @@ export abstract class Marker {
      * Creates a marker based on the marker info. In turn calls a number of internal members to
      * create the actual marker.
      *
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - icon information. Depending on the marker type, various properties
+     * @param iconInfo - icon information. Depending on the marker type, various properties
      * need to be present. For performance, it is recommended to use an id for markers that are common to facilitate
      * reuse.
-     * @param {(string, IMarkerIconInfo) => void} callback - a callback that is invoked on markers that require asyncronous
+     * @param callback - a callback that is invoked on markers that require asyncronous
      * processing during creation. For markers that do not require async processing, this parameter is ignored.
-     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * @returns - a string or a promise for a string containing
      * a data url with the marker image.
      * @memberof Marker
      */
@@ -92,9 +80,8 @@ export abstract class Marker {
     /**
      * Obtains a shared img element for a marker icon to prevent unecessary creation of
      * DOM items. This has sped up large scale makers on Bing Maps by about 70%
-     * @static
-     * @param {string} icon - The icon string (url, data url, svg) for which to obtain the image.
-     * @returns {HTMLImageElement}  - The obtained image element.
+     * @param icon - The icon string (url, data url, svg) for which to obtain the image.
+     * @returns - The obtained image element.
      * @memberof Marker
      */
     public static GetImageForMarker(icon: string): HTMLImageElement {
@@ -116,9 +103,8 @@ export abstract class Marker {
      * Creates a canvased based marker using the point collection contained in the iconInfo parameter.
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @returns - String with the data url for the marker image.
      *
      * @memberof Marker
      */
@@ -165,9 +151,8 @@ export abstract class Marker {
      * Creates a circle marker image using information contained in the iconInfo parameter.
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @returns - String with the data url for the marker image.
      *
      * @memberof Marker
      */
@@ -211,9 +196,8 @@ export abstract class Marker {
      * Creates a font based marker image (such as Font-Awesome), by using information supplied in the parameters (such as Font-Awesome).
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string} - String with the data url for the marker image.
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @returns - String with the data url for the marker image.
      *
      * @memberof Marker
      */
@@ -263,9 +247,8 @@ export abstract class Marker {
      * Creates an image marker by applying a roation to a supplied image.
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}} - a string or a promise for a string containing
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @returns - a string or a promise for a string containing
      * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
@@ -320,11 +303,10 @@ export abstract class Marker {
      * Creates a rounded image marker by applying a circle mask to a supplied image.
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @param {(string, IMarkerIconInfo) => void} - Callback invoked once marker generation is complete. The callback
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @param iconInfo - Callback invoked once marker generation is complete. The callback
      * parameters are the data uri and the IMarkerIconInfo.
-     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * @returns - a string or a promise for a string containing
      * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
@@ -375,11 +357,10 @@ export abstract class Marker {
      * Creates a scaled image marker by scaling a supplied image by a factor using a canvas.
      *
      * @protected
-     * @static
-     * @param {IMarkerIconInfo} iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
-     * @param {(string, IMarkerIconInfo) => void} - Callback invoked once marker generation is complete. The callback
+     * @param iconInfo - {@link IMarkerIconInfo} containing the information necessary to create the icon.
+     * @param iconInfo - Callback invoked once marker generation is complete. The callback
      * parameters are the data uri and the IMarkerIconInfo.
-     * @returns {string|Promise<{icon: string, iconInfo: IMarkerIconInfo}>} - a string or a promise for a string containing
+     * @returns - a string or a promise for a string containing
      * a data url with the marker image. In case of a cached image, the image will be returned, otherwise the promise.
      *
      * @memberof Marker
@@ -427,7 +408,6 @@ export abstract class Marker {
      * Indicates that the marker is the first marker in a set.
      *
      * @abstract
-     * @type {boolean}
      * @memberof Marker
      */
     public abstract get IsFirst(): boolean;
@@ -437,7 +417,6 @@ export abstract class Marker {
      * Indicates that the marker is the last marker in the set.
      *
      * @abstract
-     * @type {boolean}
      * @memberof Marker
      */
     public abstract get IsLast(): boolean;
@@ -448,7 +427,6 @@ export abstract class Marker {
      *
      * @readonly
      * @abstract
-     * @type {ILatLong}
      * @memberof Marker
      */
     public abstract get Location(): ILatLong;
@@ -458,7 +436,6 @@ export abstract class Marker {
      *
      * @readonly
      * @abstract
-     * @type {Map<string, any>}
      * @memberof Marker
      */
     public abstract get Metadata(): Map<string, any>;
@@ -468,7 +445,6 @@ export abstract class Marker {
      *
      * @readonly
      * @abstract
-     * @type {*}
      * @memberof Marker
      */
     public abstract get NativePrimitve(): any;
@@ -481,8 +457,8 @@ export abstract class Marker {
      * Adds an event listener to the marker.
      *
      * @abstract
-     * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs.
+     * @param eventType - String containing the event for which to register the listener (e.g. "click")
+     * @param fn - Delegate invoked when the event occurs.
      *
      * @memberof Marker
      */
@@ -501,7 +477,6 @@ export abstract class Marker {
      * Gets the marker label
      *
      * @abstract
-     * @returns {string}
      *
      * @memberof Marker
      */
@@ -511,7 +486,6 @@ export abstract class Marker {
      * Gets the marker visibility
      *
      * @abstract
-     * @returns {boolean}
      *
      * @memberof Marker
      */
@@ -521,7 +495,7 @@ export abstract class Marker {
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
      * @abstract
-     * @param {IPoint} anchor - Point coordinates for the marker anchor.
+     * @param anchor - Point coordinates for the marker anchor.
      *
      * @memberof Marker
      */
@@ -531,7 +505,7 @@ export abstract class Marker {
      * Sets the draggability of a marker.
      *
      * @abstract
-     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
+     * @param draggable - True to mark the marker as draggable, false otherwise.
      *
      * @memberof Marker
      */
@@ -541,7 +515,7 @@ export abstract class Marker {
      * Sets the icon for the marker.
      *
      * @abstract
-     * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
+     * @param icon - String containing the icon in various forms (url, data url, etc.)
      *
      * @memberof Marker
      */
@@ -551,7 +525,7 @@ export abstract class Marker {
      * Sets the marker label.
      *
      * @abstract
-     * @param {string} label - String containing the label to set.
+     * @param label - String containing the label to set.
      *
      * @memberof Marker
      */
@@ -561,7 +535,7 @@ export abstract class Marker {
      * Sets the marker position.
      *
      * @abstract
-     * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
+     * @param latLng - Geo coordinates to set the marker position to.
      *
      * @memberof Marker
      */
@@ -571,7 +545,7 @@ export abstract class Marker {
      * Sets the marker title.
      *
      * @abstract
-     * @param {string} title - String containing the title to set.
+     * @param title - String containing the title to set.
      *
      * @memberof Marker
      */
@@ -581,7 +555,7 @@ export abstract class Marker {
      * Sets the marker options.
      *
      * @abstract
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
+     * @param options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
      * merged with the underlying marker options.
      * @memberof Marker
      */
@@ -591,7 +565,7 @@ export abstract class Marker {
      * Sets the visiblilty of the marker.
      *
      * @abstract
-     * @param {boolean} visible - Boolean which determines if the marker is visible or not.
+     * @param visible - Boolean which determines if the marker is visible or not.
      *
      * @memberof Marker
      */

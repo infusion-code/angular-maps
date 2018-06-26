@@ -8,7 +8,6 @@ export abstract class InfoWindow {
      *
      * @readonly
      * @abstract
-     * @type {boolean}
      * @memberof InfoWindow
      */
     public abstract get IsOpen(): boolean;
@@ -18,7 +17,6 @@ export abstract class InfoWindow {
      *
      * @readonly
      * @abstract
-     * @type {*}
      * @memberof InfoWindow
      */
     public abstract get NativePrimitve(): any;
@@ -27,8 +25,8 @@ export abstract class InfoWindow {
      * Adds an event listener to the info window.
      *
      * @abstract
-     * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs.
+     * @param eventType - String containing the event for which to register the listener (e.g. "click")
+     * @param fn - Delegate invoked when the event occurs.
      *
      * @memberof InfoWindow
      */
@@ -47,7 +45,7 @@ export abstract class InfoWindow {
      * Gets the position of the info window.
      *
      * @abstract
-     * @returns {ILatLong} - Returns the geo coordinates of the info window.
+     * @returns - Returns the geo coordinates of the info window.
      *
      * @memberof InfoWindow
      */
@@ -66,7 +64,7 @@ export abstract class InfoWindow {
      * Sets the info window options.
      *
      * @abstract
-     * @param {IInfoWindowOptions} options - Info window options to set. The options will be merged with any existing options.
+     * @param options - Info window options to set. The options will be merged with any existing options.
      *
      * @memberof InfoWindow
      */
@@ -76,7 +74,7 @@ export abstract class InfoWindow {
      * Sets the info window position.
      *
      * @abstract
-     * @param {ILatLong} position - Geo coordinates to move the anchor of the info window to.
+     * @param position - Geo coordinates to move the anchor of the info window to.
      *
      * @memberof InfoWindow
      */

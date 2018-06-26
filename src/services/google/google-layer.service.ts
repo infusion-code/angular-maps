@@ -22,9 +22,6 @@ declare var google: any;
  * Implements the {@link LayerService} contract for a Google Maps specific implementation.
  *
  * @export
- * @class GoogleLayerService
- * @extends {GoogleLayerBase}
- * @implements {LayerService}
  */
 @Injectable()
 export class GoogleLayerService extends GoogleLayerBase implements LayerService  {
@@ -40,8 +37,8 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
 
     /**
      * Creates an instance of GoogleLayerService.
-     * @param {MapService} _mapService - Instance of the Google Maps Service. Will generally be injected.
-     * @param {NgZone} _zone - NgZone instance to provide zone aware promises.
+     * @param _mapService - Instance of the Google Maps Service. Will generally be injected.
+     * @param _zone - NgZone instance to provide zone aware promises.
      *
      * @memberof GoogleLayerService
      */
@@ -53,7 +50,7 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * Adds a layer to the map.
      *
      * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object.
+     * @param layer - MapLayerDirective component object.
      * Generally, MapLayerDirective will be injected with an instance of the
      * LayerService and then self register on initialization.
      *
@@ -74,9 +71,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {IPolygonOptions} options - Polygon options defining the polygon.
-     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygon.
+     * @returns - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof GoogleLayerService
      */
@@ -91,9 +88,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
-     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygons.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polygon models.
      *
      * @memberof GoogleLayerService
      */
@@ -128,9 +125,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * Adds a polyline to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the polyline.
-     * @param {IPolylineOptions} options - Polyline options defining the polyline.
-     * @returns {Promise<Polyline|Array<Polyline>>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * @param layer - The id of the layer to which to add the polyline.
+     * @param options - Polyline options defining the polyline.
+     * @returns - A promise that when fullfilled contains the an instance of the Polyline (or an array
      * of polygons for complex paths) model.
      *
      * @memberof GoogleLayerService
@@ -149,9 +146,9 @@ export class GoogleLayerService extends GoogleLayerBase implements LayerService 
      * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polylines.
-     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
-     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     * @param layer - The id of the layer to which to add the polylines.
+     * @param options - Polyline options defining the polylines.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polyline models.
      *
      * @memberof GoogleLayerService
      */

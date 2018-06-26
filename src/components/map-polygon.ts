@@ -36,10 +36,6 @@ let polygonId = 0;
  *
  *
  * @export
- * @class MapPolygonDirective
- * @implements {OnDestroy}
- * @implements {OnChanges}
- * @implements {AfterContentInit}
  */
 @Directive({
     selector: 'x-map-polygon'
@@ -64,7 +60,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Gets or sets whether this Polygon handles mouse events.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public Clickable = true;
@@ -72,7 +67,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * If set to true, the user can drag this shape over the map.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public Draggable = false;
@@ -81,7 +75,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * If set to true, the user can edit this shape by dragging the control
      * points shown at the vertices and on each segment.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public Editable = false;
@@ -89,7 +82,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The fill color of the polygon.
      *
-     * @type {string}
      * @memberof MapPolygonDirective
      */
     @Input() public FillColor: string;
@@ -97,7 +89,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The fill opacity between 0.0 and 1.0
      *
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public FillOpacity: number;
@@ -109,21 +100,18 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * geodesic polygon may appear to change when dragged, as the dimensions
      * are maintained relative to the surface of the earth. Defaults to false.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public Geodesic = false;
 
     /**
      * Set the maximum zoom at which the polygon lable is visible. Ignored if ShowLabel is false.
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public LabelMaxZoom: number;
 
     /**
      * Set the minimum zoom at which the polygon lable is visible. Ignored if ShowLabel is false.
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public LabelMinZoom: number;
@@ -131,7 +119,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Arbitary metadata to assign to the Polygon. This is useful for events
      *
-     * @type {Map<string, any>}
      * @memberof MapPolygonDirective
      */
     @Input() public Metadata: Map<string, any> = new Map<string, any>();
@@ -147,7 +134,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * Inserting or removing LatLngs from the Array will automatically update
      * the polygon on the map.
      *
-     * @type {(Array<ILatLong> | Array<Array<ILatLong>>|Array<Array<Array<ILatLong)}
      * @memberof MapPolygonDirective
      */
     @Input() public Paths: Array<ILatLong> | Array<Array<ILatLong>> = [];
@@ -155,7 +141,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Whether to show the title as the label on the polygon.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public ShowLabel: boolean;
@@ -163,7 +148,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Whether to show the title of the polygon as the tooltip on the polygon.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public ShowTooltip: boolean = true;
@@ -171,7 +155,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The stroke color.
      *
-     * @type {string}
      * @memberof MapPolygonDirective
      */
     @Input() public StrokeColor: string;
@@ -179,7 +162,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The stroke opacity between 0.0 and 1.0
      *
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public StrokeOpacity: number;
@@ -187,7 +169,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The stroke width in pixels.
      *
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public StrokeWeight: number;
@@ -195,7 +176,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The title of the polygon.
      *
-     * @type {string}
      * @memberof MapPolygonDirective
      */
     @Input() public Title: string;
@@ -203,7 +183,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Whether this polygon is visible on the map. Defaults to true.
      *
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     @Input() public Visible: boolean;
@@ -211,7 +190,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * The zIndex compared to other polys.
      *
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     @Input() public zIndex: number;
@@ -223,7 +201,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the DOM click event is fired on the Polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() Click: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -231,7 +208,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the DOM dblclick event is fired on the Polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() DblClick: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -239,7 +215,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is repeatedly fired while the user drags the polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() Drag: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -247,7 +222,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the user stops dragging the polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() DragEnd: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -255,7 +229,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the user starts dragging the polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() DragStart: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -263,7 +236,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the DOM mousedown event is fired on the Polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() MouseDown: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -271,7 +243,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the DOM mousemove event is fired on the Polygon.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() MouseMove: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -279,7 +250,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired on Polygon mouseout.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() MouseOut: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -287,7 +257,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired on Polygon mouseover.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() MouseOver: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -295,7 +264,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired whe the DOM mouseup event is fired on the Polygon
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() MouseUp: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -304,7 +272,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when the Polygon is right-clicked on.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() RightClick: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -312,7 +279,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * This event is fired when editing has completed.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolygonDirective
      */
     @Output() PathChanged: EventEmitter<IPolygonEvent> = new EventEmitter<IPolygonEvent>();
@@ -324,7 +290,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Gets whether the polygon has been registered with the service.
      * @readonly
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     public get AddedToService(): boolean { return this._addedToService; }
@@ -333,7 +298,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * Get the id of the polygon.
      *
      * @readonly
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     public get Id(): number { return this._id; }
@@ -342,7 +306,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * Gets the id of the polygon as a string.
      *
      * @readonly
-     * @type {string}
      * @memberof MapPolygonDirective
      */
     public get IdAsString(): string { return this._id.toString(); }
@@ -351,7 +314,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * Gets whether the polygon is in a custom layer. See {@link MapLayer}.
      *
      * @readonly
-     * @type {boolean}
      * @memberof MapPolygonDirective
      */
     public get InCustomLayer(): boolean { return this._inCustomLayer; }
@@ -360,7 +322,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
      * gets the id of the Layer the polygon belongs to.
      *
      * @readonly
-     * @type {number}
      * @memberof MapPolygonDirective
      */
     public get LayerId(): number { return this._layerId; }
@@ -371,7 +332,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
 
     /**
      * Creates an instance of MapPolygonDirective.
-     * @param {PolygonManager} _polygonManager
+     * @param _polygonManager
      *
      * @memberof MapPolygonDirective
      */
@@ -385,8 +346,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
 
     /**
      * Called after the content intialization of the directive is complete. Part of the ng Component life cycle.
-     *
-     * @return {void}
      *
      * @memberof MapPolygonDirective
      */
@@ -409,8 +368,7 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
-     * @return {void}
+     * @param changes - Changes that have occured.
      *
      * @memberof MapPolygonDirective
      */
@@ -445,8 +403,6 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
 
     /**
      * Wires up the event receivers.
-     *
-     * @private
      *
      * @memberof MapPolygonDirective
      */
@@ -487,9 +443,8 @@ export class MapPolygonDirective implements OnDestroy, OnChanges, AfterContentIn
     /**
      * Generates IPolygon option changeset from directive settings.
      *
-     * @private
-     * @param {SimpleChanges} changes - {@link SimpleChanges} identifying the changes that occured.
-     * @returns {IPolygonOptions} - {@link IPolygonOptions} containing the polygon options.
+     * @param changes - {@link SimpleChanges} identifying the changes that occured.
+     * @returns - {@link IPolygonOptions} containing the polygon options.
      *
      * @memberof MapPolygonDirective
      */

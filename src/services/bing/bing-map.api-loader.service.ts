@@ -17,7 +17,6 @@ export enum ScriptProtocol {
  * Bing Maps V8 specific loader configuration to be used with the {@link BingMapAPILoader}
  *
  * @export
- * @class BingMapAPILoaderConfig
  */
 @Injectable()
 export class BingMapAPILoaderConfig  {
@@ -52,8 +51,6 @@ const DEFAULT_CONFIGURATION = new BingMapAPILoaderConfig();
  * Bing Maps V8 implementation for the {@link MapAPILoader} service.
  *
  * @export
- * @class BingMapAPILoader
- * @extends {MapAPILoader}
  */
 @Injectable()
 export class BingMapAPILoader extends MapAPILoader {
@@ -71,16 +68,15 @@ export class BingMapAPILoader extends MapAPILoader {
      * Gets the loader configuration.
      *
      * @readonly
-     * @type {BingMapAPILoaderConfig}
      * @memberof BingMapAPILoader
      */
     public get Config(): BingMapAPILoaderConfig { return this._config; }
 
     /**
      * Creates an instance of BingMapAPILoader.
-     * @param {BingMapAPILoaderConfig} _config  - The loader configuration.
-     * @param {WindowRef} _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
-     * @param {DocumentRef} _documentRef - An instance of {@link DocumentRef}.
+     * @param _config  - The loader configuration.
+     * @param _windowRef - An instance of {@link WindowRef}. Necessary because Bing Map V8 interacts with the window object.
+     * @param _documentRef - An instance of {@link DocumentRef}.
      * Necessary because Bing Map V8 interacts with the document object.
      *
      * @memberof BingMapAPILoader
@@ -98,8 +94,6 @@ export class BingMapAPILoader extends MapAPILoader {
 
     /**
      * Loads the necessary resources for Bing Maps V8.
-     *
-     * @returns {Promise<void>}
      *
      * @memberof BingMapAPILoader
      */
@@ -132,9 +126,8 @@ export class BingMapAPILoader extends MapAPILoader {
     /**
      * Gets the Bing Map V8 scripts url for injections into the header.
      *
-     * @private
-     * @param {string} callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded.
-     * @returns {string} - The url to be used to load the Bing Map scripts.
+     * @param callbackName - Name of the function to be called when the Bing Maps V8 scripts are loaded.
+     * @returns - The url to be used to load the Bing Map scripts.
      *
      * @memberof BingMapAPILoader
      */

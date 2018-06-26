@@ -23,9 +23,6 @@ import { BingConversions } from './bing-conversions';
  * Implements the {@link ClusterService} contract for a  Bing Maps V8 specific implementation.
  *
  * @export
- * @class BingClusterService
- * @extends {BingLayerBase}
- * @implements {ClusterService}
  */
 @Injectable()
 export class BingClusterService extends BingLayerBase implements ClusterService {
@@ -36,8 +33,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
 
     /**
      * Creates an instance of BingClusterService.
-     * @param {MapService} _mapService - Concrete {@link MapService} implementation for Bing Maps V8. An instance of {@link BingMapService}.
-     * @param {NgZone} _zone - NgZone instance to provide zone aware promises.
+     * @param _mapService - Concrete {@link MapService} implementation for Bing Maps V8. An instance of {@link BingMapService}.
+     * @param _zone - NgZone instance to provide zone aware promises.
      *
      * @memberof BingClusterService
      */
@@ -53,7 +50,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Adds a layer to the map.
      *
      * @abstract
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object.
+     * @param layer - ClusterLayerDirective component object.
      * Generally, MapLayer will be injected with an instance of the
      * LayerService and then self register on initialization.
      *
@@ -101,9 +98,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Adds a polygon to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {IPolygonOptions} options - Polygon options defining the polygon.
-     * @returns {Promise<Polygon>} - A promise that when fullfilled contains the an instance of the Polygon model.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygon.
+     * @returns - A promise that when fullfilled contains the an instance of the Polygon model.
      *
      * @memberof BingClusterService
      */
@@ -115,9 +112,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Creates an array of unbound polygons. Use this method to create arrays of polygons to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polygon.
-     * @param {Array<IPolygonOptions>} options - Polygon options defining the polygons.
-     * @returns {Promise<Array<Polygon>>} - A promise that when fullfilled contains the an arrays of the Polygon models.
+     * @param layer - The id of the layer to which to add the polygon.
+     * @param options - Polygon options defining the polygons.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polygon models.
      *
      * @memberof BingClusterService
      */
@@ -129,9 +126,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Adds a polyline to the layer.
      *
      * @abstract
-     * @param {number} layer - The id of the layer to which to add the line.
-     * @param {IPolylineOptions} options - Polyline options defining the line.
-     * @returns {Promise<Polyline|ArraY<Polyline>>} - A promise that when fullfilled contains the an instance of the Polyline (or an array
+     * @param layer - The id of the layer to which to add the line.
+     * @param options - Polyline options defining the line.
+     * @returns - A promise that when fullfilled contains the an instance of the Polyline (or an array
      * of polygons for complex paths) model.
      *
      * @memberof BingClusterService
@@ -144,9 +141,9 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Creates an array of unbound polylines. Use this method to create arrays of polylines to be used in bulk
      * operations.
      *
-     * @param {number} layer - The id of the layer to which to add the polylines.
-     * @param {Array<IPolylineOptions>} options - Polyline options defining the polylines.
-     * @returns {Promise<Array<Polyline|Array<Polyline>>>} - A promise that when fullfilled contains the an arrays of the Polyline models.
+     * @param layer - The id of the layer to which to add the polylines.
+     * @param options - Polyline options defining the polylines.
+     * @returns - A promise that when fullfilled contains the an arrays of the Polyline models.
      *
      * @memberof BingClusterService
      */
@@ -160,8 +157,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>}
+     * @param layer - ClusterLayerDirective component object for which to retrieve the layer.
      *
      * @memberof BingClusterService
      */
@@ -183,8 +179,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>}
+     * @param layer - ClusterLayerDirective component object for which to retrieve the layer.
      *
      * @memberof BingClusterService
      */
@@ -209,9 +204,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * can provide an IconInfo property that would govern the apparenace of the pin. This method will assign the same pin to all
      * clusters in the layer.
      *
-     * @private
-     * @param {Microsoft.Maps.ClusterPushpin} cluster - The cluster for which to create the pushpin.
-     * @param {ClusterLayerDirective} layer - The {@link ClusterLayerDirective} component representing the layer.
+     * @param cluster - The cluster for which to create the pushpin.
+     * @param layer - The {@link ClusterLayerDirective} component representing the layer.
      *
      * @memberof BingClusterService
      */
@@ -251,9 +245,8 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
      * Provides a hook for consumers to provide a custom function to create cluster bins for a cluster. This is particuarily useful
      * in situation where the pin should differ to represent information about the pins in the cluster.
      *
-     * @private
-     * @param {Microsoft.Maps.ClusterPushpin} cluster - The cluster for which to create the pushpin.
-     * @param {ClusterLayerDirective} layer - The {@link ClusterLayerDirective} component
+     * @param cluster - The cluster for which to create the pushpin.
+     * @param layer - The {@link ClusterLayerDirective} component
      * representing the layer. Set the {@link ClusterLayerDirective.CustomMarkerCallback}
      * property to define the callback generating the pin.
      *
@@ -291,8 +284,7 @@ export class BingClusterService extends BingLayerBase implements ClusterService 
     /**
      * Zooms into the cluster on click so that the members of the cluster comfortable fit into the zommed area.
      *
-     * @private
-     * @param {Microsoft.Maps.IMouseEventArgs} e - Mouse Event.
+     * @param e - Mouse Event.
      *
      * @memberof BingClusterService
      */

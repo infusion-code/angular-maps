@@ -11,8 +11,6 @@ declare var google: any;
  * Concrete implementation for a polyline model for Google Maps.
  *
  * @export
- * @implements Polyline
- * @class Polyline
  */
 export class GooglePolyline extends Polyline implements Polyline {
 
@@ -37,7 +35,6 @@ export class GooglePolyline extends Polyline implements Polyline {
      * Gets the polyline metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof GooglePolyline
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -46,7 +43,6 @@ export class GooglePolyline extends Polyline implements Polyline {
      * Gets the native primitve implementing the marker, in this case {@link GoogleMApTypes.Polyline}
      *
      * @readonly
-     * @type {GoogleMApTypes.Polyline}
      * @memberof GooglePolygon
      */
     public get NativePrimitve(): GoogleMapTypes.Polyline { return this._polyline; }
@@ -55,10 +51,8 @@ export class GooglePolyline extends Polyline implements Polyline {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get ShowTooltip(): boolean { return this._showTooltip; }
     public set ShowTooltip(val: boolean) {
@@ -70,10 +64,8 @@ export class GooglePolyline extends Polyline implements Polyline {
      * Gets or sets the title off the polygon
      *
      * @abstract
-     * @type {string}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get Title(): string { return this._title; }
     public set Title(val: string) {
@@ -87,7 +79,7 @@ export class GooglePolyline extends Polyline implements Polyline {
 
      /**
      * Creates an instance of GooglePolygon.
-     * @param {GoogleMapTypes.Polyline} _polyline - The {@link GoogleMApTypes.Polyline} underlying the model.
+     * @param _polyline - The {@link GoogleMApTypes.Polyline} underlying the model.
      *
      * @memberof GooglePolyline
      */
@@ -98,7 +90,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Adds a delegate for an event.
      *
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
      * @memberof Polyline
      */
@@ -134,7 +126,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline is draggable.
      *
-     * @returns {boolean} - True if the polyline is dragable, false otherwise.
+     * @returns - True if the polyline is dragable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -145,7 +137,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline path can be edited.
      *
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof Polyline
      */
@@ -156,7 +148,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Gets the polyline path.
      *
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polyline path.
+     * @returns - Array of {@link ILatLong} objects describing the polyline path.
      *
      * @memberof Polyline
      */
@@ -170,7 +162,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Gets whether the polyline is visible.
      *
-     * @returns {boolean} - True if the polyline is visible, false otherwise.
+     * @returns - True if the polyline is visible, false otherwise.
      *
      * @memberof Polyline
      */
@@ -181,7 +173,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Sets whether the polyline is dragable.
      *
-     * @param {boolean} draggable - True to make the polyline dragable, false otherwise.
+     * @param draggable - True to make the polyline dragable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -192,7 +184,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Sets wether the polyline path is editable.
      *
-     * @param {boolean} editable - True to make polyline path editable, false otherwise.
+     * @param editable - True to make polyline path editable, false otherwise.
      *
      * @memberof Polyline
      */
@@ -203,7 +195,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Sets the polyline options
      *
-     * @param {IPolylineOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof Polyline
@@ -219,7 +211,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Sets the polyline path.
      *
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polylines path.
      *
      * @memberof Polyline
      */
@@ -232,7 +224,7 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Sets whether the polyline is visible.
      *
-     * @param {boolean} visible - True to set the polyline visible, false otherwise.
+     * @param visible - True to set the polyline visible, false otherwise.
      *
      * @memberof Polyline
      */
@@ -246,7 +238,6 @@ export class GooglePolyline extends Polyline implements Polyline {
     /**
      * Configures the tooltip for the polyline
      * @memberof GooglePolyline
-     * @private
      */
     private ManageTooltip(): void {
         if (this._showTooltip && this._title != null && this._title !== '') {

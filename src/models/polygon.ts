@@ -6,7 +6,6 @@ import { IPolygonOptions } from '../interfaces/ipolygon-options';
  *
  * @export
  * @abstract
- * @class Polygon
  */
 export abstract class Polygon {
     ///
@@ -22,8 +21,6 @@ export abstract class Polygon {
     /**
      * Gets the polygon's center.
      * @readonly
-     * @public
-     * @type {ILatLong}
      * @memberof Polygon
      */
     public get Center(): ILatLong {
@@ -36,8 +33,6 @@ export abstract class Polygon {
     /**
      * Gets the polygon's centroid.
      * @readonly
-     * @public
-     * @type {ILatLong}
      * @memberof Polygon
      */
     public get Centroid(): ILatLong {
@@ -51,10 +46,8 @@ export abstract class Polygon {
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
      * @abstract
-     * @type {number}
      * @memberof Polygon
      * @property
-     * @public
      */
     public abstract get LabelMaxZoom(): number;
     public abstract set LabelMaxZoom(val: number);
@@ -63,10 +56,8 @@ export abstract class Polygon {
      * Gets or sets the minimum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
      * @abstract
-     * @type {number}
      * @memberof Polygon
      * @property
-     * @public
      */
     public abstract get LabelMinZoom(): number;
     public abstract set LabelMinZoom(val: number);
@@ -76,7 +67,6 @@ export abstract class Polygon {
      *
      * @readonly
      * @abstract
-     * @type {Map<string, any>}
      * @memberof Polygon
      */
     public abstract get Metadata(): Map<string, any>;
@@ -85,7 +75,6 @@ export abstract class Polygon {
      * Gets the native primitve implementing the polygon.
      *
      * @readonly
-     * @type {*}
      * @memberof Polygon
      */
     public abstract get NativePrimitve(): any;
@@ -94,10 +83,8 @@ export abstract class Polygon {
      * Gets or sets whether to show the label
      *
      * @abstract
-     * @type {boolean}
      * @memberof Polygon
      * @property
-     * @public
      */
     public abstract get ShowLabel(): boolean;
     public abstract set ShowLabel(val: boolean);
@@ -106,10 +93,8 @@ export abstract class Polygon {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof Polygon
      * @property
-     * @public
      */
     public abstract get ShowTooltip(): boolean;
     public abstract set ShowTooltip(val: boolean);
@@ -118,10 +103,8 @@ export abstract class Polygon {
      * Gets or sets the title off the polygon
      *
      * @abstract
-     * @type {string}
      * @memberof Polygon
      * @property
-     * @public
      */
     public abstract get Title(): string;
     public abstract set Title(val: string);
@@ -134,7 +117,7 @@ export abstract class Polygon {
      * Adds a delegate for an event.
      *
      * @abstract
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
      * @memberof Polygon
      */
@@ -153,7 +136,7 @@ export abstract class Polygon {
      * Gets whether the polygon is draggable.
      *
      * @abstract
-     * @returns {boolean} - True if the polygon is dragable, false otherwise.
+     * @returns - True if the polygon is dragable, false otherwise.
      *
      * @memberof Polygon
      */
@@ -163,7 +146,7 @@ export abstract class Polygon {
      * Gets whether the polygon path can be edited.
      *
      * @abstract
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof Polygon
      */
@@ -173,7 +156,7 @@ export abstract class Polygon {
      * Gets the polygon path.
      *
      * @abstract
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polygon path.
+     * @returns - Array of ILatLong objects describing the polygon path.
      *
      * @memberof Polygon
      */
@@ -183,7 +166,7 @@ export abstract class Polygon {
      * Gets the polygon paths.
      *
      * @abstract
-     * @returns {Array<Array<ILatLong>>} - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
+     * @returns - Array of Array of ILatLong objects describing multiple polygon paths.
      *
      * @memberof Polygon
      */
@@ -193,7 +176,7 @@ export abstract class Polygon {
      * Gets whether the polygon is visible.
      *
      * @abstract
-     * @returns {boolean} - True if the polygon is visible, false otherwise.
+     * @returns - True if the polygon is visible, false otherwise.
      *
      * @memberof Polygon
      */
@@ -203,7 +186,7 @@ export abstract class Polygon {
      * Sets whether the polygon is dragable.
      *
      * @abstract
-     * @param {boolean} draggable - True to make the polygon dragable, false otherwise.
+     * @param draggable - True to make the polygon dragable, false otherwise.
      *
      * @memberof Polygon
      */
@@ -213,7 +196,7 @@ export abstract class Polygon {
      * Sets wether the polygon path is editable.
      *
      * @abstract
-     * @param {boolean} editable - True to make polygon path editable, false otherwise.
+     * @param editable - True to make polygon path editable, false otherwise.
      *
      * @memberof Polygon
      */
@@ -223,7 +206,7 @@ export abstract class Polygon {
      * Sets the polygon options
      *
      * @abstract
-     * @param {IPolygonOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof Polygon
@@ -234,7 +217,7 @@ export abstract class Polygon {
      * Sets the polygon path.
      *
      * @abstract
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
      *
      * @memberof Polygon
      */
@@ -244,7 +227,7 @@ export abstract class Polygon {
      * Set the polygon path or paths.
      *
      * @abstract
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong}
+     * @param paths An Array of {@link ILatLong}
      * (or array of arrays) describing the polygons path(s).
      *
      * @memberof Polygon
@@ -255,7 +238,7 @@ export abstract class Polygon {
      * Sets whether the polygon is visible.
      *
      * @abstract
-     * @param {boolean} visible - True to set the polygon visible, false otherwise.
+     * @param visible - True to set the polygon visible, false otherwise.
      *
      * @memberof Polygon
      */
@@ -268,7 +251,7 @@ export abstract class Polygon {
     /**
      * Gets the center of the polygons' bounding box.
      *
-     * @returns {ILatLong} - {@link ILatLong} object containing the center of the bounding box.
+     * @returns - ILatLong object containing the center of the bounding box.
      * @memberof Polygon
      * @method
      * @protected
@@ -296,7 +279,7 @@ export abstract class Polygon {
     /**
      * Get the centroid of the polygon based on the polygon path.
      *
-     * @return {ILatLong} - The centroid coordinates of the polygon.
+     * @returns - The centroid coordinates of the polygon.
      * @memberof Polygon
      * @method
      * @protected

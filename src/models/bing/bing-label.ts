@@ -9,9 +9,6 @@ let id: number = 0;
  * Implements map a labled to be placed on the map.
  *
  * @export
- * @extends Microsoft.Maps.CustomOverlay
- * @extends MapLabel
- * @class BingMapLabel
  */
 export class BingMapLabel extends MapLabel {
 
@@ -20,7 +17,6 @@ export class BingMapLabel extends MapLabel {
      *
      * @readonly
      * @abstract
-     * @type {*}
      * @memberof BingMapLabel
      */
     public get DefaultLabelStyle(): ILabelOptions {
@@ -39,11 +35,7 @@ export class BingMapLabel extends MapLabel {
 
     /**
      * Creates a new MapLabel
-     * @extends Microsoft.Maps.CustomOverlay
-     * @extends MapLabel
-     * @param {{ [key: string]: any }} opt_options Optional properties to set.
-     * @constructor
-     * @public
+     * @param options Optional properties to set.
      */
     constructor(options: { [key: string]: any }) {
         options.fontSize = options.fontSize || 12;
@@ -61,10 +53,9 @@ export class BingMapLabel extends MapLabel {
     /**
      * Gets the value of a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @returns {*} - The value of the setting.
+     * @param key - Key specifying the setting.
+     * @returns - The value of the setting.
      * @memberof BingMapLabel
-     * @public
      * @method
      */
     public Get(key: string): any {
@@ -74,10 +65,8 @@ export class BingMapLabel extends MapLabel {
     /**
      * Gets the map associted with the label.
      *
-     * @returns {Microsoft.Maps.Map}
      * @memberof BingMapLabel
      * @method
-     * @public
      */
     public GetMap(): Microsoft.Maps.Map {
         return (<any>this).getMap();
@@ -86,10 +75,9 @@ export class BingMapLabel extends MapLabel {
     /**
      * Set the value for a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @param {*} val - The value to set.
+     * @param key - Key specifying the setting.
+     * @param val - The value to set.
      * @memberof BingMapLabel
-     * @public
      * @method
      */
     public Set(key: string, val: any): void {
@@ -105,10 +93,9 @@ export class BingMapLabel extends MapLabel {
     /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
-     * @param {Microsoft.Maps.Map} map - Map to associated with the label.
+     * @param map - Map to associated with the label.
      * @memberof BingMapLabel
      * @method
-     * @public
      */
     public SetMap(map: Microsoft.Maps.Map): void {
         const m: Microsoft.Maps.Map = this.GetMap();
@@ -124,9 +111,8 @@ export class BingMapLabel extends MapLabel {
     /**
      * Applies settings to the object
      *
-     * @param {{ [key: string]: any }} options - An object containing the settings key value pairs.
+     * @param options - An object containing the settings key value pairs.
      * @memberof BingMapLabel
-     * @public
      * @method
      */
     public SetValues(options: { [key: string]: any }): void {
@@ -210,7 +196,6 @@ export class BingMapLabel extends MapLabel {
      * Delegate callled when the label is loaded
      * @memberof BingMapLabel
      * @method
-     * @private
      */
     private OnLoad() {
         Microsoft.Maps.Events.addHandler(this.GetMap(), 'viewchange', () => {
