@@ -1,7 +1,6 @@
-﻿/// <reference path="node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
-
-import { NgModule, ModuleWithProviders, NgZone } from '@angular/core';
+﻿import { NgModule, ModuleWithProviders, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import 'bingmaps';
 
 ///
 /// import module interfaces

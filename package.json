@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/tslint -c tslint.json ./src/**/*.ts ./index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run lint && npm run build",
+    "prepublish": "npm run package",
     "watch": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json -w ",
     "build": ".\\node_modules\\.bin\\ngc -p tsconfig-aot.json",
     "package": "ng-packagr -p package.json"
