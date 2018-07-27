@@ -1,7 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Observer, Subject } from 'rxjs';
 import { IPolylineOptions } from '../../interfaces/ipolyline-options';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { Polyline } from '../../models/polyline';

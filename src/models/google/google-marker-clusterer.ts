@@ -6,7 +6,7 @@ import { Marker } from '../marker';
 import { InfoWindow } from '../info-window';
 import { ClusterPlacementMode } from '../cluster-placement-mode';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 /**
  * Concrete implementation of a clustering layer for the Google Map Provider.

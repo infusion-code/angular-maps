@@ -2,7 +2,7 @@ import {
     Directive, Input, Output, OnDestroy, OnChanges, ViewContainerRef,
     EventEmitter, ContentChild, AfterContentInit, SimpleChanges
 } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IPolylineOptions } from '../interfaces/ipolyline-options';

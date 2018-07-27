@@ -1,6 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
+import { Observable, Observer } from 'rxjs';
 import { InfoWindow } from '../../models/info-window';
 import { IInfoWindowOptions } from '../../interfaces/iinfo-window-options';
 import { ILatLong } from '../../interfaces/ilatlong';

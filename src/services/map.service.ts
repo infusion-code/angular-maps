@@ -1,6 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IMapOptions } from '../interfaces/imap-options';
 import { ILayerOptions } from '../interfaces/ilayer-options';
 import { ILatLong } from '../interfaces/ilatlong';

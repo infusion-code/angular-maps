@@ -1,6 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { Marker } from '../models/marker';

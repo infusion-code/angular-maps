@@ -1,7 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Observer, Subject } from 'rxjs';
 import { ILatLong } from '../../interfaces/ilatlong';
 import { IMarkerOptions } from '../../interfaces/imarker-options';
 import { IMarkerIconInfo } from '../../interfaces/imarker-icon-info';
