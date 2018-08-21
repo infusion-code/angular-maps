@@ -124,9 +124,9 @@ To use maps, create a simple component (or implement the below in an existin com
                             markerOffsetRatio: { x: 0.5, y: 1 },
                             text: '\uF276'
                         }"> 
-                        <info-box [DisableAutoPan]="true" [Title]="'My InfoBox'" [Description]="'Hi, this is the content of the <strong>info window</strong>. It is your responsibility to implement functionality such as close, etc...'">
-                            <info-box-action [Label]="'Click Me'" (ActionClicked)="_click()"></info-box-action>
-                        </info-box>   
+                        <x-info-box [DisableAutoPan]="true" [Title]="'My InfoBox'" [Description]="'Hi, this is the content of the <strong>info window</strong>. It is your responsibility to implement functionality such as close, etc...'">
+                            <x-info-box-action [Label]="'Click Me'" (ActionClicked)="_click()"></info-box-action>
+                        </x-info-box>   
                     </x-map-marker>
                 </x-map>
             </div>
