@@ -12,7 +12,6 @@ import { MapPolylineDirective } from '../components/map-polyline';
  *
  * @export
  * @abstract
- * @class PolylineService
  */
 @Injectable()
 export abstract class PolylineService {
@@ -22,7 +21,7 @@ export abstract class PolylineService {
    * correcsponding layer.
    *
    * @abstract
-   * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} to be added.
+   * @param polyline - The {@link MapPolylineDirective} to be added.
    *
    * @memberof PolylineService
    */
@@ -32,10 +31,9 @@ export abstract class PolylineService {
     * Registers an event delegate for a marker.
     *
     * @abstract
-    * @template T - Type of the event to emit.
-    * @param {string} eventName - The name of the event to register (e.g. 'click')
-    * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to register the event.
-    * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+    * @param eventName - The name of the event to register (e.g. 'click')
+    * @param polyline - The {@link MapPolylineDirective} for which to register the event.
+    * @returns - Observable emiting an instance of T each time the event occurs.
     *
     * @memberof PolylineService
     */
@@ -45,8 +43,8 @@ export abstract class PolylineService {
     * Deletes a polyline.
     *
     * @abstract
-    * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be deleted.
-    * @returns {Promise<void>} - A promise fullfilled once the polyline has been deleted.
+    * @param polyline - {@link MapPolylineDirective} to be deleted.
+    * @returns - A promise fullfilled once the polyline has been deleted.
     *
     * @memberof PolylineService
     */
@@ -56,8 +54,8 @@ export abstract class PolylineService {
    * Obtains geo coordinates for the marker on the click location
    *
    * @abstract
-   * @param {(MouseEvent| any)} e - The mouse event.
-   * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+   * @param e - The mouse event.
+   * @returns - {@link ILatLong} containing the geo coordinates of the clicked marker.
    *
    * @memberof MarkerService
    */
@@ -67,8 +65,8 @@ export abstract class PolylineService {
    * Obtains the polyline model for the polyline allowing access to native implementation functionatiliy.
    *
    * @abstract
-   * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
-   * @returns {Promise<Polyline|Array<Polyline>>} - A promise that when fullfilled contains the {@link Polyline} implementation (or an
+   * @param polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
+   * @returns - A promise that when fullfilled contains the {@link Polyline} implementation (or an
    * array of polylines) for complex paths of the underlying platform.
    *
    * @memberof PolylineService
@@ -79,10 +77,10 @@ export abstract class PolylineService {
    * Set the polyline options.
    *
    * @abstract
-   * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be updated.
-   * @param {IPolylineOptions} options - {@link IPolylineOptions} object containing the options. Options will be merged with the
+   * @param polyline - {@link MapPolylineDirective} to be updated.
+   * @param options - {@link IPolylineOptions} object containing the options. Options will be merged with the
    * options already on the underlying object.
-   * @returns {Promise<void>} - A promise fullfilled once the polyline options have been set.
+   * @returns - A promise fullfilled once the polyline options have been set.
    *
    * @memberof PolylineService
    */
@@ -92,8 +90,8 @@ export abstract class PolylineService {
    * Updates the Polyline path
    *
    * @abstract
-   * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be updated.
-   * @returns {Promise<void>} - A promise fullfilled once the polyline has been updated.
+   * @param polyline - {@link MapPolylineDirective} to be updated.
+   * @returns - A promise fullfilled once the polyline has been updated.
    *
    * @memberof PolylineService
    */

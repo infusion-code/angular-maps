@@ -12,8 +12,6 @@ import { MapService} from '../../services/map.service';
  * Concrete implementation of a map layer for the Bing Map Provider.
  *
  * @export
- * @class BingLayer
- * @implements {Layer}
  */
 export class BingLayer implements Layer {
 

@@ -13,8 +13,6 @@ import { LayerService } from '../layer.service';
  * Concrete implementation of the Polyline Service abstract class for Google Maps.
  *
  * @export
- * @class GooglePolylineService
- * @implements {PolylineService}
  */
 @Injectable()
 export class GooglePolylineService implements PolylineService {
@@ -31,10 +29,10 @@ export class GooglePolylineService implements PolylineService {
 
     /**
      * Creates an instance of GooglePolylineService.
-     * @param {MapService} _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
-     * @param {LayerService} _layerService - {@link LayerService} instance.
+     * @param _mapService - {@link MapService} instance. The concrete {@link GoogleMapService} implementation is expected.
+     * @param _layerService - {@link LayerService} instance.
      * The concrete {@link GoogleLayerService} implementation is expected.
-     * @param {NgZone} _zone - NgZone instance to support zone aware promises.
+     * @param _zone - NgZone instance to support zone aware promises.
      *
      * @memberof GooglePolylineService
      */
@@ -50,7 +48,7 @@ export class GooglePolylineService implements PolylineService {
      * Adds a polyline to a map. Depending on the polyline context, the polyline will either by added to the map or a
      * correcsponding layer.
      *
-     * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} to be added.
+     * @param polyline - The {@link MapPolylineDirective} to be added.
      *
      * @memberof GooglePolylineService
      */
@@ -77,10 +75,9 @@ export class GooglePolylineService implements PolylineService {
     /**
       * Registers an event delegate for a line.
       *
-      * @template T - Type of the event to emit.
-      * @param {string} eventName - The name of the event to register (e.g. 'click')
-      * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to register the event.
-      * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+      * @param eventName - The name of the event to register (e.g. 'click')
+      * @param polyline - The {@link MapPolylineDirective} for which to register the event.
+      * @returns - Observable emiting an instance of T each time the event occurs.
       *
       * @memberof GooglePolylineService
       */
@@ -96,8 +93,8 @@ export class GooglePolylineService implements PolylineService {
     /**
       * Deletes a polyline.
       *
-      * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be deleted.
-      * @returns {Promise<void>} - A promise fullfilled once the polyline has been deleted.
+      * @param polyline - {@link MapPolylineDirective} to be deleted.
+      * @returns - A promise fullfilled once the polyline has been deleted.
       *
       * @memberof GooglePolylineService
       */
@@ -120,8 +117,8 @@ export class GooglePolylineService implements PolylineService {
      * Obtains geo coordinates for the line on the click location
      *
      * @abstract
-     * @param {(MouseEvent| any)} e - The mouse event.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked line.
+     * @param e - The mouse event.
+     * @returns - {@link ILatLong} containing the geo coordinates of the clicked line.
      *
      * @memberof GooglePolylineService
      */
@@ -141,8 +138,8 @@ export class GooglePolylineService implements PolylineService {
     /**
      * Obtains the polyline model for the line allowing access to native implementation functionatiliy.
      *
-     * @param {MapPolylineDirective} polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
-     * @returns {Promise<Polyline>} - A promise that when fullfilled contains the {@link Polyline}
+     * @param polyline - The {@link MapPolylineDirective} for which to obtain the polyline model.
+     * @returns - A promise that when fullfilled contains the {@link Polyline}
      * implementation of the underlying platform. For complex paths, returns an array of polylines.
      *
      * @memberof GooglePolylineService
@@ -154,10 +151,10 @@ export class GooglePolylineService implements PolylineService {
     /**
      * Set the polyline options.
      *
-     * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be updated.
-     * @param {IPolylineOptions} options - {@link IPolylineOptions} object containing the options. Options will be merged with the
+     * @param polyline - {@link MapPolylineDirective} to be updated.
+     * @param options - {@link IPolylineOptions} object containing the options. Options will be merged with the
      * options already on the underlying object.
-     * @returns {Promise<void>} - A promise fullfilled once the polyline options have been set.
+     * @returns - A promise fullfilled once the polyline options have been set.
      *
      * @memberof GooglePolylineService
      */
@@ -171,8 +168,8 @@ export class GooglePolylineService implements PolylineService {
     /**
      * Updates the Polyline path
      *
-     * @param {MapPolylineDirective} polyline - {@link MapPolylineDirective} to be updated.
-     * @returns {Promise<void>} - A promise fullfilled once the polyline has been updated.
+     * @param polyline - {@link MapPolylineDirective} to be updated.
+     * @returns - A promise fullfilled once the polyline has been updated.
      *
      * @memberof GooglePolylineService
      */

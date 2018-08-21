@@ -10,9 +10,6 @@ import { BingMapLabel } from './bing-label';
  * Concrete implementation for a polygon model for Bing Maps V8.
  *
  * @export
- * @extends Polygon
- * @implements Polygon
- * @class BingPolygon
  */
 export class BingPolygon extends Polygon implements Polygon {
 
@@ -44,10 +41,8 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
-     * @type {number}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get LabelMaxZoom(): number { return this._maxZoom; }
     public set LabelMaxZoom(val: number) {
@@ -58,10 +53,8 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets or sets the minimum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
-     * @type {number}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get LabelMinZoom(): number { return this._minZoom; }
     public set LabelMinZoom(val: number) {
@@ -73,7 +66,6 @@ export class BingPolygon extends Polygon implements Polygon {
      * Gets the polygon metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof BingPolygon
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -82,7 +74,6 @@ export class BingPolygon extends Polygon implements Polygon {
      * Gets the native primitve implementing the polygon, in this case {@link Microsoft.Maps.Polygon}
      *
      * @readonly
-     * @type {*}
      * @memberof BingPolygon
      */
     public get NativePrimitve(): Microsoft.Maps.Polygon { return this._polygon; }
@@ -91,10 +82,8 @@ export class BingPolygon extends Polygon implements Polygon {
      * Gets or sets whether to show the label
      *
      * @abstract
-     * @type {boolean}
      * @memberof BingPolygon
      * @property
-     * @public
      */
     public get ShowLabel(): boolean { return this._showLabel; }
     public set ShowLabel(val: boolean) {
@@ -106,10 +95,8 @@ export class BingPolygon extends Polygon implements Polygon {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof BingPolygon
      * @property
-     * @public
      */
     public get ShowTooltip(): boolean { return this._showTooltip; }
     public set ShowTooltip(val: boolean) {
@@ -121,10 +108,8 @@ export class BingPolygon extends Polygon implements Polygon {
      * Gets or sets the title off the polygon
      *
      * @abstract
-     * @type {string}
      * @memberof BingPolygon
      * @property
-     * @public
      */
     public get Title(): string { return this._title; }
     public set Title(val: string) {
@@ -139,9 +124,9 @@ export class BingPolygon extends Polygon implements Polygon {
 
     /**
      * Creates an instance of BingPolygon.
-     * @param {Microsoft.Maps.Polygon} _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
-     * @param {BingMapService} - Instance of the Map Service.
-     * @param {Microsoft.Maps.Layer} _layer - The context layer.
+     * @param _polygon - The {@link Microsoft.Maps.Polygon} underlying the model.
+     * @param _mapService Instance of the Map Service.
+     * @param _layer - The context layer.
      * @memberof BingPolygon
      */
     constructor(
@@ -157,7 +142,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Adds a delegate for an event.
      *
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
 
      * @memberof BingPolygon
@@ -199,7 +184,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon is draggable.
      *
-     * @returns {boolean} - True if the polygon is dragable, false otherwise.
+     * @returns - True if the polygon is dragable, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -217,7 +202,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon path can be edited.
      *
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -228,7 +213,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets the polygon path.
      *
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polygon path.
+     * @returns - Array of {@link ILatLong} objects describing the polygon path.
      *
      * @memberof BingPolygon
      */
@@ -242,7 +227,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets the polygon paths.
      *
-     * @returns {Array<Array<ILatLong>>} - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
+     * @returns - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
      *
      * @memberof BingPolygon
      */
@@ -260,7 +245,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon is visible.
      *
-     * @returns {boolean} - True if the polygon is visible, false otherwise.
+     * @returns - True if the polygon is visible, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -271,7 +256,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Sets whether the polygon is dragable.
      *
-     * @param {boolean} draggable - True to make the polygon dragable, false otherwise.
+     * @param draggable - True to make the polygon dragable, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -289,7 +274,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Sets wether the polygon path is editable.
      *
-     * @param {boolean} editable - True to make polygon path editable, false otherwise.
+     * @param editable - True to make polygon path editable, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -330,7 +315,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Sets the polygon options
      *
-     * @param {IPolygonOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof Polygon
@@ -348,7 +333,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Sets the polygon path.
      *
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
      *
      * @memberof BingPolygon
      */
@@ -366,7 +351,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Set the polygon path or paths.
      *
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths
+     * @param paths
      * An Array of {@link ILatLong} (or array of arrays) describing the polygons path(s).
      *
      * @memberof BingPolygon
@@ -406,7 +391,7 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Sets whether the polygon is visible.
      *
-     * @param {boolean} visible - True to set the polygon visible, false otherwise.
+     * @param visible - True to set the polygon visible, false otherwise.
      *
      * @memberof BingPolygon
      */
@@ -422,7 +407,6 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Configures the label for the polygon
      * @memberof Polygon
-     * @private
      */
     private ManageLabel(): void {
         if (this.GetPath == null || this.GetPath().length === 0) { return; }
@@ -454,7 +438,6 @@ export class BingPolygon extends Polygon implements Polygon {
     /**
      * Configures the tooltip for the polygon
      * @memberof Polygon
-     * @private
      */
     private ManageTooltip(): void {
         if (this._showTooltip && this._title != null && this._title !== '') {

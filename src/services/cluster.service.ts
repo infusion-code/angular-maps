@@ -15,7 +15,6 @@ import { LayerService } from './layer.service';
  *
  * @export
  * @abstract
- * @class ClusterService
  */
 @Injectable()
 export abstract class ClusterService extends LayerService {
@@ -26,8 +25,7 @@ export abstract class ClusterService extends LayerService {
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>}
+     * @param layer - ClusterLayerDirective component object for which to retrieve the layer.
      *
      * @memberof ClusterService
      */
@@ -39,8 +37,7 @@ export abstract class ClusterService extends LayerService {
      * As such, StopClustering should be called before adding many entities and StartClustering should be called once adding is
      * complete to recalculate the clusters.
      *
-     * @param {ClusterLayerDirective} layer - ClusterLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>}
+     * @param layer - ClusterLayerDirective component object for which to retrieve the layer.
      *
      * @memberof ClusterService
      */

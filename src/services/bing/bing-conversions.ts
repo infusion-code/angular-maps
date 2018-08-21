@@ -19,7 +19,6 @@ import { BingMapService } from './bing-map.service';
  * corresponding Bing Maps V8 specific implementations.
  *
  * @export
- * @class BingConversions
  */
 export class BingConversions {
 
@@ -30,9 +29,6 @@ export class BingConversions {
     /**
      * Map option attributes that are supported for conversion to Bing Map properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _mapOptionsAttributes: string[] = [
@@ -70,9 +66,6 @@ export class BingConversions {
     /**
      * View option attributes that are supported for conversion to Bing Map properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _viewOptionsAttributes: string[] = [
@@ -90,9 +83,6 @@ export class BingConversions {
     /**
      * InfoWindow option attributes that are supported for conversion to Bing Map properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _infoWindowOptionsAttributes: string[] = [
@@ -116,9 +106,6 @@ export class BingConversions {
     /**
      * Marker option attributes that are supported for conversion to Bing Map properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _markerOptionsAttributes: string[] = [
@@ -140,9 +127,6 @@ export class BingConversions {
     /**
      * Polygon option attributes that are supported for conversion to Bing Map Polygon properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _polygonOptionsAttributes: string[] = [
@@ -158,9 +142,6 @@ export class BingConversions {
     /**
      * Polyline option attributes that are supported for conversion to Bing Map Polyline properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _polylineOptionsAttributes: string[] = [
@@ -174,9 +155,6 @@ export class BingConversions {
     /**
      * Cluster option attributes that are supported for conversion to Bing Map properties
      *
-     * @private
-     * @static
-     * @type {string[]}
      * @memberof BingConversions
      */
     private static _clusterOptionsAttributes: string[] = [
@@ -197,9 +175,8 @@ export class BingConversions {
     /**
      * Maps an IInfoWindowAction to a Microsoft.Maps.IInfoboxActions
      *
-     * @static
-     * @param {IInfoWindowAction} action - Object to be mapped.
-     * @returns {Microsoft.Maps.IInfoboxActions} - Navtive mapped object.
+     * @param action - Object to be mapped.
+     * @returns - Navtive mapped object.
      *
      * @memberof BingConversions
      */
@@ -214,9 +191,8 @@ export class BingConversions {
     /**
      * Maps an Array of IInfoWindowAction to an Array of Microsoft.Maps.IInfoboxActions
      *
-     * @static
-     * @param {Array<IInfoWindowAction>} actions - Array of objects to be mapped.
-     * @returns {Array<Microsoft.Maps.IInfoboxActions>} - Array of mapped objects.
+     * @param actions - Array of objects to be mapped.
+     * @returns - Array of mapped objects.
      *
      * @memberof BingConversions
      */
@@ -229,9 +205,8 @@ export class BingConversions {
     /**
      * Maps an IBox object to a Microsoft.Maps.LocationRect object.
      *
-     * @static
-     * @param {IBox} box - Object to be mapped.
-     * @returns {Microsoft.Maps.LocationRect} - Mapped object.
+     * @param box - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -244,9 +219,8 @@ export class BingConversions {
     /**
      * Maps an IClusterOptions object to a Microsoft.Maps.IClusterLayerOptions object.
      *
-     * @static
-     * @param {IClusterOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IClusterLayerOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -276,9 +250,8 @@ export class BingConversions {
     /**
      * Maps an IInfoWindowOptions object to a Microsoft.Maps.IInfoboxOptions object.
      *
-     * @static
-     * @param {IInfoWindowOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IInfoboxOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -306,9 +279,8 @@ export class BingConversions {
     /**
      * Maps an IMapOptions object to a Microsoft.Maps.IMapLoadOptions object.
      *
-     * @static
-     * @param {IMapOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IMapLoadOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -348,9 +320,8 @@ export class BingConversions {
     /**
      * Maps an ILatLong object to a Microsoft.Maps.Location object.
      *
-     * @static
-     * @param {ILatLong} latlong - Object to be mapped.
-     * @returns {Microsoft.Maps.Location} - Mapped object.
+     * @param latlong - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -362,9 +333,8 @@ export class BingConversions {
     /**
      * Maps an IMarkerOptions object to a Microsoft.Maps.IPushpinOptions object.
      *
-     * @static
-     * @param {IMarkerOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IPushpinOptions} - The mapped object.
+     * @param options - Object to be mapped.
+     * @returns - The mapped object.
      *
      * @memberof BingConversions
      */
@@ -386,9 +356,8 @@ export class BingConversions {
     /**
      * Maps an IMapOptions object to a Microsoft.Maps.IMapOptions object.
      *
-     * @static
-     * @param {IMapOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IMapOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -413,9 +382,8 @@ export class BingConversions {
     /**
      * Translates an array of locations or an array or arrays of location to and array of arrays of Bing Map Locations
      *
-     * @static
-     * @param {(Array<ILatLong> | Array<Array<ILatLong>>)} paths - ILatLong based locations to convert.
-     * @returns {Array<Array<Microsoft.Maps.Location>>} - converted locations.
+     * @param paths - ILatLong based locations to convert.
+     * @returns - converted locations.
      *
      * @memberof BingConversions
      */
@@ -451,9 +419,8 @@ export class BingConversions {
     /**
      *  Maps an IPoint object to a Microsoft.Maps.Point object.
      *
-     * @static
-     * @param {IPoint} point - Object to be mapped.
-     * @returns {Microsoft.Maps.Point} - Mapped object.
+     * @param point - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -465,9 +432,8 @@ export class BingConversions {
     /**
      *  Maps an IPolygonOptions object to a Microsoft.Maps.IPolygonOptions.
      *
-     * @static
-     * @param {IPolygonOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IPolygonOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -526,9 +492,8 @@ export class BingConversions {
     /**
      *  Maps an IPolylineOptions object to a Microsoft.Maps.IPolylineOptions.
      *
-     * @static
-     * @param {IPolylineOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IPolylineOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */
@@ -577,9 +542,8 @@ export class BingConversions {
     /**
      * Maps an IMapOptions object to a Microsoft.Maps.IViewOptions object.
      *
-     * @static
-     * @param {IMapOptions} options - Object to be mapped.
-     * @returns {Microsoft.Maps.IViewOptions} - Mapped object.
+     * @param options - Object to be mapped.
+     * @returns - Mapped object.
      *
      * @memberof BingConversions
      */

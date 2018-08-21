@@ -21,8 +21,6 @@ import { BingPolylineService } from './bing-polyline.service';
  * Implements a factory to create thre necessary Bing Maps V8 specific service instances.
  *
  * @export
- * @class BingMapServiceFactory
- * @implements {MapServiceFactory}
  */
 @Injectable()
 export class BingMapServiceFactory implements MapServiceFactory {
@@ -33,8 +31,8 @@ export class BingMapServiceFactory implements MapServiceFactory {
 
     /**
      * Creates an instance of BingMapServiceFactory.
-     * @param {MapAPILoader} _loader - {@link MapAPILoader} implementation for the Bing Map V8 provider.
-     * @param {NgZone} _zone - NgZone object to implement zone aware promises.
+     * @param _loader - {@link MapAPILoader} implementation for the Bing Map V8 provider.
+     * @param _zone - NgZone object to implement zone aware promises.
      *
      * @memberof BingMapServiceFactory
      */
@@ -47,7 +45,7 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the map service for the Bing Maps V8 implementation.
      *
-     * @returns {MapService} - {@link MapService}. A concreted instance of the {@link BingMapService}.
+     * @returns - {@link MapService}. A concreted instance of the {@link BingMapService}.
      *
      * @memberof BingMapServiceFactory
      */
@@ -58,8 +56,8 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the cluster service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link BingMapService}.
-     * @returns {ClusterService} - {@link ClusterService}. A concreted instance of the {@link BingClusterService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link BingMapService}.
+     * @returns - {@link ClusterService}. A concreted instance of the {@link BingClusterService}.
      *
      * @memberof BingMapServiceFactory
      */
@@ -70,8 +68,8 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates thh info box service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link BingMapService}.
-     * @returns {InfoBoxService} - {@link InfoBoxService}. A concreted instance of the {@link BingInfoBoxService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link BingMapService}.
+     * @returns - {@link InfoBoxService}. A concreted instance of the {@link BingInfoBoxService}.
      *
      * @memberof BingMapServiceFactory
      */
@@ -82,8 +80,8 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the layer service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link BingMapService}.
-     * @returns {LayerService} - {@link LayerService}. A concreted instance of the {@link BingLayerService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link BingMapService}.
+     * @returns - {@link LayerService}. A concreted instance of the {@link BingLayerService}.
      *
      * @memberof BingMapServiceFactory
      */
@@ -94,10 +92,10 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the marker service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService}. A concreted instance of the {@link BingMapService}.
-     * @param {LayerService} layers - {@link LayerService}. A concreted instance of the {@link BingLayerService}.
-     * @param {ClusterService} clusters  - {@link ClusterService}. A concreted instance of the {@link BingClusterService}.
-     * @returns {MarkerService} - {@link MarkerService}. A concreted instance of the {@link BingMarkerService}.
+     * @param map - {@link MapService}. A concreted instance of the {@link BingMapService}.
+     * @param layers - {@link LayerService}. A concreted instance of the {@link BingLayerService}.
+     * @param clusters  - {@link ClusterService}. A concreted instance of the {@link BingClusterService}.
+     * @returns - {@link MarkerService}. A concreted instance of the {@link BingMarkerService}.
      *
      * @memberof BingMapServiceFactory
      */
@@ -109,9 +107,9 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the polygon service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
-     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
-     * @returns {PolygonService} - {@link PolygonService} implementation for the underlying map architecture.
+     * @param map - {@link MapService} implementation for thh underlying map archticture.
+     * @param layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns - {@link PolygonService} implementation for the underlying map architecture.
      *
      * @memberof MapServiceFactory
      */
@@ -122,9 +120,9 @@ export class BingMapServiceFactory implements MapServiceFactory {
     /**
      * Creates the polyline service for the Bing Maps V8 implementation.
      *
-     * @param {MapService} map - {@link MapService} implementation for thh underlying map archticture.
-     * @param {LayerService} layers - {@link LayerService} implementation for the underlying map architecture.
-     * @returns {PolylineService} - {@link PolylineService} implementation for the underlying map architecture.
+     * @param map - {@link MapService} implementation for thh underlying map archticture.
+     * @param layers - {@link LayerService} implementation for the underlying map architecture.
+     * @returns - {@link PolylineService} implementation for the underlying map architecture.
      *
      * @memberof MapServiceFactory
      */
@@ -141,7 +139,7 @@ export class BingMapServiceFactory implements MapServiceFactory {
  * @param apiLoader - An {@link MapAPILoader} instance. This is expected to the a {@link BingMapAPILoader}.
  * @param zone - An NgZone instance to provide zone aware promises.
  *
- * @return {MapServiceFactory} -  A {@link MapServiceFactory} instance.
+ * @returns -  A {@link MapServiceFactory} instance.
  */
 export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZone): MapServiceFactory {
     return new BingMapServiceFactory(apiLoader, zone);
@@ -151,7 +149,7 @@ export function BingMapServiceFactoryFactory(apiLoader: MapAPILoader, zone: NgZo
  * Creates a new instance of a plaform specific MapLoaderFactory.
  *
  * @export
- * @returns {MapAPILoader} - A {@link MapAPILoader} instance.
+ * @returns - A {@link MapAPILoader} instance.
  */
 export function BingMapLoaderFactory(): MapAPILoader {
     return new BingMapAPILoader(new BingMapAPILoaderConfig(), new WindowRef(), new DocumentRef());

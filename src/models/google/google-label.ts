@@ -7,9 +7,6 @@ declare var google: any;
  * Implements map a labled to be placed on the map.
  *
  * @export
- * @extends MapLabel
- * @extends google.maps.OverlayView
- * @class GoogleMapLabel
  */
 export class GoogleMapLabel extends MapLabel {
 
@@ -18,7 +15,6 @@ export class GoogleMapLabel extends MapLabel {
      *
      * @readonly
      * @abstract
-     * @type {*}
      * @memberof GoogleMapLabel
      */
     public get DefaultLabelStyle(): ILabelOptions {
@@ -37,11 +33,7 @@ export class GoogleMapLabel extends MapLabel {
 
     /**
      * Creates a new MapLabel
-     * @extends google.maps.OverlayView
-     * @extends MapLabel
-     * @param {{ [key: string]: any }} opt_options Optional properties to set.
-     * @constructor
-     * @public
+     * @param options Optional properties to set.
      */
     constructor(options: { [key: string]: any }) {
         options.fontSize = options.fontSize || 12;
@@ -58,10 +50,9 @@ export class GoogleMapLabel extends MapLabel {
     /**
      * Gets the value of a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @returns {*} - The value of the setting.
+     * @param key - Key specifying the setting.
+     * @returns - The value of the setting.
      * @memberof MapLabel
-     * @public
      * @method
      */
     public Get(key: string): any {
@@ -71,10 +62,8 @@ export class GoogleMapLabel extends MapLabel {
     /**
      * Gets the map associted with the label.
      *
-     * @returns {GoogleMapTypes.GoogleMap}
      * @memberof GoogleMapLabel
      * @method
-     * @public
      */
     public GetMap(): GoogleMapTypes.GoogleMap {
         return (<any>this).getMap();
@@ -83,10 +72,9 @@ export class GoogleMapLabel extends MapLabel {
     /**
      * Set the value for a setting.
      *
-     * @param {string} key - Key specifying the setting.
-     * @param {*} val - The value to set.
+     * @param key - Key specifying the setting.
+     * @param val - The value to set.
      * @memberof MapLabel
-     * @public
      * @method
      */
     public Set(key: string, val: any): void {
@@ -101,10 +89,9 @@ export class GoogleMapLabel extends MapLabel {
     /**
      * Sets the map for the label. Settings this to null remove the label from hte map.
      *
-     * @param {GoogleMapTypes.GoogleMap} map - Map to associated with the label.
+     * @param map - Map to associated with the label.
      * @memberof GoogleMapLabel
      * @method
-     * @public
      */
     public SetMap(map: GoogleMapTypes.GoogleMap): void {
         (<any>this).setMap(map);
@@ -113,9 +100,8 @@ export class GoogleMapLabel extends MapLabel {
     /**
      * Applies settings to the object
      *
-     * @param {{ [key: string]: any }} options - An object containing the settings key value pairs.
+     * @param options - An object containing the settings key value pairs.
      * @memberof MapLabel
-     * @public
      * @method
      */
     public SetValues(options: { [key: string]: any }): void {

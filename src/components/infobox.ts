@@ -50,9 +50,6 @@ let infoBoxId = 0;
  * ```
  *
  * @export
- * @class InfoBoxComponent
- * @implements {OnDestroy}
- * @implements {OnChanges}
  */
 @Component({
     selector: 'x-info-box',
@@ -78,8 +75,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * HTML conent of the infobox
      *
-     * @private
-     * @type {ElementRef}
      * @memberof InfoBoxComponent
      */
     @ViewChild('infoBoxContent') private _content: ElementRef;
@@ -87,8 +82,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Zero or more actions to show on the info window
      *
-     * @private
-     * @type {QueryList<InfoBoxAction>}
      * @memberof InfoBoxComponent
      */
     @ContentChildren(InfoBoxActionDirective) public InfoWindowActions: QueryList<InfoBoxActionDirective>;
@@ -97,7 +90,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * The latitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
      *
-     * @type {number}
      * @memberof InfoBoxComponent
      */
     @Input() public Latitude: number;
@@ -105,7 +97,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * The longitude position of the info window (only usefull if you use it ouside of a {@link MapMarker}).
      *
-     * @type {number}
      * @memberof InfoBoxComponent
      */
     @Input() public Longitude: number;
@@ -113,7 +104,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * The title to display in the info window
      *
-     * @type {string}
      * @memberof InfoBoxComponent
      */
     @Input() public Title: string;
@@ -121,7 +111,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * The description to display in the info window.
      *
-     * @type {string}
      * @memberof InfoBoxComponent
      */
     @Input() public Description: string;
@@ -130,7 +119,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Disable auto-pan on open. By default, the info window will pan the map so that it is fully
      * visible when it opens.
      *
-     * @type {boolean}
      * @memberof InfoBoxComponent
      */
     @Input() public DisableAutoPan: boolean;
@@ -140,7 +128,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      *  if it is set before a call to open. To change the maximum width when changing content, call
      *  close, update maxWidth, and then open.
      *
-     * @type {number}
      * @memberof InfoBoxComponent
      */
     @Input() public MaxWidth: number;
@@ -148,7 +135,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Determine whether only one infobox can be open at a time. Note that ANY info box settings.
      *
-     * @type {boolean}
      * @memberof InfoBoxComponent
      */
     @Input() public Modal = true;
@@ -156,7 +142,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Holds the marker that is the host of the info window (if available)
      *
-     * @type {MapMarker}
      * @memberof InfoBoxComponent
      */
     @Input() public HostMarker: MapMarkerDirective;
@@ -164,7 +149,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Determines visibility of infobox
      *
-     * @type {boolean}
      * @memberof InfoBoxComponent
      */
     @Input() public Visible = false;
@@ -172,7 +156,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Horizontal offset of the infobox from the host marker lat/long or the sepecified coordinates.
      *
-     * @type {number}
      * @memberof InfoBoxComponent
      */
     @Input() public xOffset: number;
@@ -180,7 +163,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Vertical offset for the infobox from the host marker lat/long or the specified coordinates.
      *
-     * @type {number}
      * @memberof InfoBoxComponent
      */
     @Input() public yOffset: number;
@@ -188,7 +170,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Determines if other info boxes should be closed before opening this one
      *
-     * @type {boolean}
      * @memberof InfoBoxComponent
      */
     @Input() public CloseInfoBoxesOnOpen = true;
@@ -200,7 +181,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Emits an event when the info window is closed.
      *
-     * @type {EventEmitter<void>}
      * @memberof InfoBoxComponent
      */
     @Output() public InfoBoxClose: EventEmitter<string> = new EventEmitter<string>();
@@ -213,7 +193,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Gets the HTML content of the info box.
      *
      * @readonly
-     * @type {string}
      * @memberof InfoBoxComponent
      */
     public get HtmlContent(): string {
@@ -227,7 +206,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
      * Gets the Id of the info box as a string.
      *
      * @readonly
-     * @type {string}
      * @memberof InfoBoxComponent
      */
     public get Id(): string { return this._id; }
@@ -238,7 +216,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
 
     /**
      * Creates an instance of InfoBoxComponent.
-     * @param {InfoBoxService} _infoBoxService - Concrete {@link InfoBoxService} implementation for underlying Map architecture.
+     * @param _infoBoxService - Concrete {@link InfoBoxService} implementation for underlying Map architecture.
      *
      * @memberof InfoBoxComponent
      */
@@ -251,8 +229,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Closes the Infobox.
      *
-     * @returns {Promise<void>} -
-     *
      * @memberof InfoBoxComponent
      */
     public Close(): Promise<void> {
@@ -263,8 +239,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
 
     /**
      * Called on after component view as been initialized. Part of the ng Component life cycle.
-     *
-     * @returns {void}
      *
      * @memberof Map
      */
@@ -277,8 +251,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
-     * @return {void}
+     * @param changes - Changes that have occured.
      *
      * @memberof Map
      */
@@ -297,8 +270,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
-     * @returns {void}
-     *
      * @memberof Map
      */
     public ngOnDestroy() { this._infoBoxService.DeleteInfoWindow(this); }
@@ -306,8 +277,8 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Opens a closed info window.
      *
-     * @param {ILatLong} [loc]  - {@link ILatLong } representing position on which to open the window.
-     * @returns {Promise<void>} - Promise that is fullfilled when the infobox has been opened.
+     * @param [loc]  - {@link ILatLong } representing position on which to open the window.
+     * @returns - Promise that is fullfilled when the infobox has been opened.
      *
      * @memberof InfoBoxComponent
      */
@@ -318,7 +289,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Returns a string representation of the info box.
      *
-     * @returns {string} - string representation of the info box.
+     * @returns - string representation of the info box.
      *
      * @memberof InfoBoxComponent
      */
@@ -331,8 +302,6 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Delegate handling the map click events.
      *
-     * @private
-     *
      * @memberof MapComponent
      */
     private HandleEvents(): void {
@@ -344,8 +313,7 @@ export class InfoBoxComponent implements OnDestroy, OnChanges, AfterViewInit {
     /**
      * Sets the info window options
      *
-     * @private
-     * @param {{ [key: string]: SimpleChange }} changes
+     * @param changes
      *
      * @memberof InfoBoxComponent
      */

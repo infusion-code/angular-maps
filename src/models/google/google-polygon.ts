@@ -12,9 +12,6 @@ declare var google: any;
  * Concrete implementation for a polygon model for Google Maps.
  *
  * @export
- * @implements Polygon
- * @extends Polygon
- * @class GooglePolygon
  */
 export class GooglePolygon extends Polygon implements Polygon {
 
@@ -41,10 +38,8 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets or sets the maximum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
-     * @type {number}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get LabelMaxZoom(): number { return this._maxZoom; }
     public set LabelMaxZoom(val: number) {
@@ -55,10 +50,8 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets or sets the minimum zoom at which the label is displayed. Ignored or ShowLabel is false.
      *
-     * @type {number}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get LabelMinZoom(): number { return this._minZoom; }
     public set LabelMinZoom(val: number) {
@@ -70,7 +63,6 @@ export class GooglePolygon extends Polygon implements Polygon {
      * Gets the polygon metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof GoolePolygon
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -79,7 +71,6 @@ export class GooglePolygon extends Polygon implements Polygon {
      * Gets the native primitve implementing the polygon, in this case {@link GoogleMapTypes.Polygon}
      *
      * @readonly
-     * @type {GoogleMapTypes.Polygon}
      * @memberof GooglePolygon
      */
     public get NativePrimitve(): GoogleMapTypes.Polygon { return this._polygon; }
@@ -88,10 +79,8 @@ export class GooglePolygon extends Polygon implements Polygon {
      * Gets or sets whether to show the label
      *
      * @abstract
-     * @type {boolean}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get ShowLabel(): boolean { return this._showLabel; }
     public set ShowLabel(val: boolean) {
@@ -103,10 +92,8 @@ export class GooglePolygon extends Polygon implements Polygon {
      * Gets or sets whether to show the tooltip
      *
      * @abstract
-     * @type {boolean}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get ShowTooltip(): boolean { return this._showTooltip; }
     public set ShowTooltip(val: boolean) {
@@ -118,10 +105,8 @@ export class GooglePolygon extends Polygon implements Polygon {
      * Gets or sets the title off the polygon
      *
      * @abstract
-     * @type {string}
      * @memberof GooglePolygon
      * @property
-     * @public
      */
     public get Title(): string { return this._title; }
     public set Title(val: string) {
@@ -136,7 +121,7 @@ export class GooglePolygon extends Polygon implements Polygon {
 
     /**
      * Creates an instance of GooglePolygon.
-     * @param {GoogleMapTypes.Polygon} _polygon - The {@link GoogleMapTypes.Polygon} underlying the model.
+     * @param _polygon - The {@link GoogleMapTypes.Polygon} underlying the model.
      *
      * @memberof GooglePolygon
      */
@@ -148,7 +133,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Adds a delegate for an event.
      *
-     * @param {string} eventType - String containing the event name.
+     * @param eventType - String containing the event name.
      * @param fn - Delegate function to execute when the event occurs.
 
      * @memberof GooglePolygon
@@ -188,7 +173,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon is draggable.
      *
-     * @returns {boolean} - True if the polygon is dragable, false otherwise.
+     * @returns - True if the polygon is dragable, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -199,7 +184,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon path can be edited.
      *
-     * @returns {boolean} - True if the path can be edited, false otherwise.
+     * @returns - True if the path can be edited, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -210,7 +195,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets the polygon path.
      *
-     * @returns {Array<ILatLong>} - Array of {@link ILatLong} objects describing the polygon path.
+     * @returns - Array of {@link ILatLong} objects describing the polygon path.
      *
      * @memberof GooglePolygon
      */
@@ -224,7 +209,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets the polygon paths.
      *
-     * @returns {Array<Array<ILatLong>>} - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
+     * @returns - Array of Array of {@link ILatLong} objects describing multiple polygon paths.
      *
      * @memberof GooglePolygon
      */
@@ -242,7 +227,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Gets whether the polygon is visible.
      *
-     * @returns {boolean} - True if the polygon is visible, false otherwise.
+     * @returns - True if the polygon is visible, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -253,7 +238,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Sets whether the polygon is dragable.
      *
-     * @param {boolean} draggable - True to make the polygon dragable, false otherwise.
+     * @param draggable - True to make the polygon dragable, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -264,7 +249,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Sets wether the polygon path is editable.
      *
-     * @param {boolean} editable - True to make polygon path editable, false otherwise.
+     * @param editable - True to make polygon path editable, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -285,7 +270,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Sets the polygon options
      *
-     * @param {IPolygonOptions} options - {@link ILatLong} object containing the options. The options are merged with hte ones
+     * @param options - {@link ILatLong} object containing the options. The options are merged with hte ones
      * already on the underlying model.
      *
      * @memberof GooglePolygon
@@ -305,7 +290,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Sets the polygon path.
      *
-     * @param {Array<ILatLong>} path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
+     * @param path - An Array of {@link ILatLong} (or array of arrays) describing the polygons path.
      *
      * @memberof GooglePolygon
      */
@@ -323,7 +308,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Set the polygon path or paths.
      *
-     * @param {(Array<Array<ILatLong>> | Array<ILatLong>)} paths An Array of {@link ILatLong}
+     * @param paths An Array of {@link ILatLong}
      * (or array of arrays) describing the polygons path(s).
      *
      * @memberof GooglePolygon
@@ -362,7 +347,7 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Sets whether the polygon is visible.
      *
-     * @param {boolean} visible - True to set the polygon visible, false otherwise.
+     * @param visible - True to set the polygon visible, false otherwise.
      *
      * @memberof GooglePolygon
      */
@@ -378,7 +363,6 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Configures the label for the polygon
      * @memberof GooglePolygon
-     * @private
      */
     private ManageLabel(): void {
         if (this.GetPath == null || this.GetPath().length === 0) { return; }
@@ -411,7 +395,6 @@ export class GooglePolygon extends Polygon implements Polygon {
     /**
      * Configures the tooltip for the polygon
      * @memberof GooglePolygon
-     * @private
      */
     private ManageTooltip(): void {
         if (this._showTooltip && this._title != null && this._title !== '') {

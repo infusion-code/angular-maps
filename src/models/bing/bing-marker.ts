@@ -9,8 +9,6 @@ import { BingConversions } from '../../services/bing/bing-conversions';
  * Concrete implementation of the {@link Marker} contract for the Bing Maps V8 map architecture.
  *
  * @export
- * @class BingMarker
- * @implements {Marker}
  */
 export class BingMarker implements Marker {
 
@@ -28,7 +26,6 @@ export class BingMarker implements Marker {
     /**
      * Indicates that the marker is the first marker in a set.
      *
-     * @type {boolean}
      * @memberof Marker
      */
     public get IsFirst(): boolean { return this._isFirst; }
@@ -37,7 +34,6 @@ export class BingMarker implements Marker {
     /**
      * Indicates that the marker is the last marker in the set.
      *
-     * @type {boolean}
      * @memberof Marker
      */
     public get IsLast(): boolean { return this._isLast; }
@@ -47,7 +43,6 @@ export class BingMarker implements Marker {
      * Gets the Location of the marker
      *
      * @readonly
-     * @type {ILatLong}
      * @memberof BingMarker
      */
     public get Location(): ILatLong {
@@ -62,7 +57,6 @@ export class BingMarker implements Marker {
      * Gets the marker metadata.
      *
      * @readonly
-     * @type {Map<string, any>}
      * @memberof BingMarker
      */
     public get Metadata(): Map<string, any> { return this._metadata; }
@@ -71,7 +65,6 @@ export class BingMarker implements Marker {
      * Gets the native primitve implementing the marker, in this case {@link Microsoft.Maps.Pushpin}
      *
      * @readonly
-     * @type {*}
      * @memberof BingMarker
      */
     public get NativePrimitve(): any { return this._pushpin; }
@@ -82,9 +75,9 @@ export class BingMarker implements Marker {
 
     /**
      * Creates an instance of BingMarker.
-     * @param {Microsoft.Maps.Pushpin} _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model.
-     * @param {Microsoft.Maps.Map} _map - The context map.
-     * @param {Microsoft.Maps.Layer} _layer - The context layer.
+     * @param _pushpin - The {@link Microsoft.Maps.Pushpin} underlying the model.
+     * @param _map - The context map.
+     * @param _layer - The context layer.
      *
      * @memberof BingMarker
      */
@@ -98,8 +91,8 @@ export class BingMarker implements Marker {
      * Adds an event listener to the marker.
      *
      * @abstract
-     * @param {string} eventType - String containing the event for which to register the listener (e.g. "click")
-     * @param {Function} fn - Delegate invoked when the event occurs.
+     * @param eventType - String containing the event for which to register the listener (e.g. "click")
+     * @param fn - Delegate invoked when the event occurs.
      *
      * @memberof BingMarker
      */
@@ -128,7 +121,6 @@ export class BingMarker implements Marker {
      * Gets the marker label
      *
      * @abstract
-     * @returns {string}
      *
      * @memberof BingMarker
      */
@@ -139,7 +131,7 @@ export class BingMarker implements Marker {
     /**
      * Gets whether the marker is visible.
      *
-     * @returns {boolean} - True if the marker is visible, false otherwise.
+     * @returns - True if the marker is visible, false otherwise.
      *
      * @memberof BingMarker
      */
@@ -151,7 +143,7 @@ export class BingMarker implements Marker {
      * Sets the anchor for the marker. Use this to adjust the root location for the marker to accomodate various marker image sizes.
      *
      * @abstract
-     * @param {IPoint} anchor - Point coordinates for the marker anchor.
+     * @param anchor - Point coordinates for the marker anchor.
      *
      * @memberof BingMarker
      */
@@ -165,7 +157,7 @@ export class BingMarker implements Marker {
      * Sets the draggability of a marker.
      *
      * @abstract
-     * @param {boolean} draggable - True to mark the marker as draggable, false otherwise.
+     * @param draggable - True to mark the marker as draggable, false otherwise.
      *
      * @memberof BingMarker
      */
@@ -179,7 +171,7 @@ export class BingMarker implements Marker {
      * Sets the icon for the marker.
      *
      * @abstract
-     * @param {string} icon - String containing the icon in various forms (url, data url, etc.)
+     * @param icon - String containing the icon in various forms (url, data url, etc.)
      *
      * @memberof BingMarker
      */
@@ -193,7 +185,7 @@ export class BingMarker implements Marker {
      * Sets the marker label.
      *
      * @abstract
-     * @param {string} label - String containing the label to set.
+     * @param label - String containing the label to set.
      *
      * @memberof BingMarker
      */
@@ -207,7 +199,7 @@ export class BingMarker implements Marker {
      * Sets the marker position.
      *
      * @abstract
-     * @param {ILatLong} latLng - Geo coordinates to set the marker position to.
+     * @param latLng - Geo coordinates to set the marker position to.
      *
      * @memberof BingMarker
      */
@@ -220,7 +212,7 @@ export class BingMarker implements Marker {
      * Sets the marker title.
      *
      * @abstract
-     * @param {string} title - String containing the title to set.
+     * @param title - String containing the title to set.
      *
      * @memberof BingMarker
      */
@@ -234,7 +226,7 @@ export class BingMarker implements Marker {
      * Sets the marker options.
      *
      * @abstract
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
+     * @param options - {@link IMarkerOptions} object containing the marker options to set. The supplied options are
      * merged with the underlying marker options.
      * @memberof Marker
      */
@@ -246,7 +238,7 @@ export class BingMarker implements Marker {
     /**
      * Sets whether the marker is visible.
      *
-     * @param {boolean} visible - True to set the marker visible, false otherwise.
+     * @param visible - True to set the marker visible, false otherwise.
      *
      * @memberof Marker
      */

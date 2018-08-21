@@ -10,7 +10,6 @@ declare var google: any;
  * Concrete implementing a canvas overlay to be placed on the map for Google Maps.
  *
  * @export
- * @class GoogleCanvasOverlay
  */
 export class GoogleCanvasOverlay extends CanvasOverlay {
 
@@ -22,10 +21,9 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
 
     /**
      * Creates a new instance of the GoogleCanvasOverlay class.
-     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * @param drawCallback A callback function that is triggered when the canvas is ready to be
      * rendered for the current map view.
      * @memberof GoogleCanvasOverlay
-     * @constructor
      */
     constructor(drawCallback: (canvas: HTMLCanvasElement) => void) {
         super(drawCallback);
@@ -38,8 +36,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     /**
      * Obtains geo coordinates for the click location
      *
-     * @param {GoogleMapTypes.MouseEvent} e - The mouse event.
-     * @returns {ILatLong} - {@link ILatLong} containing the geo coordinates of the clicked marker.
+     * @param e - The mouse event.
+     * @returns - {@link ILatLong} containing the geo coordinates of the clicked marker.
      * @memberof GoogleCanvasOverlay
      */
     public GetCoordinatesFromClick(e: GoogleMapTypes.MouseEvent): ILatLong {
@@ -52,10 +50,8 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     /**
      * Gets the map associted with the label.
      *
-     * @returns {GoogleMapTypes.GoogleMap}
      * @memberof GoogleCanvasOverlay
      * @method
-     * @public
      */
     public GetMap(): GoogleMapTypes.GoogleMap {
         return (<any>this).getMap();
@@ -66,10 +62,9 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * This method only generates the map label. Content and placement is the responsibility
      * of the caller.
      *
-     * @returns {MapLabel} - The label to be used for the tooltip.
+     * @returns - The label to be used for the tooltip.
      * @memberof GoogleCanvasOverlay
      * @method
-     * @public
      */
     public GetToolTipOverlay(): MapLabel {
         const o: { [key: string]: any } = {
@@ -106,7 +101,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * update, it simply scales the canvas. The actual redraw happens once the map is idle.
      * @memberof GoogleCanvasOverly
      * @method
-     * @public
      */
     public OnDraw(): void {
         const isStreetView: boolean = false;
@@ -144,7 +138,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     /**
      * CanvasOverlay loaded, attach map events for updating canvas.
      * @method
-     * @public
      * @memberof GoogleCanvasOverlay
      */
     public OnLoad(): void {
@@ -173,7 +166,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     /**
      * Associates the cnavas overlay with a map.
      * @method
-     * @public
      * @memberof GoogleCanvasOverlay
      */
     public SetMap(map: GoogleMapTypes.GoogleMap): void {
@@ -188,7 +180,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
      * Attaches the canvas to the map.
      * @memberof CanvasOverlay
      * @method
-     * @public
      */
     protected SetCanvasElement(el: HTMLCanvasElement): void {
         const panes = (<any>this).getPanes();

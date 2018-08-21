@@ -41,8 +41,6 @@ import { BingMapEventsLookup } from '../../models/bing/bing-events-lookup';
  * Concrete implementation of the MapService abstract implementing a Bin Map V8 provider
  *
  * @export
- * @class BingMapService
- * @implements {MapService}
  */
 @Injectable()
 export class BingMapService implements MapService {
@@ -64,7 +62,6 @@ export class BingMapService implements MapService {
      * Gets an array of loaded Bong modules.
      *
      * @readonly
-     * @type Map<string, Object>
      * @memberof BingMapService
      */
     public get LoadedModules(): Map<string, Object> { return this._modules; }
@@ -73,7 +70,6 @@ export class BingMapService implements MapService {
      * Gets the Bing Map control instance underlying the implementation
      *
      * @readonly
-     * @type {Microsoft.Maps.Map}
      * @memberof BingMapService
      */
     public get MapInstance(): Microsoft.Maps.Map { return this._mapInstance; }
@@ -82,7 +78,6 @@ export class BingMapService implements MapService {
      * Gets a Promise for a Bing Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
      * are not sure if and when the instance will be created.
      * @readonly
-     * @type {Promise<Microsoft.Maps.Map>}
      * @memberof BingMapService
      */
     public get MapPromise(): Promise<Microsoft.Maps.Map> { return this._map; }
@@ -92,7 +87,6 @@ export class BingMapService implements MapService {
      *
      * @readonly
      * @abstract
-     * @type {ISize}
      * @memberof BingMapService
      */
     public get MapSize(): ISize {
@@ -109,8 +103,8 @@ export class BingMapService implements MapService {
 
     /**
      * Creates an instance of BingMapService.
-     * @param {MapAPILoader} _loader MapAPILoader instance implemented for Bing Maps. This instance will generally be injected.
-     * @param {NgZone} _zone NgZone object to enable zone aware promises. This will generally be injected.
+     * @param _loader MapAPILoader instance implemented for Bing Maps. This instance will generally be injected.
+     * @param _zone NgZone object to enable zone aware promises. This will generally be injected.
      *
      * @memberof BingMapService
      */
@@ -126,9 +120,9 @@ export class BingMapService implements MapService {
     /**
      * Creates a canvas overlay layer to perform custom drawing over the map with out
      * some of the overhead associated with going through the Map objects.
-     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * @param drawCallback A callback function that is triggered when the canvas is ready to be
      * rendered for the current map view.
-     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @returns - Promise of a {@link CanvasOverlay} object.
      * @memberof BingMapService
      */
     public CreateCanvasOverlay(drawCallback: (canvas: HTMLCanvasElement) => void): Promise<CanvasOverlay> {
@@ -142,8 +136,8 @@ export class BingMapService implements MapService {
     /**
      * Creates a Bing map cluster layer within the map context
      *
-     * @param {IClusterOptions} options - Options for the layer. See {@link IClusterOptions}.
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.ClusterLayer object.
+     * @param options - Options for the layer. See {@link IClusterOptions}.
+     * @returns - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.ClusterLayer object.
      *
      * @memberof BingMapService
      */
@@ -167,8 +161,8 @@ export class BingMapService implements MapService {
     /**
      * Creates an information window for a map position
      *
-     * @param {IInfoWindowOptions} [options] - Infowindow options. See {@link IInfoWindowOptions}
-     * @returns {Promise<InfoWindow>} - Promise of a {@link InfoWindow} object, which models the underlying Microsoft.Maps.Infobox object.
+     * @param [options] - Infowindow options. See {@link IInfoWindowOptions}
+     * @returns - Promise of a {@link InfoWindow} object, which models the underlying Microsoft.Maps.Infobox object.
      *
      * @memberof BingMapService
      */
@@ -189,8 +183,8 @@ export class BingMapService implements MapService {
     /**
      * Creates a map layer within the map context
      *
-     * @param {ILayerOptions} options - Options for the layer. See {@link ILayerOptions}
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.Layer object.
+     * @param options - Options for the layer. See {@link ILayerOptions}
+     * @returns - Promise of a {@link Layer} object, which models the underlying Microsoft.Maps.Layer object.
      *
      * @memberof BingMapService
      */
@@ -205,9 +199,9 @@ export class BingMapService implements MapService {
     /**
      * Creates a map instance
      *
-     * @param {HTMLElement} el - HTML element to host the map.
-     * @param {IMapOptions} mapOptions - Map options
-     * @returns {Promise<void>} - Promise fullfilled once the map has been created.
+     * @param el - HTML element to host the map.
+     * @param mapOptions - Map options
+     * @returns - Promise fullfilled once the map has been created.
      *
      * @memberof BingMapService
      */
@@ -234,8 +228,8 @@ export class BingMapService implements MapService {
     /**
      * Creates a Bing map marker within the map context
      *
-     * @param {IMarkerOptions} [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
-     * @returns {Promise<Marker>} - Promise of a {@link Marker} object, which models the underlying Microsoft.Maps.PushPin object.
+     * @param [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
+     * @returns - Promise of a {@link Marker} object, which models the underlying Microsoft.Maps.PushPin object.
      *
      * @memberof BingMapService
      */
@@ -270,8 +264,8 @@ export class BingMapService implements MapService {
      * Creates a polygon within the Bing Maps V8 map context
      *
      * @abstract
-     * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
-     * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
+     * @param options - Options for the polygon. See {@link IPolygonOptions}.
+     * @returns - Promise of a {@link Polygon} object, which models the underlying native polygon.
      *
      * @memberof MapService
      */
@@ -298,8 +292,8 @@ export class BingMapService implements MapService {
      * Creates a polyline within the Bing Maps V8 map context
      *
      * @abstract
-     * @param {IPolylinenOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object (or an array thereof for complex paths),
+     * @param options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns - Promise of a {@link Polyline} object (or an array thereof for complex paths),
      * which models the underlying native polygon.
      *
      * @memberof MapService
@@ -339,8 +333,8 @@ export class BingMapService implements MapService {
     /**
      * Deletes a layer from the map.
      *
-     * @param {Layer} layer - Layer to delete. See {@link Layer}. This method expects the Bing specific Layer model implementation.
-     * @returns {Promise<void>} - Promise fullfilled when the layer has been removed.
+     * @param layer - Layer to delete. See {@link Layer}. This method expects the Bing specific Layer model implementation.
+     * @returns - Promise fullfilled when the layer has been removed.
      *
      * @memberof BingMapService
      */
@@ -352,8 +346,6 @@ export class BingMapService implements MapService {
 
     /**
      * Dispaose the map and associated resoures.
-     *
-     * @returns {void}
      *
      * @memberof BingMapService
      */
@@ -371,7 +363,7 @@ export class BingMapService implements MapService {
     /**
      * Gets the geo coordinates of the map center
      *
-     * @returns {Promise<ILatLong>} - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
+     * @returns - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
      *
      * @memberof BingMapService
      */
@@ -388,7 +380,7 @@ export class BingMapService implements MapService {
     /**
      * Gets the geo coordinates of the map bounding box
      *
-     * @returns {Promise<IBox>} - A promise that when fullfilled contains the goe location of the bounding box. See {@link IBox}.
+     * @returns - A promise that when fullfilled contains the goe location of the bounding box. See {@link IBox}.
      *
      * @memberof BingMapService
      */
@@ -409,10 +401,9 @@ export class BingMapService implements MapService {
     /**
      * Gets a shared or private instance of the map drawing tools.
      *
-     * @param {boolean} [useSharedInstance=true] - Set to false to create a private instance.
-     * @returns {Promise<Microsoft.Maps.DrawingTools>} - Promise that when resolved containst an instance of the drawing tools.
+     * @param [useSharedInstance=true] - Set to false to create a private instance.
+     * @returns - Promise that when resolved containst an instance of the drawing tools.
      * @memberof BingMapService
-     * @public
      */
     public GetDrawingTools (useSharedInstance: boolean = true): Promise<Microsoft.Maps.DrawingTools> {
         return new Promise<Microsoft.Maps.DrawingTools>((resolve, reject) => {
@@ -425,7 +416,7 @@ export class BingMapService implements MapService {
     /**
      * Gets the current zoom level of the map.
      *
-     * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level.
+     * @returns - A promise that when fullfilled contains the zoom level.
      *
      * @memberof BingMapService
      */
@@ -436,10 +427,9 @@ export class BingMapService implements MapService {
     /**
      * Loads a module into the Map.
      *
-     * @param {string} moduleName - The module to load.
-     * @param {() => {}} callback - Callback to call once loading is complete.
+     * @param moduleName - The module to load.
+     * @param callback - Callback to call once loading is complete.
      * @method
-     * @public
      * @memberof BingMapService
      */
     public LoadModule(moduleName: string, callback: () => void) {
@@ -457,10 +447,9 @@ export class BingMapService implements MapService {
     /**
      * Loads a module into the Map and delivers and instance of the module payload.
      *
-     * @param {string} moduleName - The module to load.
-     * @param {boolean} callback - Use a shared instance if true, create a new instance if false.
+     * @param moduleName - The module to load.
+     * @param useSharedInstance- Use a shared instance if true, create a new instance if false.
      * @method
-     * @public
      * @memberof BingMapService
      */
     public LoadModuleInstance(moduleName: string, useSharedInstance: boolean = true): Promise<Object> {
@@ -502,8 +491,8 @@ export class BingMapService implements MapService {
     /**
      * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @param {ILatLong} loc - The geo coordinates to translate.
-     * @returns {Promise<IPoint>} - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
+     * @param loc - The geo coordinates to translate.
+     * @returns - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
      * if the goe coordinates are not in the view port.
      *
      * @memberof BingMapService
@@ -522,8 +511,8 @@ export class BingMapService implements MapService {
     /**
      * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @param {ILatLong} loc - The geo coordinates to translate.
-     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     * @param loc - The geo coordinates to translate.
+     * @returns - Promise of an {@link IPoint} interface array representing the pixels.
      *
      * @memberof BingMapService
      */
@@ -539,8 +528,8 @@ export class BingMapService implements MapService {
     /**
      * Centers the map on a geo location.
      *
-     * @param {ILatLong} latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
-     * @returns {Promise<void>} - Promise that is fullfilled when the center operations has been completed.
+     * @param latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
+     * @returns - Promise that is fullfilled when the center operations has been completed.
      *
      * @memberof BingMapService
      */
@@ -553,7 +542,7 @@ export class BingMapService implements MapService {
     /**
      * Sets the generic map options.
      *
-     * @param {IMapOptions} options - Options to set.
+     * @param options - Options to set.
      *
      * @memberof BingMapService
      */
@@ -567,7 +556,7 @@ export class BingMapService implements MapService {
     /**
      * Sets the view options of the map.
      *
-     * @param {IMapOptions} options - Options to set.
+     * @param options - Options to set.
      *
      * @memberof BingMapService
      */
@@ -581,8 +570,8 @@ export class BingMapService implements MapService {
     /**
      * Sets the zoom level of the map.
      *
-     * @param {number} zoom - Zoom level to set.
-     * @returns {Promise<void>} - A Promise that is fullfilled once the zoom operation is complete.
+     * @param zoom - Zoom level to set.
+     * @returns - A Promise that is fullfilled once the zoom operation is complete.
      *
      * @memberof BingMapService
      */
@@ -595,9 +584,8 @@ export class BingMapService implements MapService {
     /**
      * Creates an event subscription
      *
-     * @template E - Generic type of the underlying event.
-     * @param {string} eventName - The name of the event (e.g. 'click')
-     * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs.
+     * @param eventName - The name of the event (e.g. 'click')
+     * @returns - An observable of tpye E that fires when the event occurs.
      *
      * @memberof BingMapService
      */
@@ -615,8 +603,8 @@ export class BingMapService implements MapService {
     /**
      * Triggers the given event name on the map instance.
      *
-     * @param {string} eventName - Event to trigger.
-     * @returns {Promise<void>} - A promise that is fullfilled once the event is triggered.
+     * @param eventName - Event to trigger.
+     * @returns - A promise that is fullfilled once the event is triggered.
      *
      * @memberof BingMapService
      */

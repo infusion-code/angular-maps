@@ -27,9 +27,9 @@ export class GoogleInfoBoxService extends InfoBoxService {
 
     /**
      * Creates an instance of GoogleInfoBoxService.
-     * @param {MapService} _mapService
-     * @param {MarkerService} _markerService
-     * @param {NgZone} _zone
+     * @param _mapService
+     * @param _markerService
+     * @param _zone
      *
      * @memberof GoogleInfoBoxService
      */
@@ -42,7 +42,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Creates a new instance of an info window
      *
-     * @param {InfoBoxComponent} info
+     * @param info
      *
      * @memberof GoogleInfoBoxService
      */
@@ -73,8 +73,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Closes the info window
      *
-     * @param {InfoBoxComponent} info
-     * @returns {Promise<void>} -  A promise that is resolved when the info box is closed.
+     * @param info
+     * @returns -  A promise that is resolved when the info box is closed.
      *
      * @memberof GoogleInfoBoxService
      */
@@ -87,10 +87,9 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Registers an event delegate for an info window.
      *
-     * @template T - Type of the event to emit.
-     * @param {string} eventName - The name of the event to register (e.g. 'click')
-     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
-     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     * @param eventName - The name of the event to register (e.g. 'click')
+     * @param infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns - Observable emiting an instance of T each time the event occurs.
      *
      * @memberof GoogleInfoBoxService
      */
@@ -106,8 +105,7 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Deletes the info window
      *
-     * @param {InfoBoxComponent} info
-     * @returns {Promise<void>}
+     * @param info
      *
      * @memberof GoogleInfoBoxService
      */
@@ -118,9 +116,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Opens the info window. Window opens on a marker, if supplied, or a specific location if given
      *
-     * @param {InfoBoxComponent} info
-     * @param {ILatLong} [loc]
-     * @returns {Promise<void>}
+     * @param info
+     * @param [loc]
      *
      * @memberof GoogleInfoBoxService
      */
@@ -163,9 +160,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Sets the info window options
      *
-     * @param {InfoBoxComponent} info
-     * @param {IInfoWindowOptions} options
-     * @returns {Promise<void>}
+     * @param info
+     * @param options
      *
      * @memberof GoogleInfoBoxService
      */
@@ -178,9 +174,8 @@ export class GoogleInfoBoxService extends InfoBoxService {
     /**
      * Sets the info window position
      *
-     * @param {InfoBoxComponent} info
-     * @param {ILatLong} latlng
-     * @returns {Promise<void>}
+     * @param info
+     * @param latlng
      *
      * @memberof GoogleInfoBoxService
      */

@@ -16,8 +16,6 @@ import { BingMapEventsLookup } from '../../models/bing/bing-events-lookup';
  * Concrete implementation of the {@link InfoBoxService} contract for the Bing Maps V8 architecture.
  *
  * @export
- * @class BingInfoBoxService
- * @implements {InfoBoxService}
  */
 @Injectable()
 export class BingInfoBoxService implements InfoBoxService {
@@ -32,8 +30,8 @@ export class BingInfoBoxService implements InfoBoxService {
 
     /**
      * Creates an instance of BingInfoBoxService.
-     * @param {MapService} _mapService - Concrete {@link MapService} implementation for Bing Maps V8. An instance of {@link BingMapService}.
-     * @param {NgZone} _zone - An instance of NgZone to provide zone aware promises.
+     * @param _mapService - Concrete {@link MapService} implementation for Bing Maps V8. An instance of {@link BingMapService}.
+     * @param _zone - An instance of NgZone to provide zone aware promises.
      *
      * @memberof BingInfoBoxService
      */
@@ -42,7 +40,7 @@ export class BingInfoBoxService implements InfoBoxService {
     /**
      * Adds an info window to the map or layer.
      *
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
      *
      * @memberof BingInfoBoxService
      */
@@ -85,8 +83,8 @@ export class BingInfoBoxService implements InfoBoxService {
      * Closes an InfoBoxComponent that is open.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been closed.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been closed.
      *
      * @memberof InfoBoxService
      */
@@ -97,10 +95,9 @@ export class BingInfoBoxService implements InfoBoxService {
     /**
      * Registers an event delegate for an info window.
      *
-     * @template T - Type of the event to emit.
-     * @param {string} eventName - The name of the event to register (e.g. 'click')
-     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
-     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     * @param eventName - The name of the event to register (e.g. 'click')
+     * @param infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns - Observable emiting an instance of T each time the event occurs.
      *
      * @memberof GoogleInfoBoxService
      */
@@ -117,8 +114,8 @@ export class BingInfoBoxService implements InfoBoxService {
      * Deletes an infobox.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been deleted.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been deleted.
      *
      * @memberof InfoBoxService
      */
@@ -139,8 +136,8 @@ export class BingInfoBoxService implements InfoBoxService {
      * Opens an infobox that is closed.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been opened.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been opened.
      *
      * @memberof InfoBoxService
      */
@@ -189,10 +186,10 @@ export class BingInfoBoxService implements InfoBoxService {
      * Sets the infobox options.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @param {IInfoWindowOptions} options - {@link IInfoWindowOptions} object containing the options to set. Options provided are
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @param options - {@link IInfoWindowOptions} object containing the options to set. Options provided are
      * merged with the existing options of the underlying infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox options have been updated.
+     * @returns - A promise that is fullfilled when the infobox options have been updated.
      *
      * @memberof InfoBoxService
      */
@@ -204,8 +201,8 @@ export class BingInfoBoxService implements InfoBoxService {
      * Set the position of the infobox based on the properties set on the InfoBox component.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox position has been updated.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox position has been updated.
      *
      * @memberof InfoBoxService
      */

@@ -21,7 +21,6 @@ declare var google: any;
  *
  * @export
  * @abstract
- * @class GoogleLayerBase
  */
 export abstract class GoogleLayerBase {
 
@@ -36,9 +35,9 @@ export abstract class GoogleLayerBase {
 
     /**
      * Creates an instance of GoogleLayerBase.
-     * @param {MapService} _mapService - Concrete {@link MapService} implementation for Google Maps.
+     * @param _mapService - Concrete {@link MapService} implementation for Google Maps.
      * An instance of {@link GoogleMapService}.
-     * @param {NgZone} _zone - NgZone instance to provide zone aware promises.
+     * @param _zone - NgZone instance to provide zone aware promises.
      *
      * @memberof GoogleLayerBase
      */
@@ -52,7 +51,7 @@ export abstract class GoogleLayerBase {
      * Adds a layer to the map.
      *
      * @abstract
-     * @param {MapLayerDirective} layer - MapLayerDirective component object.
+     * @param layer - MapLayerDirective component object.
      * Generally, MapLayerDirective will be injected with an instance of the
      * LayerService and then self register on initialization.
      *
@@ -63,8 +62,8 @@ export abstract class GoogleLayerBase {
     /**
      * Deletes the layer
      *
-     * @param {MapLayerDirective} layer - MapLayerDirective component object for which to retrieve the layer.
-     * @returns {Promise<void>} - A promise that is fullfilled when the layer has been removed.
+     * @param layer - MapLayerDirective component object for which to retrieve the layer.
+     * @returns - A promise that is fullfilled when the layer has been removed.
      *
      * @memberof GoogleLayerBase
      */
@@ -84,8 +83,8 @@ export abstract class GoogleLayerBase {
     /**
      * Returns the Layer model represented by this layer.
      *
-     * @param {MapLayerDirective|number} layer - MapLayerDirective component object or layer id for which to retrieve the layer model.
-     * @returns {Promise<Layer>} - A promise that when resolved contains the Layer model.
+     * @param layer - MapLayerDirective component object or layer id for which to retrieve the layer model.
+     * @returns - A promise that when resolved contains the Layer model.
      *
      * @memberof GoogleLayerBase
      */
@@ -103,9 +102,9 @@ export abstract class GoogleLayerBase {
     /**
      * Creates a marker in the layer.
      *
-     * @param {number} layer - The Id of the layer in which to create the marker.
-     * @param {IMarkerOptions} options - {@link IMarkerOptions} object containing the marker properties.
-     * @returns {Promise<Marker>} - A promise that when fullfilled contains the {@link Marker} model for the created marker.
+     * @param layer - The Id of the layer in which to create the marker.
+     * @param options - {@link IMarkerOptions} object containing the marker properties.
+     * @returns - A promise that when fullfilled contains the {@link Marker} model for the created marker.
      *
      * @memberof GoogleLayerBase
      */
@@ -149,9 +148,9 @@ export abstract class GoogleLayerBase {
      * Creates an array of unbound markers. Use this method to create arrays of markers to be used in bulk
      * operations.
      *
-     * @param {Array<IMarkerOptions>} options - Marker options defining the markers.
-     * @param {IMarkerIconInfo} markerIcon - Optional information to generate custom markers. This will be applied to all markers.
-     * @returns {Promise<Array<Marker>>} - A promise that when fullfilled contains the an arrays of the Marker models.
+     * @param options - Marker options defining the markers.
+     * @param markerIcon - Optional information to generate custom markers. This will be applied to all markers.
+     * @returns - A promise that when fullfilled contains the an arrays of the Marker models.
      *
      * @memberof GoogleLayerBase
      */
@@ -194,8 +193,8 @@ export abstract class GoogleLayerBase {
      * Gets the layer based on its id.
      *
      * @protected
-     * @param {number} id - Layer Id.
-     * @returns {Promise<Layer>}  - A promise that when fullfilled contains the {@link Layer} model for the layer.
+     * @param id - Layer Id.
+     * @returns - A promise that when fullfilled contains the {@link Layer} model for the layer.
      *
      * @memberof GoogleLayerBase
      */

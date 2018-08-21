@@ -10,7 +10,6 @@ import { InfoWindow } from '../models/info-window';
  *
  * @export
  * @abstract
- * @class InfoBoxService
  */
 @Injectable()
 export abstract class InfoBoxService {
@@ -19,7 +18,7 @@ export abstract class InfoBoxService {
      * Adds an info window to the map or layer.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
      *
      * @memberof InfoBoxService
      */
@@ -29,8 +28,8 @@ export abstract class InfoBoxService {
      * Closes an infobox that is open.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been closed.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been closed.
      *
      * @memberof InfoBoxService
      */
@@ -40,10 +39,9 @@ export abstract class InfoBoxService {
      * Subscribe to events on the infowindow.
      *
      * @abstract
-     * @template T - Type of the event to emit.
-     * @param {string} eventName - The name of the event to register (e.g. 'click')
-     * @param {InfoBoxComponent} infoComponent - The {@link InfoBoxComponent} for which to register the event.
-     * @returns {Observable<T>} - Observable emiting an instance of T each time the event occurs.
+     * @param eventName - The name of the event to register (e.g. 'click')
+     * @param infoComponent - The {@link InfoBoxComponent} for which to register the event.
+     * @returns - Observable emiting an instance of T each time the event occurs.
      *
      * @memberof InfoBoxService
      */
@@ -54,8 +52,8 @@ export abstract class InfoBoxService {
      * Deletes an infobox.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been deleted.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been deleted.
      *
      * @memberof InfoBoxService
      */
@@ -65,8 +63,8 @@ export abstract class InfoBoxService {
      * Opens an infobox that is closed.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox has been opened.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @returns - A promise that is fullfilled when the infobox has been opened.
      *
      * @memberof InfoBoxService
      */
@@ -76,10 +74,10 @@ export abstract class InfoBoxService {
      * Sets the infobox options.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @param {IInfoWindowOptions} options - {@link IInfoWindowOptions} object containing the options to set. Options provided are
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @param options - {@link IInfoWindowOptions} object containing the options to set. Options provided are
      * merged with the existing options of the underlying infobox.
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox options have been updated.
+     * @returns - A promise that is fullfilled when the infobox options have been updated.
      *
      * @memberof InfoBoxService
      */
@@ -89,9 +87,9 @@ export abstract class InfoBoxService {
      * Set the position of the infobox based on the properties set on the InfoBox component.
      *
      * @abstract
-     * @param {InfoBoxComponent} info - {@link InfoBoxComponent} component object representing the infobox.
-     * @param {ILatLong} latlng - The position to set
-     * @returns {Promise<void>} - A promise that is fullfilled when the infobox position has been updated.
+     * @param info - {@link InfoBoxComponent} component object representing the infobox.
+     * @param latlng - The position to set
+     * @returns - A promise that is fullfilled when the infobox position has been updated.
      *
      * @memberof InfoBoxService
      */

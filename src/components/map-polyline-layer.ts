@@ -47,10 +47,6 @@ let layerId = 1000000;
  * ```
  *
  * @export
- * @class MapPolylineLayerDirective
- * @implements {OnDestroy}
- * @implements {OnChanges}
- * @implements {AfterContentInit}
  */
 @Directive({
     selector: 'x-map-polyline-layer'
@@ -81,14 +77,12 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
 
     /**
      * Set the maximum zoom at which the polyline labels are visible. Ignored if ShowLabel is false.
-     * @type {number}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public LabelMaxZoom: number = Number.MAX_SAFE_INTEGER;
 
     /**
      * Set the minimum zoom at which the polyline labels are visible. Ignored if ShowLabel is false.
-     * @type {number}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public LabelMinZoom: number = -1;
@@ -96,7 +90,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Sepcifies styleing options for on-map polyline labels.
      *
-     * @type {ILabelOptions}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public LabelOptions: ILabelOptions;
@@ -104,7 +97,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Gets or sets An offset applied to the positioning of the layer.
      *
-     * @type {IPoint}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public LayerOffset: IPoint = null;
@@ -112,7 +104,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * An array of polyline options representing the polylines in the layer.
      *
-     * @type {Array<IPolylineOptions>}
      * @memberof MapPolylineLayerDirective
      */
     @Input()
@@ -130,7 +121,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Whether to show the polylines titles as the labels on the polylines.
      *
-     * @type {boolean}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public ShowLabels: boolean = false;
@@ -138,7 +128,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Whether to show the titles of the polylines as the tooltips on the polylines.
      *
-     * @type {boolean}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public ShowTooltips: boolean = true;
@@ -147,7 +136,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
      * Sets whether to treat changes in the PolylineOptions as streams of new markers. In this mode, changing the
      * Array supplied in PolylineOptions will be incrementally drawn on the map as opposed to replace the polylines on the map.
      *
-     * @type {boolean}
      * @memberof MapPolylineLayerDirective
      */
     @Input()
@@ -157,7 +145,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Sets the visibility of the marker layer
      *
-     * @type {string}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public Visible: boolean;
@@ -165,7 +152,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Gets or sets the z-index of the layer. If not used, layers get stacked in the order created.
      *
-     * @type {number}
      * @memberof MapPolylineLayerDirective
      */
     @Input() public ZIndex: number = 0;
@@ -177,7 +163,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * This event emitter gets emitted when the user clicks a polyline in the layer.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineLayerDirective
      */
     @Output() public PolylineClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -185,7 +170,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * This event is fired when the DOM dblclick event is fired on a polyline in the layer.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineLayerDirective
      */
     @Output() PolylineDblClick: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -193,7 +177,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * This event is fired when the DOM mousemove event is fired on a polyline in the layer.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineLayerDirective
      */
     @Output() PolylineMouseMove: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -201,7 +184,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * This event is fired on mouseout on a polyline in the layer.
      *
-     * @type {EventEmitter<IPolygonEvent>}
      * @memberof MapPolylineLayerDirective
      */
     @Output() PolylineMouseOut: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -209,7 +191,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * This event is fired on mouseover on a polyline in a layer.
      *
-     * @type {EventEmitter<IPolylineEvent>}
      * @memberof MapPolylineLayerDirective
      */
     @Output() PolylineMouseOver: EventEmitter<IPolylineEvent> = new EventEmitter<IPolylineEvent>();
@@ -224,7 +205,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
      * Gets the id of the polyline layer.
      *
      * @readonly
-     * @type {number}
      * @memberof MapPolylineLayerDirective
      */
     public get Id(): number { return this._id; }
@@ -235,9 +215,9 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
 
     /**
      * Creates an instance of MapPolylineLayerDirective.
-     * @param {LayerService} _layerService - Concreate implementation of a {@link LayerService}.
-     * @param {MapService} _mapService - Concreate implementation of a {@link MapService}.
-     * @param {NgZone} _zone - Concreate implementation of a {@link NgZone} service.
+     * @param _layerService - Concreate implementation of a {@link LayerService}.
+     * @param _mapService - Concreate implementation of a {@link MapService}.
+     * @param _zone - Concreate implementation of a {@link NgZone} service.
      * @memberof MapPolylineLayerDirective
      */
     constructor(
@@ -253,7 +233,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
 
     /**
      * Called after Component content initialization. Part of ng Component life cycle.
-     * @returns {void}
      *
      * @memberof MapPolylineLayerDirective
      */
@@ -305,7 +284,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Reacts to changes in data-bound properties of the component and actuates property changes in the underling layer model.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - collection of changes.
+     * @param changes - collection of changes.
      * @memberof MapPolylineLayerDirective
      */
     public ngOnChanges(changes: { [key: string]: SimpleChange }) {
@@ -337,7 +316,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
 
     /**
      * Obtains a string representation of the Layer Id.
-     * @return {string} - string representation of the layer id.
+     * @returns - string representation of the layer id.
      * @memberof MapPolylineLayerDirective
      */
     public toString(): string { return 'MapPolylineLayer-' + this._id.toString(); }
@@ -349,8 +328,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Adds various event listeners for the polylines.
      *
-     * @param {Polyline} p - the polyline for which to add the event.
-     * @private
+     * @param p - the polyline for which to add the event.
      *
      * @memberof MapPolylineLayerDirective
      */
@@ -368,8 +346,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Draws the polyline labels. Called by the Canvas overlay.
      *
-     * @private
-     * @param {HTMLCanvasElement} el - The canvas on which to draw the labels.
+     * @param el - The canvas on which to draw the labels.
      * @memberof MapPolylineLayerDirective
      */
     private DrawLabels(el: HTMLCanvasElement): void {
@@ -394,9 +371,9 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
 
     /**
      * Draws the label text at the appropriate place on the canvas.
-     * @param {CanvasRenderingContext2D} ctx - Canvas drawing context.
-     * @param {IPoint} loc - Pixel location on the canvas where to center the text.
-     * @param {string} text - Text to draw.
+     * @param ctx - Canvas drawing context.
+     * @param loc - Pixel location on the canvas where to center the text.
+     * @param text - Text to draw.
      */
     private DrawText(ctx: CanvasRenderingContext2D, loc: IPoint, text: string) {
         let lo: ILabelOptions = this.LabelOptions;
@@ -418,8 +395,7 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
     /**
      * Manages the tooltip and the attachment of the associated events.
      *
-     * @private
-     * @param {boolean} show - True to enable the tooltip, false to disable.
+     * @param show - True to enable the tooltip, false to disable.
      * @memberof MapPolygonLayerDirective
      */
     private ManageTooltip(show: boolean): void {
@@ -466,7 +442,6 @@ export class MapPolylineLayerDirective implements OnDestroy, OnChanges, AfterCon
      *
      * @memberof MapPolylineLayerDirective
      * @method
-     * @private
      */
     private UpdatePolylines(): void {
         if (this._layerPromise == null) {

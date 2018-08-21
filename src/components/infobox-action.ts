@@ -26,7 +26,6 @@
  * ```
  *
  * @export
- * @class InfoBoxActionDirective
  */
 @Directive({
     selector: 'x-info-box-action'
@@ -36,7 +35,6 @@ export class InfoBoxActionDirective {
     /**
      * The label to display on the action
      *
-     * @type {string}
      * @memberof InfoBoxActionDirective
      */
     @Input()
@@ -45,7 +43,6 @@ export class InfoBoxActionDirective {
     /**
      * Emits an event when the action has been clicked
      *
-     * @type {EventEmitter<void>}
      * @memberof InfoBoxActionDirective
      */
     @Output()

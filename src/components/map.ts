@@ -51,10 +51,6 @@ import { MapMarkerDirective } from './map-marker';
  * ```
  *
  * @export
- * @class MapComponent
- * @implements {OnChanges}
- * @implements {OnInit}
- * @implements {OnDestroy}
  */
 @Component({
     selector: 'x-map',
@@ -96,7 +92,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     private _options: IMapOptions = {};
     private _box: IBox = null;
     private _mapPromise: Promise<void>;
-    @HostBinding('class.map-container') private _containerClass: boolean = true;
+    @HostBinding('class.map-container') public _containerClass: boolean = true;
     @ViewChild('container') private _container: ElementRef;
     @ContentChildren(MapMarkerDirective) private _markers: Array<MapMarkerDirective>;
 
@@ -107,7 +103,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Get or sets the maximum and minimum bounding box for map.
      *
-     * @type {IBox}
      * @memberof MapComponent
      */
     @Input()
@@ -117,7 +112,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets or sets the latitude that sets the center of the map.
      *
-     * @type {(number | string)}
      * @memberof MapComponent
      */
     @Input()
@@ -130,7 +124,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets or sets the longitude that sets the center of the map.
      *
-     * @type {(number| string)}
      * @memberof MapComponent
      */
     @Input()
@@ -143,7 +136,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets or sets general map Options
      *
-     * @type {IMapOptions}
      * @memberof MapComponent
      */
     @Input()
@@ -153,7 +145,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets or sets the zoom level of the map. The default value is `8`.
      *
-     * @type {(number | string)}
      * @memberof MapComponent
      */
     @Input()
@@ -168,7 +159,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter is fired when the map bounding box changes.
      *
-     * @type {EventEmitter<IBox>}
      * @memberof MapComponent
      */
     @Output()
@@ -177,7 +167,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter is fired when the map center changes.
      *
-     * @type {EventEmitter<ILatLong>}
      * @memberof MapComponent
      */
     @Output()
@@ -187,7 +176,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user clicks on the map (but not when they click on a
      * marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -197,7 +185,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
      * on a marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -207,7 +194,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user right-clicks on the map (but not when they click
      * on a marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -217,7 +203,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
      * on a marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -227,7 +212,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
      * on a marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -237,7 +221,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * This event emitter gets emitted when the user double-clicks on the map (but not when they click
      * on a marker or infoWindow).
      *
-     * @type {EventEmitter<MouseEvent>}
      * @memberof MapComponent
      */
     @Output()
@@ -248,7 +231,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * Initialized (but not necessarily created). It contains a Promise that when fullfilled returns
      * the main map object of the underlying platform.
      *
-     * @type {EventEmitter<Promise<any>>}
      * @memberof MapComponent
      */
     @Output()
@@ -257,7 +239,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emiiter is fired when the map zoom changes
      *
-     * @type {EventEmitter<Number>}
      * @memberof MapComponent
      */
     @Output()
@@ -266,7 +247,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * This event emitter is fired when the map service is available and the maps has been
      * Initialized
-     * @type {EventEmitter<MapService>}
      * @memberOf MapComponent
      */
     @Output()
@@ -280,7 +260,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Creates an instance of MapComponent.
      *
-     * @param {MapService} _mapService - Concreted implementation of a map service for the underlying maps implementations.
+     * @param _mapService - Concreted implementation of a map service for the underlying maps implementations.
      *                                   Generally provided via injections.
      * @memberof MapComponent
      */
@@ -293,8 +273,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Called on Component initialization. Part of ng Component life cycle.
      *
-     * @returns {void}
-     *
      * @memberof MapComponent
      */
     public ngOnInit(): void {
@@ -306,8 +284,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Called when changes to the databoud properties occur. Part of the ng Component life cycle.
      *
-     * @param {{ [propName: string]: SimpleChange }} changes - Changes that have occured.
-     * @return {void}
+     * @param changes - Changes that have occured.
      *
      * @memberof MapComponent
      */
@@ -329,8 +306,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Called on component destruction. Frees the resources used by the component. Part of the ng Component life cycle.
      *
-     * @returns {void}
-     *
      * @memberof MapComponent
      */
     public ngOnDestroy(): void {
@@ -340,7 +315,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Triggers a resize event on the map instance.
      *
-     * @returns {Promise<void>} - A promise that gets resolved after the event was triggered.
+     * @returns - A promise that gets resolved after the event was triggered.
      *
      * @memberof MapComponent
      */
@@ -361,10 +336,9 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Converts a number-ish value to a number.
      *
-     * @private
-     * @param {(string | number)} value - The value to convert.
-     * @param {number} [defaultValue=null] - Default value to use if the conversion cannot be performed.
-     * @returns {number} - Converted number of the default.
+     * @param value - The value to convert.
+     * @param [defaultValue=null] - Default value to use if the conversion cannot be performed.
+     * @returns - Converted number of the default.
      *
      * @memberof MapComponent
      */
@@ -379,8 +353,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Delegate handling the map click events.
-     *
-     * @private
      *
      * @memberof MapComponent
      */
@@ -416,8 +388,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Delegate handling map center change events.
      *
-     * @private
-     *
      * @memberof MapComponent
      */
     private HandleMapBoundsChange(): void {
@@ -430,8 +400,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
 
     /**
      * Delegate handling map center change events.
-     *
-     * @private
      *
      * @memberof MapComponent
      */
@@ -450,8 +418,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Delegate handling map zoom change events.
      *
-     * @private
-     *
      * @memberof MapComponent
      */
     private HandleMapZoomChange(): void {
@@ -468,8 +434,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Initializes the map.
      *
-     * @private
-     * @param {HTMLElement} el - Html elements which will host the map canvas.
+     * @param el - Html elements which will host the map canvas.
      *
      * @memberof MapComponent
      */
@@ -490,9 +455,6 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     /**
      * Updates the map center based on the geo properties of the component.
      *
-     * @private
-     * @returns {void}
-     *
      * @memberof MapComponent
      */
     private UpdateCenter(): void {
@@ -511,9 +473,9 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @returns {ClusterService} - A concrete instance of a Cluster Service based on the underlying map architecture
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @returns - A concrete instance of a Cluster Service based on the underlying map architecture
  */
 export function ClusterServiceFactory(f: MapServiceFactory, m: MapService): ClusterService { return f.CreateClusterService(m); }
 
@@ -522,10 +484,10 @@ export function ClusterServiceFactory(f: MapServiceFactory, m: MapService): Clus
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @param {MarkerService} m - A {@link MarkerService} instance.
- * @returns {InfoBoxService} - A concrete instance of a InfoBox Service based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @param m - A {@link MarkerService} instance.
+ * @returns - A concrete instance of a InfoBox Service based on the underlying map architecture.
  */
 export function InfoBoxServiceFactory(f: MapServiceFactory, m: MapService,
     ma: MarkerService): InfoBoxService { return f.CreateInfoBoxService(m, ma); }
@@ -535,9 +497,9 @@ export function InfoBoxServiceFactory(f: MapServiceFactory, m: MapService,
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @returns {LayerService} - - A concrete instance of a Layer Service based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @returns - A concrete instance of a Layer Service based on the underlying map architecture.
  */
 export function LayerServiceFactory(f: MapServiceFactory, m: MapService): LayerService { return f.CreateLayerService(m); }
 
@@ -546,8 +508,8 @@ export function LayerServiceFactory(f: MapServiceFactory, m: MapService): LayerS
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @returns {MapService} - A concrete instance of a MapService based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @returns - A concrete instance of a MapService based on the underlying map architecture.
  */
 export function MapServiceCreator(f: MapServiceFactory): MapService { return f.Create(); }
 
@@ -556,11 +518,11 @@ export function MapServiceCreator(f: MapServiceFactory): MapService { return f.C
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @param {LayerService} l - A {@link LayerService} instance.
- * @param {ClusterService} c - A {@link ClusterService} instance.
- * @returns {MarkerService} - A concrete instance of a Marker Service based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @param l - A {@link LayerService} instance.
+ * @param c - A {@link ClusterService} instance.
+ * @returns - A concrete instance of a Marker Service based on the underlying map architecture.
  */
 export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService, c: ClusterService): MarkerService {
     return f.CreateMarkerService(m, l, c);
@@ -571,10 +533,10 @@ export function MarkerServiceFactory(f: MapServiceFactory, m: MapService, l: Lay
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @param {LayerService} l - A {@link LayerService} instance.
- * @returns {PolygonService} - A concrete instance of a Polygon Service based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @param l - A {@link LayerService} instance.
+ * @returns - A concrete instance of a Polygon Service based on the underlying map architecture.
  */
 export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolygonService {
     return f.CreatePolygonService(m, l);
@@ -585,10 +547,10 @@ export function PolygonServiceFactory(f: MapServiceFactory, m: MapService, l: La
  * us to use lamda functions inline.
  *
  * @export
- * @param {MapServiceFactory} f - The {@link MapServiceFactory} implementation.
- * @param {MapService} m - A {@link MapService} instance.
- * @param {LayerService} l - A {@link LayerService} instance.
- * @returns {PolylineService} - A concrete instance of a Polyline Service based on the underlying map architecture.
+ * @param f - The {@link MapServiceFactory} implementation.
+ * @param m - A {@link MapService} instance.
+ * @param l - A {@link LayerService} instance.
+ * @returns - A concrete instance of a Polyline Service based on the underlying map architecture.
  */
 export function PolylineServiceFactory(f: MapServiceFactory, m: MapService, l: LayerService): PolylineService {
     return f.CreatePolylineService(m, l);

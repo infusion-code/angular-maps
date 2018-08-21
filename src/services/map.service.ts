@@ -24,7 +24,6 @@ import { CanvasOverlay } from '../models/canvas-overlay';
  *
  * @export
  * @abstract
- * @class MapService
  */
 @Injectable()
 export abstract class MapService {
@@ -37,7 +36,6 @@ export abstract class MapService {
      * Gets the Map control instance underlying the implementation
      *
      * @readonly
-     * @type {any}
      * @memberof MapService
      */
     abstract get MapInstance(): any;
@@ -46,7 +44,6 @@ export abstract class MapService {
      * Gets a Promise for a Map control instance underlying the implementation. Use this instead of {@link MapInstance} if you
      * are not sure if and when the instance will be created.
      * @readonly
-     * @type {Promise<any>}
      * @memberof MapService
      */
     abstract get MapPromise(): Promise<any>;
@@ -56,7 +53,6 @@ export abstract class MapService {
      *
      * @readonly
      * @abstract
-     * @type {ISize}
      * @memberof MapService
      */
     abstract get MapSize(): ISize;
@@ -69,10 +65,9 @@ export abstract class MapService {
     /**
      * Gets a random geo locations filling the bounding box.
      *
-     * @static
-     * @param {number} count - number of locations to return
-     * @param {IBox} bounds  - bounding box.
-     * @returns {Array<ILatLong>} - Array of geo locations.
+     * @param count - number of locations to return
+     * @param bounds  - bounding box.
+     * @returns - Array of geo locations.
      * @memberof MapService
      */
     public static GetRandonLocations(count: number, bounds: IBox): Array<ILatLong> {
@@ -110,9 +105,9 @@ export abstract class MapService {
     /**
      * Creates a canvas overlay layer to perform custom drawing over the map with out
      * some of the overhead associated with going through the Map objects.
-     * @param  {HTMLCanvasElements => void} drawCallback A callback function that is triggered when the canvas is ready to be
+     * @param drawCallback A callback function that is triggered when the canvas is ready to be
      * rendered for the current map view.
-     * @returns {Promise<CanvasOverlay>} - Promise of a {@link CanvasOverlay} object.
+     * @returns - Promise of a {@link CanvasOverlay} object.
      * @memberof MapService
      * @abstract
      */
@@ -121,8 +116,8 @@ export abstract class MapService {
     /**
      * Creates a map cluster layer within the map context
      *
-     * @param {IClusterOptions} options - Options for the layer. See {@link IClusterOptions}.
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying native layer object.
+     * @param options - Options for the layer. See {@link IClusterOptions}.
+     * @returns - Promise of a {@link Layer} object, which models the underlying native layer object.
      *
      * @memberof MapService
      */
@@ -131,8 +126,8 @@ export abstract class MapService {
     /**
      * Creates an information window for a map position
      *
-     * @param {IInfoWindowOptions} [options] - Infowindow options. See {@link IInfoWindowOptions}
-     * @returns {Promise<InfoWindow>} - Promise of a {@link InfoWindow} object, which models the underlying natvie infobox object.
+     * @param [options] - Infowindow options. See {@link IInfoWindowOptions}
+     * @returns - Promise of a {@link InfoWindow} object, which models the underlying natvie infobox object.
      *
      * @memberof MapService
      */
@@ -141,8 +136,8 @@ export abstract class MapService {
     /**
      * Creates a map layer within the map context
      *
-     * @param {ILayerOptions} options - Options for the layer. See {@link ILayerOptions}
-     * @returns {Promise<Layer>} - Promise of a {@link Layer} object, which models the underlying native layer object.
+     * @param options - Options for the layer. See {@link ILayerOptions}
+     * @returns - Promise of a {@link Layer} object, which models the underlying native layer object.
      *
      * @memberof MapService
      */
@@ -151,9 +146,9 @@ export abstract class MapService {
     /**
      * Creates a map instance
      *
-     * @param {HTMLElement} el - HTML element to host the map.
-     * @param {IMapOptions} mapOptions - Map options
-     * @returns {Promise<void>} - Promise fullfilled once the map has been created.
+     * @param el - HTML element to host the map.
+     * @param mapOptions - Map options
+     * @returns - Promise fullfilled once the map has been created.
      *
      * @memberof MapService
      */
@@ -162,8 +157,8 @@ export abstract class MapService {
     /**
      * Creates a map marker within the map context
      *
-     * @param {IMarkerOptions} [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
-     * @returns {Promise<Marker>} - Promise of a {@link Marker} object, which models the underlying native pushpin object.
+     * @param [options=<IMarkerOptions>{}] - Options for the marker. See {@link IMarkerOptions}.
+     * @returns - Promise of a {@link Marker} object, which models the underlying native pushpin object.
      *
      * @memberof MapService
      */
@@ -173,8 +168,8 @@ export abstract class MapService {
      * Creates a polygon within the map context
      *
      * @abstract
-     * @param {IPolygonOptions} options - Options for the polygon. See {@link IPolygonOptions}.
-     * @returns {Promise<Polygon>} - Promise of a {@link Polygon} object, which models the underlying native polygon.
+     * @param options - Options for the polygon. See {@link IPolygonOptions}.
+     * @returns - Promise of a {@link Polygon} object, which models the underlying native polygon.
      *
      * @memberof MapService
      */
@@ -184,8 +179,8 @@ export abstract class MapService {
      * Creates a polyline within the map context
      *
      * @abstract
-     * @param {IPolylineOptions} options - Options for the polyline. See {@link IPolylineOptions}.
-     * @returns {Promise<Polyline>} - Promise of a {@link Polyline} object (or an array thereof for complex paths),
+     * @param options - Options for the polyline. See {@link IPolylineOptions}.
+     * @returns - Promise of a {@link Polyline} object (or an array thereof for complex paths),
      * which models the underlying native polyline.
      *
      * @memberof MapService
@@ -195,8 +190,8 @@ export abstract class MapService {
     /**
      * Deletes a layer from the map.
      *
-     * @param {Layer} layer - Layer to delete. See {@link Layer}.
-     * @returns {Promise<void>} - Promise fullfilled when the layer has been removed.
+     * @param layer - Layer to delete. See {@link Layer}.
+     * @returns - Promise fullfilled when the layer has been removed.
      *
      * @memberof MapService
      */
@@ -205,8 +200,6 @@ export abstract class MapService {
     /**
      * Dispaose the map and associated resoures.
      *
-     * @returns {void}
-     *
      * @memberof MapService
      */
     abstract DisposeMap(): void;
@@ -214,7 +207,7 @@ export abstract class MapService {
     /**
      * Gets the geo coordinates of the map bounds
      *
-     * @returns {Promise<IBox>} - A promise that when fullfilled contains the bounding box of the screen. See {@link IBox}.
+     * @returns - A promise that when fullfilled contains the bounding box of the screen. See {@link IBox}.
      *
      * @memberof MapService
      */
@@ -223,7 +216,7 @@ export abstract class MapService {
     /**
      * Gets the geo coordinates of the map center
      *
-     * @returns {Promise<ILatLong>} - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
+     * @returns - A promise that when fullfilled contains the goe location of the center. See {@link ILatLong}.
      *
      * @memberof MapService
      */
@@ -232,7 +225,7 @@ export abstract class MapService {
     /**
      * Gets the current zoom level of the map.
      *
-     * @returns {Promise<number>} - A promise that when fullfilled contains the zoom level.
+     * @returns - A promise that when fullfilled contains the zoom level.
      *
      * @memberof MapService
      */
@@ -241,8 +234,8 @@ export abstract class MapService {
     /**
      * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @param {ILatLong} loc - The geo coordinates to translate.
-     * @returns {Promise<IPoint>} - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
+     * @param loc - The geo coordinates to translate.
+     * @returns - Promise of an {@link IPoint} interface representing the pixels. This promise resolves to null
      * if the goe coordinates are not in the view port.
      *
      * @memberof MapService
@@ -252,8 +245,8 @@ export abstract class MapService {
     /**
      * Provides a conversion of geo coordinates to pixels on the map control.
      *
-     * @param {ILatLong} loc - The geo coordinates to translate.
-     * @returns {Promise<Array<IPoint>>} - Promise of an {@link IPoint} interface array representing the pixels.
+     * @param loc - The geo coordinates to translate.
+     * @returns - Promise of an {@link IPoint} interface array representing the pixels.
      *
      * @memberof MapService
      */
@@ -262,8 +255,8 @@ export abstract class MapService {
     /**
      * Centers the map on a geo location.
      *
-     * @param {ILatLong} latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
-     * @returns {Promise<void>} - Promise that is fullfilled when the center operations has been completed.
+     * @param latLng - GeoCoordinates around which to center the map. See {@link ILatLong}
+     * @returns - Promise that is fullfilled when the center operations has been completed.
      *
      * @memberof MapService
      */
@@ -272,7 +265,7 @@ export abstract class MapService {
     /**
      * Sets the generic map options.
      *
-     * @param {IMapOptions} options - Options to set.
+     * @param options - Options to set.
      *
      * @memberof MapService
      */
@@ -281,7 +274,7 @@ export abstract class MapService {
     /**
      * Sets the view options of the map.
      *
-     * @param {IMapOptions} options - Options to set.
+     * @param options - Options to set.
      *
      * @memberof MapService
      */
@@ -290,8 +283,8 @@ export abstract class MapService {
     /**
      * Sets the zoom level of the map.
      *
-     * @param {number} zoom - Zoom level to set.
-     * @returns {Promise<void>} - A Promise that is fullfilled once the zoom operation is complete.
+     * @param zoom - Zoom level to set.
+     * @returns - A Promise that is fullfilled once the zoom operation is complete.
      *
      * @memberof MapService
      */
@@ -300,9 +293,8 @@ export abstract class MapService {
     /**
      * Creates an event subscription
      *
-     * @template E - Generic type of the underlying event.
-     * @param {string} eventName - The name of the event (e.g. 'click')
-     * @returns {Observable<E>} - An observable of tpye E that fires when the event occurs.
+     * @param eventName - The name of the event (e.g. 'click')
+     * @returns - An observable of tpye E that fires when the event occurs.
      *
      * @memberof MapService
      */
@@ -311,8 +303,8 @@ export abstract class MapService {
     /**
      * Triggers the given event name on the map instance.
      *
-     * @param {string} eventName - Event to trigger.
-     * @returns {Promise<void>} - A promise that is fullfilled once the event is triggered.
+     * @param eventName - Event to trigger.
+     * @returns - A promise that is fullfilled once the event is triggered.
      *
      * @memberof MapService
      */

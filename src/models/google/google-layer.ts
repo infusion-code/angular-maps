@@ -14,8 +14,6 @@ import * as GoogleMapTypes from '../../services/google/google-map-types';
  * Concrete implementation of a layer for the Google Map Provider.
  *
  * @export
- * @class GoogleMarkerClusterer
- * @implements {Layer}
  */
 export class GoogleLayer implements Layer {
 
