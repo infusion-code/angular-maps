@@ -2,7 +2,7 @@
     Directive, SimpleChange, Input, Output, OnDestroy, OnChanges,
     EventEmitter, ContentChild, AfterContentInit, ViewContainerRef
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { IPoint } from '../interfaces/ipoint';
 import { ILatLong } from '../interfaces/ilatlong';
 import { IMarkerEvent } from '../interfaces/imarker-event';
@@ -432,7 +432,7 @@ export class MapMarkerDirective implements OnDestroy, OnChanges, AfterContentIni
             ///
             /// this is necessary since map will treat a doubleclick first as two clicks...'
             ///
-            this._clickTimeout = Observable.timer(300).subscribe(n => {
+            this._clickTimeout = timer(300).subscribe(n => {
                 if (this._infoBox != null) {
                     this._infoBox.Open(this._markerService.GetCoordinatesFromClick(e));
                 }

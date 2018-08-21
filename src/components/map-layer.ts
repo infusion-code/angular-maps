@@ -1,5 +1,5 @@
 ﻿import { Directive, EventEmitter, OnInit, OnDestroy, OnChanges, AfterContentInit, SimpleChange,
-    ContentChildren, Input, ElementRef, ViewContainerRef } from '@angular/core';
+    ContentChildren, Input, ViewContainerRef } from '@angular/core';
 import { LayerService } from '../services/layer.service';
 import { MapMarkerDirective } from './map-marker';
 
