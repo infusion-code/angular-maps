@@ -6,7 +6,7 @@ import { Marker } from '../marker';
 import { InfoWindow } from '../info-window';
 import { ClusterPlacementMode } from '../cluster-placement-mode';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
-import { Observable } from 'rxjs';
+import { timer } from 'rxjs';
 
 /**
  * Concrete implementation of a clustering layer for the Google Map Provider.
@@ -342,7 +342,7 @@ export class GoogleMarkerClusterer implements Layer {
         if (!this._visible) {
             // only add the markers if the layer is visible. Otherwise, keep them pending. They would be added once the
             // layer is set to visible.
-            Observable.timer(0).subscribe(() => {
+            timer(0).subscribe(() => {
                 this._layer.resetViewport(true);
             });
         }
