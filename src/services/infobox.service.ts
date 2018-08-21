@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { InfoBoxComponent } from '../components/infobox';
 import { IInfoWindowOptions } from '../interfaces/iinfo-window-options';
 import { ILatLong } from '../interfaces/ilatlong';

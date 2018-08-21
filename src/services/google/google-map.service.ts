@@ -1,8 +1,7 @@
 import { GoogleMarkerClusterer } from '../../models/google/google-marker-clusterer';
 import { GoogleInfoWindow } from '../../models/google/google-info-window';
 import { Injectable, NgZone } from '@angular/core';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Observer } from 'rxjs';
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
 import { GoogleMapAPILoader, GoogleMapAPILoaderConfig } from './google-map-api-loader.service';

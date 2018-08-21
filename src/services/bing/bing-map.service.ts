@@ -1,6 +1,5 @@
 ﻿import { Injectable, NgZone } from '@angular/core';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
+import { Observer, Observable } from 'rxjs';
 
 import { MapService } from '../map.service';
 import { MapAPILoader } from '../mapapiloader';
