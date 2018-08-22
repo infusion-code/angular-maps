@@ -3,6 +3,10 @@
 # Overview
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains default implementations for Bing Maps and Google Maps, including layers, markers, infoboxes, clusters, polygons and polylines for both platforms.
 
+```diff
+- we have now added support for angular 6 and changed the examples to stackblitz...
+```
+
 # Samples
  You can find various basic and advanced samples in the [Wiki Sample Page](../../wiki/Samples)
 
