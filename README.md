@@ -2,7 +2,9 @@
 
 ```diff
 - #IMPORTANT
-- On 10/6/2018, this repository will be migrated into the Avanade channel. While existing clones, forks and branches will automatically redirect, we recommend that after the migration you repoint your urls to the Avanade channel. 
+- On 10/6/2018, this repository will be migrated into the Avanade channel. While existing clones,
+- forks and branches will automatically redirect, we recommend that after the migration you repoint
+- your urls to the Avanade channel. 
 ```
 
 # Overview
