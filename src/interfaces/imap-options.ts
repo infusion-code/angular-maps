@@ -2,10 +2,12 @@
 import { ILatLong } from './ilatlong';
 import { IPoint } from './ipoint';
 import { IBox } from './ibox';
+import { ICustomMapStyle } from './icustom-map-style';
 
 export interface IMapOptions {
     credentials?: string;
     customizeOverlays?: boolean;
+    customMapStyle?: ICustomMapStyle;
     disableBirdseye?: boolean;
     disableKeyboardInput?: boolean;
     disableMouseInput?: boolean;
