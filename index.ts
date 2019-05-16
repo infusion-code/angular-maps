@@ -25,6 +25,7 @@ import { IPolygonEvent } from './src/interfaces/ipolygon-event';
 import { IPolylineEvent } from './src/interfaces/ipolyline-event';
 import { IMapEventLookup } from './src/interfaces/imap-event-lookup';
 import { ILabelOptions } from './src/interfaces/ilabel-options';
+import { ICustomMapStyle} from './src/interfaces/icustom-map-style';
 
 ///
 /// import module models
@@ -112,7 +113,7 @@ import { GooglePolylineService } from './src/services/google/google-polyline.ser
 export {
     ILatLong, IInfoWindowOptions, IInfoWindowAction, ISize, IMarkerOptions, IBox, IMapOptions, IPoint, IMarkerEvent, IPolygonEvent,
     IPolylineEvent, IMapEventLookup, IMarkerIconInfo, ILayerOptions, IClusterOptions, ISpiderClusterOptions, ILineOptions,
-    IPolygonOptions, IPolylineOptions, ILabelOptions, MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective,
+    IPolygonOptions, IPolylineOptions, ILabelOptions, ICustomMapStyle, MapComponent, InfoBoxComponent, MapMarkerDirective, MapPolygonDirective,
     MapPolylineDirective, InfoBoxActionDirective, MapMarkerLayerDirective, MapPolygonLayerDirective, MapLayerDirective,
     ClusterLayerDirective, MapPolylineLayerDirective, MapTypeId, Marker, MarkerTypeId, InfoWindow, Layer, ClusterPlacementMode,
     ClusterClickAction, SpiderClusterMarker, Polygon, Polyline, CanvasOverlay, MapService, MapServiceFactory, MarkerService,

@@ -35,6 +35,7 @@ export class BingConversions {
         'backgroundColor',
         'credentials',
         'customizeOverlays',
+        'customMapStyle',
         'disableBirdseye',
         'disableKeyboardInput',
         'disableMouseInput',
