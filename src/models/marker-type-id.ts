@@ -2,7 +2,7 @@
     None = 0,
     FontMarker,
     CanvasMarker,
-    DynmaicCircleMarker,
+    DynamicCircleMarker,
     RotatedImageMarker,
     RoundedImageMarker,
     ScaledImageMarker,
