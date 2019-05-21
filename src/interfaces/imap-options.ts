@@ -3,11 +3,13 @@ import { ILatLong } from './ilatlong';
 import { IPoint } from './ipoint';
 import { IBox } from './ibox';
 import { ICustomMapStyle } from './icustom-map-style';
+import { ICustomMapStyleGoogle } from './icustom-map-styles-google';
 
 export interface IMapOptions {
     credentials?: string;
     customizeOverlays?: boolean;
     customMapStyle?: ICustomMapStyle;
+    customMapStyleGoogle?: ICustomMapStyleGoogle;
     disableBirdseye?: boolean;
     disableKeyboardInput?: boolean;
     disableMouseInput?: boolean;
