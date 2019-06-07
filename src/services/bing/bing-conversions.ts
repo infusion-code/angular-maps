@@ -61,7 +61,8 @@ export class BingConversions {
         'width',
         'center',
         'zoom',
-        'mapTypeId'
+        'mapTypeId',
+        'liteMode'
     ];
 
     /**
