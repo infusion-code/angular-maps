@@ -214,7 +214,7 @@ export class BingMapLabel extends MapLabel {
  */
 export function MixinMapLabelWithOverlayView() {
     const x = BingMapLabel.prototype;
-    BingMapLabel.prototype = <any> new Microsoft.Maps.CustomOverlay();
+    Object.defineProperty(BingMapLabel, "prototype", new Microsoft.Maps.CustomOverlay());
     for (const y in x) { if ((<any>x)[y] != null) { (<any>BingMapLabel.prototype)[y] = (<any>x)[y]; }}
     (<any>BingMapLabel.prototype)['onAdd'] = x['OnAdd'];
     (<any>BingMapLabel.prototype)['onLoad'] = x['OnLoad'];

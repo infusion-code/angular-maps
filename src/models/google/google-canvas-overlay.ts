@@ -267,7 +267,7 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
  */
 export function MixinCanvasOverlay() {
     const x = GoogleCanvasOverlay.prototype;
-    GoogleCanvasOverlay.prototype = <any> new google.maps.OverlayView();
+    Object.defineProperty(GoogleCanvasOverlay, "prototype", new google.maps.OverlayView);
     for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleCanvasOverlay.prototype)[y] = (<any>x)[y]; }}
     (<any>GoogleCanvasOverlay.prototype)['onAdd'] = x['OnAdd'];
     (<any>GoogleCanvasOverlay.prototype)['draw'] = x['OnDraw'];
