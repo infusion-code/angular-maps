@@ -235,10 +235,15 @@ export class BingCanvasOverlay extends CanvasOverlay {
 export function MixinCanvasOverlay() {
     const x = BingCanvasOverlay.prototype;
 
-    Object.defineProperty(BingMapLabel, "prototype", new Microsoft.Maps.CustomOverlay());
+    Object.defineProperty(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
 
-    for (const y in x) { if ((<any>x)[y] != null) { (<any>BingCanvasOverlay.prototype)[y] = (<any>x)[y]; }}
-    (<any>BingCanvasOverlay.prototype)['onAdd'] = x['OnAdd'];
-    (<any>BingCanvasOverlay.prototype)['onLoad'] = x['OnLoad'];
-    (<any>BingCanvasOverlay.prototype)['onRemove'] = x['OnRemove'];
+    for (const y in x) {
+        if ((<any>x)[y] != null) {
+            (Object.defineProperty(BingCanvasOverlay.prototype, y, (<any>x)[y]));
+        }
+    }
+
+    (Object.defineProperty(BingCanvasOverlay.prototype, 'onAdd', x['OnAdd']));
+    (Object.defineProperty(BingCanvasOverlay.prototype, 'onLoad', x['OnLoad']));
+    (Object.defineProperty(BingCanvasOverlay.prototype, 'onRemove', x['OnRemove']));
 }

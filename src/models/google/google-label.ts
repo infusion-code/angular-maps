@@ -194,10 +194,16 @@ export class GoogleMapLabel extends MapLabel {
  */
 export function MixinMapLabelWithOverlayView() {
     const x = GoogleMapLabel.prototype;
-    Object.defineProperty(GoogleMapLabel, "prototype", new google.maps.OverlayView);
-    for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleMapLabel.prototype)[y] = (<any>x)[y]; }}
-    (<any>GoogleMapLabel.prototype)['changed'] = x['Changed'];
-    (<any>GoogleMapLabel.prototype)['onAdd'] = x['OnAdd'];
-    (<any>GoogleMapLabel.prototype)['draw'] = x['Draw'];
-    (<any>GoogleMapLabel.prototype)['onRemove'] = x['OnRemove'];
+    Object.defineProperty(GoogleMapLabel, 'prototype', new google.maps.OverlayView);
+
+    for (const y in x) {
+        if ((<any>x)[y] != null) {
+            (Object.defineProperty(GoogleMapLabel.prototype, y, (<any>x)[y]));
+        }
+    }
+
+    (Object.defineProperty(GoogleMapLabel.prototype, 'changed', x['Changed']));
+    (Object.defineProperty(GoogleMapLabel.prototype, 'onAdd', x['OnAdd']));
+    (Object.defineProperty(GoogleMapLabel.prototype, 'draw', x['Draw']));
+    (Object.defineProperty(GoogleMapLabel.prototype, 'onRemove', x['OnRemove']));
 }
