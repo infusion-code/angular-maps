@@ -241,7 +241,7 @@ function define(obj: any, field: string, newProperty: any){
 export function MixinCanvasOverlay() {
     const x = BingCanvasOverlay.prototype;
 
-    define(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
+    define(BingCanvasOverlay, 'prototype', new Microsoft.Maps.CustomOverlay());
 
     for (const y in x) {
         if ((<any>x)[y] != null) {
