@@ -259,6 +259,12 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     }
 }
 
+ function define(obj: any, field: string, newProperty: any){
+     if (typeof newProperty !== 'undefined') {
+         Object.defineProperty(obj, field, newProperty);
+     }
+ }
+
 /**
  * Helper function to extend the OverlayView into the CanvasOverlay
  *
@@ -269,15 +275,15 @@ export function MixinCanvasOverlay() {
 
     const x = GoogleCanvasOverlay.prototype;
 
-    Object.defineProperty(GoogleCanvasOverlay, 'prototype', new google.maps.OverlayView);
+    define(GoogleCanvasOverlay, 'prototype', new google.maps.OverlayView);
 
     for (const y in x) {
         if ((<any>x)[y] != null) {
-            (Object.defineProperty(GoogleCanvasOverlay.prototype, y, (<any>x)[y]));
+            define(GoogleCanvasOverlay.prototype, y, (<any>x)[y]);
         }
     }
 
-    (Object.defineProperty(GoogleCanvasOverlay.prototype, 'onAdd', x['OnAdd']));
-    (Object.defineProperty(GoogleCanvasOverlay.prototype, 'onDraw', x['OnDraw']));
-    (Object.defineProperty(GoogleCanvasOverlay.prototype, 'onRemove', x['OnRemove']));
+    define(GoogleCanvasOverlay.prototype, 'onAdd', x['OnAdd']);
+    define(GoogleCanvasOverlay.prototype, 'onDraw', x['OnDraw']);
+    define(GoogleCanvasOverlay.prototype, 'onRemove', x['OnRemove']);
 }

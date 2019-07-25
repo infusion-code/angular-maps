@@ -206,6 +206,12 @@ export class BingMapLabel extends MapLabel {
     }
 }
 
+function define(obj: any, field: string, newProperty: any){
+    if (typeof newProperty !== 'undefined') {
+        Object.defineProperty(obj, field, newProperty);
+    }
+}
+
 /**
  * Helper function to extend the CustomOverlay into the MapLabel
  *
@@ -215,15 +221,15 @@ export class BingMapLabel extends MapLabel {
 export function MixinMapLabelWithOverlayView() {
     const x = BingMapLabel.prototype;
 
-    Object.defineProperty(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
+    define(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
 
     for (const y in x) {
         if ((<any>x)[y] != null) {
-            (Object.defineProperty(BingMapLabel.prototype, y, (<any>x)[y]));
+            define(BingMapLabel.prototype, y, (<any>x)[y]);
         }
     }
 
-    Object.defineProperty(BingMapLabel.prototype, 'onAdd', x['OnAdd']);
-    Object.defineProperty(BingMapLabel.prototype, 'onLoad', x['OnLoad']);
-    Object.defineProperty(BingMapLabel.prototype, 'onRemove', x['OnRemove']);
+    define(BingMapLabel.prototype, 'onAdd', x['OnAdd']);
+    define(BingMapLabel.prototype, 'onLoad', x['OnLoad']);
+    define(BingMapLabel.prototype, 'onRemove', x['OnRemove']);
 }

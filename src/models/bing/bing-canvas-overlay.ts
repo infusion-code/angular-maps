@@ -226,6 +226,12 @@ export class BingCanvasOverlay extends CanvasOverlay {
     }
 }
 
+function define(obj: any, field: string, newProperty: any){
+     if (typeof newProperty !== 'undefined') {
+         Object.defineProperty(obj, field, newProperty);
+     }
+}
+
 /**
  * Helper function to extend the OverlayView into the CanvasOverlay
  *
@@ -235,15 +241,15 @@ export class BingCanvasOverlay extends CanvasOverlay {
 export function MixinCanvasOverlay() {
     const x = BingCanvasOverlay.prototype;
 
-    Object.defineProperty(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
+    define(BingMapLabel, 'prototype', new Microsoft.Maps.CustomOverlay());
 
     for (const y in x) {
         if ((<any>x)[y] != null) {
-            (Object.defineProperty(BingCanvasOverlay.prototype, y, (<any>x)[y]));
+            define(BingCanvasOverlay.prototype, y, (<any>x)[y]);
         }
     }
 
-    (Object.defineProperty(BingCanvasOverlay.prototype, 'onAdd', x['OnAdd']));
-    (Object.defineProperty(BingCanvasOverlay.prototype, 'onLoad', x['OnLoad']));
-    (Object.defineProperty(BingCanvasOverlay.prototype, 'onRemove', x['OnRemove']));
+    define(BingCanvasOverlay.prototype, 'onAdd', x['OnAdd']);
+    define(BingCanvasOverlay.prototype, 'onLoad', x['OnLoad']);
+    define(BingCanvasOverlay.prototype, 'onRemove', x['OnRemove']);
 }

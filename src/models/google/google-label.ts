@@ -186,24 +186,33 @@ export class GoogleMapLabel extends MapLabel {
     }
 }
 
+ function define(obj: any, field: string, newProperty: any){
+     if (typeof newProperty !== 'undefined') {
+         Object.defineProperty(obj, field, newProperty);
+     }
+ }
+
 /**
  * Helper function to extend the OverlayView into the MapLabel
  *
  * @export
  * @method
  */
+
+
 export function MixinMapLabelWithOverlayView() {
     const x = GoogleMapLabel.prototype;
-    Object.defineProperty(GoogleMapLabel, 'prototype', new google.maps.OverlayView);
+
+    define(GoogleMapLabel, 'prototype', new google.maps.OverlayView);
 
     for (const y in x) {
         if ((<any>x)[y] != null) {
-            (Object.defineProperty(GoogleMapLabel.prototype, y, (<any>x)[y]));
+            define(GoogleMapLabel.prototype, y, (<any>x)[y]);
         }
     }
 
-    (Object.defineProperty(GoogleMapLabel.prototype, 'changed', x['Changed']));
-    (Object.defineProperty(GoogleMapLabel.prototype, 'onAdd', x['OnAdd']));
-    (Object.defineProperty(GoogleMapLabel.prototype, 'draw', x['Draw']));
-    (Object.defineProperty(GoogleMapLabel.prototype, 'onRemove', x['OnRemove']));
+    define(GoogleMapLabel.prototype, 'changed', x['Changed']);
+    define(GoogleMapLabel.prototype, 'onAdd', x['OnAdd']);
+    define(GoogleMapLabel.prototype, 'draw', x['Draw']);
+    define(GoogleMapLabel.prototype, 'onRemove', x['OnRemove']);
 }
