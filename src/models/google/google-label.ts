@@ -1,6 +1,9 @@
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { MapLabel } from '../map-label';
 import { ILabelOptions } from '../../interfaces/ilabel-options';
+import { Extender } from '../extender';
+
+
 declare var google: any;
 
 /**
@@ -186,12 +189,6 @@ export class GoogleMapLabel extends MapLabel {
     }
 }
 
- function define(obj: any, field: string, newProperty: any){
-     if (typeof newProperty !== 'undefined') {
-         Object.defineProperty(obj, field, newProperty);
-     }
- }
-
 /**
  * Helper function to extend the OverlayView into the MapLabel
  *
@@ -201,18 +198,11 @@ export class GoogleMapLabel extends MapLabel {
 
 
 export function MixinMapLabelWithOverlayView() {
-    const x = GoogleMapLabel.prototype;
 
-    define(GoogleMapLabel, 'prototype', new google.maps.OverlayView);
-
-    for (const y in x) {
-        if ((<any>x)[y] != null) {
-            define(GoogleMapLabel.prototype, y, (<any>x)[y]);
-        }
-    }
-
-    define(GoogleMapLabel.prototype, 'changed', x['Changed']);
-    define(GoogleMapLabel.prototype, 'onAdd', x['OnAdd']);
-    define(GoogleMapLabel.prototype, 'draw', x['Draw']);
-    define(GoogleMapLabel.prototype, 'onRemove', x['OnRemove']);
+    new Extender(GoogleMapLabel)
+        .Extend(new google.maps.OverlayView)
+        .Map('changed', 'Changed')
+        .Map('onAdd', 'OnAdd')
+        .Map('draw', 'Draw')
+        .Map('onRemove', 'OnRemove');
 }

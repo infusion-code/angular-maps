@@ -4,6 +4,7 @@ import { CanvasOverlay } from '../canvas-overlay';
 import { MapLabel } from '../map-label';
 import { GoogleMapLabel } from './google-label';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { Extender } from '../extender';
 declare var google: any;
 
 /**
@@ -259,12 +260,6 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
     }
 }
 
- function define(obj: any, field: string, newProperty: any){
-     if (typeof newProperty !== 'undefined') {
-         Object.defineProperty(obj, field, newProperty);
-     }
- }
-
 /**
  * Helper function to extend the OverlayView into the CanvasOverlay
  *
@@ -273,17 +268,9 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
  */
 export function MixinCanvasOverlay() {
 
-    const x = GoogleCanvasOverlay.prototype;
-
-    define(GoogleCanvasOverlay, 'prototype', new google.maps.OverlayView);
-
-    for (const y in x) {
-        if ((<any>x)[y] != null) {
-            define(GoogleCanvasOverlay.prototype, y, (<any>x)[y]);
-        }
-    }
-
-    define(GoogleCanvasOverlay.prototype, 'onAdd', x['OnAdd']);
-    define(GoogleCanvasOverlay.prototype, 'onDraw', x['OnDraw']);
-    define(GoogleCanvasOverlay.prototype, 'onRemove', x['OnRemove']);
+    new Extender(GoogleCanvasOverlay)
+        .Extend(new google.maps.OverlayView)
+        .Map('onAdd', 'OnAdd')
+        .Map('draw', 'OnDraw')
+        .Map('onRemove', 'OnRemove');
 }

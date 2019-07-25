@@ -3,6 +3,7 @@ import { BingConversions } from '../../services/bing/bing-conversions';
 import { CanvasOverlay } from '../canvas-overlay';
 import { MapLabel } from '../map-label';
 import { BingMapLabel } from './bing-label';
+import { Extender } from '../extender';
 
 /**
  * Concrete implementing a canvas overlay to be placed on the map for Bing Maps.
@@ -226,12 +227,6 @@ export class BingCanvasOverlay extends CanvasOverlay {
     }
 }
 
-function define(obj: any, field: string, newProperty: any){
-     if (typeof newProperty !== 'undefined') {
-         Object.defineProperty(obj, field, newProperty);
-     }
-}
-
 /**
  * Helper function to extend the OverlayView into the CanvasOverlay
  *
@@ -239,17 +234,10 @@ function define(obj: any, field: string, newProperty: any){
  * @method
  */
 export function MixinCanvasOverlay() {
-    const x = BingCanvasOverlay.prototype;
 
-    define(BingCanvasOverlay, 'prototype', new Microsoft.Maps.CustomOverlay());
-
-    for (const y in x) {
-        if ((<any>x)[y] != null) {
-            define(BingCanvasOverlay.prototype, y, (<any>x)[y]);
-        }
-    }
-
-    define(BingCanvasOverlay.prototype, 'onAdd', x['OnAdd']);
-    define(BingCanvasOverlay.prototype, 'onLoad', x['OnLoad']);
-    define(BingCanvasOverlay.prototype, 'onRemove', x['OnRemove']);
+    new Extender(BingCanvasOverlay)
+    .Extend(new Microsoft.Maps.CustomOverlay())
+    .Map('onAdd', 'OnAdd')
+    .Map('onLoad', 'OnLoad')
+    .Map('onRemove', 'OnRemove');
 }
