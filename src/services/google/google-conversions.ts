@@ -32,6 +32,7 @@ export class GoogleConversions {
         'backgroundColor',
         'center',
         'clickableIcons',
+        'customMapStyleGoogle',
         'disableDefaultUI',
         'disableDoubleClickZoom',
         'draggable',
@@ -346,6 +347,9 @@ export class GoogleConversions {
                 }
                 else if (k === 'showMapTypeSelector') {
                     o.mapTypeControl = false;
+                }
+                else if (k === 'customMapStyleGoogle') {
+                    o.styles = <GoogleMapTypes.MapTypeStyle[]><any> options.customMapStyleGoogle
                 }
                 else {
                     (<any>o)[k] = (<any>options)[k];
