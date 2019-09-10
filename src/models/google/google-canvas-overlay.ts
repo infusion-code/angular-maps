@@ -4,6 +4,7 @@ import { CanvasOverlay } from '../canvas-overlay';
 import { MapLabel } from '../map-label';
 import { GoogleMapLabel } from './google-label';
 import * as GoogleMapTypes from '../../services/google/google-map-types';
+import { Extender } from '../extender';
 declare var google: any;
 
 /**
@@ -266,10 +267,10 @@ export class GoogleCanvasOverlay extends CanvasOverlay {
  * @method
  */
 export function MixinCanvasOverlay() {
-    const x = GoogleCanvasOverlay.prototype;
-    GoogleCanvasOverlay.prototype = <any> new google.maps.OverlayView();
-    for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleCanvasOverlay.prototype)[y] = (<any>x)[y]; }}
-    (<any>GoogleCanvasOverlay.prototype)['onAdd'] = x['OnAdd'];
-    (<any>GoogleCanvasOverlay.prototype)['draw'] = x['OnDraw'];
-    (<any>GoogleCanvasOverlay.prototype)['onRemove'] = x['OnRemove'];
+
+    new Extender(GoogleCanvasOverlay)
+        .Extend(new google.maps.OverlayView)
+        .Map('onAdd', 'OnAdd')
+        .Map('draw', 'OnDraw')
+        .Map('onRemove', 'OnRemove');
 }
