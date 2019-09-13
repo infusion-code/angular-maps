@@ -35,6 +35,7 @@ export class BingConversions {
         'backgroundColor',
         'credentials',
         'customizeOverlays',
+        'customMapStyle',
         'disableBirdseye',
         'disableKeyboardInput',
         'disableMouseInput',
@@ -60,7 +61,8 @@ export class BingConversions {
         'width',
         'center',
         'zoom',
-        'mapTypeId'
+        'mapTypeId',
+        'liteMode'
     ];
 
     /**

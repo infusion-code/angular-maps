@@ -2,6 +2,7 @@ import { BingMapService } from '../../services/bing/bing-map.service';
 import { BingConversions } from '../../services/bing/bing-conversions';
 import { ILabelOptions } from '../../interfaces/ilabel-options';
 import { MapLabel } from '../map-label';
+import { Extender } from '../extender';
 
 let id: number = 0;
 
@@ -213,10 +214,9 @@ export class BingMapLabel extends MapLabel {
  * @method
  */
 export function MixinMapLabelWithOverlayView() {
-    const x = BingMapLabel.prototype;
-    BingMapLabel.prototype = <any> new Microsoft.Maps.CustomOverlay();
-    for (const y in x) { if ((<any>x)[y] != null) { (<any>BingMapLabel.prototype)[y] = (<any>x)[y]; }}
-    (<any>BingMapLabel.prototype)['onAdd'] = x['OnAdd'];
-    (<any>BingMapLabel.prototype)['onLoad'] = x['OnLoad'];
-    (<any>BingMapLabel.prototype)['onRemove'] = x['OnRemove'];
+    new Extender(BingMapLabel)
+    .Extend(new Microsoft.Maps.CustomOverlay())
+    .Map('onAdd', 'OnAdd')
+    .Map('onLoad', 'OnLoad')
+    .Map('onRemove', 'OnRemove');
 }

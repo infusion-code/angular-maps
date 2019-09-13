@@ -67,7 +67,7 @@ export abstract class Marker {
     public static CreateMarker(iconInfo: IMarkerIconInfo): string|Promise<{icon: string, iconInfo: IMarkerIconInfo}> {
         switch (iconInfo.markerType) {
             case MarkerTypeId.CanvasMarker: return Marker.CreateCanvasMarker(iconInfo);
-            case MarkerTypeId.DynmaicCircleMarker: return Marker.CreateDynmaicCircleMarker(iconInfo);
+            case MarkerTypeId.DynamicCircleMarker: return Marker.CreateDynamicCircleMarker(iconInfo);
             case MarkerTypeId.FontMarker: return Marker.CreateFontBasedMarker(iconInfo);
             case MarkerTypeId.RotatedImageMarker: return Marker.CreateRotatedImageMarker(iconInfo);
             case MarkerTypeId.RoundedImageMarker: return Marker.CreateRoundedImageMarker(iconInfo);
@@ -156,7 +156,7 @@ export abstract class Marker {
      *
      * @memberof Marker
      */
-    protected static CreateDynmaicCircleMarker(iconInfo: IMarkerIconInfo): string {
+    protected static CreateDynamicCircleMarker(iconInfo: IMarkerIconInfo): string {
         if (document == null) { throw Error('Document context (window.document) is required for dynamic circle markers.'); }
         if (iconInfo == null || iconInfo.size == null) { throw Error('IMarkerIconInfo.size is required for dynamic circle markers.'); }
         if (iconInfo.id != null && Marker.MarkerCache.has(iconInfo.id)) {

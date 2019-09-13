@@ -1,7 +1,23 @@
 [![npm version](https://badge.fury.io/js/angular-maps.svg)](https://www.npmjs.com/package/angular-maps) ![angular-maps](https://img.shields.io/npm/dm/angular-maps.svg) [![Code Climate](https://codeclimate.com/github/infusion-code/angular-maps/badges/gpa.svg)](https://codeclimate.com/github/infusion-code/angular-maps) [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 
+```diff
+- #IMPORTANT
+- I don't plan to maintain this repository. I just added Bing liteMode option to address performance issues with vector labels
+```
+
+```diff
+- #IMPORTANT
+- On 10/6/2018, this repository will be migrated into the Avanade channel. While existing clones,
+- forks and branches will automatically redirect, we recommend that after the migration you repoint
+- your urls to the Avanade channel. 
+```
+
 # Overview
 Angular Maps (X-Map) is a set of components and services to provide map functionality in angular 2+ apps. X-Maps architecture is provider independent and can be used with Bing, Google, ESRI or any other service enabled mapping provider. X-Map contains default implementations for Bing Maps and Google Maps, including layers, markers, infoboxes, clusters, polygons and polylines for both platforms.
+
+```diff
+- we have now added support for angular 6 and changed the examples to stackblitz...
+```
 
 # Samples
  You can find various basic and advanced samples in the [Wiki Sample Page](../../wiki/Samples)

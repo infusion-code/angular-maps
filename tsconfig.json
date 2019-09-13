@@ -7,14 +7,13 @@
         "experimentalDecorators": true,
         "allowJs": true,
         "sourceMap": true,
-        "declaration": true,
         "outDir": "dist",
         "skipDefaultLibCheck": true,
         "lib": ["es6", "dom"],
         "types": ["node"]
     },
     "files": [
-        "node_modules/bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.All.d.ts",
+        "node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts",
         "index.ts"
     ],
     "exclude": [

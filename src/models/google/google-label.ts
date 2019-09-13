@@ -1,6 +1,9 @@
 import * as GoogleMapTypes from '../../services/google/google-map-types';
 import { MapLabel } from '../map-label';
 import { ILabelOptions } from '../../interfaces/ilabel-options';
+import { Extender } from '../extender';
+
+
 declare var google: any;
 
 /**
@@ -192,12 +195,14 @@ export class GoogleMapLabel extends MapLabel {
  * @export
  * @method
  */
+
+
 export function MixinMapLabelWithOverlayView() {
-    const x = GoogleMapLabel.prototype;
-    GoogleMapLabel.prototype = new google.maps.OverlayView;
-    for (const y in x) { if ((<any>x)[y] != null) { (<any>GoogleMapLabel.prototype)[y] = (<any>x)[y]; }}
-    (<any>GoogleMapLabel.prototype)['changed'] = x['Changed'];
-    (<any>GoogleMapLabel.prototype)['onAdd'] = x['OnAdd'];
-    (<any>GoogleMapLabel.prototype)['draw'] = x['Draw'];
-    (<any>GoogleMapLabel.prototype)['onRemove'] = x['OnRemove'];
+
+    new Extender(GoogleMapLabel)
+        .Extend(new google.maps.OverlayView)
+        .Map('changed', 'Changed')
+        .Map('onAdd', 'OnAdd')
+        .Map('draw', 'Draw')
+        .Map('onRemove', 'OnRemove');
 }
