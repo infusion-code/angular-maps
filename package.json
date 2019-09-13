@@ -48,7 +48,7 @@
     "codelyzer": ">=3.0.1",
     "ng-packagr": "^3.0.2",
     "tslint": ">=5.4.2",
-    "typescript": "^2.8.0",
+    "typescript": "<=2.8.0",
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
@@ -58,5 +58,7 @@
     "json-loader": "^0.5.4",
     "rxjs": "^6.0.0"
   },
-  "files": ["dist"]
+  "files": [
+    "dist"
+  ]
 }
