@@ -57,8 +57,5 @@
     "font-awesome": "^4.6.3",
     "json-loader": "^0.5.4",
     "rxjs": "^6.0.0"
-  },
-  "files": [
-    "dist"
-  ]
+  }
 }
