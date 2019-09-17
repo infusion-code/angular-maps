@@ -70,7 +70,8 @@ export class BingMapLabel extends MapLabel {
      * @method
      */
     public GetMap(): Microsoft.Maps.Map {
-        return (<any>this).getMap();
+        if (typeof (<any>this).getMap === 'function') { return (<any>this).getMap(); }
+        return null;
     }
 
     /**
