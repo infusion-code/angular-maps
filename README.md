@@ -70,9 +70,9 @@ Import the MapModule. Note that the module is designed for lazy loading, so call
 ```
 ## 2. Configure Services
 
-Theoretically, this is optional. However, generally you will need to supply some configuration to your map service, such as the service key or some such. You do that by injection specifc 
-service configurations in the root module. The two service you will need to configure 
-is the loader (which is actually responsible to load the resources from the map provider such as scripts etc) and the Service Factory, which provides bootstrapping for the concrete implementation
+Theoretically, this is optional. However, generally you will need to supply some configuration to your map service, such as the service key or some such. You do that by injecting specific 
+service configurations in the root module. The two services you will need to configure 
+are the loader (which is actually responsible to load the resources from the map provider such as scripts etc) and the Service Factory, which provides bootstrapping for the concrete implementation
 (Bing, Google, etc) you want to be using. Currently only a bing provider exists. 
 
 ```
@@ -99,7 +99,7 @@ is the loader (which is actually responsible to load the resources from the map 
         let bc: BingMapAPILoaderConfig = new BingMapAPILoaderConfig();
         bc.apiKey ="..."; // your bing map key
         bc.branch = "experimental"; 
-            // to use the experimental bing brach. There are some bug fixes for
+            // to use the experimental bing branch. There are some bug fixes for
             // clustering in that branch you will need if you want to use 
             // clustering.
         return new BingMapAPILoader(bc, new WindowRef(), new DocumentRef());
@@ -107,11 +107,11 @@ is the loader (which is actually responsible to load the resources from the map 
 
 ```
 
-> Note: The provider factory was moved into an exported method to accomodate Angular 4 requirements to no have lambda functions in the provider loading. 
+> Note: The provider factory was moved into an exported method to accomodate Angular 4 requirements to not have lambda functions in the provider loading. 
 
 ## 3. Add a map, markers, infoboxes and actions to a component
 
-To use maps, create a simple component (or implement the below in an existin component) as follows:
+To use maps, create a simple component (or implement the below in an existing component) as follows:
 
 ```
     import { Component } from '@angular/core';
@@ -135,9 +135,9 @@ To use maps, create a simple component (or implement the below in an existin com
                             markerOffsetRatio: { x: 0.5, y: 1 },
                             text: '\uF276'
                         }"> 
-                        <info-box [DisableAutoPan]="true" [Title]="'My InfoBox'" [Description]="'Hi, this is the content of the <strong>info window</strong>. It is your responsibility to implement functionality such as close, etc...'">
-                            <info-box-action [Label]="'Click Me'" (ActionClicked)="_click()"></info-box-action>
-                        </info-box>   
+                        <x-info-box [DisableAutoPan]="true" [Title]="'My InfoBox'" [Description]="'Hi, this is the content of the <strong>info window</strong>. It is your responsibility to implement functionality such as close, etc...'">
+                            <x-info-box-action [Label]="'Click Me'" (ActionClicked)="_click()"></x-info-box-action>
+                        </x-info-box>   
                     </x-map-marker>
                 </x-map>
             </div>
@@ -186,7 +186,7 @@ As with all these, I am looking for help in evolving this module. The top things
 
 # Implementing your own Provider
 
-The angular-maps module allows for the implementation of various different providers. Even though currently only Bing is implemented, implementing your own provider against Google, Esri or others is straight forward 
+The angular-maps module allows for the implementation of various different providers. Even though currently only Bing is implemented, implementing your own provider against Google, Esri or others is straightforward 
 as long as the underlying capabilities are there. In order to do that you need to:
 
 1. Create concrete implementations of the Marker and InfoBox abstracts (see BingMarker and BingInfoWindow for guidance)
