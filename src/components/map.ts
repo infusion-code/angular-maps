@@ -92,7 +92,7 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
     private _options: IMapOptions = {};
     private _box: IBox = null;
     private _mapPromise: Promise<void>;
-    @HostBinding('class.map-container') public _containerClass: boolean = true;
+    @HostBinding('class.map-container') public _containerClass = true;
     @ViewChild('container') private _container: ElementRef;
     @ContentChildren(MapMarkerDirective) private _markers: Array<MapMarkerDirective>;
 
@@ -276,9 +276,12 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
      * @memberof MapComponent
      */
     public ngOnInit(): void {
-        this.InitMapInstance(this._container.nativeElement);
         this.MapPromise.emit(this._mapService.MapPromise);
         this.MapService.emit(this._mapService);
+    }
+
+    public ngAfterViewInit() {
+        this.InitMapInstance(this._container.nativeElement);
     }
 
     /**
