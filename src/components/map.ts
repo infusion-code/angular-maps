@@ -280,7 +280,12 @@ export class MapComponent implements OnChanges, OnInit, OnDestroy {
         this.MapService.emit(this._mapService);
     }
 
-    public ngAfterViewInit() {
+    /**
+     * Called after Angular has fully initialized a component's view. Part of ng Component life cycle.
+     *
+     * @memberof MapComponent
+     */
+    public ngAfterViewInit(): void {
         this.InitMapInstance(this._container.nativeElement);
     }
 
