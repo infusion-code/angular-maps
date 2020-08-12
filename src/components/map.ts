@@ -80,7 +80,7 @@ import { MapMarkerDirective } from './map-marker';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapComponent implements OnChanges, OnInit, OnDestroy {
+export class MapComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
     ///
     /// Field declarations
